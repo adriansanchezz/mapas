@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <?php
-require_once 'lib/functiones.php';
-session_start();
+// require_once 'lib/functiones.php';
+// session_start();
 ?>
 <?php
 include 'lib/functiones.php';
@@ -13,11 +13,7 @@ session_start();
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
         <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-        <style>
-            #map {
-                height: 400px;
-            }
-        </style>
+        
     </head>
     <body>
         <div class="NAVBAR">
@@ -30,27 +26,27 @@ session_start();
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav mr-auto">
                             <li class="nav-item active">
-                                <form action="MenusGenerales.php">
+                                <form action="menu.php">
                                     <button class="btn nav-link" name="inicio" type="submit">Inicio <span class="sr-only">(current)</span></button>
                                 </form>
                             </li>
                             <li class="nav-item">
-                                <form action="MenusGenerales.php">
+                                <form action="menu.php">
                                     <button class="btn nav-link" name="nosotros" type="submit">Nosotros</button>
                                 </form>
                             </li>
                             <li class="nav-item">
-                                <form action="MenusGenerales.php">
+                                <form action="menu.php">
                                     <button class="btn nav-link" name="usuario" type="submit">Usuario</button>
                                 </form>
                             </li>
                             <li class="nav-item">
-                                <form action="MenusGenerales.php">
+                                <form action="menu.php">
                                     <button class="btn nav-link" name="empresa" type="submit">Empresa</button>
                                 </form>
                             </li>
                             <li class="nav-item">
-                                <form action="MenusGenerales.php">
+                                <form action="menu.php">
                                     <button class="btn nav-link" name="administrador" type="submit">Administrador</button>
                                 </form>
                             </li>
@@ -90,14 +86,14 @@ session_start();
                         <hr>
                         <ul class="nav nav-pills flex-column mb-auto">
                             <li class="nav-item">
-                                <form action="MenusGenerales.php" method="get">
+                                <form action="menu.php" method="get">
                                     <button type="submit" name="usuarioInicio" class="btn btn-link nav-link text-white">
                                         Inicio
                                     </button>
                                 </form>
                             </li>
                             <li>
-                                <form action="MenusGenerales.php" method="get">
+                                <form action="menu.php" method="get">
                                     <button type="submit" name="usuarioVigia" class="btn btn-link nav-link text-white">
                                         Vigía
                                     </button>
@@ -117,7 +113,7 @@ session_start();
                         <hr>
                         <ul class="nav nav-pills flex-column mb-auto">
                             <li class="nav-item">
-                                <form action="MenusGenerales.php" method="get">
+                                <form action="menu.php" method="get">
                                     <button type="submit" name="empresaMapa" class="btn btn-link nav-link text-white">
                                         Mapa
                                     </button>
@@ -135,7 +131,7 @@ session_start();
                         <hr>
                         <ul class="nav nav-pills flex-column mb-auto">
                             <li class="nav-item">
-                                <form action="MenusGenerales.php" method="get">
+                                <form action="menu.php" method="get">
                                     <button type="submit" name="empresaMapa" class="btn btn-link nav-link text-white">
                                         Mapa
                                     </button>
@@ -148,44 +144,52 @@ session_start();
                     <div class="flex-grow-1">
                         <div class="p-3" style="display: block;">
                             <h1>Aquí estará el mapa</h1>
-                            <div id="map"></div>
+                            <div id="map" style="height: 100vh;"></div>
                             <div id="infoContainer"></div>
                             <script>
-                                var map = L.map('map').setView([43.3828500, -3.2204300], 13);
+                            var map = L.map('map').setView([43.3828500, -3.2204300], 13);
 
-                                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                                    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
-                                    maxZoom: 18,
-                                }).addTo(map);
+                            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
+                                maxZoom: 18,
+                            }).addTo(map);
 
-                                var marker = L.marker([43.3828500, -3.2204300]).addTo(map);
-                                marker.bindPopup("<b>Castro-Urdiales, España</b>").openPopup();
+                            <?php
+                            require_once 'lib/functiones.php';
 
-                                var markers = [];
+                            // Establecer la conexión con la base de datos
+                            $conn = conectar();
 
-                                // Generar coordenadas aleatorias en un rango alrededor de Castro-Urdiales
-                                var numMarkers = 5; // Número de marcadores a generar
-                                var range = 0.1; // Rango en grados
+                            // Consultar los marcadores existentes
+                            $sql = "SELECT * FROM marcadores";
+                            $result = $conn->query($sql);
 
-                                for (var i = 0; i < numMarkers; i++) {
-                                    // Generar coordenadas aleatorias en el rango
-                                    var lat = 43.3828500 + (Math.random() * 2 - 1) * range;
-                                    var lng = -3.2204300 + (Math.random() * 2 - 1) * range;
+                            if ($result->num_rows > 0) {
+                                while ($row = $result->fetch_assoc()) {
+                                    $lat = $row['lat'];
+                                    $lng = $row['lng'];
+                                    $titulo = $row['titulo'];
+                                    $texto = $row['texto'];
+                                    $apiKey = 'AIzaSyADr5gpzLPePzkWwz8C94wBQ21DzQ4GGVU'; // Reemplaza con tu propia API Key de Google Maps Static
 
-                                    // Crear un nuevo marcador con coordenadas aleatorias
-                                    var marker = L.marker([lat, lng]).addTo(map);
+                                    // Construir la URL de la imagen de Google Maps Static
+                                    $imageUrl = 'https://maps.googleapis.com/maps/api/streetview?size=400x300&location=' . $lat . ',' . $lng . '&key=' . $apiKey;
+                                    ?>
 
-                                    // Agregar contenido personalizado al marcador
-                                    var content = '<h3>Marcador ' + (i + 1) + '</h3>' +
-                                            '<p>Texto de ejemplo para el marcador.</p>' +
-                                            '<img src="ruta/de/la/imagen.jpg" alt="Imagen de ejemplo">' +
-                                            '<form action="confirmacionPago.php"><button class="btn btn-outline-success my-2 my-sm-0" name="confirmar" type="submit">Seleccionar</button></form>';
-
-                                    marker.bindPopup(content);
-
-                                    markers.push(marker);
+                                    // Crear un marcador para cada registro de la base de datos
+                                    var marker = L.marker([<?php echo $lat; ?>, <?php echo $lng; ?>]).addTo(map);
+                                    marker.bindPopup("<h3><?php echo $titulo; ?></h3><p><?php echo $texto; ?></p><img src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación'>");
+                                    <?php
                                 }
-                            </script>
+                            }
+
+                            // Cerrar la conexión y liberar recursos
+                            //errarConexion($conn);
+                            ?>
+
+                            // Resto del código del mapa...
+                        </script>
+
                         </div>
                     </div>
                 </div>
@@ -197,28 +201,28 @@ session_start();
                         <hr>
                         <ul class="nav nav-pills flex-column mb-auto">
                             <li class="nav-item">
-                                <form action="MenusGenerales.php" method="get">
+                                <form action="menu.php" method="get">
                                     <button type="submit" name="administradorAdministradores" class="btn btn-link nav-link text-white">
                                         Administradores
                                     </button>
                                 </form>
                             </li>
                             <li class="nav-item">
-                                <form action="MenusGenerales.php" method="get">
+                                <form action="menu.php" method="get">
                                     <button type="submit" name="administradorEmpresas" class="btn btn-link nav-link text-white">
                                         Empresas
                                     </button>
                                 </form>
                             </li>
                             <li class="nav-item">
-                                <form action="MenusGenerales.php" method="get">
+                                <form action="menu.php" method="get">
                                     <button type="submit" name="administradorVigilantes" class="btn btn-link nav-link text-white">
                                         Vigilantes
                                     </button>
                                 </form>
                             </li>
                             <li class="nav-item">
-                                <form action="MenusGenerales.php" method="get">
+                                <form action="menu.php" method="get">
                                     <button type="submit" name="administradorUsuarios" class="btn btn-link nav-link text-white">
                                         Usuarios
                                     </button>
@@ -241,28 +245,28 @@ session_start();
                         <hr>
                         <ul class="nav nav-pills flex-column mb-auto">
                             <li class="nav-item">
-                                <form action="MenusGenerales.php" method="get">
+                                <form action="menu.php" method="get">
                                     <button type="submit" name="administradorAdministradores" class="btn btn-link nav-link text-white">
                                         Administradores
                                     </button>
                                 </form>
                             </li>
                             <li class="nav-item">
-                                <form action="MenusGenerales.php" method="get">
+                                <form action="menu.php" method="get">
                                     <button type="submit" name="administradorEmpresas" class="btn btn-link nav-link text-white">
                                         Empresas
                                     </button>
                                 </form>
                             </li>
                             <li class="nav-item">
-                                <form action="MenusGenerales.php" method="get">
+                                <form action="menu.php" method="get">
                                     <button type="submit" name="administradorVigilantes" class="btn btn-link nav-link text-white">
                                         Vigilantes
                                     </button>
                                 </form>
                             </li>
                             <li class="nav-item">
-                                <form action="MenusGenerales.php" method="get">
+                                <form action="menu.php" method="get">
                                     <button type="submit" name="administradorUsuarios" class="btn btn-link nav-link text-white">
                                         Usuarios
                                     </button>
@@ -285,28 +289,28 @@ session_start();
                         <hr>
                         <ul class="nav nav-pills flex-column mb-auto">
                             <li class="nav-item">
-                                <form action="MenusGenerales.php" method="get">
+                                <form action="menu.php" method="get">
                                     <button type="submit" name="administradorAdministradores" class="btn btn-link nav-link text-white">
                                         Administradores
                                     </button>
                                 </form>
                             </li>
                             <li class="nav-item">
-                                <form action="MenusGenerales.php" method="get">
+                                <form action="menu.php" method="get">
                                     <button type="submit" name="administradorEmpresas" class="btn btn-link nav-link text-white">
                                         Empresas
                                     </button>
                                 </form>
                             </li>
                             <li class="nav-item">
-                                <form action="MenusGenerales.php" method="get">
+                                <form action="menu.php" method="get">
                                     <button type="submit" name="administradorVigilantes" class="btn btn-link nav-link text-white">
                                         Vigilantes
                                     </button>
                                 </form>
                             </li>
                             <li class="nav-item">
-                                <form action="MenusGenerales.php" method="get">
+                                <form action="menu.php" method="get">
                                     <button type="submit" name="administradorUsuarios" class="btn btn-link nav-link text-white">
                                         Usuarios
                                     </button>
@@ -329,28 +333,28 @@ session_start();
                         <hr>
                         <ul class="nav nav-pills flex-column mb-auto">
                             <li class="nav-item">
-                                <form action="MenusGenerales.php" method="get">
+                                <form action="menu.php" method="get">
                                     <button type="submit" name="administradorAdministradores" class="btn btn-link nav-link text-white">
                                         Administradores
                                     </button>
                                 </form>
                             </li>
                             <li class="nav-item">
-                                <form action="MenusGenerales.php" method="get">
+                                <form action="menu.php" method="get">
                                     <button type="submit" name="administradorEmpresas" class="btn btn-link nav-link text-white">
                                         Empresas
                                     </button>
                                 </form>
                             </li>
                             <li class="nav-item">
-                                <form action="MenusGenerales.php" method="get">
+                                <form action="menu.php" method="get">
                                     <button type="submit" name="administradorVigilantes" class="btn btn-link nav-link text-white">
                                         Vigilantes
                                     </button>
                                 </form>
                             </li>
                             <li class="nav-item">
-                                <form action="MenusGenerales.php" method="get">
+                                <form action="menu.php" method="get">
                                     <button type="submit" name="administradorUsuarios" class="btn btn-link nav-link text-white">
                                         Usuarios
                                     </button>
@@ -373,28 +377,28 @@ session_start();
                         <hr>
                         <ul class="nav nav-pills flex-column mb-auto">
                             <li class="nav-item">
-                                <form action="MenusGenerales.php" method="get">
+                                <form action="menu.php" method="get">
                                     <button type="submit" name="administradorAdministradores" class="btn btn-link nav-link text-white">
                                         Administradores
                                     </button>
                                 </form>
                             </li>
                             <li class="nav-item">
-                                <form action="MenusGenerales.php" method="get">
+                                <form action="menu.php" method="get">
                                     <button type="submit" name="administradorEmpresas" class="btn btn-link nav-link text-white">
                                         Empresas
                                     </button>
                                 </form>
                             </li>
                             <li class="nav-item">
-                                <form action="MenusGenerales.php" method="get">
+                                <form action="menu.php" method="get">
                                     <button type="submit" name="administradorVigilantes" class="btn btn-link nav-link text-white">
                                         Vigilantes
                                     </button>
                                 </form>
                             </li>
                             <li class="nav-item">
-                                <form action="MenusGenerales.php" method="get">
+                                <form action="menu.php" method="get">
                                     <button type="submit" name="administradorUsuarios" class="btn btn-link nav-link text-white">
                                         Usuarios
                                     </button>
@@ -417,14 +421,14 @@ session_start();
                         <hr>
                         <ul class="nav nav-pills flex-column mb-auto">
                             <li class="nav-item">
-                                <form action="MenusGenerales.php" method="get">
+                                <form action="menu.php" method="get">
                                     <button type="submit" name="usuarioInicio" class="btn btn-link nav-link text-white">
                                         Inicio
                                     </button>
                                 </form>
                             </li>
                             <li>
-                                <form action="MenusGenerales.php" method="get">
+                                <form action="menu.php" method="get">
                                     <button type="submit" name="usuarioVigia" class="btn btn-link nav-link text-white">
                                         Vigía
                                     </button>
@@ -433,10 +437,10 @@ session_start();
                         </ul>
                     </div>
                     <div class="flex-grow-1">
-                        <form class="form-inline my-2 my-lg-0" action="MenusGenerales.php">
+                        <form class="form-inline my-2 my-lg-0" action="menu.php">
                             <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioInicioMapa" type="submit">Mapa</button>
                         </form>
-                        <form class="form-inline my-2 my-lg-0" action="MenusGenerales.php">
+                        <form class="form-inline my-2 my-lg-0" action="menu.php">
                             <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioInicioTienda" type="submit">Tienda</button>
                         </form>
                     </div>
@@ -449,14 +453,14 @@ session_start();
                         <hr>
                         <ul class="nav nav-pills flex-column mb-auto">
                             <li class="nav-item">
-                                <form action="MenusGenerales.php" method="get">
+                                <form action="menu.php" method="get">
                                     <button type="submit" name="usuarioInicio" class="btn btn-link nav-link text-white">
                                         Inicio
                                     </button>
                                 </form>
                             </li>
                             <li>
-                                <form action="MenusGenerales.php" method="get">
+                                <form action="menu.php" method="get">
                                     <button type="submit" name="usuarioVigia" class="btn btn-link nav-link text-white">
                                         Vigía
                                     </button>
@@ -465,10 +469,10 @@ session_start();
                         </ul>
                     </div>
                     <div class="flex-grow-1">
-                        <form class="form-inline my-2 my-lg-0" action="MenusGenerales.php">
+                        <form class="form-inline my-2 my-lg-0" action="menu.php">
                             <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioVigiaMisiones" type="submit">Misiones</button>
                         </form>
-                        <form class="form-inline my-2 my-lg-0" action="MenusGenerales.php">
+                        <form class="form-inline my-2 my-lg-0" action="menu.php">
                             <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioVigiaPuntos" type="submit">Puntos</button>
                         </form>
 
@@ -483,14 +487,14 @@ session_start();
                         <hr>
                         <ul class="nav nav-pills flex-column mb-auto">
                             <li class="nav-item">
-                                <form action="MenusGenerales.php" method="get">
+                                <form action="menu.php" method="get">
                                     <button type="submit" name="usuarioInicio" class="btn btn-link nav-link text-white">
                                         Inicio
                                     </button>
                                 </form>
                             </li>
                             <li>
-                                <form action="MenusGenerales.php" method="get">
+                                <form action="menu.php" method="get">
                                     <button type="submit" name="usuarioVigia" class="btn btn-link nav-link text-white">
                                         Vigía
                                     </button>
@@ -499,14 +503,104 @@ session_start();
                         </ul>
                     </div>
                     <div class="flex-grow-1">
-                        <form class="form-inline my-2 my-lg-0" action="MenusGenerales.php">
+                        <form class="form-inline my-2 my-lg-0" action="menu.php">
                             <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioInicioMapa" type="submit">Mapa</button>
                         </form>
-                        <form class="form-inline my-2 my-lg-0" action="MenusGenerales.php">
+                        <form class="form-inline my-2 my-lg-0" action="menu.php">
                             <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioInicioTienda" type="submit">Tienda</button>
                         </form>
-                        <h1>MAPA</h1>
 
+                        <h1>MAPA</h1>
+                        <input type="text" id="direccion" placeholder="Buscar dirección">
+                        <button onclick="buscarDireccion()">Buscar</button>
+                        <div id="map" style="height: 400px;"></div>
+                        <script>
+                        var map = L.map('map').setView([43.3828500, -3.2204300], 13);
+
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
+                            maxZoom: 18,
+                        }).addTo(map);
+
+                        var marker;
+
+                        map.on('click', function(e) {
+                            if (marker) {
+                                map.removeLayer(marker);
+                            }
+
+                            marker = L.marker(e.latlng).addTo(map);
+                            marker.bindPopup("Ubicación seleccionada").openPopup();
+
+                            // Actualizar campos ocultos en el formulario con las coordenadas
+                            document.getElementById('lat').value = e.latlng.lat;
+                            document.getElementById('lng').value = e.latlng.lng;
+                        });
+
+                        function buscarDireccion() {
+                            var direccion = document.getElementById('direccion').value;
+
+                            // Realizar la petición de geocodificación
+                            fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + direccion)
+                                .then(function(response) {
+                                    return response.json();
+                                })
+                                .then(function(data) {
+                                    if (data.length > 0) {
+                                        var latitud = parseFloat(data[0].lat);
+                                        var longitud = parseFloat(data[0].lon);
+
+                                        // Centrar el mapa en la ubicación encontrada
+                                        map.setView([latitud, longitud], 13);
+
+                                        if (marker) {
+                                            map.removeLayer(marker);
+                                        }
+
+                                        marker = L.marker([latitud, longitud]).addTo(map);
+                                        marker.bindPopup("Ubicación encontrada").openPopup();
+
+                                        // Actualizar campos ocultos en el formulario con las coordenadas
+                                        document.getElementById('lat').value = latitud;
+                                        document.getElementById('lng').value = longitud;
+                                    } else {
+                                        alert("No se encontró la dirección especificada.");
+                                    }
+                                })
+                                .catch(function(error) {
+                                    console.log('Error:', error);
+                                });
+                        }
+
+                        function validarFormulario() {
+                            var titulo = document.getElementById('titulo').value;
+                            var texto = document.getElementById('texto').value;
+                            var latitud = parseFloat(document.getElementById('lat').value);
+                            var longitud = parseFloat(document.getElementById('lng').value);
+
+                            if (titulo.trim() === '' || texto.trim() === '') {
+                                alert('Los campos de título y texto no pueden estar vacíos.');
+                                return false;
+                            }
+
+                            if (isNaN(latitud) || isNaN(longitud)) {
+                                alert('Debe seleccionar una ubicación en el mapa.');
+                                return false;
+                            }
+
+                            return true;
+                        }
+                        </script>
+
+                        <form action="guardarMarcador.php" method="post" onsubmit="return validarFormulario();">
+                            <input type="hidden" name="lat" id="lat">
+                            <input type="hidden" name="lng" id="lng">
+                            Titulo: <input type="text" name="titulo" id="titulo">
+                            Texto: <input type="text" name="texto" id="texto">
+                            
+                            
+                            <button type="submit" name="guardarMarcador">Guardar</button>
+                        </form>
                     </div>
                 </div>
                 <?php
@@ -517,14 +611,14 @@ session_start();
                         <hr>
                         <ul class="nav nav-pills flex-column mb-auto">
                             <li class="nav-item">
-                                <form action="MenusGenerales.php" method="get">
+                                <form action="menu.php" method="get">
                                     <button type="submit" name="usuarioInicio" class="btn btn-link nav-link text-white">
                                         Inicio
                                     </button>
                                 </form>
                             </li>
                             <li>
-                                <form action="MenusGenerales.php" method="get">
+                                <form action="menu.php" method="get">
                                     <button type="submit" name="usuarioVigia" class="btn btn-link nav-link text-white">
                                         Vigía
                                     </button>
@@ -533,10 +627,10 @@ session_start();
                         </ul>
                     </div>
                     <div class="flex-grow-1">
-                        <form class="form-inline my-2 my-lg-0" action="MenusGenerales.php">
+                        <form class="form-inline my-2 my-lg-0" action="menu.php">
                             <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioInicioMapa" type="submit">Mapa</button>
                         </form>
-                        <form class="form-inline my-2 my-lg-0" action="MenusGenerales.php">
+                        <form class="form-inline my-2 my-lg-0" action="menu.php">
                             <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioInicioTienda" type="submit">Tienda</button>
                         </form>
                         <h1>TIENDA</h1>
@@ -550,14 +644,14 @@ session_start();
                         <hr>
                         <ul class="nav nav-pills flex-column mb-auto">
                             <li class="nav-item">
-                                <form action="MenusGenerales.php" method="get">
+                                <form action="menu.php" method="get">
                                     <button type="submit" name="usuarioInicio" class="btn btn-link nav-link text-white">
                                         Inicio
                                     </button>
                                 </form>
                             </li>
                             <li>
-                                <form action="MenusGenerales.php" method="get">
+                                <form action="menu.php" method="get">
                                     <button type="submit" name="usuarioVigia" class="btn btn-link nav-link text-white">
                                         Vigía
                                     </button>
@@ -566,10 +660,10 @@ session_start();
                         </ul>
                     </div>
                     <div class="flex-grow-1">
-                        <form class="form-inline my-2 my-lg-0" action="MenusGenerales.php">
+                        <form class="form-inline my-2 my-lg-0" action="menu.php">
                             <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioVigiaMisiones" type="submit">Misiones</button>
                         </form>
-                        <form class="form-inline my-2 my-lg-0" action="MenusGenerales.php">
+                        <form class="form-inline my-2 my-lg-0" action="menu.php">
                             <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioVigiaPuntos" type="submit">Puntos</button>
                         </form>
                         <h1>MISIONES</h1>
@@ -584,14 +678,14 @@ session_start();
                         <hr>
                         <ul class="nav nav-pills flex-column mb-auto">
                             <li class="nav-item">
-                                <form action="MenusGenerales.php" method="get">
+                                <form action="menu.php" method="get">
                                     <button type="submit" name="usuarioInicio" class="btn btn-link nav-link text-white">
                                         Inicio
                                     </button>
                                 </form>
                             </li>
                             <li>
-                                <form action="MenusGenerales.php" method="get">
+                                <form action="menu.php" method="get">
                                     <button type="submit" name="usuarioVigia" class="btn btn-link nav-link text-white">
                                         Vigía
                                     </button>
@@ -600,10 +694,10 @@ session_start();
                         </ul>
                     </div>
                     <div class="flex-grow-1">
-                        <form class="form-inline my-2 my-lg-0" action="MenusGenerales.php">
+                        <form class="form-inline my-2 my-lg-0" action="menu.php">
                             <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioVigiaMisiones" type="submit">Misiones</button>
                         </form>
-                        <form class="form-inline my-2 my-lg-0" action="MenusGenerales.php">
+                        <form class="form-inline my-2 my-lg-0" action="menu.php">
                             <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioVigiaPuntos" type="submit">Puntos</button>
                         </form>
                         <h1>PUNTOS</h1>

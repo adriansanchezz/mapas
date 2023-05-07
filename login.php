@@ -21,7 +21,7 @@ session_start();
             ?>
             <div class="box">     
                 <div class="form">                
-                    <form action="MenusGenerales.php" method="post">
+                    <form action="menu.php" method="post">
                         <div class="inputBox">
                             <input type="text" name="usu"/>
                             <span>Correo</span>
@@ -79,7 +79,7 @@ session_start();
                         ?>
                         <div class="box">     
                             <div class="form">                
-                                <form action="MenusGenerales.php" method="post">
+                                <form action="menu.php" method="post">
                                     <div class="inputBox">
                                         <input type="text" name="usu"/>
                                         <span>Correo</span>
@@ -118,7 +118,7 @@ session_start();
                 ?>
                 <div class="box">     
                     <div class="form">                
-                        <form action="MenusGenerales.php" method="post">
+                        <form action="menu.php" method="post">
                             <div class="inputBox">
                                 <span>Correo</span>
                                 <input type="text" name="usu"/>
