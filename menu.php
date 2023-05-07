@@ -61,13 +61,16 @@ session_start();
                 </div>
             </nav>
         </div>
+
         <?php
         if (isset($_REQUEST['inicio'])) {
             ?>
             <h1>INICIO</h1>
 
             <?php
-        } else if (isset($_REQUEST['nosotros'])) {
+        } 
+        
+        else if (isset($_REQUEST['nosotros'])) {
             ?>
             <h1>NOSOTROS</h1>
             <div class="container">
@@ -79,7 +82,10 @@ session_start();
                     </div>
                 </div>
                 <?php
-            } else if (isset($_REQUEST['usuario'])) {
+            } 
+            
+            
+            else if (isset($_REQUEST['usuario'])) {
                 ?>
                 <div class="d-flex vh-100">
                     <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px;">
@@ -106,7 +112,12 @@ session_start();
                     </div>
                 </div>
                 <?php
-            } else if (isset($_REQUEST['empresa'])) {
+            } 
+            
+            
+            
+            
+            else if (isset($_REQUEST['empresa'])) {
                 ?>   
                 <div class="d-flex vh-100">
                     <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px;">
@@ -124,7 +135,11 @@ session_start();
 
                 </div>
                 <?php
-            } else if (isset($_REQUEST['empresaMapa'])) {
+            } 
+            
+            
+            
+            else if (isset($_REQUEST['empresaMapa'])) {
                 ?>
                 <div class="d-flex vh-100">
                     <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px;">
@@ -194,7 +209,11 @@ session_start();
                     </div>
                 </div>
                 <?php
-            } else if (isset($_REQUEST['administrador'])) {
+            } 
+            
+            
+            
+            else if (isset($_REQUEST['administrador'])) {
                 ?>
                 <div class="d-flex vh-100">
                     <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px;">
@@ -238,7 +257,11 @@ session_start();
                     </div>
                 </div>
                 <?php
-            } else if (isset($_REQUEST['administradorAdministradores'])) {
+            } 
+            
+            
+            
+            else if (isset($_REQUEST['administradorAdministradores'])) {
                 ?>
                 <div class="d-flex vh-100">
                     <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px;">
@@ -282,7 +305,11 @@ session_start();
                     </div>
                 </div>
                 <?php
-            } else if (isset($_REQUEST['administradorEmpresas'])) {
+            } 
+            
+            
+            
+            else if (isset($_REQUEST['administradorEmpresas'])) {
                 ?>
                 <div class="d-flex vh-100">
                     <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px;">
@@ -326,7 +353,10 @@ session_start();
                     </div>
                 </div>
                 <?php
-            } else if (isset($_REQUEST['administradorVigilantes'])) {
+            } 
+            
+            
+            else if (isset($_REQUEST['administradorVigilantes'])) {
                 ?>
                 <div class="d-flex vh-100">
                     <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px;">
@@ -370,7 +400,11 @@ session_start();
                     </div>
                 </div>
                 <?php
-            } else if (isset($_REQUEST['administradorUsuarios'])) {
+            } 
+            
+            
+            
+            else if (isset($_REQUEST['administradorUsuarios'])) {
                 ?>
                 <div class="d-flex vh-100">
                     <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px;">
@@ -414,7 +448,11 @@ session_start();
                     </div>
                 </div>
                 <?php
-            } else if (isset($_REQUEST['usuarioInicio'])) {
+            } 
+            
+            
+            
+            else if (isset($_REQUEST['usuarioInicio'])) {
                 ?>
                 <div class="d-flex vh-100">
                     <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px;">
@@ -446,7 +484,11 @@ session_start();
                     </div>
                 </div>
                 <?php
-            } else if (isset($_REQUEST['usuarioVigia'])) {
+            } 
+            
+            
+            
+            else if (isset($_REQUEST['usuarioVigia'])) {
                 ?>
                 <div class="d-flex vh-100">
                     <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px;">
@@ -480,7 +522,11 @@ session_start();
                     </div>
                 </div>
                 <?php
-            } else if (isset($_REQUEST['usuarioInicioMapa'])) {
+            } 
+            
+            
+            
+            else if (isset($_REQUEST['usuarioInicioMapa'])) {
                 ?>
                 <div class="d-flex vh-100">
                     <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px;">
@@ -604,7 +650,12 @@ session_start();
                     </div>
                 </div>
                 <?php
-            } else if (isset($_REQUEST['usuarioInicioTienda'])) {
+            } 
+            
+            
+            
+            
+            else if (isset($_REQUEST['usuarioInicioTienda'])) {
                 ?> 
                 <div class="d-flex vh-100">
                     <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px;">
@@ -637,7 +688,12 @@ session_start();
                     </div>
                 </div>
                 <?php
-            } else if (isset($_REQUEST['usuarioVigiaMisiones'])) {
+            } 
+            
+            
+            
+            
+            else if (isset($_REQUEST['usuarioVigiaMisiones'])) {
                 ?> 
                 <div class="d-flex vh-100">
                     <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px;">
@@ -671,7 +727,12 @@ session_start();
                     </div>
                 </div>
                 <?php
-            } else if (isset($_REQUEST['usuarioVigiaPuntos'])) {
+            } 
+            
+            
+            
+            
+            else if (isset($_REQUEST['usuarioVigiaPuntos'])) {
                 ?>
                 <div class="d-flex vh-100">
                     <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px;">
