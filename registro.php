@@ -38,7 +38,7 @@ require_once 'lib/modulos.php';
         
       <?php
         if(isset($_POST['registrar'])){
-            $estado = validarUser($_POST['username'],$_POST['correo'],$_POST['telefono'],$_POST['password'],$_POST['password2']);
+            validarUser($_POST['username'],$_POST['correo'],$_POST['telefono'],$_POST['password'],$_POST['password2']);
         }
       ?>
     </body>

@@ -123,7 +123,7 @@ function autenticarUser($email, $password) {
                 // Verifica la contraseña
                 if (password_verify($password, $password_hash)) {
                     header("location:pag/principal.php");
-                    exit(); // Es importante poner exit después del header para asegurarnos de que el script no siga ejecutándose
+                    exit; // Es importante poner exit después del header para asegurarnos de que el script no siga ejecutándose
                 } else {
                     echo "Password Incorrecto!";
                 }
@@ -137,12 +137,6 @@ function autenticarUser($email, $password) {
             mysqli_close($conn);
         }
     }
-}
-
-if(isset($_POST['cerrar_sesion'])){
-    session_destroy(); // Destruye todas las variables de sesión
-    header("Location: ../login.php"); // Redirige al usuario a la página de inicio de sesión
-    exit; // Detiene la ejecución del script después de la redirección
 }
 ?>
 
