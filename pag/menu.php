@@ -1,66 +1,18 @@
 <!DOCTYPE html>
 <?php
-// require_once 'lib/functiones.php';
-// session_start();
-?>
-<?php
-require_once 'lib/functiones.php';
-require_once 'lib/modulos.php';
+require_once '../lib/functiones.php';
+require_once '../lib/modulos.php';
 ?>
 <html>
-    <head>
-        <title>DisplayADS - Menú</title>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-        <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-        
-    </head>
+    <?php head_login(); ?>
     <body>
-        <div class="NAVBAR">
-            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-                <div class="container-fluid">
-                    <a class="navbar-brand" >DisplayADS</a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="navbar-nav mr-auto">
-                            <li class="nav-item active">
-                                <form action="menu.php">
-                                    <button class="btn nav-link" name="inicio" type="submit">Inicio <span class="sr-only">(current)</span></button>
-                                </form>
-                            </li>
-                            <li class="nav-item">
-                                <form action="menu.php">
-                                    <button class="btn nav-link" name="nosotros" type="submit">Nosotros</button>
-                                </form>
-                            </li>
-                            <li class="nav-item">
-                                <form action="menu.php">
-                                    <button class="btn nav-link" name="usuario" type="submit">Usuario</button>
-                                </form>
-                            </li>
-                            <li class="nav-item">
-                                <form action="menu.php">
-                                    <button class="btn nav-link" name="empresa" type="submit">Empresa</button>
-                                </form>
-                            </li>
-                            <li class="nav-item">
-                                <form action="menu.php">
-                                    <button class="btn nav-link" name="administrador" type="submit">Administrador</button>
-                                </form>
-                            </li>
-                        </ul>
-                        <form class="form-inline my-2 my-lg-0" action="Cuenta.php">
-                            <button class="btn btn-outline-success my-2 my-sm-0" name="login" type="submit">Cuenta</button>
-                        </form>
-                        <form class="form-inline my-2 my-lg-0" action="Index.php">
-                            <button class="btn btn-outline-success my-2 my-sm-0" name="registro" type="submit">Cerrar sesión</button>
-                        </form>
-                    </div>
-                </div>
-            </nav>
-        </div>
+        
+
+        <?php
+            if(isset($_POST['login'])){
+                autenticarUser($_POST['correo'],$_POST['password']);
+            }
+        ?>
 
         <?php
         if (isset($_REQUEST['inicio'])) {
