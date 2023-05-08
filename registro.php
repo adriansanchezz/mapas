@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <?php
 require_once 'lib/functiones.php';
-session_start();
+require_once 'lib/modulos.php';
 ?>
 <html>
     <head>
@@ -14,9 +14,8 @@ session_start();
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">   
     </head>
     <body>
-        <?php
-            include 'lib/menu_index.php';
-        ?>
+        <!-- Imprimir menu del index, de forma modular sin introducir los codigos -->
+        <?php menu_index(); ?>
             <div class="form"> 
                 <form action="registro.php" method="post">
                     <label>Nombre de usuario</label><br>
@@ -35,10 +34,11 @@ session_start();
                     <input type="password" name="password2"/><br/>
                     
                     <input type="submit" name="registrar" value="Registrarse"/>
-                    
-                    <form action="index.php" method="post">
-                        <input type="submit" name="volverReg" value="Volver"/>
-                    </form>            
+                </form>
+
+                <form action="index.php" method="post">
+                    <input type="submit" name="volverReg" value="Volver"/>
+                </form>        
             </div>
         
       <?php

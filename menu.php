@@ -4,8 +4,8 @@
 // session_start();
 ?>
 <?php
-include 'lib/functiones.php';
-session_start();
+require_once 'lib/functiones.php';
+require_once 'lib/modulos.php';
 ?>
 <html>
     <head>
