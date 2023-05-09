@@ -11,6 +11,7 @@ require_once '../lib/modulos.php';
 </head>
 
 <body>
+    <!-- Menu general -->
     <?php menu_general(); ?>
 
     <div class="d-flex vh-100">

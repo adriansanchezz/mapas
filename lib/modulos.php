@@ -1,4 +1,5 @@
 <?php
+// Menu index
 function menu_index()
 {
     ?>

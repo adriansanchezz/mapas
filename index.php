@@ -38,6 +38,7 @@ if(isset($_POST['cerrarSesion'])){
                         todos los balcones o ventanas posibles, ayudando así a promocionar a las empresas, y también ayudando a los usuarios que nos ofrecen este servicio 
                         a ganar algo de dinero sin hacer casi nada.</p>
                 </div>
+                
                 <div class="col-md-3">
                     <!-- Contenedor de la derecha -->
                     <h2>CARROUSEL DE IMAGENES SOBRE NUESTRA APLICACION</h2>

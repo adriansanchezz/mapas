@@ -11,6 +11,7 @@ require_once '../lib/modulos.php';
 </head>
 
 <body>
+    <!-- Menu general -->
     <?php menu_general(); ?>
 
 </body>

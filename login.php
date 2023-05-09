@@ -35,6 +35,7 @@ require_once 'lib/modulos.php';
         ?>
 
         <form action="./pag/principal.php"><button type="submit">Acceso anticipado</button></form>
+        
     </body>
 </html>
 

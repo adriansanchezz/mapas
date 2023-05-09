@@ -29,7 +29,7 @@ print '<br>';
 print '<a href ="login.php"><button class="back">Volver</button></a>';
 session_destroy();
 
-
+  
 ?>
 <html>
 
