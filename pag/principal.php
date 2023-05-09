@@ -1,4 +1,4 @@
-decimal(12,2)	<!DOCTYPE html>
+<!DOCTYPE html>
 <?php
 if(isset($_POST['cerrarSesion'])){
     session_destroy(); // Destruye todas las variables de sesión
