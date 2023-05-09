@@ -22,7 +22,7 @@ function conectar()
 
 
 // Para hacer Registro del usuario
-function validarUser($username, $email, $telefono, $password, $password2)
+function registrarUser($username, $email, $telefono, $password, $password2)
 {
 
     // Verificar si hay campo vacio.
@@ -118,7 +118,9 @@ function autenticarUser($email, $password)
         try {
             //conexion
             $conn = conectar();
+            //consulta
             $sql = "SELECT * FROM usuarios WHERE email='$email'";
+            //Ejecutar
             $result = mysqli_query($conn, $sql);
 
             if ($row = mysqli_fetch_assoc($result)) {
@@ -126,7 +128,7 @@ function autenticarUser($email, $password)
 
                 // Verifica la contraseña
                 if (password_verify($password, $password_hash)) {
-                    $_SESSION['usuario'] = $row['password'];
+                    $_SESSION['usuario'] = $row;
                     header("location:pag/principal.php");
                     exit; // Es importante poner exit después del header para asegurarnos de que el script no siga ejecutándose
                 } else {
@@ -148,6 +150,211 @@ function autenticarUser($email, $password)
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function validarUsuario($id_user)
+{
+    try {
+        //conexion
+        $conn = conectar();
+        //consulta
+        $sql = "SELECT * FROM usuarios_roles WHERE id_usuario='$id_user' AND id_rol=(SELECT id_rol FROM roles WHERE nombre='Usuario')";
+        //Ejecutar
+        $result = mysqli_query($conn, $sql);
+        
+        //Comprobar si existe el compo de la consulta
+        if (mysqli_fetch_assoc($result)) {
+            echo "Tiene rol de Usuario";
+        } else {
+            echo "No tiene rol de Usuario";
+        }
+        
+    } catch (Exception $e) {
+        echo "Hay un fallo ".$e;
+    } finally {
+        // Cerrar la conexión y liberar recursos
+        mysqli_close($conn);
+    }
+}
+
+
+function validarAdmin($id_user)
+{
+    try {
+        //conexion
+        $conn = conectar();
+        //consulta
+        $sql = "SELECT * FROM usuarios_roles WHERE id_usuario='$id_user' AND id_rol=(SELECT id_rol FROM roles WHERE nombre='Admin')";
+        //Ejecutar
+        $result = mysqli_query($conn, $sql);
+        
+        //Comprobar si existe el compo de la consulta
+        if (mysqli_fetch_assoc($result)) {
+            echo "Tiene rol de Admin";
+        } else {
+            echo "No tiene rol de Admin";
+        }
+        
+    } catch (Exception $e) {
+        echo "Hay un fallo ".$e;
+    } finally {
+        // Cerrar la conexión y liberar recursos
+        mysqli_close($conn);
+    }
+}
+
+function validarEmpresa($id_user)
+{
+    try {
+        //conexion
+        $conn = conectar();
+        //consulta
+        $sql = "SELECT * FROM usuarios_roles WHERE id_usuario='$id_user' AND id_rol=(SELECT id_rol FROM roles WHERE nombre='Empresa')";
+        //Ejecutar
+        $result = mysqli_query($conn, $sql);
+        
+        //Comprobar si existe el compo de la consulta
+        if (mysqli_fetch_assoc($result)) {
+            echo "Tiene rol de Empresa";
+        } else {
+            echo "No tiene rol de Empresa";
+        }
+        
+    } catch (Exception $e) {
+        echo "Hay un fallo ".$e;
+    } finally {
+        // Cerrar la conexión y liberar recursos
+        mysqli_close($conn);
+    }
+}
+
+function validarVIP($id_user)
+{
+    try {
+        //conexion
+        $conn = conectar();
+        //consulta
+        $sql = "SELECT * FROM usuarios_roles WHERE id_usuario='$id_user' AND id_rol=(SELECT id_rol FROM roles WHERE nombre='VIP')";
+        //Ejecutar
+        $result = mysqli_query($conn, $sql);
+        
+        //Comprobar si existe el compo de la consulta
+        if (mysqli_fetch_assoc($result)) {
+            echo "Tiene rol de VIP";
+        } else {
+            echo "No tiene rol de VIP";
+        }
+        
+    } catch (Exception $e) {
+        echo "Hay un fallo ".$e;
+    } finally {
+        // Cerrar la conexión y liberar recursos
+        mysqli_close($conn);
+    }
+}
+
+function validarVigilante($id_user)
+{
+    try {
+        //conexion
+        $conn = conectar();
+        //consulta
+        $sql = "SELECT * FROM usuarios_roles WHERE id_usuario='$id_user' AND id_rol=(SELECT id_rol FROM roles WHERE nombre='Vigilante')";
+        //Ejecutar
+        $result = mysqli_query($conn, $sql);
+        
+        //Comprobar si existe el compo de la consulta
+        if (mysqli_fetch_assoc($result)) {
+            echo "Tiene rol de Vigilante";
+        } else {
+            echo "No tiene rol de Vigilante";
+        }
+        
+    } catch (Exception $e) {
+        echo "Hay un fallo ".$e;
+    } finally {
+        // Cerrar la conexión y liberar recursos
+        mysqli_close($conn);
+    }
+}
+
+function agregarUsuario($id_user)
+{
+
+}
+
+
+function agregarAdmin($id_user)
+{
+    
+}
+
+function agregarEmpresa($id_user)
+{
+
+}
+
+function agregarVIP($id_user)
+{
+
+}
+
+function agregarVigilante($id_user)
+{
+
+}
+
+function eliminarUsuario($id_user)
+{
+
+}
+
+
+function eliminarAdmin($id_user)
+{
+    
+}
+
+function eliminarEmpresa($id_user)
+{
+
+}
+
+function eliminarVIP($id_user)
+{
+
+}
+
+function eliminarVigilante($id_user)
+{
+
+}
 
 function guardarNombre($nombre, $id_user)
 {

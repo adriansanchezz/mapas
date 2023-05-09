@@ -75,7 +75,7 @@ require_once '../lib/modulos.php';
             </div>
             <?php
         } else if (isset($_POST['guardarNombre'])) {
-            guardarNombre($_POST['nuevoNombre']);
+            guardarNombre($_POST['nuevoNombre'],0);
         }
         ?>
 
@@ -87,7 +87,7 @@ require_once '../lib/modulos.php';
                     <h3>Modificar el Correo</h3><br />
                     <input type="email" name="nuevoCorreo" placeholder="Nuevo correo"><br />
                     <input type="text" name="confirmNom" placeholder="Confirmar nombre"><br /><br />
-                    
+
                     <input type="submit" name="confirmarCorreo" value="Confirmar" />
                 </form>
             </div>
