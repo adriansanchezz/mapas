@@ -10,12 +10,13 @@ require_once '../lib/modulos.php';
     </head>
     <body>
         <?php menu_general(); ?>
+
         <div class="d-flex vh-100">
-            <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px;">
+            <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 100px;">
                 <hr>
                 <ul class="nav nav-pills flex-column mb-auto">
                     <li class="nav-item">
-                        <form action="mapa.php">
+                        <form action="empresa.php">
                             <button type="submit" name="empresaMapa" class="btn btn-link nav-link text-white">
                                 Mapa
                             </button>
@@ -23,6 +24,11 @@ require_once '../lib/modulos.php';
                     </li>
                 </ul>
             </div>
+            <?php
+            if (isset($_POST['empresaMapa'])) {
+                mapa("ver");
+            } 
+            ?>
         </div>
     </body>
 </html>

@@ -39,7 +39,6 @@ require_once '../lib/modulos.php';
                     <form class="form-inline my-2 my-lg-0" action="usuario.php" method="post">
                         <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioInicioTienda" type="submit">Tienda</button>
                     </form>
-                    
                 </div>
             <?php
             } 
@@ -59,8 +58,6 @@ require_once '../lib/modulos.php';
             <?php
             } 
             ?>
-
-            
 
             <?php
             if (isset($_POST['usuarioInicioTienda'])) {
@@ -83,6 +80,12 @@ require_once '../lib/modulos.php';
             ?> 
                 <h1>PUNTOS</h1>
             <?php
+            } 
+            ?>
+
+            <?php
+            if (isset($_POST['usuarioInicioMapa'])) {
+                mapa("guardar");
             } 
             ?>
 
