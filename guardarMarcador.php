@@ -21,6 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Verificar si la inserción fue exitosa
     if ($stmt->affected_rows > 0) {
         echo "El marcador se guardó correctamente.";
+        echo "<form action='usuario.php'><button type='submit'>Aceptar</button></form>";
     } else {
         echo "Error al guardar el marcador.";
     }
