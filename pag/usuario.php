@@ -33,8 +33,8 @@ require_once '../lib/modulos.php';
             if (isset($_POST['usuarioInicio'])) {
             ?>
                 <div class="flex-grow-1">
-                    <form class="form-inline my-2 my-lg-0" action="usuario.php" method="post">
-                        <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioInicioMapa" type="submit">Mapa</button>
+                    <form class="form-inline my-2 my-lg-0" action="mapa.php" method="post">
+                        <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioMapa" type="submit">Mapa</button>
                     </form>
                     <form class="form-inline my-2 my-lg-0" action="usuario.php" method="post">
                         <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioInicioTienda" type="submit">Tienda</button>
@@ -58,7 +58,6 @@ require_once '../lib/modulos.php';
             <?php
             } 
             ?>
-
             <?php
             if (isset($_POST['usuarioInicioTienda'])) {
             ?> 
