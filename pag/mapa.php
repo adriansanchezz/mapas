@@ -209,7 +209,7 @@ require_once '../lib/modulos.php';
                     }
                 </script>
 
-                <form action="guardarMarcador.php" method="post" onsubmit="return validarFormulario();">
+                <form action="../guardarMarcador.php" method="post" onsubmit="return validarFormulario();">
                     <input type="hidden" name="lat" id="lat">
                     <input type="hidden" name="lng" id="lng">
                     Titulo: <input type="text" name="titulo" id="titulo">
