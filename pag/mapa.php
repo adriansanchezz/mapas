@@ -130,7 +130,7 @@ require_once '../lib/modulos.php';
                 <h1>MAPA</h1>
                 ¿Quieres buscar una ubicación? <input type="text" id="direccion" placeholder="Buscar dirección">
                 <button onclick="buscarDireccion()">Buscar</button>
-                <div id="map" style="height: 400px;"></div>
+                <div id="map" style="height: 100vh;"></div>
                 <script>
                     var map = L.map('map').setView([43.3828500, -3.2204300], 13);
 
