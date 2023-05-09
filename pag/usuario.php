@@ -21,7 +21,7 @@ require_once '../lib/modulos.php';
                 <li class="nav-item">
                     <form action="usuario.php" method="post">
                         <button type="submit" name="usuarioInicio"
-                            class="btn btn-link nav-link text-white">Inicio</button>
+                            class="btn btn-link nav-link text-white">Principal</button>
                     </form>
                 </li>
                 <li>
@@ -35,15 +35,16 @@ require_once '../lib/modulos.php';
 
         <?php
         if (isset($_POST['usuarioInicio'])) {
-        ?>
-                <div class="flex-grow-1">
-                    <form class="form-inline my-2 my-lg-0" action="usuario.php" method="post">
-                        <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioMapa" type="submit">Mapa</button>
-                    </form>
-                    <form class="form-inline my-2 my-lg-0" action="usuario.php" method="post">
-                        <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioInicioTienda" type="submit">Tienda</button>
-                    </form>
-                </div>
+            ?>
+            <div class="flex-grow-1">
+                <form class="form-inline my-2 my-lg-0" action="usuario.php" method="post">
+                    <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioMapa" type="submit">Mapa</button>
+                </form>
+                <form class="form-inline my-2 my-lg-0" action="usuario.php" method="post">
+                    <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioInicioTienda"
+                        type="submit">Tienda</button>
+                </form>
+            </div>
             <?php
         }
         ?>
@@ -92,9 +93,10 @@ require_once '../lib/modulos.php';
         <?php
         if (isset($_POST['usuarioMapa'])) {
             mapa("guardar");
-        } 
+        }
         ?>
 
     </div>
 </body>
+
 </html>

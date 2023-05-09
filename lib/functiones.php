@@ -2,7 +2,8 @@
 session_start();
 
 // conexion BD
-function conectar() {
+function conectar()
+{
     //Dato 
     $host = "localhost";
     $basededatos = "mapa_promocion";
@@ -21,7 +22,8 @@ function conectar() {
 
 
 // Para hacer Registro del usuario
-function validarUser($username, $email, $telefono, $password, $password2) {
+function validarUser($username, $email, $telefono, $password, $password2)
+{
 
     // Verificar si hay campo vacio.
     if (empty($username) || empty($email) || empty($telefono) || empty($password) || empty($password2)) {
@@ -49,7 +51,7 @@ function validarUser($username, $email, $telefono, $password, $password2) {
     $result = mysqli_query($conn, $sql);
 
     if (mysqli_num_rows($result) > 0) {
-        $errors[]="El nombre de usuario ya existe!";
+        $errors[] = "El nombre de usuario ya existe!";
     }
 
     // Verificar si el correo electrónico ya existe en la base de datos
@@ -57,7 +59,7 @@ function validarUser($username, $email, $telefono, $password, $password2) {
     $result = mysqli_query($conn, $sql);
 
     if (mysqli_num_rows($result) > 0) {
-        $errors[]="El correo electrónico ya existe!";
+        $errors[] = "El correo electrónico ya existe!";
     }
     mysqli_close($conn);
 
@@ -78,7 +80,7 @@ function validarUser($username, $email, $telefono, $password, $password2) {
             //conexion
             $conn = conectar();
             $sql = "INSERT INTO usuarios (nombre, email, password, telefono)"
-                    . "VALUES ('$username', '$email', '$password_hash', '$telefono')";
+                . "VALUES ('$username', '$email', '$password_hash', '$telefono')";
 
             //Ejecutar inset
             mysqli_query($conn, $sql);
@@ -86,8 +88,9 @@ function validarUser($username, $email, $telefono, $password, $password2) {
 
             return true;
         } catch (Exception $e) {
-            echo "Hay un fallo ".$e;
+            echo "Hay un fallo " . $e;
         } finally {
+            // Cerrar la conexión y liberar recursos
             mysqli_close($conn);
         }
     }
@@ -95,7 +98,8 @@ function validarUser($username, $email, $telefono, $password, $password2) {
 
 
 // Para hacer autenticacion login del usuario
-function autenticarUser($email, $password) {
+function autenticarUser($email, $password)
+{
     // Verificar si hay campo vacio.
     if (empty($email) || empty($password)) {
         $errors[] = "Hay campos vacios.";
@@ -111,17 +115,18 @@ function autenticarUser($email, $password) {
         return false;
     } else {
         // Si no hay errores, los datos del formulario son válidos.
-        try{
+        try {
             //conexion
             $conn = conectar();
             $sql = "SELECT * FROM usuarios WHERE email='$email'";
-            $result = mysqli_query($conn,$sql);
+            $result = mysqli_query($conn, $sql);
 
             if ($row = mysqli_fetch_assoc($result)) {
                 $password_hash = $row['password'];
-        
+
                 // Verifica la contraseña
                 if (password_verify($password, $password_hash)) {
+                    $_SESSION['usuario'] = $row['password'];
                     header("location:pag/principal.php");
                     exit; // Es importante poner exit después del header para asegurarnos de que el script no siga ejecutándose
                 } else {
@@ -130,10 +135,11 @@ function autenticarUser($email, $password) {
             } else {
                 echo "El usuario no existe!";
             }
-            
+
         } catch (Exception $e) {
-            echo "Hay un fallo ".$e;
+            echo "Hay un fallo " . $e;
         } finally {
+            // Cerrar la conexión y liberar recursos
             mysqli_close($conn);
         }
     }
@@ -143,10 +149,36 @@ function autenticarUser($email, $password) {
 
 
 
+function guardarNombre($nombre, $id_user)
+{
+    try {
+        //conexion
+        $conn = conectar();
+        $sql = "INSERT INTO usuarios (nombre)"
+            . "VALUES ('$nombre')";
+
+        //Ejecutar inset
+        mysqli_query($conn, $sql);
+        echo "Su usuario ha sido registrado correctamente!";
+
+        return true;
+    } catch (Exception $e) {
+        echo "Hay un fallo " . $e;
+    } finally {
+        mysqli_close($conn);
+    }
+}
 
 
+function guardarCorreo($nombre, $id_user)
+{
 
+}
 
+function guardarContraseña($nombre, $id_user)
+{
+
+}
 
 
 
@@ -184,11 +216,12 @@ if (isset($_POST['compraUbicacion']) && $_POST['compraUbicacion'] == '1') {
 }
 
 
-function guardarMarcador($lat, $lng, $titulo, $texto) {
+function guardarMarcador($lat, $lng, $titulo, $texto)
+{
 
 
-    
-    try{
+
+    try {
         // Aquí puedes manejar la imagen guardándola en el servidor y obteniendo su ruta
 
         // Establecer la conexión con la base de datos
@@ -207,7 +240,7 @@ function guardarMarcador($lat, $lng, $titulo, $texto) {
             echo "Error al guardar el marcador.";
         }
     } catch (Exception $e) {
-        echo "Hay un fallo ".$e;
+        echo "Hay un fallo " . $e;
     } finally {
         // Cerrar la conexión y liberar recursos
         $stmt->close();
@@ -230,4 +263,3 @@ function guardarMarcador($lat, $lng, $titulo, $texto) {
 
 
 ?>
-

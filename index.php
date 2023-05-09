@@ -2,6 +2,9 @@
 <?php
 require_once 'lib/functiones.php';
 require_once 'lib/modulos.php';
+if(isset($_POST['cerrarSesion'])){
+    session_destroy(); // Destruye todas las variables de sesión
+}
 ?>
 <html>
     <head>
