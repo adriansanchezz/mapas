@@ -35,9 +35,9 @@ require_once '../lib/modulos.php';
 
         <?php
         if (isset($_POST['usuarioInicio'])) {
-            ?>
+        ?>
                 <div class="flex-grow-1">
-                    <form class="form-inline my-2 my-lg-0" action="mapa.php" method="post">
+                    <form class="form-inline my-2 my-lg-0" action="usuario.php" method="post">
                         <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioMapa" type="submit">Mapa</button>
                     </form>
                     <form class="form-inline my-2 my-lg-0" action="usuario.php" method="post">
@@ -65,15 +65,6 @@ require_once '../lib/modulos.php';
         }
         ?>
 
-
-        <?php
-        // Incluir el contenido de mapa.php
-        include 'mapa.php';
-        ?>
-
-
-
-
         <?php
         if (isset($_POST['usuarioInicioTienda'])) {
             ?>
@@ -98,14 +89,12 @@ require_once '../lib/modulos.php';
         }
         ?>
 
-            <?php
-            if (isset($_POST['usuarioInicioMapa'])) {
-                mapa("guardar");
-            } 
-            ?>
+        <?php
+        if (isset($_POST['usuarioMapa'])) {
+            mapa("guardar");
+        } 
+        ?>
 
-        </div>
-
+    </div>
 </body>
-
 </html>

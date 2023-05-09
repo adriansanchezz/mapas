@@ -111,114 +111,13 @@ require_once '../lib/modulos.php';
                     }
 
                 </script>
-
             </div>
         </div>
         <?php
     } else if (isset($_REQUEST['usuarioMapa'])) {
         ?>
 
-            <div class="flex-grow-1">
-                <form class="form-inline my-2 my-lg-0" action="menu.php">
-                    <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioInicioMapa" type="submit">Mapa</button>
-                </form>
-                <form class="form-inline my-2 my-lg-0" action="menu.php">
-                    <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioInicioTienda"
-                        type="submit">Tienda</button>
-                </form>
 
-                <h1>MAPA</h1>
-                ¿Quieres buscar una ubicación? <input type="text" id="direccion" placeholder="Buscar dirección">
-                <button onclick="buscarDireccion()">Buscar</button>
-                <div id="map" style="height: 100vh;"></div>
-                <script>
-                    var map = L.map('map').setView([43.3828500, -3.2204300], 13);
-
-                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
-                        maxZoom: 18,
-                    }).addTo(map);
-
-                    var marker;
-
-                    map.on('click', function (e) {
-                        if (marker) {
-                            map.removeLayer(marker);
-                        }
-
-                        marker = L.marker(e.latlng).addTo(map);
-                        marker.bindPopup("Ubicación seleccionada").openPopup();
-
-                        // Actualizar campos ocultos en el formulario con las coordenadas
-                        document.getElementById('lat').value = e.latlng.lat;
-                        document.getElementById('lng').value = e.latlng.lng;
-                    });
-
-                    function buscarDireccion() {
-                        var direccion = document.getElementById('direccion').value;
-
-                        // Realizar la petición de geocodificación
-                        fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + direccion)
-                            .then(function (response) {
-                                return response.json();
-                            })
-                            .then(function (data) {
-                                if (data.length > 0) {
-                                    var latitud = parseFloat(data[0].lat);
-                                    var longitud = parseFloat(data[0].lon);
-
-                                    // Centrar el mapa en la ubicación encontrada
-                                    map.setView([latitud, longitud], 13);
-
-                                    if (marker) {
-                                        map.removeLayer(marker);
-                                    }
-
-                                    marker = L.marker([latitud, longitud]).addTo(map);
-                                    marker.bindPopup("Ubicación encontrada").openPopup();
-
-                                    // Actualizar campos ocultos en el formulario con las coordenadas
-                                    document.getElementById('lat').value = latitud;
-                                    document.getElementById('lng').value = longitud;
-                                } else {
-                                    alert("No se encontró la dirección especificada.");
-                                }
-                            })
-                            .catch(function (error) {
-                                console.log('Error:', error);
-                            });
-                    }
-
-                    function validarFormulario() {
-                        var titulo = document.getElementById('titulo').value;
-                        var texto = document.getElementById('texto').value;
-                        var latitud = parseFloat(document.getElementById('lat').value);
-                        var longitud = parseFloat(document.getElementById('lng').value);
-
-                        if (titulo.trim() === '' || texto.trim() === '') {
-                            alert('Los campos de título y texto no pueden estar vacíos.');
-                            return false;
-                        }
-
-                        if (isNaN(latitud) || isNaN(longitud)) {
-                            alert('Debe seleccionar una ubicación en el mapa.');
-                            return false;
-                        }
-
-                        return true;
-                    }
-                </script>
-
-                <form action="../guardarMarcador.php" method="post" onsubmit="return validarFormulario();">
-                    <input type="hidden" name="lat" id="lat">
-                    <input type="hidden" name="lng" id="lng">
-                    Titulo: <input type="text" name="titulo" id="titulo">
-                    Texto: <input type="text" name="texto" id="texto">
-
-
-                    <button type="submit" name="guardarMarcador">Guardar</button>
-                </form>
-            </div>
 
         <?php
     } else if (isset($_REQUEST['vigiaMapa'])) {

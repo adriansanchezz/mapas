@@ -30,12 +30,6 @@ require_once '../lib/modulos.php';
         echo "<p><strong>Latitud:</strong> $lat</p>";
         echo "<p><strong>Longitud:</strong> $lng</p>";
 
-
-
-
-
-
-
         ?>
         <p>¿Confirmar compra?</p>
         <form method="post" action="confirmarCompra.php">
