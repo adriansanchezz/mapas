@@ -18,7 +18,7 @@ require_once 'lib/modulos.php';
                 <div class="col-md-12">
                     <!-- Contenedor de la izquierda -->
                     <h2>TEXTO EXPLICATIVO</h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed in nibh eu nisi lacinia pretium.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed in nibh eu nisi lacinia pretium.  DisplayAds</p>
                 </div>
             </div>
         </div>

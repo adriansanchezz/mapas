@@ -35,7 +35,6 @@ require_once 'lib/modulos.php';
                     <input type="submit" name="volverReg" value="Volver"/>
                 </form>        
             </div>
-        
       <?php
         if(isset($_POST['registrar'])){
             registrarUser($_POST['username'],$_POST['correo'],$_POST['telefono'],$_POST['password'],$_POST['password2']);

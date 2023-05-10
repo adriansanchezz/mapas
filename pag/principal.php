@@ -12,6 +12,7 @@ require_once '../lib/modulos.php';
 
 <body>
     <?php 
+    // Pruebas
         menu_general();
         validarUsuario($_SESSION['usuario']['id_usuario']);  echo "<br>";
         validarAdmin($_SESSION['usuario']['id_usuario']);  echo "<br>";
