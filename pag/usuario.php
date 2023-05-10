@@ -35,7 +35,7 @@ require_once '../lib/modulos.php';
         </div>
 
         <?php
-        if (isset($_POST['usuarioInicio'])) {
+        if (isset($_REQUEST['usuarioInicio'])) {
             ?>
             <div class="flex-grow-1">
                 <form class="form-inline my-2 my-lg-0" action="usuario.php" method="post">
@@ -51,7 +51,7 @@ require_once '../lib/modulos.php';
         ?>
 
         <?php
-        if (isset($_POST['usuarioVigia'])) {
+        if (isset($_REQUEST['usuarioVigia'])) {
             ?>
             <div class="flex-grow-1">
                 <form class="form-inline my-2 my-lg-0" action="usuario.php" method="post">
@@ -68,7 +68,7 @@ require_once '../lib/modulos.php';
         ?>
 
         <?php
-        if (isset($_POST['usuarioInicioTienda'])) {
+        if (isset($_REQUEST['usuarioInicioTienda'])) {
             ?>
             <h1>TIENDA</h1>
             <?php
@@ -76,7 +76,7 @@ require_once '../lib/modulos.php';
         ?>
 
         <?php
-        if (isset($_POST['usuarioVigiaMisiones'])) {
+        if (isset($_REQUEST['usuarioVigiaMisiones'])) {
             ?>
             <h1>MISIONES</h1>
             <?php
@@ -84,7 +84,7 @@ require_once '../lib/modulos.php';
         ?>
 
         <?php
-        if (isset($_POST['usuarioVigiaPuntos'])) {
+        if (isset($_REQUEST['usuarioVigiaPuntos'])) {
             ?>
             <h1>PUNTOS</h1>
             <?php
@@ -92,7 +92,7 @@ require_once '../lib/modulos.php';
         ?>
 
         <?php
-        if (isset($_POST['usuarioMapa'])) {
+        if (isset($_REQUEST['usuarioMapa'])) {
             mapa("guardar");
         }
         ?>
