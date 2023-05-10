@@ -373,12 +373,12 @@ function guardarNombre($nombre, $id_user)
 
         if ($datos["count"] > 0) {
             // El nuevo nombre de usuario ya existe en la base de datos, mostrar un mensaje de error
-            echo "El nuevo nombre de usuario ya existe.";
+            echo "<div class='flex-grow-1'>El nuevo nombre de usuario ya existe.</div>";
         } else {
             // El nuevo nombre de usuario no existe en la base de datos, actualizar el registro correspondiente
             $sql = "UPDATE usuarios SET nombre='$nombre' WHERE id_usuario = '$id_user'";
             if (mysqli_query($conn, $sql)) {
-                echo "El nombre de usuario se ha modificado correctamente.";
+                echo "<div class='flex-grow-1'>El nombre de usuario se ha modificado correctamente.</div>";
             } else {
                 // Se produjo un error al actualizar el registro, mostrar un mensaje de error
                 echo "Error al modificar el nombre de usuario: " . mysqli_error($conn);
@@ -392,7 +392,7 @@ function guardarNombre($nombre, $id_user)
     }
 }
 
-
+ 
 function guardarCorreo($correo, $correo2, $id_user)
 {
     if(repetirCorreo($correo,$correo2)){
@@ -409,13 +409,13 @@ function guardarCorreo($correo, $correo2, $id_user)
             $datos = mysqli_fetch_assoc($result);
     
             if ($datos["count"] > 0) {
-                // El nuevo nombre de usuario ya existe en la base de datos, mostrar un mensaje de error
-                echo "El nuevo correo de usuario ya existe.";
+                // El nuevo correo de usuario ya existe en la base de datos, mostrar un mensaje de error
+                echo "<div class='flex-grow-1'>El nuevo correo de usuario ya existe.</div>";
             } else {
-                // El nuevo nombre de usuario no existe en la base de datos, actualizar el registro correspondiente
+                // El nuevo correo de usuario no existe en la base de datos, actualizar el registro correspondiente
                 $sql = "UPDATE usuarios SET email='$correo' WHERE id_usuario = '$id_user'";
                 if (mysqli_query($conn, $sql)) {
-                    echo "El correo de usuario se ha modificado correctamente.";
+                    echo "<div class='flex-grow-1'>El correo de usuario se ha modificado correctamente.</div>";
                 } else {
                     // Se produjo un error al actualizar el registro, mostrar un mensaje de error
                     echo "Error al modificar el correo de usuario: " . mysqli_error($conn);
@@ -428,7 +428,7 @@ function guardarCorreo($correo, $correo2, $id_user)
             mysqli_close($conn);
         }
     } else {
-        echo "Los correo no son iguales!";
+        echo "<div class='flex-grow-1'>Los correo no son iguales!</div>";
     }
 }
 
@@ -440,13 +440,13 @@ function guardarPassword($pass, $pass2, $id_user)
             $conn = conectar();
             
             //Hashar la contra
-            $password_hash = $pass;
+            $password_hash = password_hash($pass, PASSWORD_DEFAULT);
             
             //consulta
             $sql = "UPDATE usuarios SET password='$password_hash' WHERE id_usuario = '$id_user'";
 
             if (mysqli_query($conn, $sql)) {
-                echo "La contraseña de usuario se ha modificado correctamente.";
+                echo "<div class='flex-grow-1'>La contraseña de usuario se ha modificado correctamente.</div>";
             } else {
                 // Se produjo un error al actualizar el registro, mostrar un mensaje de error
                 echo "Error al modificar la contraseña de usuario: " . mysqli_error($conn);
@@ -459,7 +459,7 @@ function guardarPassword($pass, $pass2, $id_user)
             mysqli_close($conn);
         }
     } else {
-        echo "Los correo no son iguales!";
+        echo "<div class='flex-grow-1'>Las contraseñas no son iguales!</div>";
     }
 }
 

@@ -88,7 +88,7 @@ require_once '../lib/modulos.php';
                 <form action="cuenta.php" method="post">
                     <h3>Modificar el Correo</h3><br />
                     <input type="email" name="nuevoCorreo" placeholder="Nuevo correo"><br />
-                    <input type="text" name="nuevoCorreo2" placeholder="Confirmar nombre"><br /><br />
+                    <input type="email" name="nuevoCorreo2" placeholder="Confirmar correo"><br /><br />
 
                     <input type="submit" name="confirmarCorreo" value="Confirmar" />
                 </form>
@@ -105,8 +105,8 @@ require_once '../lib/modulos.php';
             <div class="flex-grow-1">
                 <form action="cuenta.php" method="post">
                     <h3>Modificar la Constraseña</h3><br />
-                    <input type="email" name="nuevoPass" placeholder="Nuevo correo"><br />
-                    <input type="text" name="nuevoPass2" placeholder="Confirmar nombre"><br /><br />
+                    <input type="password" name="nuevoPass" placeholder="Nuevo contraseña"><br />
+                    <input type="password" name="nuevoPass2" placeholder="Confirmar contraseña"><br /><br />
 
                     <input type="submit" name="cambioContra" value="Confirmar" />
                 </form>

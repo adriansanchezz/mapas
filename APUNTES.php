@@ -28,6 +28,14 @@ print '<br>';
 print '<a href ="login.php"><button class="back">Volver</button></a>';
 session_destroy();
 
+/* 
+Cuenta fucion falta lista de erro 8 caracter
+
+
+
+
+*/
+
 //Adrian
 
 ?>
