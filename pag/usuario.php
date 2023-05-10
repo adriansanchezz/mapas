@@ -242,6 +242,11 @@ require_once '../lib/modulos.php';
             mapa("guardar");
         }
         ?>
+        <?php
+        if (isset($_REQUEST['guardarMarcador'])) {
+            guardarMarcador();
+        }
+        ?>
 
     </div>
 </body>

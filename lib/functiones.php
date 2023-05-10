@@ -563,35 +563,41 @@ if (isset($_POST['compraUbicacion']) && $_POST['compraUbicacion'] == '1') {
 }
 
 
-function guardarMarcador($lat, $lng, $titulo, $texto)
+function guardarMarcador()
 {
 
-
-
-    try {
-        // Aquí puedes manejar la imagen guardándola en el servidor y obteniendo su ruta
-
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $lat = $_POST['lat'];
+        $lng = $_POST['lng'];
+    
+        $descripcion = $_POST['descripcion'];
+        $provincia = $_POST['provincia'];
+        $ciudad = $_POST['ciudad'];
+        $ubicacion = $_POST['ubicacion'];
+        $codigo_postal = $_POST['codigo_postal'];
+        $tipoPropiedad = $_POST['tipoPropiedad'];
+    
+    
         // Establecer la conexión con la base de datos
         $conn = conectar();
-
-        // Preparar y ejecutar la consulta para insertar los datos en la base de datos
-        $sql = "INSERT INTO marcadores (lat, lng, titulo, texto) VALUES (?, ?, ?, ?)";
+    
+        $sql = "INSERT INTO propiedades (latitud, longitud, provincia, ciudad, ubicacion, codigo_postal, descripcion, id_tipo_propiedad, id_usuario) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 4)";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ddss", $lat, $lng, $titulo, $texto);
+        $stmt->bind_param("ddsssssi", $lat, $lng, $provincia, $ciudad, $ubicacion, $codigo_postal, $descripcion, $tipoPropiedad);
         $stmt->execute();
-
+    
         // Verificar si la inserción fue exitosa
         if ($stmt->affected_rows > 0) {
             echo "El marcador se guardó correctamente.";
+            echo "<form action='usuario.php'><button type='submit'>Aceptar</button></form>";
         } else {
             echo "Error al guardar el marcador.";
         }
-    } catch (Exception $e) {
-        echo "Hay un fallo " . $e;
-    } finally {
+    
         // Cerrar la conexión y liberar recursos
-        $stmt->close();
-        mysqli_close($conn);
+        //$stmt->close();
+        //cerrarConexion($conn);
     }
 }
 
