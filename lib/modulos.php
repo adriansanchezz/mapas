@@ -37,6 +37,7 @@ function menu_index()
 ?>
 
 <?php
+//Menu luego de iniciar sesión
 function menu_general()
 {
     ?>
@@ -98,6 +99,7 @@ function menu_general()
 ?>
 
 <?php
+// Link de head
 function head_info()
 {
     ?>
@@ -115,6 +117,7 @@ function head_info()
 ?>
 
 <?php
+//Mapa PHP
 function mapa($valor)
 {
 
@@ -143,41 +146,44 @@ function mapa($valor)
                         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
                         maxZoom: 18,
                     }).addTo(map);
+                            
+                    
+                        <?php
 
-                    <?php
-                    // Establecer la conexión con la base de datos
-                    $conn = conectar();
+                        // Establecer la conexión con la base de datos
+                        $conn = conectar();
 
-                    // Consultar los marcadores existentes
-                    $sql = "SELECT * FROM propiedades";
-                    $result = $conn->query($sql);
+                        // Consultar los marcadores existentes
+                        $sql = "SELECT * FROM marcadores";
+                        $result = $conn->query($sql);
 
-                    if ($result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                            $latitud = $row['latitud'];
-                            $longitud = $row['longitud'];
-                            $descripcion = $row['descripcion'];
-                            $ubicacion = $row['ubicacion'];
-                            $apiKey = 'AIzaSyADr5gpzLPePzkWwz8C94wBQ21DzQ4GGVU'; // Reemplaza con tu propia API Key de Google Maps Static
-            
-                            $imageUrl = 'https://maps.googleapis.com/maps/api/streetview?size=400x300&location=' . $latitud . ',' . $longitud . '&key=' . $apiKey;
-                            ?>
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                $lat = $row['lat'];
+                                $lng = $row['lng'];
+                                $titulo = $row['titulo'];
+                                $texto = $row['texto'];
+                                $apiKey = 'AIzaSyADr5gpzLPePzkWwz8C94wBQ21DzQ4GGVU'; // Reemplaza con tu propia API Key de Google Maps Static
+                
+                                // Construir la URL de la imagen de Google Maps Static
+                                $imageUrl = 'https://maps.googleapis.com/maps/api/streetview?size=400x300&location=' . $lat . ',' . $lng . '&key=' . $apiKey;
+                        ?>
 
-                            // Crear un marcador para cada registro de la base de datos
-                            var marker = L.marker([<?php echo $latitud; ?>, <?php echo $longitud; ?>]).addTo(map);
-                            marker.bindPopup("<h3><?php echo $ubicacion; ?></h3><p><?php echo $descripcion; ?></p><img src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación'><br><form action='./confirmarCompra.php' method='POST'><input type='hidden' name='lat' value='<?php echo $latitud; ?>'><input type='hidden' name='lng' value='<?php echo $longitud; ?>'><input type='hidden' name='ubicacion' value='<?php echo $ubicacion; ?>'><input type='hidden' name='descripcion' value='<?php echo $descripcion; ?>'><button type='submit' name='compraUbicacion' value='1'>Seleccionar</button></form>");
+                                // Crear un marcador para cada registro de la base de datos
+                                var marker = L.marker([<?php echo $lat; ?>, <?php echo $lng; ?>]).addTo(map);
+                                marker.bindPopup("<h3><?php echo $titulo; ?></h3><p><?php echo $texto; ?></p><img src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación'><br><form action='./confirmarCompra.php' method='POST'><input type='hidden' name='lat' value='<?php echo $lat; ?>'><input type='hidden' name='lng' value='<?php echo $lng; ?>'><input type='hidden' name='titulo' value='<?php echo $titulo; ?>'><input type='hidden' name='texto' value='<?php echo $texto; ?>'><button type='submit' name='compraUbicacion' value='1'>Seleccionar</button></form>");
 
-                            function seleccionarUbicacion(latitud, longitud, descripcion, ubicacion) {
-                                // Redireccionar a confirmarCompra.php con los datos de la ubicación seleccionada
-                                window.location.href = "confirmarCompra.php?lat=" + latitud + "&lng=" + longitud + "&ubicacion=" + encodeURIComponent(ubicacion) + "&descripcion=" + encodeURIComponent(descripcion);
+                                function seleccionarUbicacion(lat, lng, titulo, texto) {
+                                    // Redireccionar a confirmarCompra.php con los datos de la ubicación seleccionada
+                                    window.location.href = "confirmarCompra.php?lat=" + lat + "&lng=" + lng + "&titulo=" + encodeURIComponent(titulo) + "&texto=" + encodeURIComponent(texto);
+                                }
+                        <?php
                             }
-                            <?php
                         }
-                    }
 
-                    // Cerrar la conexión y liberar recursos
-                    //errarConexion($conn);
-                    ?>
+                        // Cerrar la conexión y liberar recursos
+                        //errarConexion($conn);
+                        ?>
 
 
                     function buscarDireccion() {

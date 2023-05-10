@@ -1,4 +1,5 @@
 <?php
+// Abrir session
 session_start();
 
 // conexion BD 

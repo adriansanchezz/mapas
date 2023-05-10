@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <?php
+//Importar y abrir session que esta dentro de functiones.php
 require_once '../lib/functiones.php';
 require_once '../lib/modulos.php';
 ?>
@@ -76,7 +77,7 @@ require_once '../lib/modulos.php';
             </div>
             <?php
         } else if (isset($_POST['guardarNombre'])) {
-            guardarNombre($_POST['nuevoNombre'],0);
+            guardarNombre($_POST['nuevoNombre'], 0);
         }
         ?>
 
