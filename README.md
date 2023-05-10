@@ -1,1 +1,1 @@
-Pruebas
+Proyecto Mapa de promociones
