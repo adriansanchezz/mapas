@@ -330,9 +330,8 @@ function listarRol($id_user)
 
         //Comprobar si existe el compo de la consulta
         while ($row = mysqli_fetch_assoc($result)) {
-            echo $row['nombre'] . "<br>";
+            echo $row['nombre'] ."    -------    ". $row['email'] ."    -------    ". $row['nombre_rol'] . "<br>";
         }
-        echo "dadw";
     } catch (Exception $e) {
         echo "Hay un fallo " . $e;
     } finally {
