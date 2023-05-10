@@ -35,7 +35,7 @@ require_once '../lib/modulos.php';
         </div>
 
         <?php
-        if (isset($_POST['empresaInicio'])) {
+        if (isset($_REQUEST['empresaInicio'])) {
             ?>
             <div class="flex-grow-1">
             <div id="seccion1" class="p-3" style="display: block;">
@@ -52,7 +52,7 @@ require_once '../lib/modulos.php';
 
 
         <?php
-        if (isset($_POST['empresaMapa'])) {
+        if (isset($_REQUEST['empresaMapa'])) {
             mapa("ver");
         }
         ?>

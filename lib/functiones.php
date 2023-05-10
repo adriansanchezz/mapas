@@ -315,6 +315,34 @@ function validarVigilante($id_user)
     }
 }
 
+function listarRol($id_user)
+{
+    try {
+        //conexion
+        $conn = conectar();
+        //consulta
+        $sql = "SELECT u.nombre, u.email, r.nombre as nombre_rol
+                FROM usuarios u
+                LEFT JOIN usuarios_roles ur ON u.id_usuario = ur.id_usuario
+                LEFT JOIN roles r ON ur.id_rol = r.id_rol";
+        //Ejecutar
+        $result = mysqli_query($conn, $sql);
+
+        //Comprobar si existe el compo de la consulta
+        while ($row = mysqli_fetch_assoc($result)) {
+            echo $row['nombre'] . "<br>";
+        }
+        echo "dadw";
+    } catch (Exception $e) {
+        echo "Hay un fallo " . $e;
+    } finally {
+        // Cerrar la conexión y liberar recursos
+        mysqli_close($conn);
+    }
+}
+
+
+
 function agregarUsuario($id_user)
 {
 
@@ -402,22 +430,22 @@ function guardarNombre($nombre, $id_user)
     }
 }
 
- 
+
 function guardarCorreo($correo, $correo2, $id_user)
 {
-    if(repetirCorreo($correo,$correo2)){
+    if (repetirCorreo($correo, $correo2)) {
         try {
             //conexion
             $conn = conectar();
-    
+
             //consulta
             $sql = "SELECT COUNT(*) as count FROM usuarios WHERE email = '$correo'";
-    
+
             //Ejecutar
             $result = mysqli_query($conn, $sql);
-    
+
             $datos = mysqli_fetch_assoc($result);
-    
+
             if ($datos["count"] > 0) {
                 // El nuevo correo de usuario ya existe en la base de datos, mostrar un mensaje de error
                 echo "<div class='flex-grow-1'>El nuevo correo de usuario ya existe.</div>";
@@ -444,14 +472,14 @@ function guardarCorreo($correo, $correo2, $id_user)
 
 function guardarPassword($pass, $pass2, $id_user)
 {
-    if(repetirCorreo($pass,$pass2)){
+    if (repetirCorreo($pass, $pass2)) {
         try {
             //conexion
             $conn = conectar();
-            
+
             //Hashar la contra
             $password_hash = password_hash($pass, PASSWORD_DEFAULT);
-            
+
             //consulta
             $sql = "UPDATE usuarios SET password='$password_hash' WHERE id_usuario = '$id_user'";
 

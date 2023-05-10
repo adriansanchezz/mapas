@@ -18,6 +18,17 @@ try {
     // Cerrar la conexión y liberar recursos
     mysqli_close($conn);
 }
+?>
+
+<!-- Para modulos -->
+<?php
+function nombre()
+{
+?>
+
+<?php
+}
+?>
 
 
 // Notas
