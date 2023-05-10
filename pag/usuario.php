@@ -39,13 +39,15 @@ require_once '../lib/modulos.php';
         if (isset($_REQUEST['usuarioInicio'])) {
             ?>
             <div class="flex-grow-1">
-                <form class="form-inline my-2 my-lg-0" action="usuario.php" method="post">
-                    <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioMapa" type="submit">Mapa</button>
-                </form>
-                <form class="form-inline my-2 my-lg-0" action="usuario.php" method="post">
-                    <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioTienda"
-                        type="submit">Tienda</button>
-                </form>
+                <div id="seccion1" class="p-3" style="display: block;">
+                    <form class="form-inline my-2 my-lg-0" action="usuario.php" method="post">
+                        <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioMapa" type="submit">Mapa</button>
+                    </form>
+                    <form class="form-inline my-2 my-lg-0" action="usuario.php" method="post">
+                        <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioTienda"
+                            type="submit">Tienda</button>
+                    </form>
+                </div>
             </div>
             <?php
         }
@@ -55,14 +57,16 @@ require_once '../lib/modulos.php';
         if (isset($_REQUEST['usuarioVigia'])) {
             ?>
             <div class="flex-grow-1">
-                <form class="form-inline my-2 my-lg-0" action="usuario.php" method="post">
-                    <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioVigiaMisiones"
-                        type="submit">Misiones</button>
-                </form>
-                <form class="form-inline my-2 my-lg-0" action="usuario.php" method="post">
-                    <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioVigiaPuntos"
-                        type="submit">Puntos</button>
-                </form>
+                <div id="seccion1" class="p-3" style="display: block;">
+                    <form class="form-inline my-2 my-lg-0" action="usuario.php" method="post">
+                        <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioVigiaMisiones"
+                            type="submit">Misiones</button>
+                    </form>
+                    <form class="form-inline my-2 my-lg-0" action="usuario.php" method="post">
+                        <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioVigiaPuntos"
+                            type="submit">Puntos</button>
+                    </form>
+                </div>
             </div>
             <?php
         }
@@ -72,53 +76,48 @@ require_once '../lib/modulos.php';
         if (isset($_REQUEST['usuarioTienda'])) {
             ?>
             <div class="flex-grow-1">
-                <form class="form-inline my-2 my-lg-0" action="usuario.php" method="post">
-                    <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioMapa" type="submit">Mapa</button>
-                </form>
-                <form class="form-inline my-2 my-lg-0" action="usuario.php" method="post">
-                    <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioTienda" type="submit">Tienda</button>
-                </form>
-                <form class="form-inline my-2 my-lg-0" action="usuario.php" method="post">
-                    <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioCarrito"
-                        type="submit">Carrito</button>
-                </form>
-                <h1>TIENDA</h1>
-                <div class="products">
-                    <?php
-                    // Establecer la conexión con la base de datos utilizando una función de conexión existente
-                    $conn = conectar();
+                <div id="seccion1" class="p-3" style="display: block;">
+                    <form class="form-inline my-2 my-lg-0" action="usuario.php" method="post">
+                        <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioCarrito"
+                            type="submit">Carrito</button>
+                    </form>
+                    <h1>TIENDA</h1>
+                    <div class="products">
+                        <?php
+                        // Establecer la conexión con la base de datos utilizando una función de conexión existente
+                        $conn = conectar();
 
-                    // Consultar los productos desde la base de datos
-                    $sql = "SELECT * FROM productos";
-                    $result = $conn->query($sql);
+                        // Consultar los productos desde la base de datos
+                        $sql = "SELECT * FROM productos";
+                        $result = $conn->query($sql);
 
-                    // Verificar si se encontraron productos
-                    if ($result->num_rows > 0) {
-                        // Iterar sobre los productos y mostrarlos en la página
-                        while ($row = $result->fetch_assoc()) {
-                            echo "<div class='product card border-primary mb-3' style='max-width: 18rem;'>";
-                            echo "<div class='card-body'>";
-                            echo "<h3 class='card-title'>" . $row['nombre'] . "</h3>";
-                            echo "<p class='card-text'>" . $row['descripcion'] . "</p>";
-                            echo "<p class='card-text'>Precio: $" . $row['precio'] . "</p>";
-                            echo "<form action='usuario.php' method='post'>";
-                            echo "<input type='hidden' name='product_id' value='" . $row['id_producto'] . "'>";
-                            echo "<input class='btn btn-primary' type='submit' name='add_to_cart' value='Agregar al carrito'>";
-                            echo "</form>";
-                            echo "</div>";
-                            echo "</div>";
+                        // Verificar si se encontraron productos
+                        if ($result->num_rows > 0) {
+                            // Iterar sobre los productos y mostrarlos en la página
+                            while ($row = $result->fetch_assoc()) {
+                                echo "<div class='product card border-primary mb-3' style='max-width: 18rem;'>";
+                                echo "<div class='card-body'>";
+                                echo "<h3 class='card-title'>" . $row['nombre'] . "</h3>";
+                                echo "<p class='card-text'>" . $row['descripcion'] . "</p>";
+                                echo "<p class='card-text'>Precio: $" . $row['precio'] . "</p>";
+                                echo "<form action='usuario.php' method='post'>";
+                                echo "<input type='hidden' name='product_id' value='" . $row['id_producto'] . "'>";
+                                echo "<input class='btn btn-primary' type='submit' name='add_to_cart' value='Agregar al carrito'>";
+                                echo "</form>";
+                                echo "</div>";
+                                echo "</div>";
 
+                            }
+                        } else {
+                            echo "No se encontraron productos";
                         }
-                    } else {
-                        echo "No se encontraron productos";
-                    }
 
-                    // Cerrar la conexión
-                    //cerrarConexion($conn);
-                    ?>
+                        // Cerrar la conexión
+                        //cerrarConexion($conn);
+                        ?>
+                    </div>
                 </div>
             </div>
-
             <?php
         }
 
@@ -159,61 +158,64 @@ require_once '../lib/modulos.php';
         if (isset($_REQUEST['usuarioCarrito'])) {
             ?>
             <div class="flex-grow-1">
-                <form class="form-inline my-2 my-lg-0" action="usuario.php" method="post">
-                    <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioMapa" type="submit">Mapa</button>
-                </form>
-                <form class="form-inline my-2 my-lg-0" action="usuario.php" method="post">
-                    <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioTienda" type="submit">Tienda</button>
-                </form>
-                <form class="form-inline my-2 my-lg-0" action="usuario.php" method="post">
-                    <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioCarrito"
-                        type="submit">Carrito</button>
-                </form>
-                <h1>Carrito</h1>
-                <div class="products">
-                    <?php
-                    // Verificar si el carrito de compras está almacenado en la sesión
-                    if (isset($_SESSION['cart'])) {
-                        $cart = $_SESSION['cart'];
+                <div id="seccion1" class="p-3" style="display: block;">
+                    <form class="form-inline my-2 my-lg-0" action="usuario.php" method="post">
+                        <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioMapa" type="submit">Mapa</button>
+                    </form>
+                    <form class="form-inline my-2 my-lg-0" action="usuario.php" method="post">
+                        <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioTienda"
+                            type="submit">Tienda</button>
+                    </form>
+                    <form class="form-inline my-2 my-lg-0" action="usuario.php" method="post">
+                        <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioCarrito"
+                            type="submit">Carrito</button>
+                    </form>
+                    <h1>Carrito</h1>
+                    <div class="products">
+                        <?php
+                        // Verificar si el carrito de compras está almacenado en la sesión
+                        if (isset($_SESSION['cart'])) {
+                            $cart = $_SESSION['cart'];
 
-                        // Consultar los productos desde la base de datos utilizando los IDs en el carrito
-                        $productIds = array_keys($cart);
-                        $sql = "SELECT id_producto, nombre, descripcion, precio FROM productos WHERE id_producto IN (" . implode(",", $productIds) . ")";
-                        $conn = conectar();
-                        $result = $conn->query($sql);
+                            // Consultar los productos desde la base de datos utilizando los IDs en el carrito
+                            $productIds = array_keys($cart);
+                            $sql = "SELECT id_producto, nombre, descripcion, precio FROM productos WHERE id_producto IN (" . implode(",", $productIds) . ")";
+                            $conn = conectar();
+                            $result = $conn->query($sql);
 
-                        if ($result->num_rows > 0) {
-                            // Iterar sobre los productos en el carrito
-                            while ($row = $result->fetch_assoc()) {
-                                $product_id = $row['id_producto'];
-                                $product_name = $row['nombre'];
-                                $product_description = $row['descripcion'];
-                                $product_price = $row['precio'];
-                                $product_quantity = $cart[$product_id];
+                            if ($result->num_rows > 0) {
+                                // Iterar sobre los productos en el carrito
+                                while ($row = $result->fetch_assoc()) {
+                                    $product_id = $row['id_producto'];
+                                    $product_name = $row['nombre'];
+                                    $product_description = $row['descripcion'];
+                                    $product_price = $row['precio'];
+                                    $product_quantity = $cart[$product_id];
 
-                                // Calcular el subtotal por producto
-                                $subtotal = $product_price * $product_quantity;
+                                    // Calcular el subtotal por producto
+                                    $subtotal = $product_price * $product_quantity;
 
-                                // Agregar el subtotal al total de dinero
-                                $totalMoney += $subtotal;
+                                    // Agregar el subtotal al total de dinero
+                                    $totalMoney += $subtotal;
 
-                                // Mostrar los detalles del producto en el carrito
-                                echo "<div class='product card border-primary mb-3' style='max-width: 18rem;'>";
-                                echo "<div class='card-header bg-primary text-white'>$product_name</div>";
-                                echo "<div class='card-body text-primary'>";
-                                echo "<h5 class='card-title'>$product_description</h5>";
-                                echo "<p class='card-text'>Precio: $product_price</p>";
-                                echo "<p class='card-text'>Cantidad: $product_quantity</p>";
-                                echo "<p class='card-text'>Subtotal: $subtotal</p>";
-                                echo "</div>";
-                                echo "</div>";
+                                    // Mostrar los detalles del producto en el carrito
+                                    echo "<div class='product card border-primary mb-3' style='max-width: 18rem;'>";
+                                    echo "<div class='card-header bg-primary text-white'>$product_name</div>";
+                                    echo "<div class='card-body text-primary'>";
+                                    echo "<h5 class='card-title'>$product_description</h5>";
+                                    echo "<p class='card-text'>Precio: $product_price</p>";
+                                    echo "<p class='card-text'>Cantidad: $product_quantity</p>";
+                                    echo "<p class='card-text'>Subtotal: $subtotal</p>";
+                                    echo "</div>";
+                                    echo "</div>";
+                                }
                             }
                         }
-                    }
 
-                    // Mostrar el total de dinero en el carrito
-                    echo "<p>Total a pagar: $totalMoney</p>";
-                    ?>
+                        // Mostrar el total de dinero en el carrito
+                        echo "<p>Total a pagar: $totalMoney</p>";
+                        ?>
+                    </div>
                 </div>
             </div>
 

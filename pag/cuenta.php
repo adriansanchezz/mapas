@@ -49,17 +49,17 @@ require_once '../lib/modulos.php';
         </div>
 
         <div class="flex-grow-1">
-            <h2>Informacion personal</h2><br>
+            <div id="seccion1" class="p-3" style="display: block;">
+                <h2>Informacion personal</h2><br>
 
-            <h3>Correo</h3>
-            fasdfasdf <br><br>
+                <h3>Correo</h3>
+                fasdfasdf <br><br>
 
-            <h3>Nombre</h3>
-            fasdfasdf <br><br>
-            <br>
+                <h3>Nombre</h3>
+                fasdfasdf <br><br>
 
-            <h3>Propieracdes</h3>
-
+                <h3>Propieracdes</h3>
+            </div>
         </div>
 
 
@@ -68,12 +68,14 @@ require_once '../lib/modulos.php';
         if (isset($_POST['cambiar_nombre'])) {
             ?>
             <div class="flex-grow-1">
-                <form action="cuenta.php" method="post">
-                    <h3>Modificar el Nombre</h3><br />
-                    <input type="text" name="nuevoNombre" placeholder="Nuevo nombre"><br /><br />
+                <div id="seccion1" class="p-3" style="display: block;">
+                    <form action="cuenta.php" method="post">
+                        <h3>Modificar el Nombre</h3><br />
+                        <input type="text" name="nuevoNombre" placeholder="Nuevo nombre"><br /><br />
 
-                    <input type="submit" name="guardarNombre" value="Guardar" />
-                </form>
+                        <input type="submit" name="guardarNombre" value="Guardar" />
+                    </form>
+                </div>
             </div>
             <?php
         } else if (isset($_POST['guardarNombre'])) {
@@ -85,13 +87,15 @@ require_once '../lib/modulos.php';
         if (isset($_POST['cambiar_correo'])) {
             ?>
             <div class="flex-grow-1">
-                <form action="cuenta.php" method="post">
-                    <h3>Modificar el Correo</h3><br />
-                    <input type="email" name="nuevoCorreo" placeholder="Nuevo correo"><br />
-                    <input type="email" name="nuevoCorreo2" placeholder="Confirmar correo"><br /><br />
+                <div id="seccion1" class="p-3" style="display: block;">
+                    <form action="cuenta.php" method="post">
+                        <h3>Modificar el Correo</h3><br />
+                        <input type="email" name="nuevoCorreo" placeholder="Nuevo correo"><br />
+                        <input type="email" name="nuevoCorreo2" placeholder="Confirmar correo"><br /><br />
 
-                    <input type="submit" name="confirmarCorreo" value="Confirmar" />
-                </form>
+                        <input type="submit" name="confirmarCorreo" value="Confirmar" />
+                    </form>
+                </div>
             </div>
             <?php
         } else if (isset($_POST['confirmarCorreo'])) {
@@ -103,13 +107,15 @@ require_once '../lib/modulos.php';
         if (isset($_POST['cambiar_contra'])) {
             ?>
             <div class="flex-grow-1">
-                <form action="cuenta.php" method="post">
-                    <h3>Modificar la Constraseña</h3><br />
-                    <input type="password" name="nuevoPass" placeholder="Nuevo contraseña"><br />
-                    <input type="password" name="nuevoPass2" placeholder="Confirmar contraseña"><br /><br />
+                <div id="seccion1" class="p-3" style="display: block;">
+                    <form action="cuenta.php" method="post">
+                        <h3>Modificar la Constraseña</h3><br />
+                        <input type="password" name="nuevoPass" placeholder="Nuevo contraseña"><br />
+                        <input type="password" name="nuevoPass2" placeholder="Confirmar contraseña"><br /><br />
 
-                    <input type="submit" name="cambioContra" value="Confirmar" />
-                </form>
+                        <input type="submit" name="cambioContra" value="Confirmar" />
+                    </form>
+                </div>
             </div>
             <?php
         } else if (isset($_POST['cambioContra'])) {

@@ -38,9 +38,13 @@ require_once '../lib/modulos.php';
         if (isset($_POST['empresaInicio'])) {
             ?>
             <div class="flex-grow-1">
+            <div id="seccion1" class="p-3" style="display: block;">
+
                 <form class="form-inline my-2 my-lg-0" action="empresa.php" method="post">
                     <button class="btn btn-outline-success my-2 my-sm-0" name="empresaMapa" type="submit">Mapa</button>
                 </form>
+                </div>
+
             </div>
             <?php
         }
