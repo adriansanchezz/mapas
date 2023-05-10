@@ -34,9 +34,6 @@ require_once 'lib/modulos.php';
                 autenticarUser($_POST['correo'],$_POST['password']);
             }
         ?>
-
-        <form action="./pag/principal.php"><button type="submit">Acceso anticipado</button></form>
-        
     </body>
 </html>
 
