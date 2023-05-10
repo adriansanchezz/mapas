@@ -2,6 +2,7 @@
 <?php
 // Comodines
 
+//consulta, otro quitar $result
 try {
     //conexion
     $conn = conectar();
@@ -10,7 +11,10 @@ try {
     $sql = "";
 
     //Ejecutar
-    mysqli_query($conn, $sql);
+    $result = mysqli_query($conn, $sql);
+
+    while ($row = mysqli_fetch_assoc($result)) {
+    }
 
 } catch (Exception $e) {
     echo "Hay un fallo " . $e;
