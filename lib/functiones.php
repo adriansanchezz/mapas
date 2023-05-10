@@ -191,9 +191,11 @@ function validarUsuario($id_user)
 
         //Comprobar si existe el compo de la consulta
         if (mysqli_fetch_assoc($result)) {
-            echo "Tiene rol de Usuario";
+            echo "Usuario SI";
+            return true;
         } else {
-            echo "No tiene rol de Usuario";
+            echo "Usuario NO";
+            return false;
         }
 
     } catch (Exception $e) {
@@ -217,9 +219,11 @@ function validarAdmin($id_user)
 
         //Comprobar si existe el compo de la consulta
         if (mysqli_fetch_assoc($result)) {
-            echo "Tiene rol de Admin";
+            echo "Admin SI";
+            return true;
         } else {
-            echo "No tiene rol de Admin";
+            echo "Admin NO";
+            return false;
         }
 
     } catch (Exception $e) {
@@ -242,9 +246,11 @@ function validarEmpresa($id_user)
 
         //Comprobar si existe el compo de la consulta
         if (mysqli_fetch_assoc($result)) {
-            echo "Tiene rol de Empresa";
+            echo "Empresa SI";
+            return true;
         } else {
-            echo "No tiene rol de Empresa";
+            echo "Empresa NO";
+            return false;
         }
 
     } catch (Exception $e) {
@@ -267,9 +273,11 @@ function validarVIP($id_user)
 
         //Comprobar si existe el compo de la consulta
         if (mysqli_fetch_assoc($result)) {
-            echo "Tiene rol de VIP";
+            echo "VIP SI";
+            return true;
         } else {
-            echo "No tiene rol de VIP";
+            echo "VIP NO";
+            return false;
         }
 
     } catch (Exception $e) {
@@ -292,9 +300,11 @@ function validarVigilante($id_user)
 
         //Comprobar si existe el compo de la consulta
         if (mysqli_fetch_assoc($result)) {
-            echo "Tiene rol de Vigilante";
+            echo "Vigilante SI";
+            return true;
         } else {
-            echo "No tiene rol de Vigilante";
+            echo "Vigilante NO";
+            return false;
         }
 
     } catch (Exception $e) {
