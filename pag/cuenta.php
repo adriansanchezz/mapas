@@ -75,7 +75,7 @@ require_once '../lib/modulos.php';
             </div>
             <?php
         } else if (isset($_POST['guardarNombre'])) {
-            guardarNombre($_POST['nuevoNombre'],0);
+            guardarNombre($_POST['nuevoNombre'], 0);
         }
         ?>
 
