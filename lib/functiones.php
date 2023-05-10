@@ -471,7 +471,7 @@ function guardarCorreo($correo, $correo2, $id_user)
 
 function guardarPassword($pass, $pass2, $id_user)
 {
-    if (repetirCorreo($pass, $pass2)) {
+    if (repetirPassword($pass, $pass2)) {
         try {
             //conexion
             $conn = conectar();
@@ -500,7 +500,7 @@ function guardarPassword($pass, $pass2, $id_user)
     }
 }
 
-
+// MODIFICAR
 function repetirCorreo($correo, $correo2)
 {
     // Verificar si los correo es igual o no
@@ -520,6 +520,18 @@ function repetirPassword($pass, $pass2)
         return false;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
