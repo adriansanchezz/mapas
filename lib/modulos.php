@@ -97,7 +97,8 @@ function menu_general()
                             ?>
                             <li class="nav-item">
                                 <form action="administrador.php">
-                                    <button class="btn nav-link" name="administradorPrincipal" type="submit">Administrador</button>
+                                    <button class="btn nav-link" name="administradorPrincipal"
+                                        type="submit">Administrador</button>
                                 </form>
                             </li>
                             <?php
@@ -141,6 +142,9 @@ function head_info()
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link href="css/style.css" rel="stylesheet" type="text/css">
+    <link href="css/modulos.css" rel="stylesheet" type="text/css">
+    <link href="css/menu.css" rel="stylesheet" type="text/css">
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <?php
 }
@@ -155,13 +159,10 @@ function mapa($valor)
         ?>
         <div class="flex-grow-1">
             <div id="seccion1" class="p-3" style="display: block;">
-
                 <div class="p-3" style="display: block;">
                     <h1>Aquí estará el mapa</h1>
                     ¿Quieres buscar una ubicación?<input type="text" id="direccion" placeholder="Buscar ubicación...">
                     <button type="button" onclick="buscarDireccion()">Buscar</button>
-
-
 
                     <div id="map"></div>
                     <style>
@@ -182,85 +183,85 @@ function mapa($valor)
                             maxZoom: 18,
                         }).addTo(map);
 
-                        <?php
-                        // Establecer la conexión con la base de datos
-                        $conn = conectar();
+                                <?php
+                                // Establecer la conexión con la base de datos
+                                $conn = conectar();
 
-                        // Consultar los marcadores existentes
-                        $sql = "SELECT * FROM propiedades";
-                        $result = $conn->query($sql);
+                                // Consultar los marcadores existentes
+                                $sql = "SELECT * FROM propiedades";
+                                $result = $conn->query($sql);
 
-                        if ($result->num_rows > 0) {
-                            while ($row = $result->fetch_assoc()) {
-                                $latitud = $row['latitud'];
-                                $longitud = $row['longitud'];
-                                $descripcion = $row['descripcion'];
-                                $ubicacion = $row['ubicacion'];
-                                $precio = $row['precio'];
-                                $apiKey = 'AIzaSyADr5gpzLPePzkWwz8C94wBQ21DzQ4GGVU'; // Reemplaza con tu propia API Key de Google Maps Static
-                
-                                $imageUrl = 'https://maps.googleapis.com/maps/api/streetview?size=400x300&location=' . $latitud . ',' . $longitud . '&key=' . $apiKey;
+                                if ($result->num_rows > 0) {
+                                    while ($row = $result->fetch_assoc()) {
+                                        $latitud = $row['latitud'];
+                                        $longitud = $row['longitud'];
+                                        $descripcion = $row['descripcion'];
+                                        $ubicacion = $row['ubicacion'];
+                                        $precio = $row['precio'];
+                                        $apiKey = 'AIzaSyADr5gpzLPePzkWwz8C94wBQ21DzQ4GGVU'; // Reemplaza con tu propia API Key de Google Maps Static
+                        
+                                        $imageUrl = 'https://maps.googleapis.com/maps/api/streetview?size=400x300&location=' . $latitud . ',' . $longitud . '&key=' . $apiKey;
+                                        ?>
+
+                                                // Crear un marcador para cada registro de la base de datos
+                                                var marker = L.marker([<?php echo $latitud; ?>, <?php echo $longitud; ?>]).addTo(map);
+                                        marker.bindPopup("<div class='popup-content'><h3><?php echo $ubicacion . " " . $precio . "€"; ?></h3><p><?php echo $descripcion; ?></p><img src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación'></div><form action='empresa.php' method='POST'><input type='hidden' name='product_id' value='<?php echo $row['id_propiedad'] ?>'><input type='hidden' name='lat' value='<?php echo $latitud; ?>'><input type='hidden' name='lng' value='<?php echo $longitud; ?>'><input type='hidden' name='ubicacion' value='<?php echo $ubicacion; ?>'><input type='hidden' name='descripcion' value='<?php echo $descripcion; ?>'><button type='submit' name='add_to_cart' value='1'>Seleccionar</button></form>");
+
+                                        function seleccionarUbicacion(latitud, longitud, descripcion, ubicacion) {
+                                            // Enviar una solicitud POST al archivo "usuario.php" con los datos de la ubicación seleccionada
+                                            var xhttp = new XMLHttpRequest();
+                                            xhttp.onreadystatechange = function () {
+                                                if (this.readyState === 4 && this.status === 200) {
+                                                    // Redireccionar a la página del carrito después de agregar la ubicación al carrito
+                                                    window.location.href = "usuario.php?usuarioCarrito=1";
+                                                }
+                                            };
+                                            xhttp.open("POST", "usuario.php", true);
+                                            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                                            xhttp.send("compraUbicacion=1&lat=" + latitud + "&lng=" + longitud + "&ubicacion=" + encodeURIComponent(ubicacion) + "&descripcion=" + encodeURIComponent(descripcion));
+                                        }
+                                                <?php
+                                    }
+                                }
+
+                                mysqli_close($conn);
                                 ?>
 
-                                // Crear un marcador para cada registro de la base de datos
-                                var marker = L.marker([<?php echo $latitud; ?>, <?php echo $longitud; ?>]).addTo(map);
-                                marker.bindPopup("<div class='popup-content'><h3><?php echo $ubicacion . " " . $precio . "€"; ?></h3><p><?php echo $descripcion; ?></p><img src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación'></div><form action='empresa.php' method='POST'><input type='hidden' name='product_id' value='<?php echo $row['id_propiedad'] ?>'><input type='hidden' name='lat' value='<?php echo $latitud; ?>'><input type='hidden' name='lng' value='<?php echo $longitud; ?>'><input type='hidden' name='ubicacion' value='<?php echo $ubicacion; ?>'><input type='hidden' name='descripcion' value='<?php echo $descripcion; ?>'><button type='submit' name='add_to_cart' value='1'>Seleccionar</button></form>");
 
-                                function seleccionarUbicacion(latitud, longitud, descripcion, ubicacion) {
-                                    // Enviar una solicitud POST al archivo "usuario.php" con los datos de la ubicación seleccionada
-                                    var xhttp = new XMLHttpRequest();
-                                    xhttp.onreadystatechange = function () {
-                                        if (this.readyState === 4 && this.status === 200) {
-                                            // Redireccionar a la página del carrito después de agregar la ubicación al carrito
-                                            window.location.href = "usuario.php?usuarioCarrito=1";
+                            function buscarDireccion() {
+                                var direccion = document.getElementById('direccion').value;
+
+                                // Realizar la petición de geocodificación
+                                fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + direccion)
+                                    .then(function (response) {
+                                        return response.json();
+                                    })
+                                    .then(function (data) {
+                                        if (data.length > 0) {
+                                            var latitud = parseFloat(data[0].lat);
+                                            var longitud = parseFloat(data[0].lon);
+
+                                            // Centrar el mapa en la ubicación encontrada
+                                            map.setView([latitud, longitud], 13);
+
+                                            if (marker) {
+                                                map.removeLayer(marker);
+                                            }
+
+                                            marker = L.marker([latitud, longitud]).addTo(map);
+                                            marker.bindPopup("Ubicación encontrada").openPopup();
+
+                                            // Actualizar campos ocultos en el formulario con las coordenadas
+                                            document.getElementById('lat').value = latitud;
+                                            document.getElementById('lng').value = longitud;
+                                        } else {
+                                            alert("No se encontró la dirección especificada.");
                                         }
-                                    };
-                                    xhttp.open("POST", "usuario.php", true);
-                                    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                                    xhttp.send("compraUbicacion=1&lat=" + latitud + "&lng=" + longitud + "&ubicacion=" + encodeURIComponent(ubicacion) + "&descripcion=" + encodeURIComponent(descripcion));
-                                }
-                                <?php
+                                    })
+                                    .catch(function (error) {
+                                        console.log('Error:', error);
+                                    });
                             }
-                        }
-
-                        mysqli_close($conn);
-                        ?>
-
-
-                        function buscarDireccion() {
-                            var direccion = document.getElementById('direccion').value;
-
-                            // Realizar la petición de geocodificación
-                            fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + direccion)
-                                .then(function (response) {
-                                    return response.json();
-                                })
-                                .then(function (data) {
-                                    if (data.length > 0) {
-                                        var latitud = parseFloat(data[0].lat);
-                                        var longitud = parseFloat(data[0].lon);
-
-                                        // Centrar el mapa en la ubicación encontrada
-                                        map.setView([latitud, longitud], 13);
-
-                                        if (marker) {
-                                            map.removeLayer(marker);
-                                        }
-
-                                        marker = L.marker([latitud, longitud]).addTo(map);
-                                        marker.bindPopup("Ubicación encontrada").openPopup();
-
-                                        // Actualizar campos ocultos en el formulario con las coordenadas
-                                        document.getElementById('lat').value = latitud;
-                                        document.getElementById('lng').value = longitud;
-                                    } else {
-                                        alert("No se encontró la dirección especificada.");
-                                    }
-                                })
-                                .catch(function (error) {
-                                    console.log('Error:', error);
-                                });
-                        }
 
                     </script>
 
