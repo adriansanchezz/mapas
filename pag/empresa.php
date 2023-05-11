@@ -85,13 +85,41 @@ require_once '../lib/modulos.php';
             // Guardar el carrito actualizado en la sesión
             $_SESSION['empresaCart'] = $empresaCart;
 
-            header("Location: empresa.php?empresaMapa=1");
+            echo "<script>window.location.href = 'empresa.php?empresaMapa=1';</script>";
             exit();
+
         }
 
         // Calcular el total de dinero en el carrito
         $totalMoney = 0;
         ?>
+        <?php
+
+        if (isset($_POST['remove_from_cart'])) {
+            $product_id = trim($_POST['product_id']);
+            echo $product_id;
+            // Verificar si el carrito de compras está almacenado en la sesión
+            if (isset($_SESSION['empresaCart'])) {
+                $cart = $_SESSION['empresaCart'];
+                
+                // Verificar si el producto existe en el carrito
+                
+                if (isset($cart[$product_id])) {
+
+                    unset($cart[$product_id]);
+
+                    // Guardar el carrito actualizado en la sesión
+                    $_SESSION['empresaCart'] = $cart;
+                }
+            }
+
+            // Redirigir nuevamente al carrito
+            echo "<script>window.location.href = 'empresa.php?empresaCarrito=1';</script>";
+            exit();
+        }
+        ?>
+
+
         <?php
         if (isset($_REQUEST['empresaCarrito'])) {
             ?>
@@ -106,14 +134,13 @@ require_once '../lib/modulos.php';
                     $productIds = array_keys($empresaCart);
 
                     if (!empty($productIds)) {
-                        $productIdsString = implode(",", $productIds);
-                        $productIdsString = trim($productIdsString, ", ");
-
-                        $sql = "SELECT * FROM propiedades WHERE id_propiedad IN ($productIdsString)";
+                        $placeholders = implode(',', array_fill(0, count($productIds), '?'));
+                        $sql = "SELECT * FROM propiedades WHERE id_propiedad IN ($placeholders)";
                         $conn = conectar();
-                        $result = $conn->query($sql);
-
-
+                        $stmt = $conn->prepare($sql);
+                        $stmt->bind_param(str_repeat('s', count($productIds)), ...$productIds);
+                        $stmt->execute();
+                        $result = $stmt->get_result();
 
                         if ($result->num_rows > 0) {
                             // Iterar sobre los productos en el carrito
@@ -124,7 +151,7 @@ require_once '../lib/modulos.php';
                                 $product_price = $row['precio'];
 
                                 // Calcular el subtotal por producto
-                                $subtotal = $product_price * $product_quantity;
+                                $subtotal = $product_price;
 
                                 // Agregar el subtotal al total de dinero
                                 $totalMoney += $subtotal;
@@ -135,9 +162,9 @@ require_once '../lib/modulos.php';
                                 echo "<div class='card-body text-primary'>";
                                 echo "<h5 class='card-title'>$product_description</h5>";
                                 echo "<p class='card-text'>Precio: $product_price</p>";
-                                echo "<form action='usuario.php' method='post'>";
+                                echo "<form action='empresa.php' method='post'>";
                                 echo "<input type='hidden' name='product_id' value='$product_id'>";
-                                echo "<button class='btn btn-danger' name='remove_from_empresaCart' type='submit'>Eliminar</button>";
+                                echo "<button class='btn btn-danger' name='remove_from_cart' value='$product_id' type='submit'>Eliminar</button>";
                                 echo "</form>";
                                 echo "</div>";
                                 echo "</div>";

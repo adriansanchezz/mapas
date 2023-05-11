@@ -191,7 +191,7 @@ function mapa($valor)
 
                                 // Crear un marcador para cada registro de la base de datos
                                 var marker = L.marker([<?php echo $latitud; ?>, <?php echo $longitud; ?>]).addTo(map);
-                                marker.bindPopup("<h3><?php echo $ubicacion; ?></h3><p><?php echo $descripcion; ?></p><img src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación'><br><form action='empresa.php' method='POST'><input type='hidden' name='product_id' value=' <?php echo $row['id_propiedad'] ?> '><input type='hidden' name='lat' value='<?php echo $latitud; ?>'><input type='hidden' name='lng' value='<?php echo $longitud; ?>'><input type='hidden' name='ubicacion' value='<?php echo $ubicacion; ?>'><input type='hidden' name='descripcion' value='<?php echo $descripcion; ?>'><button type='submit' name='add_to_cart' value='1'>Seleccionar</button></form>");
+                                marker.bindPopup("<h3><?php echo $ubicacion; ?></h3><p><?php echo $descripcion; ?></p><img src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación'><br><form action='empresa.php' method='POST'><input type='hidden' name='product_id' value='<?php echo $row['id_propiedad'] ?>'><input type='hidden' name='lat' value='<?php echo $latitud; ?>'><input type='hidden' name='lng' value='<?php echo $longitud; ?>'><input type='hidden' name='ubicacion' value='<?php echo $ubicacion; ?>'><input type='hidden' name='descripcion' value='<?php echo $descripcion; ?>'><button type='submit' name='add_to_cart' value='1'>Seleccionar</button></form>");
 
                                 function seleccionarUbicacion(latitud, longitud, descripcion, ubicacion) {
                                     // Enviar una solicitud POST al archivo "usuario.php" con los datos de la ubicación seleccionada
@@ -276,9 +276,9 @@ function mapa($valor)
                 <script>
                     var map = L.map('map').setView([43.3828500, -3.2204300], 13);
 
-                    var cantabriaBounds = L.latLngBounds(
-                        L.latLng(43.184104, -4.910493), // Coordenada superior izquierda
-                        L.latLng(43.498820, -2.662647)  // Coordenada inferior derecha
+                    var spainBounds = L.latLngBounds(
+                        L.latLng(36.0000, -9.3922), // Coordenada superior izquierda (Latitud, Longitud)
+                        L.latLng(43.7486, 4.3273)  // Coordenada inferior derecha (Latitud, Longitud)
                     );
 
                     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -288,7 +288,7 @@ function mapa($valor)
 
 
 
-                    map.setMaxBounds(cantabriaBounds); // Establecer límites máximos
+                    map.setMaxBounds(spainBounds); // Establecer límites máximos
 
 
 
@@ -296,8 +296,8 @@ function mapa($valor)
 
                     map.on('click', function (e) {
                         try {
-                            if (!cantabriaBounds.contains(e.latlng)) {
-                                alert('Por favor, coloque puntos dentro de Cantabria.');
+                            if (!spainBounds.contains(e.latlng)) {
+                                alert('Por favor, coloque puntos dentro de España.');
                                 return;
                             }
 
