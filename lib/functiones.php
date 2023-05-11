@@ -537,30 +537,7 @@ function repetirPassword($pass, $pass2)
 
 // sin hacer
 
-if (isset($_POST['compraUbicacion']) && $_POST['compraUbicacion'] == '1') {
-    $lat = $_POST['lat'];
-    $lng = $_POST['lng'];
-    $titulo = $_POST['titulo'];
-    $texto = $_POST['texto'];
 
-    // Mostrar los datos de la ubicación seleccionada
-    echo "<p><strong>Ubicación:</strong> $titulo</p>";
-    echo "<p><strong>Descripción:</strong> $texto</p>";
-    echo "<p><strong>Latitud:</strong> $lat</p>";
-    echo "<p><strong>Longitud:</strong> $lng</p>";
-
-    ?>
-    <p>¿Confirmar compra?</p>
-    <form method="post" action="confirmarCompra.php">
-        <input type="hidden" name="compraUbicacion" value="true">
-        <input type="hidden" name="lat" value="<?php echo $lat; ?>">
-        <input type="hidden" name="lng" value="<?php echo $lng; ?>">
-        <input type="hidden" name="titulo" value="<?php echo $titulo; ?>">
-        <input type="hidden" name="texto" value="<?php echo $texto; ?>">
-        <input type="submit" value="Confirmar">
-    </form>
-    <?php
-}
 
 
 function guardarMarcador()
@@ -582,7 +559,7 @@ function guardarMarcador()
         $conn = conectar();
     
         $sql = "INSERT INTO propiedades (latitud, longitud, provincia, ciudad, ubicacion, codigo_postal, descripcion, id_tipo_propiedad, id_usuario) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 4)";
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("ddsssssi", $lat, $lng, $provincia, $ciudad, $ubicacion, $codigo_postal, $descripcion, $tipoPropiedad);
         $stmt->execute();
@@ -595,9 +572,8 @@ function guardarMarcador()
             echo "Error al guardar el marcador.";
         }
     
-        // Cerrar la conexión y liberar recursos
-        //$stmt->close();
-        //cerrarConexion($conn);
+        
+        mysqli_close($conn);
     }
 }
 

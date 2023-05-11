@@ -112,8 +112,7 @@ require_once '../lib/modulos.php';
                             echo "No se encontraron productos";
                         }
 
-                        // Cerrar la conexión
-                        //cerrarConexion($conn);
+                        mysqli_close($conn);
                         ?>
                     </div>
                 </div>
@@ -251,12 +250,13 @@ require_once '../lib/modulos.php';
                                         echo "</div>";
                                     }
                                 }
+                                mysqli_close($conn);
                             }
 
                         }
 
                         // Mostrar el total de dinero en el carrito
-                        echo "<p>Total a pagar: $totalMoney</p>";
+                        echo "<p>Total a pagar: $totalMoney €</p>";
                         ?>
                     </div>
                 </div>
@@ -289,6 +289,27 @@ require_once '../lib/modulos.php';
         if (isset($_REQUEST['guardarMarcador'])) {
             guardarMarcador();
         }
+        if (isset($_POST['compraUbicacion'])) {
+            // Obtener los datos de la ubicación seleccionada desde la solicitud POST
+            $latitud = $_POST['lat'];
+            $longitud = $_POST['lng'];
+            $ubicacion = $_POST['ubicacion'];
+            $descripcion = $_POST['descripcion'];
+
+            // Agregar los datos de la ubicación al carrito (puedes adaptar esta lógica según tu implementación)
+            // Por ejemplo, puedes almacenar los datos en un array o en la sesión
+            $carrito[] = array(
+                'latitud' => $latitud,
+                'longitud' => $longitud,
+                'ubicacion' => $ubicacion,
+                'descripcion' => $descripcion
+            );
+
+            // Redirigir nuevamente a la página del carrito
+            header("Location: empresa.php?empresaCarrito=1");
+            exit();
+        }
+
         ?>
 
     </div>
