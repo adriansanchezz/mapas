@@ -184,6 +184,7 @@ function mapa($valor)
                                 $longitud = $row['longitud'];
                                 $descripcion = $row['descripcion'];
                                 $ubicacion = $row['ubicacion'];
+                                $precio = $row['precio'];
                                 $apiKey = 'AIzaSyADr5gpzLPePzkWwz8C94wBQ21DzQ4GGVU'; // Reemplaza con tu propia API Key de Google Maps Static
                 
                                 $imageUrl = 'https://maps.googleapis.com/maps/api/streetview?size=400x300&location=' . $latitud . ',' . $longitud . '&key=' . $apiKey;
@@ -191,7 +192,7 @@ function mapa($valor)
 
                                 // Crear un marcador para cada registro de la base de datos
                                 var marker = L.marker([<?php echo $latitud; ?>, <?php echo $longitud; ?>]).addTo(map);
-                                marker.bindPopup("<h3><?php echo $ubicacion; ?></h3><p><?php echo $descripcion; ?></p><img src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación'><br><form action='empresa.php' method='POST'><input type='hidden' name='product_id' value='<?php echo $row['id_propiedad'] ?>'><input type='hidden' name='lat' value='<?php echo $latitud; ?>'><input type='hidden' name='lng' value='<?php echo $longitud; ?>'><input type='hidden' name='ubicacion' value='<?php echo $ubicacion; ?>'><input type='hidden' name='descripcion' value='<?php echo $descripcion; ?>'><button type='submit' name='add_to_cart' value='1'>Seleccionar</button></form>");
+                                marker.bindPopup("<div class='popup-content'><h3><?php echo $ubicacion . " " . $precio . "€"; ?></h3><p><?php echo $descripcion; ?></p><img src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación'></div><form action='empresa.php' method='POST'><input type='hidden' name='product_id' value='<?php echo $row['id_propiedad'] ?>'><input type='hidden' name='lat' value='<?php echo $latitud; ?>'><input type='hidden' name='lng' value='<?php echo $longitud; ?>'><input type='hidden' name='ubicacion' value='<?php echo $ubicacion; ?>'><input type='hidden' name='descripcion' value='<?php echo $descripcion; ?>'><button type='submit' name='add_to_cart' value='1'>Seleccionar</button></form>");
 
                                 function seleccionarUbicacion(latitud, longitud, descripcion, ubicacion) {
                                     // Enviar una solicitud POST al archivo "usuario.php" con los datos de la ubicación seleccionada
@@ -402,8 +403,27 @@ function mapa($valor)
                     <input type="text" id="ubicacion" name="ubicacion" placeholder="Ubicación">
                     <input type="text" id="codigo_postal" name="codigo_postal" placeholder="Código Postal">
                     <select name="tipoPropiedad">
-                        <option value="1">Comunidad de vecinos</option>
+                        <?php
+                        $conn = conectar();
+                        $sql = "SELECT id_tipo_propiedad, nombre FROM tipospropiedades";
+                        $resultado = mysqli_query($conn, $sql);
+
+                        // Verificar si se obtuvieron resultados
+                        if (mysqli_num_rows($resultado) > 0) {
+                            // Recorrer los resultados y crear las opciones del select
+                            while ($fila = mysqli_fetch_assoc($resultado)) {
+                                $id = $fila['id_tipo_propiedad'];
+                                $nombre = $fila['nombre'];
+                                echo "<option value='$id'>$nombre</option>";
+                            }
+                            mysqli_close($conn);
+                        } else {
+                            echo "<option value=''>No hay tipos de propiedades disponibles</option>";
+                        }
+                        ?>
                     </select>
+                    <label>Establece un precio: </label>
+                    <input type="number" id="precio" name="precio" placeholder="Precio" required>
 
                     <button type="submit" name="guardarMarcador">Guardar</button>
                 </form>

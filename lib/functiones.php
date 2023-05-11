@@ -553,15 +553,17 @@ function guardarMarcador()
         $ubicacion = $_POST['ubicacion'];
         $codigo_postal = $_POST['codigo_postal'];
         $tipoPropiedad = $_POST['tipoPropiedad'];
+        $precio = $_POST['precio'];
+        $idUser = $_SESSION['usuario']['id_usuario'];
     
     
         // Establecer la conexión con la base de datos
         $conn = conectar();
     
-        $sql = "INSERT INTO propiedades (latitud, longitud, provincia, ciudad, ubicacion, codigo_postal, descripcion, id_tipo_propiedad, id_usuario) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)";
+        $sql = "INSERT INTO propiedades (latitud, longitud, provincia, ciudad, ubicacion, codigo_postal, descripcion, precio, id_tipo_propiedad, id_usuario) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ddsssssi", $lat, $lng, $provincia, $ciudad, $ubicacion, $codigo_postal, $descripcion, $tipoPropiedad);
+        $stmt->bind_param('ddssssssii', $lat, $lng, $provincia, $ciudad, $ubicacion, $codigo_postal, $descripcion, $precio, $tipoPropiedad, $idUser);
         $stmt->execute();
     
         // Verificar si la inserción fue exitosa

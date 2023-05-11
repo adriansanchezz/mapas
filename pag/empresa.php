@@ -9,6 +9,18 @@ require_once '../lib/modulos.php';
 <head>
     <?php head_info(); ?>
     <title>DisplayAds</title>
+    <style>
+        .popup-content {
+            max-width: 300px;
+            /* Ajusta el ancho máximo según tus necesidades */
+        }
+
+        .popup-content img {
+            max-width: 100%;
+            max-height: 300px;
+            /* Ajusta la altura máxima según tus necesidades */
+        }
+    </style>
 </head>
 
 <body>
@@ -101,9 +113,9 @@ require_once '../lib/modulos.php';
             // Verificar si el carrito de compras está almacenado en la sesión
             if (isset($_SESSION['empresaCart'])) {
                 $cart = $_SESSION['empresaCart'];
-                
+
                 // Verificar si el producto existe en el carrito
-                
+        
                 if (isset($cart[$product_id])) {
 
                     unset($cart[$product_id]);
