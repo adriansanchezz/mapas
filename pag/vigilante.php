@@ -18,8 +18,13 @@ require_once '../lib/modulos.php';
     <div class="d-flex vh-100">
         <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 200px;">
             <br><br>
-
             <ul class="nav nav-pills flex-column mb-auto">
+                <li>
+                    <form action="vigilante.php" method="post">
+                        <button type="submit" name="vigilantePrincipal" class="btn btn-link nav-link text-white">Principal
+                        </button>
+                    </form>
+                </li>
                 <li>
                     <form action="vigilante.php" method="post">
                         <button type="submit" name="misiones" class="btn btn-link nav-link text-white">Misiones
@@ -37,8 +42,20 @@ require_once '../lib/modulos.php';
         </div>
 
 
-        <?php
 
+        <?php
+        if (isset($_REQUEST['vigilantePrincipal'])) {
+            ?>
+            <div class="flex-grow-1">
+                <div id="seccion1" class="p-3" style="display: block;">
+                    <h2>Noticias para vigilante</h2><br>
+                </div>
+            </div>
+            <?php
+        }
+        ?>
+
+        <?php
         if (isset($_REQUEST['misiones'])) {
             ?>
             <div id="seccion1" class="p-3" style="display: block;">

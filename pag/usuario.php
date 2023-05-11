@@ -22,19 +22,17 @@ require_once '../lib/modulos.php';
             <ul class="nav nav-pills flex-column mb-auto">
                 <li class="nav-item">
                     <form action="usuario.php" method="post">
-                        <button type="submit" name="usuarioInicio"
-                            class="btn btn-link nav-link text-white">Principal</button>
+                        <button type="submit" name="usuarioPrincipal" class="btn btn-link nav-link text-white">Principal</button>
                     </form>
                 </li>
                 <li>
                     <form action="usuario.php" method="post">
-                        <button type="submit" name="usuarioVigia"
-                            class="btn btn-link nav-link text-white">Mapa</button>
+                        <button type="submit" name="usuarioMapa" class="btn btn-link nav-link text-white">Mapa</button>
                     </form>
                 </li>
                 <li>
                     <form action="usuario.php" method="post">
-                        <button type="submit" name="usuarioVigia"
+                        <button type="submit" name="usuarioTienda"
                             class="btn btn-link nav-link text-white">Tienda</button>
                     </form>
                 </li>
@@ -42,17 +40,11 @@ require_once '../lib/modulos.php';
         </div>
 
         <?php
-        if (isset($_REQUEST['usuarioInicio'])) {
+        if (isset($_REQUEST['usuarioPrincipal'])) {
             ?>
             <div class="flex-grow-1">
                 <div id="seccion1" class="p-3" style="display: block;">
-                    <form class="form-inline my-2 my-lg-0" action="usuario.php" method="post">
-                        <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioMapa" type="submit">Mapa</button>
-                    </form>
-                    <form class="form-inline my-2 my-lg-0" action="usuario.php" method="post">
-                        <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioTienda"
-                            type="submit">Tienda</button>
-                    </form>
+                    <h2>Noticias para usuario</h2><br>
                 </div>
             </div>
             <?php
@@ -93,7 +85,6 @@ require_once '../lib/modulos.php';
                                 echo "</form>";
                                 echo "</div>";
                                 echo "</div>";
-
                             }
                         } else {
                             echo "No se encontraron productos";

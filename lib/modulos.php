@@ -61,7 +61,7 @@ function menu_general()
                             ?>
                             <li class="nav-item">
                                 <form action="usuario.php">
-                                    <button class="btn nav-link" name="usuario" type="submit">Usuario</button>
+                                    <button class="btn nav-link" name="usuarioPrincipal" type="submit">Usuario</button>
                                 </form>
                             </li>
                             <?php
@@ -73,7 +73,7 @@ function menu_general()
                             ?>
                             <li class="nav-item">
                                 <form action="vigilante.php">
-                                    <button class="btn nav-link" name="vigilante" type="submit">Vigilante</button>
+                                    <button class="btn nav-link" name="vigilantePrincipal" type="submit">Vigilante</button>
                                 </form>
                             </li>
                             <?php
@@ -85,7 +85,7 @@ function menu_general()
                             ?>
                             <li class="nav-item">
                                 <form action="empresa.php">
-                                    <button class="btn nav-link" name="empresa" type="submit">Empresa</button>
+                                    <button class="btn nav-link" name="empresaPrincipal" type="submit">Empresa</button>
                                 </form>
                             </li>
                             <?php
@@ -97,7 +97,7 @@ function menu_general()
                             ?>
                             <li class="nav-item">
                                 <form action="administrador.php">
-                                    <button class="btn nav-link" name="administrador" type="submit">Administrador</button>
+                                    <button class="btn nav-link" name="administradorPrincipal" type="submit">Administrador</button>
                                 </form>
                             </li>
                             <?php

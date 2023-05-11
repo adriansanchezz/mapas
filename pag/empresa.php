@@ -33,7 +33,7 @@ require_once '../lib/modulos.php';
             <ul class="nav nav-pills flex-column mb-auto">
                 <li class="nav-item">
                     <form action="empresa.php" method="post">
-                        <button type="submit" name="empresaInicio"
+                        <button type="submit" name="empresaPrincipal"
                             class="btn btn-link nav-link text-white">Principal</button>
                     </form>
                 </li>
@@ -54,7 +54,7 @@ require_once '../lib/modulos.php';
         </div>
 
         <?php
-        if (isset($_REQUEST['empresaInicio'])) {
+        if (isset($_REQUEST['empresaPrincipal'])) {
             ?>
             <div class="flex-grow-1">
                 <div id="seccion1" class="p-3" style="display: block;">
