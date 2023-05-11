@@ -146,6 +146,7 @@ require_once '../lib/modulos.php';
             // Guardar el carrito actualizado en la sesión
             $_SESSION['cart'] = $cart;
 
+            header("Location: usuario.php?usuarioTienda=1");
             exit();
         }
 
@@ -153,8 +154,39 @@ require_once '../lib/modulos.php';
         $totalMoney = 0;
         ?>
 
+        <?php
+        if (isset($_POST['remove_from_cart'])) {
+            $product_id = $_POST['product_id'];
+
+            // Verificar si el carrito de compras está almacenado en la sesión
+            if (isset($_SESSION['cart'])) {
+                $cart = $_SESSION['cart'];
+
+                // Verificar si el producto existe en el carrito
+                if (isset($cart[$product_id])) {
+                    // Restar una cantidad del producto en el carrito
+                    $cart[$product_id]--;
+
+                    // Verificar si la cantidad llega a cero o menos y eliminar el producto del carrito si es así
+                    if ($cart[$product_id] <= 0) {
+                        unset($cart[$product_id]);
+                    }
+
+                    // Guardar el carrito actualizado en la sesión
+                    $_SESSION['cart'] = $cart;
+                }
+            }
+
+            // Redirigir nuevamente al carrito
+            header("Location: usuario.php?usuarioCarrito=1");
+            exit();
+        }
+        ?>
+
+
 
         <?php
+
         if (isset($_REQUEST['usuarioCarrito'])) {
             ?>
             <div class="flex-grow-1">
@@ -178,38 +210,49 @@ require_once '../lib/modulos.php';
                             $cart = $_SESSION['cart'];
 
                             // Consultar los productos desde la base de datos utilizando los IDs en el carrito
+                            // Consultar los productos desde la base de datos utilizando los IDs en el carrito
                             $productIds = array_keys($cart);
-                            $sql = "SELECT id_producto, nombre, descripcion, precio FROM productos WHERE id_producto IN (" . implode(",", $productIds) . ")";
-                            $conn = conectar();
-                            $result = $conn->query($sql);
+                            if (!empty($productIds)) {
+                                $productIdsString = implode(",", $productIds);
+                                $sql = "SELECT id_producto, nombre, descripcion, precio FROM productos WHERE id_producto IN ($productIdsString)";
+                                $conn = conectar();
+                                $result = $conn->query($sql);
 
-                            if ($result->num_rows > 0) {
-                                // Iterar sobre los productos en el carrito
-                                while ($row = $result->fetch_assoc()) {
-                                    $product_id = $row['id_producto'];
-                                    $product_name = $row['nombre'];
-                                    $product_description = $row['descripcion'];
-                                    $product_price = $row['precio'];
-                                    $product_quantity = $cart[$product_id];
 
-                                    // Calcular el subtotal por producto
-                                    $subtotal = $product_price * $product_quantity;
 
-                                    // Agregar el subtotal al total de dinero
-                                    $totalMoney += $subtotal;
+                                if ($result->num_rows > 0) {
+                                    // Iterar sobre los productos en el carrito
+                                    while ($row = $result->fetch_assoc()) {
+                                        $product_id = $row['id_producto'];
+                                        $product_name = $row['nombre'];
+                                        $product_description = $row['descripcion'];
+                                        $product_price = $row['precio'];
+                                        $product_quantity = $cart[$product_id];
 
-                                    // Mostrar los detalles del producto en el carrito
-                                    echo "<div class='product card border-primary mb-3' style='max-width: 18rem;'>";
-                                    echo "<div class='card-header bg-primary text-white'>$product_name</div>";
-                                    echo "<div class='card-body text-primary'>";
-                                    echo "<h5 class='card-title'>$product_description</h5>";
-                                    echo "<p class='card-text'>Precio: $product_price</p>";
-                                    echo "<p class='card-text'>Cantidad: $product_quantity</p>";
-                                    echo "<p class='card-text'>Subtotal: $subtotal</p>";
-                                    echo "</div>";
-                                    echo "</div>";
+                                        // Calcular el subtotal por producto
+                                        $subtotal = $product_price * $product_quantity;
+
+                                        // Agregar el subtotal al total de dinero
+                                        $totalMoney += $subtotal;
+
+                                        // Mostrar los detalles del producto en el carrito
+                                        echo "<div class='product card border-primary mb-3' style='max-width: 18rem;'>";
+                                        echo "<div class='card-header bg-primary text-white'>$product_name</div>";
+                                        echo "<div class='card-body text-primary'>";
+                                        echo "<h5 class='card-title'>$product_description</h5>";
+                                        echo "<p class='card-text'>Precio: $product_price</p>";
+                                        echo "<p class='card-text'>Cantidad: $product_quantity</p>";
+                                        echo "<p class='card-text'>Subtotal: $subtotal</p>";
+                                        echo "<form action='usuario.php' method='post'>";
+                                        echo "<input type='hidden' name='product_id' value='$product_id'>";
+                                        echo "<button class='btn btn-danger' name='remove_from_cart' type='submit'>Eliminar</button>";
+                                        echo "</form>";
+                                        echo "</div>";
+                                        echo "</div>";
+                                    }
                                 }
                             }
+
                         }
 
                         // Mostrar el total de dinero en el carrito
