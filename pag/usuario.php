@@ -16,7 +16,7 @@ require_once '../lib/modulos.php';
     <?php menu_general(); ?>
 
     <div class="d-flex vh-100">
-        <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 100px;">
+        <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 200px;">
             <br><br>
 
             <ul class="nav nav-pills flex-column mb-auto">
@@ -29,7 +29,13 @@ require_once '../lib/modulos.php';
                 <li>
                     <form action="usuario.php" method="post">
                         <button type="submit" name="usuarioVigia"
-                            class="btn btn-link nav-link text-white">Vigía</button>
+                            class="btn btn-link nav-link text-white">Mapa</button>
+                    </form>
+                </li>
+                <li>
+                    <form action="usuario.php" method="post">
+                        <button type="submit" name="usuarioVigia"
+                            class="btn btn-link nav-link text-white">Tienda</button>
                     </form>
                 </li>
             </ul>
@@ -46,25 +52,6 @@ require_once '../lib/modulos.php';
                     <form class="form-inline my-2 my-lg-0" action="usuario.php" method="post">
                         <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioTienda"
                             type="submit">Tienda</button>
-                    </form>
-                </div>
-            </div>
-            <?php
-        }
-        ?>
-
-        <?php
-        if (isset($_REQUEST['usuarioVigia'])) {
-            ?>
-            <div class="flex-grow-1">
-                <div id="seccion1" class="p-3" style="display: block;">
-                    <form class="form-inline my-2 my-lg-0" action="usuario.php" method="post">
-                        <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioVigiaMisiones"
-                            type="submit">Misiones</button>
-                    </form>
-                    <form class="form-inline my-2 my-lg-0" action="usuario.php" method="post">
-                        <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioVigiaPuntos"
-                            type="submit">Puntos</button>
                     </form>
                 </div>
             </div>
@@ -263,19 +250,6 @@ require_once '../lib/modulos.php';
             </div>
 
 
-            <?php
-        }
-        if (isset($_REQUEST['usuarioVigiaMisiones'])) {
-            ?>
-            <h1>MISIONES</h1>
-            <?php
-        }
-        ?>
-
-        <?php
-        if (isset($_REQUEST['usuarioVigiaPuntos'])) {
-            ?>
-            <h1>PUNTOS</h1>
             <?php
         }
         ?>

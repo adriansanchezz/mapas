@@ -69,6 +69,18 @@ function menu_general()
                         ?>
 
                         <?php
+                        if (validarVigilante($_SESSION['usuario']['id_usuario'])) {
+                            ?>
+                            <li class="nav-item">
+                                <form action="vigilante.php">
+                                    <button class="btn nav-link" name="vigilante" type="submit">Vigilante</button>
+                                </form>
+                            </li>
+                            <?php
+                        }
+                        ?>
+
+                        <?php
                         if (validarEmpresa($_SESSION['usuario']['id_usuario'])) {
                             ?>
                             <li class="nav-item">
