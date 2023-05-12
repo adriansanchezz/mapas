@@ -1,27 +1,16 @@
 <!DOCTYPE html>
 <?php
+
 // Comodines
 
-//consulta, otro quitar $result
-try {
-    //conexion
-    $conn = conectar();
+sqlSELECT($sql);
 
-    //consulta
-    $sql = "";
+// 
+$result = sqlSELECT($sql);
 
-    //Ejecutar
-    $result = mysqli_query($conn, $sql);
-
-    while ($row = mysqli_fetch_assoc($result)) {
-    }
-
-} catch (Exception $e) {
-    echo "Hay un fallo " . $e;
-} finally {
-    // Cerrar la conexión y liberar recursos
-    mysqli_close($conn);
+while ($row = mysqli_fetch_assoc($result)) {
 }
+
 ?>
 
 <!-- Para modulos -->

@@ -47,22 +47,16 @@ function registrarUser($username, $email, $telefono, $password, $password2)
     }
 
     // Verificar si el nombre de usuario ya existe en la base de datos
-    $conn = conectar();
     $sql = "SELECT * FROM usuarios WHERE nombre='$username'";
-    $result = mysqli_query($conn, $sql);
-
-    if (mysqli_num_rows($result) > 0) {
+    if (mysqli_num_rows(sqlSELECT($sql)) > 0) {
         $errors[] = "El nombre de usuario ya existe!";
     }
 
     // Verificar si el correo electrónico ya existe en la base de datos
     $sql = "SELECT * FROM usuarios WHERE email='$email'";
-    $result = mysqli_query($conn, $sql);
-
-    if (mysqli_num_rows($result) > 0) {
+    if (mysqli_num_rows(sqlSELECT($sql)) > 0) {
         $errors[] = "El correo electrónico ya existe!";
     }
-    mysqli_close($conn);
 
     //Lanza alerta si hay erro en el array de $errors
     if (!empty($errors)) {
@@ -77,26 +71,14 @@ function registrarUser($username, $email, $telefono, $password, $password2)
         // Guardar los datos del usuario en la base de datos.
         $password_hash = password_hash($password, PASSWORD_DEFAULT);
 
-        try {
-            //conexion
-            $conn = conectar();
-            $sql = "INSERT INTO usuarios (nombre, email, password, telefono)"
-                . "VALUES ('$username', '$email', '$password_hash', '$telefono')";
+        $sql = "INSERT INTO usuarios (nombre, email, password, telefono)"
+        . "VALUES ('$username', '$email', '$password_hash', '$telefono')";
 
-            //Ejecutar inset
-            mysqli_query($conn, $sql);
+        if(sqlSELECT($sql)){
             echo "Su usuario ha sido registrado correctamente!";
-
-            return true;
-        } catch (Exception $e) {
-            echo "Hay un fallo " . $e;
-        } finally {
-            // Cerrar la conexión y liberar recursos
-            mysqli_close($conn);
         }
     }
 }
-
 
 // Para hacer autenticacion login del usuario
 function autenticarUser($email, $password)
@@ -116,61 +98,93 @@ function autenticarUser($email, $password)
         return false;
     } else {
         // Si no hay errores, los datos del formulario son válidos.
-        try {
-            //conexion
-            $conn = conectar();
-            //consulta
-            $sql = "SELECT * FROM usuarios WHERE email='$email'";
-            //Ejecutar
-            $result = mysqli_query($conn, $sql);
 
-            if ($row = mysqli_fetch_assoc($result)) {
-                $password_hash = $row['password'];
+        $sql = "SELECT * FROM usuarios WHERE email='$email'";
+        
+        if ($row = mysqli_fetch_assoc(sqlSELECT($sql))) {
+            $password_hash = $row['password'];
 
-                // Verifica la contraseña
-                if (password_verify($password, $password_hash)) {
-                    $_SESSION['usuario'] = $row;
-                    header("location:pag/principal.php");
-                    exit; // Es importante poner exit después del header para asegurarnos de que el script no siga ejecutándose
-                } else {
-                    echo "Password Incorrecto!";
-                }
+            // Verifica la contraseña
+            if (password_verify($password, $password_hash)) {
+                $_SESSION['usuario'] = $row;
+                header("location:pag/principal.php");
+                exit; // Es importante poner exit después del header para asegurarnos de que el script no siga ejecutándose
             } else {
-                echo "El usuario no existe!";
+                echo "Password Incorrecto!";
             }
-
-        } catch (Exception $e) {
-            echo "Hay un fallo " . $e;
-        } finally {
-            // Cerrar la conexión y liberar recursos
-            mysqli_close($conn);
+        } else {
+            echo "El usuario no existe!";
         }
     }
 }
 
 
+// Para realizar consulta, recordar que para while hace falta meterlo a un atributo, luego meter a mysqli_fetch_assoc($result)
+// De vuelve el resultado de la consulta
+function sqlSELECT($sql)
+{
+    try {
+        //conexion
+        $conn = conectar();
+
+        //Ejecutar
+        $result = mysqli_query($conn, $sql);
+
+        // Devolver el resultado
+        return $result;
+
+    } catch (Exception $e) {
+        echo "Hay un fallo en la consulta: " . $e;
+    } finally {
+        // Cerrar la conexión y liberar recursos
+        mysqli_close($conn);
+    }
+}
 
 
+// Duelve true o false
+function sqlUPDATE($sql)
+{
+    try {
+        //conexion
+        $conn = conectar();
 
+        if (mysqli_query($conn, $sql)) {
+            // Si la actualización fue exitosa, retorna un true
+            return true;
+        } else {
+            // Si la actualización falló, retorna un false
+            return false;
+        }
+    } catch (Exception $e) {
+        echo "Error al actualizar registro: " . $e;
+    } finally {
+        // Cerrar la conexión a la base de datos
+        mysqli_close($conn);
+    }
+}
 
+// Duelve true o false
+function sqlINSERT($sql)
+{
+    try {
+        //conexion
+        $conn = conectar();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        if (mysqli_query($conn, $sql)) {
+            // Si la insercion fue exitosa, retorna un true
+            return true;
+        } else {
+            // Si la insercion falló, retorna un false
+            return false;
+        }
+    } catch (Exception $e) {
+        echo "Error al insertar registro: " . $e;
+    } finally {
+        // Cerrar la conexión a la base de datos
+        mysqli_close($conn);
+    }
+}
 
 
 
@@ -181,187 +195,109 @@ function autenticarUser($email, $password)
 
 function validarUsuario($id_user)
 {
-    try {
-        //conexion
-        $conn = conectar();
-        //consulta
-        $sql = "SELECT * FROM usuarios_roles WHERE id_usuario='$id_user' AND id_rol=(SELECT id_rol FROM roles WHERE nombre='Usuario')";
-        //Ejecutar
-        $result = mysqli_query($conn, $sql);
+    $sql = "SELECT * FROM usuarios_roles WHERE id_usuario='$id_user' AND id_rol=(SELECT id_rol FROM roles WHERE nombre='Usuario')";
 
-        //Comprobar si existe el compo de la consulta
-        if (mysqli_fetch_assoc($result)) {
-            echo "Usuario SI";
-            return true;
-        } else {
-            echo "Usuario NO";
-            return false;
-        }
-
-    } catch (Exception $e) {
-        echo "Hay un fallo " . $e;
-    } finally {
-        // Cerrar la conexión y liberar recursos
-        mysqli_close($conn);
+    if (mysqli_fetch_assoc(sqlSELECT($sql))) {
+        return true;
+    } else {
+        return false;
     }
+    /*    try {
+    //conexion
+    $conn = conectar();
+    //consulta
+    $sql = "SELECT * FROM usuarios_roles WHERE id_usuario='$id_user' AND id_rol=(SELECT id_rol FROM roles WHERE nombre='Usuario')";
+    //Ejecutar
+    $result = mysqli_query($conn, $sql);
+    //Comprobar si existe el compo de la consulta
+    if (mysqli_fetch_assoc($result)) {
+    echo "Usuario SI";
+    return true;
+    } else {
+    echo "Usuario NO";
+    return false;
+    }
+    } catch (Exception $e) {
+    echo "Hay un fallo " . $e;
+    } finally {
+    // Cerrar la conexión y liberar recursos
+    mysqli_close($conn);
+    }
+    */
 }
 
 
 function validarAdmin($id_user)
 {
-    try {
-        //conexion
-        $conn = conectar();
-        //consulta
-        $sql = "SELECT * FROM usuarios_roles WHERE id_usuario='$id_user' AND id_rol=(SELECT id_rol FROM roles WHERE nombre='Admin')";
-        //Ejecutar
-        $result = mysqli_query($conn, $sql);
+    //consulta
+    $sql = "SELECT * FROM usuarios_roles WHERE id_usuario='$id_user' AND id_rol=(SELECT id_rol FROM roles WHERE nombre='Admin')";
 
-        //Comprobar si existe el compo de la consulta
-        if (mysqli_fetch_assoc($result)) {
-            echo "Admin SI";
-            return true;
-        } else {
-            echo "Admin NO";
-            return false;
-        }
-
-    } catch (Exception $e) {
-        echo "Hay un fallo " . $e;
-    } finally {
-        // Cerrar la conexión y liberar recursos
-        mysqli_close($conn);
+    if (mysqli_fetch_assoc(sqlSELECT($sql))) {
+        return true;
+    } else {
+        return false;
     }
 }
 
 function validarEmpresa($id_user)
 {
-    try {
-        //conexion
-        $conn = conectar();
-        //consulta
-        $sql = "SELECT * FROM usuarios_roles WHERE id_usuario='$id_user' AND id_rol=(SELECT id_rol FROM roles WHERE nombre='Empresa')";
-        //Ejecutar
-        $result = mysqli_query($conn, $sql);
+    $sql = "SELECT * FROM usuarios_roles WHERE id_usuario='$id_user' AND id_rol=(SELECT id_rol FROM roles WHERE nombre='Empresa')";
 
-        //Comprobar si existe el compo de la consulta
-        if (mysqli_fetch_assoc($result)) {
-            echo "Empresa SI";
-            return true;
-        } else {
-            echo "Empresa NO";
-            return false;
-        }
-
-    } catch (Exception $e) {
-        echo "Hay un fallo " . $e;
-    } finally {
-        // Cerrar la conexión y liberar recursos
-        mysqli_close($conn);
+    if (mysqli_fetch_assoc(sqlSELECT($sql))) {
+        return true;
+    } else {
+        return false;
     }
 }
 
 function validarVIP($id_user)
 {
-    try {
-        //conexion
-        $conn = conectar();
-        //consulta
-        $sql = "SELECT * FROM usuarios_roles WHERE id_usuario='$id_user' AND id_rol=(SELECT id_rol FROM roles WHERE nombre='VIP')";
-        //Ejecutar
-        $result = mysqli_query($conn, $sql);
+    $sql = "SELECT * FROM usuarios_roles WHERE id_usuario='$id_user' AND id_rol=(SELECT id_rol FROM roles WHERE nombre='VIP')";
 
-        //Comprobar si existe el compo de la consulta
-        if (mysqli_fetch_assoc($result)) {
-            echo "VIP SI";
-            return true;
-        } else {
-            echo "VIP NO";
-            return false;
-        }
-
-    } catch (Exception $e) {
-        echo "Hay un fallo " . $e;
-    } finally {
-        // Cerrar la conexión y liberar recursos
-        mysqli_close($conn);
+    if (mysqli_fetch_assoc(sqlSELECT($sql))) {
+        return true;
+    } else {
+        return false;
     }
 }
 
 function validarVigilante($id_user)
 {
-    try {
-        //conexion
-        $conn = conectar();
-        //consulta
-        $sql = "SELECT * FROM usuarios_roles WHERE id_usuario='$id_user' AND id_rol=(SELECT id_rol FROM roles WHERE nombre='Vigilante')";
-        //Ejecutar
-        $result = mysqli_query($conn, $sql);
+    $sql = "SELECT * FROM usuarios_roles WHERE id_usuario='$id_user' AND id_rol=(SELECT id_rol FROM roles WHERE nombre='Vigilante')";
 
-        //Comprobar si existe el compo de la consulta
-        if (mysqli_fetch_assoc($result)) {
-            echo "Vigilante SI";
-            return true;
-        } else {
-            echo "Vigilante NO";
-            return false;
-        }
-
-    } catch (Exception $e) {
-        echo "Hay un fallo " . $e;
-    } finally {
-        // Cerrar la conexión y liberar recursos
-        mysqli_close($conn);
+    if (mysqli_fetch_assoc(sqlSELECT($sql))) {
+        return true;
+    } else {
+        return false;
     }
 }
 
 function listarRoles($id_user)
 {
-    try {
-        //conexion
-        $conn = conectar();
-        //consulta
-        $sql = "SELECT u.nombre, u.email, r.nombre as nombre_rol
-                FROM usuarios u
-                LEFT JOIN usuarios_roles ur ON u.id_usuario = ur.id_usuario
-                LEFT JOIN roles r ON ur.id_rol = r.id_rol";
-        //Ejecutar
-        $result = mysqli_query($conn, $sql);
+    $sql = "SELECT u.nombre, u.email, r.nombre as nombre_rol
+        FROM usuarios u
+        LEFT JOIN usuarios_roles ur ON u.id_usuario = ur.id_usuario
+        LEFT JOIN roles r ON ur.id_rol = r.id_rol";
 
-        //Comprobar si existe el compo de la consulta
-        while ($row = mysqli_fetch_assoc($result)) {
-            echo $row['nombre'] ."    -------    ". $row['email'] ."    -------    ". $row['nombre_rol'] . "<br>";
-        }
-    } catch (Exception $e) {
-        echo "Hay un fallo " . $e;
-    } finally {
-        // Cerrar la conexión y liberar recursos
-        mysqli_close($conn);
+    $result = sqlSELECT($sql);
+
+    while ($row = mysqli_fetch_assoc($result)) {
+        echo $row['nombre'] . "    -------    " . $row['email'] . "    -------    " . $row['nombre_rol'] . "<br>";
     }
 }
 
 function listarPropiedades($id_user)
 {
-    try {
-        //conexion
-        $conn = conectar();
-        //consulta
-        $sql = "SELECT p.id_propiedad, p.provincia, p.ciudad, p.ubicacion, p.codigo_postal, p.descripcion, p.precio, t.nombre
-                FROM propiedades p
-                LEFT JOIN tipospropiedades t ON p.id_tipo_propiedad = t.id_tipo_propiedad 
-                WHERE p.id_usuario = '$id_user'";
-        //Ejecutar
-        $result = mysqli_query($conn, $sql);
+    $sql = "SELECT p.id_propiedad, p.provincia, p.ciudad, p.ubicacion, p.codigo_postal, p.descripcion, p.precio, t.nombre
+    FROM propiedades p
+    LEFT JOIN tipospropiedades t ON p.id_tipo_propiedad = t.id_tipo_propiedad 
+    WHERE p.id_usuario = '$id_user'";
 
-        //Comprobar si existe el compo de la consulta
-        while ($row = mysqli_fetch_assoc($result)) {
-            echo $row['id_propiedad']  ."    -------    ".  $row['nombre'] ."    -------    ". $row['provincia'] ."    -------    ".  $row['ubicacion'] ."    -------    ".  $row['codigo_postal'] ."    -------    ".  $row['descripcion'] ."    -------    ". $row['precio'] . "<br>";
-        }
-    } catch (Exception $e) {
-        echo "Hay un fallo " . $e;
-    } finally {
-        // Cerrar la conexión y liberar recursos
-        mysqli_close($conn);
+    $result = sqlSELECT($sql);
+
+    //Comprobar si existe el compo de la consulta
+    while ($row = mysqli_fetch_assoc($result)) {
+        echo $row['id_propiedad'] . "    -------    " . $row['nombre'] . "    -------    " . $row['provincia'] . "    -------    " . $row['ubicacion'] . "    -------    " . $row['codigo_postal'] . "    -------    " . $row['descripcion'] . "    -------    " . $row['precio'] . "<br>";
     }
 }
 
@@ -420,43 +356,31 @@ function eliminarVigilante($id_user)
 
 function guardarNombre($nombre, $id_user)
 {
-    try {
-        //conexion
-        $conn = conectar();
+    //consulta
+    $sql = "SELECT COUNT(*) as count FROM usuarios WHERE nombre = '$nombre'";
 
-        //consulta
-        $sql = "SELECT COUNT(*) as count FROM usuarios WHERE nombre = '$nombre'";
+    $datos = mysqli_fetch_assoc(sqlSELECT($sql));
 
-        //Ejecutar
-        $result = mysqli_query($conn, $sql);
+    if ($datos["count"] > 0) {
+        // El nuevo nombre de usuario ya existe en la base de datos, mostrar un mensaje de error
+        echo "<div class='flex-grow-1'>El nuevo nombre de usuario ya existe.</div>";
+    } else {
+        // El nuevo nombre de usuario no existe en la base de datos, actualizar el registro correspondiente
+        $sql = "UPDATE usuarios SET nombre='$nombre' WHERE id_usuario = '$id_user'";
 
-        $datos = mysqli_fetch_assoc($result);
-
-        if ($datos["count"] > 0) {
-            // El nuevo nombre de usuario ya existe en la base de datos, mostrar un mensaje de error
-            echo "<div class='flex-grow-1'>El nuevo nombre de usuario ya existe.</div>";
+        if (sqlUPDATE($sql)) {
+            echo "<div class='flex-grow-1'>El nombre de usuario se ha modificado correctamente.</div>";
         } else {
-            // El nuevo nombre de usuario no existe en la base de datos, actualizar el registro correspondiente
-            $sql = "UPDATE usuarios SET nombre='$nombre' WHERE id_usuario = '$id_user'";
-            if (mysqli_query($conn, $sql)) {
-                echo "<div class='flex-grow-1'>El nombre de usuario se ha modificado correctamente.</div>";
-            } else {
-                // Se produjo un error al actualizar el registro, mostrar un mensaje de error
-                echo "Error al modificar el nombre de usuario: " . mysqli_error($conn);
-            }
+            // Se produjo un error al actualizar el registro, mostrar un mensaje de error
+            echo "Error al modificar el nombre de usuario!";
         }
-    } catch (Exception $e) {
-        echo "Hay un fallo " . $e;
-    } finally {
-        // Cerrar la conexión y liberar recursos
-        mysqli_close($conn);
     }
 }
 
 
 function guardarCorreo($correo, $correo2, $id_user)
 {
-    if (repetirCorreo($correo, $correo2)) {
+    if (repetirValor($correo, $correo2)) {
         try {
             //conexion
             $conn = conectar();
@@ -495,7 +419,7 @@ function guardarCorreo($correo, $correo2, $id_user)
 
 function guardarPassword($pass, $pass2, $id_user)
 {
-    if (repetirPassword($pass, $pass2)) {
+    if (repetirValor($pass, $pass2)) {
         try {
             //conexion
             $conn = conectar();
@@ -525,20 +449,10 @@ function guardarPassword($pass, $pass2, $id_user)
 }
 
 // MODIFICAR
-function repetirCorreo($correo, $correo2)
+function repetirValor($valo, $valo2)
 {
     // Verificar si los correo es igual o no
-    if ($correo == $correo2) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-function repetirPassword($pass, $pass2)
-{
-    // Verificar si los correo es igual o no
-    if ($pass == $pass2) {
+    if ($valo == $valo2) {
         return true;
     } else {
         return false;
@@ -570,7 +484,7 @@ function guardarMarcador()
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $lat = $_POST['lat'];
         $lng = $_POST['lng'];
-    
+
         $descripcion = $_POST['descripcion'];
         $provincia = $_POST['provincia'];
         $ciudad = $_POST['ciudad'];
@@ -579,17 +493,17 @@ function guardarMarcador()
         $tipoPropiedad = $_POST['tipoPropiedad'];
         $precio = $_POST['precio'];
         $idUser = $_SESSION['usuario']['id_usuario'];
-    
-    
+
+
         // Establecer la conexión con la base de datos
         $conn = conectar();
-    
+
         $sql = "INSERT INTO propiedades (latitud, longitud, provincia, ciudad, ubicacion, codigo_postal, descripcion, precio, id_tipo_propiedad, id_usuario) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param('ddssssssii', $lat, $lng, $provincia, $ciudad, $ubicacion, $codigo_postal, $descripcion, $precio, $tipoPropiedad, $idUser);
         $stmt->execute();
-    
+
         // Verificar si la inserción fue exitosa
         if ($stmt->affected_rows > 0) {
             echo "El marcador se guardó correctamente.";
@@ -597,8 +511,8 @@ function guardarMarcador()
         } else {
             echo "Error al guardar el marcador.";
         }
-    
-        
+
+
         mysqli_close($conn);
     }
 }

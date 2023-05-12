@@ -15,15 +15,36 @@ require_once '../lib/modulos.php';
     <?php 
     // Pruebas
         menu_general();
-        validarUsuario($_SESSION['usuario']['id_usuario']);  echo "<br>";
-        validarAdmin($_SESSION['usuario']['id_usuario']);  echo "<br>";
-        validarEmpresa($_SESSION['usuario']['id_usuario']);  echo "<br>";
-        validarVIP($_SESSION['usuario']['id_usuario']);  echo "<br>";
-        validarVigilante($_SESSION['usuario']['id_usuario']);
 
+        if (validarUsuario($_SESSION['usuario']['id_usuario'])) {
+            echo "Usuario SI";
+        } else {
+            echo "Usuario NO";
+        }echo "<br>";
 
+        if (validarAdmin($_SESSION['usuario']['id_usuario'])) {
+            echo "Admin SI";
+        } else {
+            echo "Admin NO";
+        }echo "<br>";
 
+        if (validarEmpresa($_SESSION['usuario']['id_usuario'])) {
+            echo "Empresa SI";
+        } else {
+            echo "Empresa NO";
+        }echo "<br>";
 
+        if (validarVIP($_SESSION['usuario']['id_usuario'])) {
+            echo "VIP SI";
+        } else {
+            echo "VIP NO";
+        }echo "<br>";
+
+        if (validarVigilante($_SESSION['usuario']['id_usuario'])) {
+            echo "Vigilante SI";
+        } else {
+            echo "Vigilante NO";
+        }
     ?>
 
 </body>

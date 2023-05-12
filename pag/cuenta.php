@@ -51,9 +51,9 @@ require_once '../lib/modulos.php';
         <div class="flex-grow-1">
             <div id="seccion1" class="p-3" style="display: block;">
                 <h2>Informacion personal</h2><br>
-
+<!-- get hace falta -->
                 <h3>Correo</h3>
-                <?php echo $_SESSION['usuario']['email']; ?> <br><br>
+                <?php echo $_SESSION['usuario']['email']; ?> <br><br> 
 
                 <h3>Nombre</h3>
                 <?php echo $_SESSION['usuario']['nombre']; ?> <br><br>
