@@ -105,21 +105,20 @@ function menu_general()
                         }
                         ?>
 
-                        <li class="nav-item">
-                            <form action="ticket.php">
-                                <button class="btn nav-link" name="ticket" type="submit">Ticket</button>
-                            </form>
-                        </li>
-
                     </ul>
 
                     <form class="form-inline my-2 my-lg-0" action="cuenta.php" method="post">
-                        <input class="btn btn-outline-success my-2 my-sm-0" type="submit" name="cuenta" value="Cuenta" />
+                        <input class="btn btn-outline-success my-2 my-sm-0" type="submit" name="cuenta" value="Cuenta" />&nbsp;&nbsp;
+                    </form>
+
+                    <form class="form-inline my-2 my-lg-0" action="ticket.php" method="post">
+                        <input class="btn btn-outline-success my-2 my-sm-0" type="submit" name="ticket" value="Ticket" />
                     </form>
 
                     <form class="form-inline my-2 my-lg-0" action="../index.php" method="post">
-                        <input class="btn btn-outline-success my-2 my-sm-0" type="submit" name="cerrarSesion"
-                            value="Cerrar sesión" />
+                        <button class="btn nav-link" name="cerrarSesion" type="submit">
+                            <i class="fa-solid fa-right-from-bracket" style="color: #ffffff;"></i>
+                        </button>
                     </form>
                 </div>
             </div>
@@ -146,6 +145,7 @@ function head_info()
     <link href="css/modulos.css" rel="stylesheet" type="text/css">
     <link href="css/menu.css" rel="stylesheet" type="text/css">
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <?php
 }
 ?>

@@ -53,12 +53,13 @@ require_once '../lib/modulos.php';
                 <h2>Informacion personal</h2><br>
 
                 <h3>Correo</h3>
-                fasdfasdf <br><br>
+                <?php echo $_SESSION['usuario']['email']; ?> <br><br>
 
                 <h3>Nombre</h3>
-                fasdfasdf <br><br>
+                <?php echo $_SESSION['usuario']['nombre']; ?> <br><br>
 
-                <h3>Propieracdes</h3>
+                <h3>Propiedades</h3>
+                <?php listarPropiedades($_SESSION['usuario']['id_usuario']); ?>
             </div>
         </div>
 

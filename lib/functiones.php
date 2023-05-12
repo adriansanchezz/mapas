@@ -315,7 +315,7 @@ function validarVigilante($id_user)
     }
 }
 
-function listarRol($id_user)
+function listarRoles($id_user)
 {
     try {
         //conexion
@@ -340,6 +340,30 @@ function listarRol($id_user)
     }
 }
 
+function listarPropiedades($id_user)
+{
+    try {
+        //conexion
+        $conn = conectar();
+        //consulta
+        $sql = "SELECT p.id_propiedad, p.provincia, p.ciudad, p.ubicacion, p.codigo_postal, p.descripcion, p.precio, t.nombre
+                FROM propiedades p
+                LEFT JOIN tipospropiedades t ON p.id_tipo_propiedad = t.id_tipo_propiedad 
+                WHERE p.id_usuario = '$id_user'";
+        //Ejecutar
+        $result = mysqli_query($conn, $sql);
+
+        //Comprobar si existe el compo de la consulta
+        while ($row = mysqli_fetch_assoc($result)) {
+            echo $row['id_propiedad']  ."    -------    ".  $row['nombre'] ."    -------    ". $row['provincia'] ."    -------    ".  $row['ubicacion'] ."    -------    ".  $row['codigo_postal'] ."    -------    ".  $row['descripcion'] ."    -------    ". $row['precio'] . "<br>";
+        }
+    } catch (Exception $e) {
+        echo "Hay un fallo " . $e;
+    } finally {
+        // Cerrar la conexión y liberar recursos
+        mysqli_close($conn);
+    }
+}
 
 
 function agregarUsuario($id_user)

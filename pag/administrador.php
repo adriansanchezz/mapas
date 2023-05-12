@@ -44,7 +44,7 @@ require_once '../lib/modulos.php';
                 
                 <?php
                 if (isset($_REQUEST['administradorAdministradores'])) {
-                    listarRol($_SESSION['usuario']['id_usuario']);
+                    listarRoles($_SESSION['usuario']['id_usuario']);
                 }
                 ?>
 
