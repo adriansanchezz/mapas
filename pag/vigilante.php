@@ -21,7 +21,8 @@ require_once '../lib/modulos.php';
             <ul class="nav nav-pills flex-column mb-auto">
                 <li>
                     <form action="vigilante.php" method="post">
-                        <button type="submit" name="vigilantePrincipal" class="btn btn-link nav-link text-white">Principal
+                        <button type="submit" name="vigilantePrincipal"
+                            class="btn btn-link nav-link text-white">Principal
                         </button>
                     </form>
                 </li>
@@ -58,9 +59,10 @@ require_once '../lib/modulos.php';
         <?php
         if (isset($_REQUEST['misiones'])) {
             ?>
-            <div id="seccion1" class="p-3" style="display: block;">
-                <h1>MISIONES</h1>
-            </div>
+            
+                
+                <?php mapa("vigilar"); ?>
+            
             <?php
         }
         ?>
@@ -70,6 +72,7 @@ require_once '../lib/modulos.php';
             ?>
             <div id="seccion1" class="p-3" style="display: block;">
                 <h1>Recompensas</h1>
+                
             </div>
             <?php
         }
