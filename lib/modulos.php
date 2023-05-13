@@ -160,7 +160,9 @@ function mapa($valor)
         <div class="flex-grow-1">
             <div id="seccion1" class="p-3" style="display: block;">
                 <div class="p-3" style="display: block;">
-                    <h1>Aquí estará el mapa</h1>
+                    <h1>Bienvenido a nuestro mapa. </h1>
+                    <h4>Selecciona alguna ubicación para ver información:</h4>
+                    <h6>O busca la ubicación que desees.</h6>
                     ¿Quieres buscar una ubicación?<input type="text" id="direccion" placeholder="Buscar ubicación...">
                     <button type="button" onclick="buscarDireccion()">Buscar</button>
 
@@ -207,19 +209,7 @@ function mapa($valor)
                                                 var marker = L.marker([<?php echo $latitud; ?>, <?php echo $longitud; ?>]).addTo(map);
                                         marker.bindPopup("<div class='popup-content'><h3><?php echo $ubicacion . " " . $precio . "€"; ?></h3><p><?php echo $descripcion; ?></p><img src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación'></div><form action='empresa.php' method='POST'><input type='hidden' name='product_id' value='<?php echo $row['id_propiedad'] ?>'><input type='hidden' name='lat' value='<?php echo $latitud; ?>'><input type='hidden' name='lng' value='<?php echo $longitud; ?>'><input type='hidden' name='ubicacion' value='<?php echo $ubicacion; ?>'><input type='hidden' name='descripcion' value='<?php echo $descripcion; ?>'><button type='submit' name='add_to_cart' value='1'>Seleccionar</button></form>");
 
-                                        function seleccionarUbicacion(latitud, longitud, descripcion, ubicacion) {
-                                            // Enviar una solicitud POST al archivo "usuario.php" con los datos de la ubicación seleccionada
-                                            var xhttp = new XMLHttpRequest();
-                                            xhttp.onreadystatechange = function () {
-                                                if (this.readyState === 4 && this.status === 200) {
-                                                    // Redireccionar a la página del carrito después de agregar la ubicación al carrito
-                                                    window.location.href = "usuario.php?usuarioCarrito=1";
-                                                }
-                                            };
-                                            xhttp.open("POST", "usuario.php", true);
-                                            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                                            xhttp.send("compraUbicacion=1&lat=" + latitud + "&lng=" + longitud + "&ubicacion=" + encodeURIComponent(ubicacion) + "&descripcion=" + encodeURIComponent(descripcion));
-                                        }
+                                        
                                                 <?php
                                     }
                                 }
