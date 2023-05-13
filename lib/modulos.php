@@ -108,7 +108,8 @@ function menu_general()
                     </ul>
 
                     <form class="form-inline my-2 my-lg-0" action="cuenta.php" method="post">
-                        <input class="btn btn-outline-success my-2 my-sm-0" type="submit" name="cuenta" value="Cuenta" />&nbsp;&nbsp;
+                        <input class="btn btn-outline-success my-2 my-sm-0" type="submit" name="cuenta"
+                            value="Cuenta" />&nbsp;&nbsp;
                     </form>
 
                     <form class="form-inline my-2 my-lg-0" action="ticket.php" method="post">
@@ -185,73 +186,84 @@ function mapa($valor)
                             maxZoom: 18,
                         }).addTo(map);
 
-                                <?php
-                                // Establecer la conexión con la base de datos
-                                $conn = conectar();
+                        <?php
+                        // Establecer la conexión con la base de datos
+                        $conn = conectar();
 
-                                // Consultar los marcadores existentes
-                                $sql = "SELECT * FROM propiedades";
-                                $result = $conn->query($sql);
+                        // Consultar los marcadores existentes
+                        $sql = "SELECT * FROM propiedades";
+                        $result = $conn->query($sql);
 
-                                if ($result->num_rows > 0) {
-                                    while ($row = $result->fetch_assoc()) {
-                                        $latitud = $row['latitud'];
-                                        $longitud = $row['longitud'];
-                                        $descripcion = $row['descripcion'];
-                                        $ubicacion = $row['ubicacion'];
-                                        $precio = $row['precio'];
-                                        $apiKey = 'AIzaSyADr5gpzLPePzkWwz8C94wBQ21DzQ4GGVU'; // Reemplaza con tu propia API Key de Google Maps Static
-                        
-                                        $imageUrl = 'https://maps.googleapis.com/maps/api/streetview?size=400x300&location=' . $latitud . ',' . $longitud . '&key=' . $apiKey;
-                                        ?>
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                $latitud = $row['latitud'];
+                                $longitud = $row['longitud'];
+                                $descripcion = $row['descripcion'];
+                                $ubicacion = $row['ubicacion'];
+                                $precio = $row['precio'];
 
-                                                // Crear un marcador para cada registro de la base de datos
-                                                var marker = L.marker([<?php echo $latitud; ?>, <?php echo $longitud; ?>]).addTo(map);
-                                        marker.bindPopup("<div class='popup-content'><h3><?php echo $ubicacion . " " . $precio . "€"; ?></h3><p><?php echo $descripcion; ?></p><img src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación'></div><form action='empresa.php' method='POST'><input type='hidden' name='product_id' value='<?php echo $row['id_propiedad'] ?>'><input type='hidden' name='lat' value='<?php echo $latitud; ?>'><input type='hidden' name='lng' value='<?php echo $longitud; ?>'><input type='hidden' name='ubicacion' value='<?php echo $ubicacion; ?>'><input type='hidden' name='descripcion' value='<?php echo $descripcion; ?>'><button type='submit' name='add_to_cart' value='1'>Seleccionar</button></form>");
+                                $tipo = $row['id_tipo_propiedad'];
+                                $sql2 = "SELECT nombre FROM tipospropiedades WHERE id_tipo_propiedad = $tipo";
+                                $result2 = $conn->query($sql2);
 
-                                        
-                                                <?php
-                                    }
+                                if ($result2) {
+                                    $row2 = $result2->fetch_assoc();
+                                    $nombre_tipo = $row2['nombre'];
+                                } else {
+                                    $nombre_tipo = "Tipo de propiedad no encontrado";
                                 }
-
-                                mysqli_close($conn);
+                                $apiKey = 'AIzaSyADr5gpzLPePzkWwz8C94wBQ21DzQ4GGVU'; // Reemplaza con tu propia API Key de Google Maps Static
+                
+                                $imageUrl = 'https://maps.googleapis.com/maps/api/streetview?size=400x300&location=' . $latitud . ',' . $longitud . '&key=' . $apiKey;
                                 ?>
 
+                                // Crear un marcador para cada registro de la base de datos
+                                var marker = L.marker([<?php echo $latitud; ?>, <?php echo $longitud; ?>]).addTo(map);
+                                marker.bindPopup("<div class='popup-content'><h3><?php echo $nombre_tipo . " " . $ubicacion . " " . $precio . "€"; ?></h3><p><?php echo $descripcion; ?></p><img src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación'></div><form action='empresa.php' method='POST'><input type='hidden' name='product_id' value='<?php echo $row['id_propiedad'] ?>'><input type='hidden' name='lat' value='<?php echo $latitud; ?>'><input type='hidden' name='lng' value='<?php echo $longitud; ?>'><input type='hidden' name='ubicacion' value='<?php echo $ubicacion; ?>'><input type='hidden' name='descripcion' value='<?php echo $descripcion; ?>'><button type='submit' name='add_to_cart' value='1'>Seleccionar</button></form>");
 
-                            function buscarDireccion() {
-                                var direccion = document.getElementById('direccion').value;
 
-                                // Realizar la petición de geocodificación
-                                fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + direccion)
-                                    .then(function (response) {
-                                        return response.json();
-                                    })
-                                    .then(function (data) {
-                                        if (data.length > 0) {
-                                            var latitud = parseFloat(data[0].lat);
-                                            var longitud = parseFloat(data[0].lon);
-
-                                            // Centrar el mapa en la ubicación encontrada
-                                            map.setView([latitud, longitud], 13);
-
-                                            if (marker) {
-                                                map.removeLayer(marker);
-                                            }
-
-                                            marker = L.marker([latitud, longitud]).addTo(map);
-                                            marker.bindPopup("Ubicación encontrada").openPopup();
-
-                                            // Actualizar campos ocultos en el formulario con las coordenadas
-                                            document.getElementById('lat').value = latitud;
-                                            document.getElementById('lng').value = longitud;
-                                        } else {
-                                            alert("No se encontró la dirección especificada.");
-                                        }
-                                    })
-                                    .catch(function (error) {
-                                        console.log('Error:', error);
-                                    });
+                                <?php
                             }
+                        }
+
+                        mysqli_close($conn);
+                        ?>
+
+
+                        function buscarDireccion() {
+                            var direccion = document.getElementById('direccion').value;
+
+                            // Realizar la petición de geocodificación
+                            fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + direccion)
+                                .then(function (response) {
+                                    return response.json();
+                                })
+                                .then(function (data) {
+                                    if (data.length > 0) {
+                                        var latitud = parseFloat(data[0].lat);
+                                        var longitud = parseFloat(data[0].lon);
+
+                                        // Centrar el mapa en la ubicación encontrada
+                                        map.setView([latitud, longitud], 13);
+
+                                        if (marker) {
+                                            map.removeLayer(marker);
+                                        }
+
+                                        marker = L.marker([latitud, longitud]).addTo(map);
+                                        marker.bindPopup("Ubicación encontrada").openPopup();
+
+                                        // Actualizar campos ocultos en el formulario con las coordenadas
+                                        document.getElementById('lat').value = latitud;
+                                        document.getElementById('lng').value = longitud;
+                                    } else {
+                                        alert("No se encontró la dirección especificada.");
+                                    }
+                                })
+                                .catch(function (error) {
+                                    console.log('Error:', error);
+                                });
+                        }
 
                     </script>
 
