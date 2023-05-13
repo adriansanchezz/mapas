@@ -479,8 +479,6 @@ function mapa($valor)
                             // Centrar el mapa en la ubicación del usuario
                             map.setView([userLat, userLng], 13);
 
-                            // Resto de tu código aquí...
-
                             // Crear un círculo alrededor de la ubicación del usuario
                             var userCircle = L.circle([userLat, userLng], {
                                 color: 'blue',
@@ -489,21 +487,52 @@ function mapa($valor)
                                 radius: 500 // Radio del círculo en metros
                             }).addTo(map);
 
-                            // Generar puntos cercanos aleatorios
-                            var numPoints = 5; // Número de puntos cercanos a generar
-                            var maxDistance = 1000; // Distancia máxima en metros desde la ubicación del usuario
+                            // Obtener los límites del círculo
+                            var circleBounds = userCircle.getBounds();
+                            var circleBoundsNE = circleBounds.getNorthEast();
+                            var circleBoundsSW = circleBounds.getSouthWest();
+                            var circleBoundsLatMin = circleBoundsSW.lat;
+                            var circleBoundsLngMin = circleBoundsSW.lng;
+                            var circleBoundsLatMax = circleBoundsNE.lat;
+                            var circleBoundsLngMax = circleBoundsNE.lng;
 
-                            for (var i = 0; i < numPoints; i++) {
-                                var randomAngle = Math.random() * 360; // Ángulo aleatorio en grados
-                                var randomDistance = Math.random() * maxDistance; // Distancia aleatoria en metros
+                            // Consultar los marcadores dentro del límite
+                            // Reemplaza esta sección con el código PHP correspondiente
+                            fetch('get_markers.php', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    latMin: circleBoundsLatMin,
+                                    lngMin: circleBoundsLngMin,
+                                    latMax: circleBoundsLatMax,
+                                    lngMax: circleBoundsLngMax
+                                })
+                            })
+                                .then(function (response) {
+                                    return response.json();
+                                })
+                                .then(function (markers) {
 
-                                // Calcular la posición del punto cercano
-                                var lat = userLat + (randomDistance * Math.cos(randomAngle));
-                                var lng = userLng + (randomDistance * Math.sin(randomAngle));
+                                    markers.forEach(function (marker) {
+                                        var lat = marker.latitud;
+                                        var lng = marker.longitud;
+                                        var nombreTipo = marker.nombre_tipo;
+                                        var ubicacion = marker.ubicacion;
+                                        var precio = marker.precio;
+                                        var descripcion = marker.descripcion;
+                                        var imageUrl = marker.imagen_url;
 
-                                // Crear un marcador para el punto cercano
-                                var marker = L.marker([lat, lng]).addTo(map);
-                            }
+                                        // Crear un marcador para cada registro de la base de datos dentro del límite
+                                        var marker = L.marker([lat, lng]).addTo(map);
+                                    })
+
+                                })
+                                .catch(function (error) {
+                                    console.log("Error al obtener los marcadores: " + error.message);
+                                });
+
 
                         }, function (error) {
                             console.log("Error al obtener la ubicación del usuario: " + error.message);
@@ -511,8 +540,6 @@ function mapa($valor)
                     } else {
                         console.log("Geolocalización no es compatible en este navegador.");
                     }
-
-
                 </script>
 
             </div>
