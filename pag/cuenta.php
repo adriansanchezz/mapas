@@ -7,6 +7,7 @@ require_once '../lib/modulos.php';
 <html>
 
 <head>
+    <!-- Meter informacion general de head -->
     <?php head_info(); ?>
     <title>DisplayAds</title>
 </head>
@@ -18,7 +19,7 @@ require_once '../lib/modulos.php';
     <div class="d-flex vh-100">
         <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 240px;">
             <br><br>
-
+            <!-- Crear submenu con sus opciones -->
             <ul class="nav nav-pills flex-column mb-auto">
                 <li>
                     <form action="cuenta.php" method="post">
@@ -51,9 +52,9 @@ require_once '../lib/modulos.php';
         <div class="flex-grow-1">
             <div id="seccion1" class="p-3" style="display: block;">
                 <h2>Informacion personal</h2><br>
-<!-- get hace falta -->
+                <!-- get hace falta -->
                 <h3>Correo</h3>
-                <?php echo $_SESSION['usuario']['email']; ?> <br><br> 
+                <?php echo $_SESSION['usuario']['email']; ?> <br><br>
 
                 <h3>Nombre</h3>
                 <?php echo $_SESSION['usuario']['nombre']; ?> <br><br>
@@ -72,7 +73,7 @@ require_once '../lib/modulos.php';
                 <div id="seccion1" class="p-3" style="display: block;">
                     <form action="cuenta.php" method="post">
                         <h3>Modificar el Nombre</h3><br />
-                        <input type="text" name="nuevoNombre" placeholder="Nuevo nombre"><br /><br />
+                        <input type="text" name="nuevoNombre" placeholder="Nuevo nombre" required><br /><br />
 
                         <input type="submit" name="guardarNombre" value="Guardar" />
                     </form>
@@ -91,8 +92,8 @@ require_once '../lib/modulos.php';
                 <div id="seccion1" class="p-3" style="display: block;">
                     <form action="cuenta.php" method="post">
                         <h3>Modificar el Correo</h3><br />
-                        <input type="email" name="nuevoCorreo" placeholder="Nuevo correo"><br />
-                        <input type="email" name="nuevoCorreo2" placeholder="Confirmar correo"><br /><br />
+                        <input type="email" name="nuevoCorreo" placeholder="Nuevo correo" required><br />
+                        <input type="email" name="nuevoCorreo2" placeholder="Confirmar correo" required><br /><br />
 
                         <input type="submit" name="confirmarCorreo" value="Confirmar" />
                     </form>
@@ -111,8 +112,8 @@ require_once '../lib/modulos.php';
                 <div id="seccion1" class="p-3" style="display: block;">
                     <form action="cuenta.php" method="post">
                         <h3>Modificar la Constraseña</h3><br />
-                        <input type="password" name="nuevoPass" placeholder="Nuevo contraseña"><br />
-                        <input type="password" name="nuevoPass2" placeholder="Confirmar contraseña"><br /><br />
+                        <input type="password" name="nuevoPass" placeholder="Nuevo contraseña" required><br />
+                        <input type="password" name="nuevoPass2" placeholder="Confirmar contraseña" required><br /><br />
 
                         <input type="submit" name="cambioContra" value="Confirmar" />
                     </form>

@@ -74,7 +74,7 @@ function registrarUser($username, $email, $telefono, $password, $password2)
         $sql = "INSERT INTO usuarios (nombre, email, password, telefono)"
             . "VALUES ('$username', '$email', '$password_hash', '$telefono')";
 
-        if (sqlSELECT($sql)) {
+        if (sqlINSERT($sql)) {
             echo "Su usuario ha sido registrado correctamente!";
         }
     }
@@ -99,8 +99,10 @@ function autenticarUser($email, $password)
     } else {
         // Si no hay errores, los datos del formulario son válidos.
 
+        //Consulta
         $sql = "SELECT * FROM usuarios WHERE email='$email'";
 
+        //Verificar si el usuario existe o no
         if ($row = mysqli_fetch_assoc(sqlSELECT($sql))) {
             $password_hash = $row['password'];
 
@@ -141,7 +143,7 @@ function sqlSELECT($sql)
     }
 }
 
-
+// Sirve para las actualizacones de UPDATE
 // Duelve true o false
 function sqlUPDATE($sql)
 {
@@ -157,6 +159,7 @@ function sqlUPDATE($sql)
             return false;
         }
     } catch (Exception $e) {
+        // Lanzar erro si falla
         echo "Error al actualizar registro: " . $e;
     } finally {
         // Cerrar la conexión a la base de datos
@@ -164,6 +167,7 @@ function sqlUPDATE($sql)
     }
 }
 
+// Sirve para las actualizaciones de INSET
 // Duelve true o false
 function sqlINSERT($sql)
 {
@@ -179,6 +183,7 @@ function sqlINSERT($sql)
             return false;
         }
     } catch (Exception $e) {
+        // Lanzar erro si falla
         echo "Error al insertar registro: " . $e;
     } finally {
         // Cerrar la conexión a la base de datos
@@ -186,52 +191,27 @@ function sqlINSERT($sql)
     }
 }
 
-
-
-
-
-
-
-
+// Velificar si existe el rol de Usuario
 function validarUsuario($id_user)
 {
+    //Consultas
     $sql = "SELECT * FROM usuarios_roles WHERE id_usuario='$id_user' AND id_rol=(SELECT id_rol FROM roles WHERE nombre='Usuario')";
 
+    // Devuelve si true o false, segun si tiene o no tiene este rol
     if (mysqli_fetch_assoc(sqlSELECT($sql))) {
         return true;
     } else {
         return false;
     }
-    /*    try {
-    //conexion
-    $conn = conectar();
-    //consulta
-    $sql = "SELECT * FROM usuarios_roles WHERE id_usuario='$id_user' AND id_rol=(SELECT id_rol FROM roles WHERE nombre='Usuario')";
-    //Ejecutar
-    $result = mysqli_query($conn, $sql);
-    //Comprobar si existe el compo de la consulta
-    if (mysqli_fetch_assoc($result)) {
-    echo "Usuario SI";
-    return true;
-    } else {
-    echo "Usuario NO";
-    return false;
-    }
-    } catch (Exception $e) {
-    echo "Hay un fallo " . $e;
-    } finally {
-    // Cerrar la conexión y liberar recursos
-    mysqli_close($conn);
-    }
-    */
 }
 
-
+// Velificar si existe el rol de Admin
 function validarAdmin($id_user)
 {
-    //consulta
+    // Consulta
     $sql = "SELECT * FROM usuarios_roles WHERE id_usuario='$id_user' AND id_rol=(SELECT id_rol FROM roles WHERE nombre='Admin')";
 
+    // Devuelve si true o false, según si tiene o no tiene este rol
     if (mysqli_fetch_assoc(sqlSELECT($sql))) {
         return true;
     } else {
@@ -239,10 +219,13 @@ function validarAdmin($id_user)
     }
 }
 
+// Velificar si existe el rol de Empresa
 function validarEmpresa($id_user)
 {
+    //Consulta
     $sql = "SELECT * FROM usuarios_roles WHERE id_usuario='$id_user' AND id_rol=(SELECT id_rol FROM roles WHERE nombre='Empresa')";
 
+    // Devuelve si true o false, según si tiene o no tiene este rol
     if (mysqli_fetch_assoc(sqlSELECT($sql))) {
         return true;
     } else {
@@ -250,10 +233,13 @@ function validarEmpresa($id_user)
     }
 }
 
+// Velificar si existe el rol de VIP
 function validarVIP($id_user)
 {
+    // Consulta
     $sql = "SELECT * FROM usuarios_roles WHERE id_usuario='$id_user' AND id_rol=(SELECT id_rol FROM roles WHERE nombre='VIP')";
 
+    // Devuelve si true o false, según si tiene o no tiene este rol
     if (mysqli_fetch_assoc(sqlSELECT($sql))) {
         return true;
     } else {
@@ -261,10 +247,13 @@ function validarVIP($id_user)
     }
 }
 
+// Velificar si existe el rol de Vigilante
 function validarVigilante($id_user)
 {
+    // Consulta
     $sql = "SELECT * FROM usuarios_roles WHERE id_usuario='$id_user' AND id_rol=(SELECT id_rol FROM roles WHERE nombre='Vigilante')";
 
+    // Devuelve si true o false, según si tiene o no tiene este rol
     if (mysqli_fetch_assoc(sqlSELECT($sql))) {
         return true;
     } else {
@@ -272,95 +261,112 @@ function validarVigilante($id_user)
     }
 }
 
+// Listar usuario y sus datos con rol, para todo los usuraio que existe
 function listarRoles($id_user)
 {
+    // Consulta
     $sql = "SELECT u.nombre, u.email, r.nombre as nombre_rol
         FROM usuarios u
         LEFT JOIN usuarios_roles ur ON u.id_usuario = ur.id_usuario
         LEFT JOIN roles r ON ur.id_rol = r.id_rol";
 
+    // Guardar el resulatdo devulto
     $result = sqlSELECT($sql);
 
+    // Comprobar si existe el compo de la consulta, y listar los datos
     while ($row = mysqli_fetch_assoc($result)) {
         echo $row['nombre'] . "    -------    " . $row['email'] . "    -------    " . $row['nombre_rol'] . "<br>";
     }
 }
 
+// Listar Propiedad y sus datos, para todo los usuraio que existe
 function listarPropiedades($id_user)
 {
+    // Consulta
     $sql = "SELECT p.id_propiedad, p.provincia, p.ciudad, p.ubicacion, p.codigo_postal, p.descripcion, p.precio, t.nombre
     FROM propiedades p
     LEFT JOIN tipospropiedades t ON p.id_tipo_propiedad = t.id_tipo_propiedad 
     WHERE p.id_usuario = '$id_user'";
 
+    // Guardar el resulatdo devulto
     $result = sqlSELECT($sql);
 
-    //Comprobar si existe el compo de la consulta
+    // Comprobar si existe el compo de la consulta, y listar los datos
     while ($row = mysqli_fetch_assoc($result)) {
         echo $row['id_propiedad'] . "    -------    " . $row['nombre'] . "    -------    " . $row['provincia'] . "    -------    " . $row['ubicacion'] . "    -------    " . $row['codigo_postal'] . "    -------    " . $row['descripcion'] . "    -------    " . $row['precio'] . "<br>";
     }
 }
 
-
+// Agregar rol de Usuario
 function agregarUsuario($id_user)
 {
 
 }
 
-
+// Agregar rol de Admin
 function agregarAdmin($id_user)
 {
 
 }
 
+// Agregar rol de Empresa
 function agregarEmpresa($id_user)
 {
 
 }
 
+// Agregar rol de VIP
 function agregarVIP($id_user)
 {
 
 }
 
+// Agregar rol de Vigilante
 function agregarVigilante($id_user)
 {
 
 }
 
+// Eliminar rol de Usuario
 function eliminarUsuario($id_user)
 {
 
 }
 
-
+// Eliminar rol de Admin
 function eliminarAdmin($id_user)
 {
 
 }
 
+// Eliminar rol de Empresa
 function eliminarEmpresa($id_user)
 {
 
 }
 
+// Eliminar rol de VIP
 function eliminarVIP($id_user)
 {
 
 }
 
+// Eliminar rol de Vigilante
 function eliminarVigilante($id_user)
 {
 
 }
 
+// Actualizar dato de nombre, un parametro de nuevo nombre y id usuario
 function guardarNombre($nombre, $id_user)
 {
     //consulta
     $sql = "SELECT COUNT(*) as count FROM usuarios WHERE nombre = '$nombre'";
 
+    // Meter el resultado devulto para un valor;
     $datos = mysqli_fetch_assoc(sqlSELECT($sql));
 
+    // Comproba mediante count si existe ya ese nombre o es un nombre nuevo
     if ($datos["count"] > 0) {
         // El nuevo nombre de usuario ya existe en la base de datos, mostrar un mensaje de error
         echo "<div class='flex-grow-1'>El nuevo nombre de usuario ya existe.</div>";
@@ -377,14 +383,18 @@ function guardarNombre($nombre, $id_user)
     }
 }
 
-
+// Actualizar dato de correo, y pasa parametro de nuevo correo y correo repetido, mas su id usuario
 function guardarCorreo($correo, $correo2, $id_user)
 {
+    // Verificar si los datos repite o no
     if (repetirValor($correo, $correo2)) {
+        // Consulta
         $sql = "SELECT COUNT(*) as count FROM usuarios WHERE email = '$correo'";
 
+        // Meter el resultado devulto para un valor;
         $datos = mysqli_fetch_assoc(sqlSELECT($sql));
 
+        // Comproba mediante count si existe ya ese correo o no
         if ($datos["count"] > 0) {
             // El nuevo correo de usuario ya existe en la base de datos, mostrar un mensaje de error
             echo "<div class='flex-grow-1'>El nuevo correo de usuario ya existe.</div>";
@@ -398,46 +408,15 @@ function guardarCorreo($correo, $correo2, $id_user)
                 echo "Error al modificar el correo de usuario!";
             }
         }
-
-
-        //     try {
-        //         //conexion
-        //         $conn = conectar();
-
-        //         //consulta
-        //         $sql = "SELECT COUNT(*) as count FROM usuarios WHERE email = '$correo'";
-
-        //         //Ejecutar
-        //         $result = mysqli_query($conn, $sql);
-
-        //         $datos = mysqli_fetch_assoc($result);
-
-        //         if ($datos["count"] > 0) {
-        //             // El nuevo correo de usuario ya existe en la base de datos, mostrar un mensaje de error
-        //             echo "<div class='flex-grow-1'>El nuevo correo de usuario ya existe.</div>";
-        //         } else {
-        //             // El nuevo correo de usuario no existe en la base de datos, actualizar el registro correspondiente
-        //             $sql = "UPDATE usuarios SET email='$correo' WHERE id_usuario = '$id_user'";
-        //             if (mysqli_query($conn, $sql)) {
-        //                 echo "<div class='flex-grow-1'>El correo de usuario se ha modificado correctamente.</div>";
-        //             } else {
-        //                 // Se produjo un error al actualizar el registro, mostrar un mensaje de error
-        //                 echo "Error al modificar el correo de usuario: " . mysqli_error($conn);
-        //             }
-        //         }
-        //     } catch (Exception $e) {
-        //         echo "Hay un fallo " . $e;
-        //     } finally {
-        //         // Cerrar la conexión y liberar recursos
-        //         mysqli_close($conn);
-        //     }
     } else {
         echo "<div class='flex-grow-1'>Los correo no son iguales!</div>";
     }
 }
 
+// Actualizar dato de password, pasa parametro de nuevo pass y pass repetido, mas su id usuario
 function guardarPassword($pass, $pass2, $id_user)
 {
+    // Verificar si los datos repite o no
     if (repetirValor($pass, $pass2)) {
 
         //Hashar la contra
@@ -457,7 +436,7 @@ function guardarPassword($pass, $pass2, $id_user)
     }
 }
 
-// MODIFICAR
+// Pasar los valores para comprovar si repeti o no
 function repetirValor($valo, $valo2)
 {
     // Verificar si los correo es igual o no
@@ -467,8 +446,6 @@ function repetirValor($valo, $valo2)
         return false;
     }
 }
-
-
 
 
 function guardarMarcador()

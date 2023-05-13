@@ -7,6 +7,7 @@ require_once '../lib/modulos.php';
 <html>
 
 <head>
+    <!-- Meter informacion general de head -->
     <?php head_info(); ?>
     <title>DisplayAds</title>
 </head>
@@ -14,7 +15,7 @@ require_once '../lib/modulos.php';
 <body>
     <!-- Menu general -->
     <?php menu_general(); ?>
-
+<!-- Crear submenu con sus opciones -->
     <div class="d-flex vh-100">
         <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 200px;">
             <br><br>

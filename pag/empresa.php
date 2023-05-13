@@ -7,6 +7,7 @@ require_once '../lib/modulos.php';
 <html>
 
 <head>
+    <!-- Meter informacion general de head -->
     <?php head_info(); ?>
     <title>DisplayAds</title>
     <style>
@@ -29,7 +30,7 @@ require_once '../lib/modulos.php';
     <div class="d-flex vh-100">
         <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 200px;">
             <br><br>
-
+            <!-- Crear submenu con sus opciones -->
             <ul class="nav nav-pills flex-column mb-auto">
                 <li class="nav-item">
                     <form action="empresa.php" method="post">

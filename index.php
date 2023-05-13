@@ -9,6 +9,7 @@ if(isset($_POST['cerrarSesion'])){
 ?>
 <html>
     <head>
+        <!-- Meter informacion general de head -->
         <?php head_info(); ?>
         <title>DisplayAds</title>
     </head>

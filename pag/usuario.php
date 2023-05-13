@@ -7,6 +7,7 @@ require_once '../lib/modulos.php';
 <html>
 
 <head>
+    <!-- Meter informacion general de head -->
     <?php head_info(); ?>
     <title>DisplayAds</title>
 </head>
@@ -14,7 +15,7 @@ require_once '../lib/modulos.php';
 <body>
     <!-- Menu general -->
     <?php menu_general(); ?>
-
+<!-- Crear submenu con sus opciones -->
     <div class="d-flex vh-100">
         <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 200px;">
             <br><br>
@@ -168,17 +169,6 @@ require_once '../lib/modulos.php';
             ?>
             <div class="flex-grow-1">
                 <div id="seccion1" class="p-3" style="display: block;">
-                    <form class="form-inline my-2 my-lg-0" action="usuario.php" method="post">
-                        <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioMapa" type="submit">Mapa</button>
-                    </form>
-                    <form class="form-inline my-2 my-lg-0" action="usuario.php" method="post">
-                        <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioTienda"
-                            type="submit">Tienda</button>
-                    </form>
-                    <form class="form-inline my-2 my-lg-0" action="usuario.php" method="post">
-                        <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioCarrito"
-                            type="submit">Carrito</button>
-                    </form>
                     <h1>Carrito</h1>
                     <div class="products">
                         <?php

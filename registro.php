@@ -6,6 +6,7 @@ require_once 'lib/modulos.php';
 ?>
 <html>
     <head>
+        <!-- Meter informacion general de head -->
         <?php head_info(); ?>
         <title>DisplayAds</title>
     </head>
@@ -15,19 +16,19 @@ require_once 'lib/modulos.php';
             <div class="form"> 
                 <form action="registro.php" method="post">
                     <label>Nombre de usuario</label><br>
-                    <input type="text" name="username"/><br/>
+                    <input type="text" name="username" required/><br/>
                     
                     <label>Correo electronico</label><br>
-                    <input type="email" name="correo"/><br/>
+                    <input type="email" name="correo" required/><br/>
                     
                     <label>Numero de telefono</label><br>
-                    <input type="tel" name="telefono"/><br/>
+                    <input type="tel" name="telefono" required/><br/>
                     
                     <label>Contraseña</label><br>
-                    <input type="password" name="password"/><br/>
+                    <input type="password" name="password" required/><br/>
                     
                     <label>Repite la contraseña</label><br>
-                    <input type="password" name="password2"/><br/>
+                    <input type="password" name="password2" required/><br/>
                     
                     <input type="submit" name="registrar" value="Registrarse"/>
                 </form>

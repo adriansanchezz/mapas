@@ -38,3 +38,42 @@ $conn->close();
 header('Content-Type: application/json');
 echo json_encode($markers);
 ?>
+
+<!-- 
+function obtenerMarcadores($latMin, $lngMin, $latMax, $lngMax) {
+    require_once '../lib/functiones.php';
+    require_once '../lib/modulos.php';
+
+    // Establecer la conexión con la base de datos
+    $conn = conectar();
+
+    // Verificar la conexión
+    if ($conn->connect_error) {
+        die("Error de conexión a la base de datos: " . $conn->connect_error);
+    }
+
+    // Consultar los marcadores existentes dentro del límite
+    $sql = "SELECT * FROM propiedades WHERE latitud BETWEEN ? AND ? AND longitud BETWEEN ? AND ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("dddd", $latMin, $latMax, $lngMin, $lngMax);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $markers = array();
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $markers[] = $row;
+        }
+    }
+
+    // Cerrar la conexión a la base de datos
+    $stmt->close();
+    $conn->close();
+
+    // Devolver los marcadores como respuesta en formato JSON
+    return json_encode($markers);
+}
+
+$marcadores = obtenerMarcadores(37.123, -122.456, 37.456, -122.123);
+echo $marcadores;
+ -->
