@@ -448,10 +448,14 @@ function repetirValor($valo, $valo2)
 }
 
 
+// Función utilizada para guardar un marcador en el mapa del menú de usuario. 
 function guardarMarcador()
 {
 
+    // Se verifica que la solicitud sea un método post.
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+        // Atrapa todos los valores situados en la página mediante post.
         $lat = $_POST['lat'];
         $lng = $_POST['lng'];
 
@@ -465,24 +469,30 @@ function guardarMarcador()
         $idUser = $_SESSION['usuario']['id_usuario'];
 
 
-        // Establecer la conexión con la base de datos
+        // Establecer la conexión con la base de datos.
         $conn = conectar();
 
+        // Realización de la consulta a la base de datos a través de un bind param.
         $sql = "INSERT INTO propiedades (latitud, longitud, provincia, ciudad, ubicacion, codigo_postal, descripcion, precio, id_tipo_propiedad, id_usuario) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        // Se comprueba que la consulta sea adecuada.
         $stmt = $conn->prepare($sql);
+        // Y mediante un bind_param se establecen los valores.
         $stmt->bind_param('ddssssssii', $lat, $lng, $provincia, $ciudad, $ubicacion, $codigo_postal, $descripcion, $precio, $tipoPropiedad, $idUser);
+        // Se ejecuta la consulta.
         $stmt->execute();
 
-        // Verificar si la inserción fue exitosa
+        // Verificar si la inserción fue exitosa.
         if ($stmt->affected_rows > 0) {
+            // Si lo fue, se muestra que el marcador fue guardado de manera correcta y un botón para confirmar.
             echo "El marcador se guardó correctamente.";
             echo "<form action='usuario.php'><button type='submit'>Aceptar</button></form>";
         } else {
+            // Si no lo fue, se indica un error.
             echo "Error al guardar el marcador.";
         }
 
-
+        // Se cierra la conexión sql.
         mysqli_close($conn);
     }
 }
