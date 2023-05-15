@@ -15,18 +15,18 @@ function menu_index()
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item active">
-                        <a class="nav-link" href="Inicio.php">INICIO <span class="sr-only">(current)</span></a>
+                        <a class="nav-link" href="index.php">INICIO <span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="Nosotros.php">Nosotros</a>
+                        <a class="nav-link" href="nosotros.php">Nosotros</a>
                     </li>
                 </ul>
 
-                <form class="form-inline my-2 my-lg-0" action="Login.php">
+                <form class="form-inline my-2 my-lg-0" action="login.php">
                     <button class="btn btn-outline-success my-2 my-sm-0" name="login" type="submit">Iniciar Sesión</button>
                 </form>
 
-                <form class="form-inline my-2 my-lg-0" action="Registro.php">
+                <form class="form-inline my-2 my-lg-0" action="registro.php">
                     <button class="btn btn-outline-success my-2 my-sm-0" name="registro" type="submit">Registrarse</button>
                 </form>
             </div>
