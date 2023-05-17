@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <?php
 //Importar y abrir session que esta dentro de functiones.php
-require_once '../lib/functiones.php';
 require_once '../lib/modulos.php';
 ?>
 <html>
@@ -60,7 +59,7 @@ require_once '../lib/modulos.php';
                 <?php echo $_SESSION['usuario']['nombre']; ?> <br><br>
 
                 <h3>Propiedades</h3>
-                <?php listarPropiedades($_SESSION['usuario']['id_usuario']); ?>
+                <?php listarPublicidades($_SESSION['usuario']['id_usuario']); ?>
             </div>
         </div>
 

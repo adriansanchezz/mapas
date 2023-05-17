@@ -38,10 +38,10 @@ require_once '../lib/modulos.php';
                             class="btn btn-link nav-link text-white">Principal</button>
                     </form>
                 </li>
-                <li>
+                <li class="nav-item">
                     <form action="empresa.php" method="post">
-                        <button type="submit" name="empresaCarrito"
-                            class="btn btn-link nav-link text-white">Carrito</button>
+                        <button type="submit" name="empresaMapa"
+                            class="btn btn-link nav-link text-white">Publicitarse</button>
                     </form>
                 </li>
                 <li>
@@ -59,12 +59,8 @@ require_once '../lib/modulos.php';
             ?>
             <div class="flex-grow-1">
                 <div id="seccion1" class="p-3" style="display: block;">
-
-                    <form class="form-inline my-2 my-lg-0" action="empresa.php" method="post">
-                        <button class="btn btn-outline-success my-2 my-sm-0" name="empresaMapa" type="submit">Mapa</button>
-                    </form>
+                    <h2>Noticias para empresa</h2><br>
                 </div>
-
             </div>
             <?php
         }
@@ -75,6 +71,7 @@ require_once '../lib/modulos.php';
         if (isset($_REQUEST['empresaMapa'])) {
             mapa("ver");
         }
+
 
         if (isset($_POST['add_to_cart'])) {
             $product_id = $_POST['product_id'];
@@ -148,7 +145,7 @@ require_once '../lib/modulos.php';
 
                     if (!empty($productIds)) {
                         $placeholders = implode(',', array_fill(0, count($productIds), '?'));
-                        $sql = "SELECT * FROM propiedades WHERE id_propiedad IN ($placeholders)";
+                        $sql = "SELECT * FROM publicidades WHERE id_publicidad IN ($placeholders)";
                         $conn = conectar();
                         $stmt = $conn->prepare($sql);
                         $stmt->bind_param(str_repeat('s', count($productIds)), ...$productIds);
@@ -158,7 +155,7 @@ require_once '../lib/modulos.php';
                         if ($result->num_rows > 0) {
                             // Iterar sobre los productos en el carrito
                             while ($row = $result->fetch_assoc()) {
-                                $product_id = $row['id_propiedad'];
+                                $product_id = $row['id_publicidad'];
                                 $product_name = $row['ubicacion'];
                                 $product_description = $row['provincia'];
                                 $product_price = $row['precio'];

@@ -280,7 +280,7 @@ function listarRoles($id_user)
 }
 
 // Listar Propiedad y sus datos, para todo los usuraio que existe
-function listarPropiedades($id_user)
+function listarPublicidades($id_user)
 {
     // Consulta
     $sql = "SELECT p.id_publicidad, p.provincia, p.ciudad, p.ubicacion, p.codigo_postal, p.descripcion, p.precio, t.nombre
@@ -464,7 +464,7 @@ function guardarMarcador()
         $ciudad = $_POST['ciudad'];
         $ubicacion = $_POST['ubicacion'];
         $codigo_postal = $_POST['codigo_postal'];
-        $tipoPropiedad = $_POST['tipoPropiedad'];
+        $tipoPublicidad = $_POST['tipoPublicidad'];
         $precio = $_POST['precio'];
         $idUser = $_SESSION['usuario']['id_usuario'];
 
@@ -473,12 +473,12 @@ function guardarMarcador()
         $conn = conectar();
 
         // Realización de la consulta a la base de datos a través de un bind param.
-        $sql = "INSERT INTO propiedades (latitud, longitud, provincia, ciudad, ubicacion, codigo_postal, descripcion, precio, id_tipo_propiedad, id_usuario) 
+        $sql = "INSERT INTO publicidades (latitud, longitud, provincia, ciudad, ubicacion, codigo_postal, descripcion, precio, id_tipo_publicidad, id_usuario) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         // Se comprueba que la consulta sea adecuada.
         $stmt = $conn->prepare($sql);
         // Y mediante un bind_param se establecen los valores.
-        $stmt->bind_param('ddssssssii', $lat, $lng, $provincia, $ciudad, $ubicacion, $codigo_postal, $descripcion, $precio, $tipoPropiedad, $idUser);
+        $stmt->bind_param('ddssssssii', $lat, $lng, $provincia, $ciudad, $ubicacion, $codigo_postal, $descripcion, $precio, $tipoPublicidad, $idUser);
         // Se ejecuta la consulta.
         $stmt->execute();
 
@@ -496,6 +496,7 @@ function guardarMarcador()
         mysqli_close($conn);
     }
 }
+
 
 
 
