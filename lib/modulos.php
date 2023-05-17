@@ -97,7 +97,7 @@ function menu_general()
                             ?>
                             <li class="nav-item">
                                 <form action="administrador.php">
-                                    <button class="btn nav-link" name="administradorPrincipal"
+                                    <button class="btn nav-link" name="administradorPanel"
                                         type="submit">Administrador</button>
                                 </form>
                             </li>

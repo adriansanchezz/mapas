@@ -6,6 +6,7 @@ require_once 'lib/modulos.php';
 if(isset($_POST['cerrarSesion'])){
     session_destroy(); // Destruye todas las variables de sesión
 }
+sumarVisitaTotal();
 ?>
 <html>
     <head>

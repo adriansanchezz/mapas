@@ -18,6 +18,18 @@ require_once '../lib/modulos.php';
         // Menu general
         menu_general();
 
+
+
+
+
+
+
+
+
+
+
+
+        
     } else {
         echo ('Acceso denegado');
         print '<a href ="../index.php"><button>Volver</button></a>';

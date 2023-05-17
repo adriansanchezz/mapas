@@ -384,6 +384,7 @@ function guardarNombre($nombre, $id_user)
     }
 }
 
+
 // Actualizar dato de correo, y pasa parametro de nuevo correo y correo repetido, mas su id usuario
 function guardarCorreo($correo, $correo2, $id_user)
 {
@@ -413,6 +414,7 @@ function guardarCorreo($correo, $correo2, $id_user)
         echo "<div class='flex-grow-1'>Los correo no son iguales!</div>";
     }
 }
+
 
 // Actualizar dato de password, pasa parametro de nuevo pass y pass repetido, mas su id usuario
 function guardarPassword($pass, $pass2, $id_user)
@@ -447,6 +449,64 @@ function repetirValor($valo, $valo2)
         return false;
     }
 }
+
+
+
+
+
+// Actualizar dato de password, pasa parametro de nuevo pass y pass repetido, mas su id usuario
+function sumarVisitaTotal()
+{
+    // Consulta
+    $sql = "SELECT COUNT(*) as count, numero FROM pagina_info WHERE titulo = 'visitas'";
+
+    // Meter el resultado devulto para un valor;
+    $datos = mysqli_fetch_assoc(sqlSELECT($sql));
+
+    // Comproba mediante count si existe ya ese correo o no
+    if ($datos["count"] > 0) {
+        // ya existe en la base de datos
+        $n = $datos["numero"] + 1;
+
+        //consulta
+        $sql = "UPDATE pagina_info SET numero='$n' WHERE titulo = 'visitas'";
+        sqlUPDATE($sql);
+    } else {
+        // no existe en la base de datos
+        $sql = "INSERT INTO pagina_info (titulo, numero, descripcion)"
+            . "VALUES ('visitas', 1, 'Visitas totales de la pagina')";
+        sqlSELECT($sql);
+    }
+}
+
+
+
+function verVisitaTotal()
+{
+    // Consulta
+    $sql = "SELECT numero FROM pagina_info WHERE titulo = 'visitas'";
+
+    // Meter el resultado devulto para un valor;
+    $datos = mysqli_fetch_assoc(sqlSELECT($sql));
+    echo $datos["numero"];
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // Función utilizada para guardar un marcador en el mapa del menú de usuario. 

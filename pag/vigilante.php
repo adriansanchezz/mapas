@@ -35,7 +35,6 @@ require_once '../lib/modulos.php';
                             </button>
                         </form>
                     </li>
-
                     <li>
                         <form action="vigilante.php" method="post">
                             <button type="submit" name="recompesas" class="btn btn-link nav-link text-white">Recompensas
@@ -90,7 +89,5 @@ require_once '../lib/modulos.php';
     }
     ?>
 
-
 </body>
-
 </html>
