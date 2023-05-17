@@ -13,39 +13,50 @@ require_once '../lib/modulos.php';
 </head>
 
 <body>
-    <?php 
-    // Pruebas
+    <?php
+    if (isset($_SESSION['usuario'])) {
+        // Menu general
         menu_general();
 
         if (validarUsuario($_SESSION['usuario']['id_usuario'])) {
             echo "Usuario SI";
         } else {
             echo "Usuario NO";
-        }echo "<br>";
+        }
+        echo "<br>";
 
         if (validarAdmin($_SESSION['usuario']['id_usuario'])) {
             echo "Admin SI";
         } else {
             echo "Admin NO";
-        }echo "<br>";
+        }
+        echo "<br>";
 
         if (validarEmpresa($_SESSION['usuario']['id_usuario'])) {
             echo "Empresa SI";
         } else {
             echo "Empresa NO";
-        }echo "<br>";
+        }
+        echo "<br>";
 
         if (validarVIP($_SESSION['usuario']['id_usuario'])) {
             echo "VIP SI";
         } else {
             echo "VIP NO";
-        }echo "<br>";
+        }
+        echo "<br>";
 
         if (validarVigilante($_SESSION['usuario']['id_usuario'])) {
             echo "Vigilante SI";
         } else {
             echo "Vigilante NO";
         }
+
+    } else {
+        echo ('Acceso denegado');
+        print '<a href ="../index.php"><button>Volver</button></a>';
+        session_destroy();
+    }
     ?>
 
 </body>

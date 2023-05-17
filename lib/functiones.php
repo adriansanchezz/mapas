@@ -109,6 +109,7 @@ function autenticarUser($email, $password)
             // Verifica la contraseña
             if (password_verify($password, $password_hash)) {
                 $_SESSION['usuario'] = $row;
+                $_SESSION['validarEstado'] = true;
                 header("location:pag/principal.php");
                 exit; // Es importante poner exit después del header para asegurarnos de que el script no siga ejecutándose
             } else {
