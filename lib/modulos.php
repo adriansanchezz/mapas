@@ -211,7 +211,7 @@ function mapa($valor)
 
                                 // Se obtiene la id del tipo de propiedad.
                                 $tipo = $row['id_tipo_propiedad'];
-
+                                
                                 // Y mediante una consulta a la tabla tipospropiedades se obtiene el nombre del tipo de propiedad que es.
                                 $sql2 = "SELECT nombre FROM tipospropiedades WHERE id_tipo_propiedad = $tipo";
                                 $result2 = $conn->query($sql2);
@@ -304,6 +304,9 @@ function mapa($valor)
                         /* Sombra */
                     }
                 </style>
+
+                    
+
                 <script>
                     // Se crea el mapa.
                     var map = L.map('map').setView([43.3828500, -3.2204300], 13);
@@ -424,18 +427,6 @@ function mapa($valor)
                             alert('Los campos de título y texto no pueden estar vacíos.');
                             return false;
                         }
-                        else {
-                            var regex = /^[\w\s]+,\s*\d+(?:,\s*\d+[ºª]?[A-Za-z]+\s*)?$/;
-
-
-                            if (regex.test(descripcion)) {
-                                // La descripción tiene el formato correcto
-                                console.log('La descripción sigue el formato válido.');
-                            } else {
-                                alert('Los campos de título y texto no pueden estar vacíos.');
-                                return false;
-                            }
-                        }
 
                         if (isNaN(latitud) || isNaN(longitud)) {
                             alert('Debe seleccionar una ubicación en el mapa.');
@@ -445,7 +436,7 @@ function mapa($valor)
                         return true;
                     }
                 </script>
-
+                
                 <form action="usuario.php" method="post" onsubmit="return validarFormulario(); guardarMarcador();">
                     <input type="hidden" name="lat" id="lat">
                     <input type="hidden" name="lng" id="lng">
@@ -563,7 +554,6 @@ function mapa($valor)
 
                                         // Crear un marcador para cada registro de la base de datos dentro del límite
                                         var marker = L.marker([lat, lng]).addTo(map);
-                                        marker.bindPopup("<div><p>" + descripcion + "</p></div>");
                                     })
                                 })
                                 .catch(function (error) {
@@ -588,3 +578,5 @@ function mapa($valor)
 
 }
 ?>
+
+

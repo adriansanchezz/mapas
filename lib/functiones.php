@@ -283,9 +283,9 @@ function listarRoles($id_user)
 function listarPropiedades($id_user)
 {
     // Consulta
-    $sql = "SELECT p.id_propiedad, p.provincia, p.ciudad, p.ubicacion, p.codigo_postal, p.descripcion, p.precio, t.nombre
-    FROM propiedades p
-    LEFT JOIN tipospropiedades t ON p.id_tipo_propiedad = t.id_tipo_propiedad 
+    $sql = "SELECT p.id_publicidad, p.provincia, p.ciudad, p.ubicacion, p.codigo_postal, p.descripcion, p.precio, t.nombre
+    FROM publicidades p
+    LEFT JOIN tipospublicidades t ON p.id_tipo_publicidad = t.id_tipo_publicidad
     WHERE p.id_usuario = '$id_user'";
 
     // Guardar el resulatdo devulto
@@ -293,7 +293,7 @@ function listarPropiedades($id_user)
 
     // Comprobar si existe el compo de la consulta, y listar los datos
     while ($row = mysqli_fetch_assoc($result)) {
-        echo $row['id_propiedad'] . "    -------    " . $row['nombre'] . "    -------    " . $row['provincia'] . "    -------    " . $row['ubicacion'] . "    -------    " . $row['codigo_postal'] . "    -------    " . $row['descripcion'] . "    -------    " . $row['precio'] . "<br>";
+        echo $row['id_publicidad'] . "    -------    " . $row['nombre'] . "    -------    " . $row['provincia'] . "    -------    " . $row['ubicacion'] . "    -------    " . $row['codigo_postal'] . "    -------    " . $row['descripcion'] . "    -------    " . $row['precio'] . "<br>";
     }
 }
 
