@@ -85,13 +85,6 @@ require_once '../lib/modulos.php';
 
                     if (isset($_REQUEST['administradorProductos'])) {
                         echo "<div>";
-                        echo "<form action='administrador.php'>";
-                        echo "<input type='submit' name='anhadirProductos' value='Añadir productos'/>";
-                        echo "<input type='submit' name='borrarProductos' value='Borrar productos'/>";
-                        echo "</div>";
-
-                    }
-                    if (isset($_REQUEST['anhadirProductos'])) {
                         echo "<div class='container'>";
                         echo "<h2 class='mt-5'>Crear nuevo producto</h2>";
                         echo "<form action='administrador.php' method='POST' enctype='multipart/form-data'>";
@@ -114,117 +107,6 @@ require_once '../lib/modulos.php';
                         echo "</form>";
                         echo "</div>";
 
-                        echo "<h1 class='mt-5'>Lista de Productos</h1>";
-                        $conn = conectar();
-                        $sql = "SELECT * FROM productos";
-                        $result = $conn->query($sql);
-
-
-
-                        // Verificar si se encontraron productos
-                        if ($result->num_rows > 0) {
-                            echo "<table class='table table-striped'>";
-                            echo "<thead>";
-                            echo "<tr>";
-                            echo "<th>Nombre</th>";
-                            echo "<th>Descripcion</th>";
-                            echo "<th>Precio</th>";
-                            echo "<th>Foto</th>";
-                            echo "</tr>";
-                            echo "</thead>";
-                            echo "<tbody>";
-                            while ($row = mysqli_fetch_assoc($result)) {
-                                echo "<tr>";
-                                echo "<td>" . $row["nombre"] . "</td>";
-                                echo "<td>" . $row["descripcion"] . "</td>";
-                                echo "<td>" . $row["precio"] . "</td>";
-
-                                $sql2 = "SELECT * FROM `fotos` where id_producto =" . $row['id_producto'];
-                                $result2 = $conn->query($sql2);
-
-                                echo "<td>";
-                                if ($result2->num_rows > 0) {
-                                    // Recuperar la información de la imagen
-                                    $row2 = $result2->fetch_assoc();
-                                    $imagen = $row2["foto"];
-
-                                    // Mostrar la imagen en la página
-                                    echo "<img src='data:image/jpeg;base64," . base64_encode($imagen) . "' alt='Imagen del producto'>";
-                                } else {
-                                    echo "No se encontró la imagen asociada.";
-                                }
-                                echo "</td>";
-
-                                echo "</tr>";
-                            }
-                            echo "</tbody>";
-                            echo "</table>";
-                        } else {
-                            echo "<p>No hay productos disponibles.</p>";
-                        }
-
-                    }
-
-
-                    if (isset($_POST['nuevoProducto'])) {
-                        $nombreProducto = $_POST['nombre'];
-                        $descripcionProducto = $_POST['descripcion'];
-                        $precioProducto = $_POST['precio'];
-
-
-                        $conn = conectar();
-                        $sql = "INSERT INTO `productos`(`nombre`, `descripcion`, `precio`) VALUES (?, ?, ?)";
-                        $stmt = $conn->prepare($sql);
-                        // Y mediante un bind_param se establecen los valores.
-                        $stmt->bind_param('ssd', $nombreProducto, $descripcionProducto, $precioProducto);
-                        // Se ejecuta la consulta.
-                        $stmt->execute();
-
-                        // Verificar si la inserción fue exitosa.
-                        if ($stmt->affected_rows > 0) {
-
-                            if (isset($_FILES['imagen'])) {
-                                if ($_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
-                                    $imagen = $_FILES['imagen']['tmp_name'];
-                                    $contenidoImagen = file_get_contents($imagen);
-                                    $ultimoIdProducto = $stmt->insert_id;
-                                    $sql = "INSERT INTO `fotos`(`foto`, `id_producto`) VALUES (?, ?)";
-                                    $stmt2 = $conn->prepare($sql);
-                                    $stmt2->bind_param("si", $contenidoImagen, $ultimoIdProducto);
-                                    // Ejecutar la consulta
-                                    if ($stmt2->execute()) {
-                                        echo "<script>window.location.href = 'administrador.php?anhadirProductos=Añadir+productos';</script>";
-                                        exit();
-                                    } else {
-                                        echo "Error al subir la imagen: " . $stmt->error;
-                                    }
-
-                                }
-                            } else {
-                                echo "<h1>ERROR</h1>";
-                            }
-
-                        } else {
-                            // Si no lo fue, se indica un error.
-                            echo "Error al guardar el marcador.";
-                        }
-                    }
-
-
-                    if (isset($_POST['borrarProducto'])) {
-                        $id = $_POST['idProducto'];
-                        $conn = conectar();
-                        $sql = "DELETE FROM `productos` WHERE id_producto =" . $id . ";";
-                        $resultado = mysqli_query($conn, $sql);
-
-                        if ($resultado) {
-                            echo "<script>window.location.href = 'administrador.php?borrarProductos=Borrar+productos';</script>";
-                            exit();
-                        } else {
-                            echo "Error al ejecutar la consulta de eliminación: " . mysqli_error($conn);
-                        }
-                    }
-                    if (isset($_REQUEST['borrarProductos'])) {
                         echo "<h1>Lista de Productos</h1>";
                         $conn = conectar();
                         $sql = "SELECT * FROM productos";
@@ -282,12 +164,70 @@ require_once '../lib/modulos.php';
                         } else {
                             echo "<option value=''>No hay tipos de publicidades disponibles</option>";
                         }
+
+                        echo "</div>";
+
                     }
+                    if (isset($_REQUEST['anhadirProductos'])) {
 
-                    if (isset($_REQUEST['actualizarProducto'])) {
 
                     }
+                    if (isset($_POST['nuevoProducto'])) {
+                        $nombreProducto = $_POST['nombre'];
+                        $descripcionProducto = $_POST['descripcion'];
+                        $precioProducto = $_POST['precio'];
 
+
+                        $conn = conectar();
+                        $sql = "INSERT INTO `productos`(`nombre`, `descripcion`, `precio`) VALUES (?, ?, ?)";
+                        $stmt = $conn->prepare($sql);
+                        // Y mediante un bind_param se establecen los valores.
+                        $stmt->bind_param('ssd', $nombreProducto, $descripcionProducto, $precioProducto);
+                        // Se ejecuta la consulta.
+                        $stmt->execute();
+
+                        // Verificar si la inserción fue exitosa.
+                        if ($stmt->affected_rows > 0) {
+
+                            if (isset($_FILES['imagen'])) {
+                                if ($_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
+                                    $imagen = $_FILES['imagen']['tmp_name'];
+                                    $contenidoImagen = file_get_contents($imagen);
+                                    $ultimoIdProducto = $stmt->insert_id;
+                                    $sql = "INSERT INTO `fotos`(`foto`, `id_producto`) VALUES (?, ?)";
+                                    $stmt2 = $conn->prepare($sql);
+                                    $stmt2->bind_param("si", $contenidoImagen, $ultimoIdProducto);
+                                    // Ejecutar la consulta
+                                    if ($stmt2->execute()) {
+                                        echo "<script>window.location.href = 'administrador.php?administradorProductos=';</script>";
+                                        exit();
+                                    } else {
+                                        echo "Error al subir la imagen: " . $stmt->error;
+                                    }
+
+                                }
+                            } else {
+                                echo "<h1>ERROR</h1>";
+                            }
+
+                        } else {
+                            // Si no lo fue, se indica un error.
+                            echo "Error al guardar el marcador.";
+                        }
+                    }
+                    if (isset($_POST['borrarProducto'])) {
+                        $id = $_POST['idProducto'];
+                        $conn = conectar();
+                        $sql = "DELETE FROM `productos` WHERE id_producto =" . $id . ";";
+                        $resultado = mysqli_query($conn, $sql);
+
+                        if ($resultado) {
+                            echo "<script>window.location.href = 'administrador.php?administradorProductos=';</script>";
+                            exit();
+                        } else {
+                            echo "Error al ejecutar la consulta de eliminación: " . mysqli_error($conn);
+                        }
+                    }
                     ?>
                     <?php
                     // Verificar si se recibió un pedido para editar un producto
@@ -326,7 +266,7 @@ require_once '../lib/modulos.php';
                             echo "Error al actualizar el valor";
                         }
                         // Terminar la ejecución del script PHP
-                        exit();
+              git          exit();
                     }
                     ?>
 
