@@ -471,7 +471,8 @@ function mapa($valor)
                         ?>
                     </select>
                     <label>Establece un precio: </label>
-                    <input type="number" id="precio" name="precio" placeholder="Precio" required>
+                    <input type="text" id="precio" name="precio" placeholder="Precio" required>
+
 
                     <button type="submit" name="guardarMarcador">Guardar</button>
                 </form>
