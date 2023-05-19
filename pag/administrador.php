@@ -265,7 +265,6 @@ require_once '../lib/modulos.php';
                         } else {
                             echo "Error al actualizar el valor";
                         }
-
                         // Terminar la ejecución del script PHP
                         exit();
                     }

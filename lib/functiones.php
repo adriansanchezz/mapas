@@ -284,7 +284,7 @@ function listarRoles($id_user)
 function listarPublicidades($id_user)
 {
     // Consulta
-    $sql = "SELECT p.id_publicidad, p.provincia, p.ciudad, p.ubicacion, p.codigo_postal, p.descripcion, p.precio, t.nombre
+    $sql = "SELECT p.id_publicidad, p.provincia, p.ciudad, p.ubicacion, p.codigo_postal, p.descripcion, p.precio, p.estado, t.nombre as tipo
     FROM publicidades p
     LEFT JOIN tipospublicidades t ON p.id_tipo_publicidad = t.id_tipo_publicidad
     WHERE p.id_usuario = '$id_user'";
@@ -293,9 +293,46 @@ function listarPublicidades($id_user)
     $result = sqlSELECT($sql);
 
     // Comprobar si existe el compo de la consulta, y listar los datos
+    echo "
+    <table border='1'  style='border-collapse: collapse;'>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tipo</th>
+                <th>Direccion</th>
+                <th>Descripcion</th>
+                <th>Precio</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+    ";
+
     while ($row = mysqli_fetch_assoc($result)) {
-        echo $row['id_publicidad'] . "    -------    " . $row['nombre'] . "    -------    " . $row['provincia'] . "    -------    " . $row['ubicacion'] . "    -------    " . $row['codigo_postal'] . "    -------    " . $row['descripcion'] . "    -------    " . $row['precio'] . "<br>";
+        $id_publicidad = $row['id_publicidad'];
+        $tipo = $row['tipo'];
+        $provincia = $row['provincia'];
+        $ubicacion = $row['ubicacion'];
+        $codigo_postal = $row['codigo_postal'];
+        $descripcion = $row['descripcion'];
+        $precio = $row['precio'];
+        $estado = $row['estado'];
+
+        echo"
+        <tr>
+            <td>$id_publicidad</td>
+            <td>$tipo</td>
+            <td>$provincia, $codigo_postal, $ubicacion</td>
+            <td>$descripcion</td>
+            <td>$precio</td>
+            <td>$estado</td>
+        </tr>
+        ";
     }
+    echo "
+        </tbody>
+    </table>
+    ";
 }
 
 // Agregar rol de Usuario
