@@ -103,11 +103,11 @@ require_once '../lib/modulos.php';
                         echo "<div class='form-group'>";
                         echo "<input type='file' name='imagen' accept='image/*' required>";
                         echo "</div>";
-                        echo "<input type='submit' name='nuevoProducto' class='btn btn-danger'>Crear producto</button>";
+                        echo "<input type='submit' name='nuevoProducto' class='btn btn-danger' value='Crear producto'>";
                         echo "</form>";
                         echo "</div>";
-
-                        echo "<h1>Lista de Productos</h1>";
+                        echo "<div class='container'>";
+                        echo "<h1 class='mt-5'>Lista de Productos</h1>";
                         $conn = conectar();
                         $sql = "SELECT * FROM productos";
                         $result = $conn->query($sql);
@@ -164,7 +164,7 @@ require_once '../lib/modulos.php';
                         } else {
                             echo "<option value=''>No hay tipos de publicidades disponibles</option>";
                         }
-
+                        echo "</div>";
                         echo "</div>";
 
                     }
