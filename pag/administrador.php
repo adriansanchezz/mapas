@@ -266,7 +266,7 @@ require_once '../lib/modulos.php';
                             echo "Error al actualizar el valor";
                         }
                         // Terminar la ejecución del script PHP
-              git          exit();
+                        exit();
                     }
                     ?>
 
