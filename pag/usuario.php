@@ -127,7 +127,7 @@ require_once '../lib/modulos.php';
                 // Guardar el carrito actualizado en la sesión
                 $_SESSION['cart'] = $cart;
 
-                header("Location: usuario.php?usuarioTienda=1");
+                echo "<script>window.location.href = 'usuario.php?usuarioTienda';</script>";
                 exit();
             }
 
@@ -159,8 +159,9 @@ require_once '../lib/modulos.php';
                 }
 
                 // Redirigir nuevamente al carrito
-                header("Location: usuario.php?usuarioCarrito=1");
+                echo "<script>window.location.href = 'usuario.php?usuarioCarrito=1';</script>";
                 exit();
+                
             }
             ?>
 
