@@ -164,6 +164,8 @@ require_once '../lib/modulos.php';
                         }
 
                     }
+
+
                     if (isset($_POST['nuevoProducto'])) {
                         $nombreProducto = $_POST['nombre'];
                         $descripcionProducto = $_POST['descripcion'];
@@ -207,6 +209,8 @@ require_once '../lib/modulos.php';
                             echo "Error al guardar el marcador.";
                         }
                     }
+
+
                     if (isset($_POST['borrarProducto'])) {
                         $id = $_POST['idProducto'];
                         $conn = conectar();
@@ -321,7 +325,6 @@ require_once '../lib/modulos.php';
                         } else {
                             echo "Error al actualizar el valor";
                         }
-
                         // Terminar la ejecución del script PHP
                         exit();
                     }
