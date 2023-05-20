@@ -32,16 +32,16 @@ require_once '../lib/modulos.php';
                     </li>
                     <li class="nav-item">
                         <form action="administrador.php" method="get">
-                            <button type="submit" name="administradorAdministradores"
+                            <button type="submit" name="administradorRoles"
                                 class="btn btn-link nav-link text-white">
-                                Administrar Roles
+                                Roles
                             </button>
                         </form>
                     </li>
                     <li class="nav-item">
                         <form action="administrador.php" method="get">
                             <button type="submit" name="administradorEmpresas" class="btn btn-link nav-link text-white">
-                                Banear usuario
+                                Usuario
                             </button>
                         </form>
                     </li>
@@ -49,6 +49,13 @@ require_once '../lib/modulos.php';
                         <form action="administrador.php" method="get">
                             <button type="submit" name="administradorProductos" class="btn btn-link nav-link text-white">
                                 Productos
+                            </button>
+                        </form>
+                    </li>
+                    <li class="nav-item">
+                        <form action="administrador.php" method="get">
+                            <button type="submit" name="administradorNoticia" class="btn btn-link nav-link text-white">
+                                Noticia
                             </button>
                         </form>
                     </li>
@@ -71,7 +78,7 @@ require_once '../lib/modulos.php';
 
 
                     <?php
-                    if (isset($_REQUEST['administradorAdministradores'])) {
+                    if (isset($_REQUEST['administradorRoles'])) {
                         listarRoles($_SESSION['usuario']['id_usuario']);
                     }
 
