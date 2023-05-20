@@ -64,20 +64,27 @@ require_once '../lib/modulos.php';
 
 
                 <?php mapa("vigilar"); ?>
-
-
                 <?php
+                echo '<input type="button" class="btn btn-primary" id="solicitarMision" value="Solicitar mision">';
+                ?>
+                <?php
+            }
+            if (isset($_REQUEST['solicitarMision'])) {
+                function randomMission()
+                {
+
+                }
             }
             ?>
 
             <?php
             if (isset($_REQUEST['recompesas'])) {
                 ?>
-                <div id="seccion1" class="p-3" style="display: block;">
+                < div id="seccion1" class="p-3" style="display: block;">
                     <h1>Recompensas</h1>
 
-                </div>
-                <?php
+            </div>
+            <?php
             }
             ?>
         </div>
@@ -90,4 +97,5 @@ require_once '../lib/modulos.php';
     ?>
 
 </body>
+
 </html>

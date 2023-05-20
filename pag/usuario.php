@@ -47,7 +47,7 @@ require_once '../lib/modulos.php';
             if (isset($_REQUEST['usuarioPrincipal'])) {
                 ?>
                 <div class="flex-grow-1">
-                    <div id="seccion1" class="p-3" style="display: block;">
+                    <div class="p-3" style="display: block;">
                         <h2>Noticias para usuario</h2><br>
                     </div>
                 </div>
@@ -59,7 +59,7 @@ require_once '../lib/modulos.php';
             if (isset($_REQUEST['usuarioTienda'])) {
                 ?>
                 <div class="flex-grow-1">
-                    <div id="seccion1" class="p-3" style="display: block;">
+                    <div class="p-3" style="display: block;">
                         <form class="form-inline my-2 my-lg-0" action="usuario.php" method="post">
                             <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioCarrito"
                                 type="submit">Carrito</button>

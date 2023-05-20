@@ -285,6 +285,7 @@ require_once '../lib/modulos.php';
     ?>
 
     <script>
+
         function prueba() {
             // Obtén todos los elementos con la clase "editable"
             var editables = document.getElementsByClassName('editable');
@@ -293,7 +294,7 @@ require_once '../lib/modulos.php';
             for (var i = 0; i < editables.length; i++) {
                 editables[i].addEventListener('click', function () {
                     if (!this.classList.contains('editing')) {
-                        // Marcar el elemento como en edición
+                        // Marcar el elemento como en edición.
                         this.classList.add('editing');
 
                         // Obtén el texto actual del valor
