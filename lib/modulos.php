@@ -486,6 +486,22 @@ function mapa($valor)
             <div id="seccion1" class="p-3" style="display: block;">
                 <h1>MISIONES</h1>
                 <div id="map"></div>
+                <div class="container mt-4">
+                    <div class="table-responsive mb-4">
+                        <table id="tabla-puntos" class="table">
+                            <thead>
+                                <tr>
+                                    <th>Descripcion</th>
+                                    <th>Latitud</th>
+                                    <th>Longitud</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Filas de puntos se agregarán aquí dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
                 <style>
                     #map {
                         height: 70vh;
@@ -583,17 +599,56 @@ function mapa($valor)
                         function seleccionarPunto() {
                             // Obtener todos los marcadores en el mapa
                             var marcadores = L.layerGroup(markers); // Suponiendo que 'markers' es un array de objetos con atributos de marcadores
-                            console.log(marcadores);
 
                             // Generar un índice aleatorio
                             var indiceAleatorio = Math.floor(Math.random() * marcadores.getLayers().length);
 
                             // Obtener el objeto JSON correspondiente al índice aleatorio
                             var marcadorJSON = markers[indiceAleatorio];
-
+                            console.log("MARCADOR:" + marcadorJSON.id_publicidad);
                             // Obtener la ubicación (latitud y longitud) del marcador
                             var latitud = marcadorJSON.latitud;
                             var longitud = marcadorJSON.longitud;
+
+                            // Crear una tabla con las características de la misión:
+                            // Obtener la tabla existente
+                            var tabla = document.getElementById('tabla-puntos');
+
+                            // Crear una nueva fila de tabla
+                            var fila = document.createElement('tr');
+
+                            // Crear las celdas de la fila con los datos del punto
+                            var celdaId = document.createElement('td');
+                            celdaId.textContent = marcadorJSON.ubicacion;
+                            fila.appendChild(celdaId);
+
+                            var celdaLatitud = document.createElement('td');
+                            celdaLatitud.textContent = latitud;
+                            fila.appendChild(celdaLatitud);
+
+                            var celdaLongitud = document.createElement('td');
+                            celdaLongitud.textContent = longitud;
+                            fila.appendChild(celdaLongitud);
+
+                            // Agregar la fila a la tabla
+                            tabla.appendChild(fila);
+
+                            var data = "descripcion=" + encodeURIComponent(latitud + longitud + marcadorJSON.ubicacion);
+                            var url = 'vigilante.php?subirMision';
+                            var xhr = new XMLHttpRequest();
+                            xhr.open('POST', url, true);
+                            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                            xhr.onreadystatechange = function () {
+                                if (xhr.readyState === 4 && xhr.status === 200) {
+                                    console.log("correcto");
+                                }
+                                
+                            };
+                            xhr.onerror = function () {
+                                console.log("Error en la solicitud AJAX");
+                            };
+                            xhr.send(data);
+
 
                             // Crear un marcador de Leaflet utilizando la ubicación
                             var marcadorLeaflet = L.marker([latitud, longitud]);
@@ -620,10 +675,9 @@ function mapa($valor)
                     }
 
 
-
-
-
                 </script>
+
+                
 
 
             </div>
