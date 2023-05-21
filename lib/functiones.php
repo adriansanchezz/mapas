@@ -304,11 +304,11 @@ function listarRoles($id_user)
             <tr>
             
                 <td>$id_usuario</td>
-                <td><span class='editable' id='nombre' data-usuario-id='$id_usuario'>$nombre</span></td>
-                <td><span class='editable' id='email' data-usuario-id='$id_usuario'>$email</span></td>
-                <td><span class='editable' id='saldo' data-usuario-id='$id_usuario'>$saldo</span></td>
+                <td><span class='editableProducto' id='nombre' data-usuario-id='$id_usuario'>$nombre</span></td>
+                <td><span class='editableUsuario' id='email' data-usuario-id='$id_usuario'>$email</span></td>
+                <td><span class='editableUsuario' id='saldo' data-usuario-id='$id_usuario'>$saldo</span></td>
                 <td>$fecha_bloqueo</td>
-                <td><span class='editable' id='nombre_rol' data-usuario-id='$id_usuario'>$nombre_rol</span></td>
+                <td>$nombre_rol</td>
                 <td></td>
             </tr>
             ";

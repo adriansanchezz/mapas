@@ -153,7 +153,7 @@ require_once '../lib/modulos.php';
                             while ($row = mysqli_fetch_assoc($result)) {
 
                                 echo "<tr>";
-                                echo "<td><span class='editableProducto' id='nombre' data-producto-id='" . $row["id_producto"] . "'>" . $row["nombre"] . "</span></td>";
+                                echo "<td><span class='editableUsuario' id='nombre' data-producto-id='" . $row["id_producto"] . "'>" . $row["nombre"] . "</span></td>";
                                 echo "<td><span class='editableProducto' id='descripcion' data-producto-id='" . $row["id_producto"] . "'>" . $row["descripcion"] . "</span></td>";
                                 echo "<td><span class='editableProducto' id='precio' data-producto-id='" . $row["id_producto"] . "'>" . $row["precio"] . "</span></td>";
 
@@ -315,7 +315,6 @@ require_once '../lib/modulos.php';
                         $conexion = conectar();
                         $columna = $conexion->real_escape_string($columna); // Escapar el nombre de la columna para evitar inyección de SQL
                         $consulta = "UPDATE usuarios SET $columna = '$nuevoValor' WHERE id_usuario = $usuarioId";
-                        echo "$usuarioId";
                         $resultado = $conexion->query($consulta);
 
                         // Manejar la respuesta de la actualización (puedes enviar un mensaje de éxito o realizar alguna otra acción)
@@ -342,6 +341,7 @@ require_once '../lib/modulos.php';
     ?>
 
     <script>
+        administradorUsuario();
         administradorProductos();
     </script>
 
