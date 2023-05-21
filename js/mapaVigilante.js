@@ -74,3 +74,4 @@ if ("geolocation" in navigator) {
 } else {
     console.log("Geolocalización no es compatible en este navegador.");
 }
+
