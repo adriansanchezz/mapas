@@ -160,7 +160,7 @@ function mapa($valor)
         ?>
         <!-- Se crea toda la maquetación del menú de empresa. -->
         <div class="flex-grow-1">
-            <div  class="p-3" style="display: block;">
+            <div class="p-3" style="display: block;">
                 <div class="p-3" style="display: block;">
                     <form class="form-inline my-2 my-lg-0" action="empresa.php" method="post">
                         <button class="btn btn-outline-success my-2 my-sm-0" name="empresaCarrito"
@@ -488,20 +488,83 @@ function mapa($valor)
                 <div id="map"></div>
                 <div class="container mt-4">
                     <div class="table-responsive mb-4">
+                        Misiones en proceso:
                         <table id="tabla-puntos" class="table">
                             <thead>
                                 <tr>
                                     <th>Descripcion</th>
                                     <th>Latitud</th>
                                     <th>Longitud</th>
+                                    <th>Prueba</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <!-- Filas de puntos se agregarán aquí dinámicamente -->
+                                <?php
+                                $id_usuario = $_SESSION['usuario']['id_usuario'];
+                                $conn = conectar();
+                                $sql = "SELECT * FROM misiones WHERE id_usuario='$id_usuario' AND estado=0";
+                                $result = $conn->query($sql);
+
+
+
+
+                                if ($result->num_rows > 0) {
+                                    while ($row = $result->fetch_assoc()) {
+                                        echo '<tr>';
+                                        echo '<td>' . $row['descripcion'] . '</td>'; // Columna de descripción
+                                        echo '<td>' . $row['fecha_fin'] . '</td>'; // Columna de fecha_fin
+                                        echo '<td>' . $row['descripcion'] . '</td>'; // Columna de descripción
+                                        echo "<td><form action='vigilante.php' method='POST' enctype='multipart/form-data'>";
+                                        echo "<input type='hidden' name='id_mision' value='" . $row['id_mision'] . "'>";
+                                        echo "<input type='file' name='imagen' accept='image/*' required>";
+                                        echo "<input type='submit' name='imagenMision'></form></td>";
+                                        echo '</tr>';
+                                    }
+                                }
+
+
+                                ?>
                             </tbody>
+
+                        </table>
+                        Misiones completadas:
+                        <table id="tabla-puntos" class="table">
+                            <thead>
+                                <tr>
+                                    <th>Descripcion</th>
+                                    <th>Latitud</th>
+                                    <th>Longitud</th>
+                                    <th>Prueba</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Filas de puntos se agregarán aquí dinámicamente -->
+                                <?php
+                                $id_usuario = $_SESSION['usuario']['id_usuario'];
+                                $conn = conectar();
+                                $sql = "SELECT * FROM misiones WHERE id_usuario='$id_usuario' AND estado=1";
+                                $result = $conn->query($sql);
+
+                                if ($result->num_rows > 0) {
+                                    while ($row = $result->fetch_assoc()) {
+                                        echo '<tr>';
+                                        echo '<td>' . $row['descripcion'] . '</td>'; // Columna de descripción
+                                        echo '<td>' . $row['fecha_fin'] . '</td>'; // Columna de fecha_fin
+                                        echo '<td>' . $row['descripcion'] . '</td>'; // Columna de descripción
+                                        
+                                        echo '</tr>';
+                                    }
+                                }
+
+
+                                ?>
+                            </tbody>
+
                         </table>
                     </div>
                 </div>
+                
                 <style>
                     #map {
                         height: 70vh;
@@ -511,12 +574,44 @@ function mapa($valor)
                         /* Sombra */
                     }
                 </style>
+                <?php
+                echo "<script>
+                        var map = L.map('map').setView([43.3828500, -3.2204300], 13);
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                            attribution: 'Map data &copy; <a href=\'https://www.openstreetmap.org/\'>OpenStreetMap</a> contributors',
+                            maxZoom: 18,
+                        }).addTo(map);
+                    </script>";
+
+                // Consulta para obtener los datos de publicidades y misiones
+                $sql2 = "SELECT * FROM publicidades AS p, misiones AS m WHERE p.id_publicidad = m.id_publicidad";
+                $result2 = $conn->query($sql2);
+                if ($result2->num_rows > 0) {
+                    while ($row2 = $result2->fetch_assoc()) {
+                        echo "<script>
+                        var marcadorLeaflet = L.marker([" . $row2['latitud'] . "," . $row2['longitud'] . "]);
+                        resaltarMarcadorEnMapa(marcadorLeaflet);
+
+                        function resaltarMarcadorEnMapa(marcador) {
+                            console.log(marcador);
+                            if (marcador) {
+                                // Código para resaltar el marcador
+                                marcador.setIcon(L.icon({
+                                    iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Red_circle_frame_transparent.svg/1200px-Red_circle_frame_transparent.svg.png',
+                                    iconSize: [25, 25],
+                                    iconAnchor: [12, 12]
+                                }));
+                                
+                                // Agregar el marcador resaltado al mapa
+                                marcador.addTo(map);
+                            }
+                        }
+                        </script>";
+                    }
+                }
+                ?>
                 <script>
-                    var map = L.map('map').setView([43.3828500, -3.2204300], 13);
-                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
-                        maxZoom: 18,
-                    }).addTo(map);
+
 
                     // Obtener la ubicación actual del usuario
                     if ("geolocation" in navigator) {
@@ -597,6 +692,7 @@ function mapa($valor)
 
                         // Función para seleccionar un punto aleatorio y resaltarlo en el mapa
                         function seleccionarPunto() {
+
                             // Obtener todos los marcadores en el mapa
                             var marcadores = L.layerGroup(markers); // Suponiendo que 'markers' es un array de objetos con atributos de marcadores
 
@@ -606,43 +702,67 @@ function mapa($valor)
                             // Obtener el objeto JSON correspondiente al índice aleatorio
                             var marcadorJSON = markers[indiceAleatorio];
                             console.log("MARCADOR:" + marcadorJSON.id_publicidad);
+
                             // Obtener la ubicación (latitud y longitud) del marcador
                             var latitud = marcadorJSON.latitud;
                             var longitud = marcadorJSON.longitud;
 
-                            // Crear una tabla con las características de la misión:
-                            // Obtener la tabla existente
-                            var tabla = document.getElementById('tabla-puntos');
 
-                            // Crear una nueva fila de tabla
-                            var fila = document.createElement('tr');
 
-                            // Crear las celdas de la fila con los datos del punto
-                            var celdaId = document.createElement('td');
-                            celdaId.textContent = marcadorJSON.ubicacion;
-                            fila.appendChild(celdaId);
+                            var data = "descripcion=" + encodeURIComponent(marcadorJSON.ubicacion);
+                            data += "&id_publicidad=" + encodeURIComponent(marcadorJSON.id_publicidad);
 
-                            var celdaLatitud = document.createElement('td');
-                            celdaLatitud.textContent = latitud;
-                            fila.appendChild(celdaLatitud);
-
-                            var celdaLongitud = document.createElement('td');
-                            celdaLongitud.textContent = longitud;
-                            fila.appendChild(celdaLongitud);
-
-                            // Agregar la fila a la tabla
-                            tabla.appendChild(fila);
-
-                            var data = "descripcion=" + encodeURIComponent(latitud + longitud + marcadorJSON.ubicacion);
-                            var url = 'vigilante.php?subirMision';
+                            var url = '../lib/ejecutarMision.php?subirMision';
                             var xhr = new XMLHttpRequest();
                             xhr.open('POST', url, true);
                             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
                             xhr.onreadystatechange = function () {
-                                if (xhr.readyState === 4 && xhr.status === 200) {
-                                    console.log("correcto");
+                                if (xhr.readyState === 4) {
+                                    if (xhr.status === 200) {
+                                        console.log("correcto");
+                                        var resultado = xhr.responseText.trim();
+                                        console.log(resultado);
+
+
+                                        if (resultado === "true") {
+                                            console.log("La condición es verdadera. Realizando acción A.");
+                                            // Realiza la acción A
+                                        }
+                                        if (resultado === "false") {
+                                            console.log("La condición es falsa. Realizando acción B.");
+                                            // Crear una tabla con las características de la misión:
+                                            // Obtener la tabla existente
+                                            var tabla = document.getElementById('tabla-puntos');
+
+                                            // Crear una nueva fila de tabla
+                                            var fila = document.createElement('tr');
+
+                                            // Crear las celdas de la fila con los datos del punto
+                                            var celdaId = document.createElement('td');
+                                            celdaId.textContent = marcadorJSON.ubicacion;
+                                            fila.appendChild(celdaId);
+
+                                            var celdaLatitud = document.createElement('td');
+                                            celdaLatitud.textContent = latitud;
+                                            fila.appendChild(celdaLatitud);
+
+                                            var celdaLongitud = document.createElement('td');
+                                            celdaLongitud.textContent = longitud;
+                                            fila.appendChild(celdaLongitud);
+
+                                            var celdaInput = document.createElement('td');
+                                            
+                                            fila.appendChild(celdaInput);
+
+                                            // Agregar la fila a la tabla
+                                            tabla.appendChild(fila);
+                                            window.location.href = 'vigilante.php?misiones=';
+                                            exit();
+                                        }
+                                    } else {
+                                        console.log("Error en la solicitud AJAX. Estado de la respuesta: " + xhr.status);
+                                    }
                                 }
-                                
                             };
                             xhr.onerror = function () {
                                 console.log("Error en la solicitud AJAX");
