@@ -677,14 +677,8 @@ function mapa($valor)
 
                 </script>
 
-                
-
-
             </div>
         </div>
-
-
-
 
         <?php
 
