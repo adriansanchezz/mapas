@@ -21,7 +21,6 @@ require_once '../lib/modulos.php';
 
         th,
         td {
-            width: 33.33%;
             border: 1px solid black;
             padding: 8px;
             text-align: center;

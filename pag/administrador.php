@@ -9,10 +9,40 @@ require_once '../lib/modulos.php';
 <head>
     <!-- Meter informacion general de head -->
     <?php head_info(); ?>
+    <script src="../js/funciones.js"></script>
     <title>DisplayAds</title>
 </head>
 
 <body>
+
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #333;
+            color: white;
+        }
+
+        td:nth-child(even) {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+
+        td:nth-child(odd) {
+            background-color: #ddd;
+            color: #333;
+        }
+    </style>
     <?php
     if (isset($_SESSION['usuario'])) {
         // Menu general
@@ -32,16 +62,8 @@ require_once '../lib/modulos.php';
                     </li>
                     <li class="nav-item">
                         <form action="administrador.php" method="get">
-                            <button type="submit" name="administradorRoles"
-                                class="btn btn-link nav-link text-white">
-                                Roles
-                            </button>
-                        </form>
-                    </li>
-                    <li class="nav-item">
-                        <form action="administrador.php" method="get">
-                            <button type="submit" name="administradorEmpresas" class="btn btn-link nav-link text-white">
-                                Usuario
+                            <button type="submit" name="administradorUsuarios" class="btn btn-link nav-link text-white">
+                                Usuarios
                             </button>
                         </form>
                     </li>
@@ -78,15 +100,9 @@ require_once '../lib/modulos.php';
 
 
                     <?php
-                    if (isset($_REQUEST['administradorRoles'])) {
+                    if (isset($_REQUEST['administradorUsuarios'])) {
                         listarRoles($_SESSION['usuario']['id_usuario']);
                     }
-
-
-
-
-
-
 
 
 
@@ -137,9 +153,9 @@ require_once '../lib/modulos.php';
                             while ($row = mysqli_fetch_assoc($result)) {
 
                                 echo "<tr>";
-                                echo "<td><p class='editable' id='nombre' data-producto-id='" . $row["id_producto"] . "'>" . $row["nombre"] . "</p></td>";
-                                echo "<td><p class='editable' id='descripcion' data-producto-id='" . $row["id_producto"] . "'>" . $row["descripcion"] . "</p></td>";
-                                echo "<td><p class='editable' id='precio' data-producto-id='" . $row["id_producto"] . "'>" . $row["precio"] . "</p></td>";
+                                echo "<td><span class='editableProducto' id='nombre' data-producto-id='" . $row["id_producto"] . "'>" . $row["nombre"] . "</span></td>";
+                                echo "<td><span class='editableProducto' id='descripcion' data-producto-id='" . $row["id_producto"] . "'>" . $row["descripcion"] . "</span></td>";
+                                echo "<td><span class='editableProducto' id='precio' data-producto-id='" . $row["id_producto"] . "'>" . $row["precio"] . "</span></td>";
 
                                 $sql2 = "SELECT * FROM `fotos` where id_producto =" . $row['id_producto'];
                                 $result2 = $conn->query($sql2);
@@ -222,6 +238,7 @@ require_once '../lib/modulos.php';
                             echo "Error al guardar el marcador.";
                         }
                     }
+                    
                     if (isset($_POST['borrarProducto'])) {
                         $id = $_POST['idProducto'];
                         $conn = conectar();
@@ -236,6 +253,7 @@ require_once '../lib/modulos.php';
                         }
                     }
                     ?>
+
                     <?php
                     // Verificar si se recibió un pedido para editar un producto
                     if (isset($_GET['editarProducto'])) {
@@ -247,13 +265,6 @@ require_once '../lib/modulos.php';
 
                         // Obtener el nombre de la columna a actualizar (puede venir como parámetro en la solicitud)
                         $columna = $_POST['columna']; // Asegúrate de validar y sanitizar este valor
-                
-                        // Validar y sanitizar el nombre de la columna
-                        $columnasPermitidas = array('nombre', 'descripcion', 'precio'); // Lista de columnas permitidas
-                        if (!in_array($columna, $columnasPermitidas)) {
-                            echo "Columna no válida";
-                            exit();
-                        }
 
                         // Realizar la lógica para actualizar el valor en la base de datos
                         // Aquí debes escribir el código específico para tu base de datos y tabla
@@ -277,7 +288,46 @@ require_once '../lib/modulos.php';
                     }
                     ?>
 
+                    <?php
+                    // Verificar si se recibió un pedido para editar un usuario
+                    if (isset($_GET['editarUsuario'])) {
+                        // Obtener el ID del producto a editar
+                        $usuarioId = $_GET['editarUsuario'];
 
+                        // Obtener el nuevo valor del producto
+                        $nuevoValor = $_POST['nuevoValor'];
+
+                        // Obtener el nombre de la columna a actualizar (puede venir como parámetro en la solicitud)
+                        $columna = $_POST['columna']; // Asegúrate de validar y sanitizar este valor
+                
+                        // Validar y sanitizar el nombre de la columna
+                        // $columnasPermitidas = array('nombre', 'descripcion', 'precio'); // Lista de columnas permitidas
+                        // if (!in_array($columna, $columnasPermitidas)) {
+                        //     echo "Columna no válida";
+                        //     exit();
+                        // }
+                        // Realizar la lógica para actualizar el valor en la base de datos
+                        // Aquí debes escribir el código específico para tu base de datos y tabla
+                
+                        // Por ejemplo, supongamos que tienes una tabla llamada "productos"
+                        // Puedes utilizar una consulta SQL para actualizar el valor del producto en la columna específica
+                        // Ejemplo con MySQLi:
+                        $conexion = conectar();
+                        $columna = $conexion->real_escape_string($columna); // Escapar el nombre de la columna para evitar inyección de SQL
+                        $consulta = "UPDATE usuarios SET $columna = '$nuevoValor' WHERE id_usuario = $usuarioId";
+                        echo "$usuarioId";
+                        $resultado = $conexion->query($consulta);
+
+                        // Manejar la respuesta de la actualización (puedes enviar un mensaje de éxito o realizar alguna otra acción)
+                        if ($resultado) {
+                            echo "Actualización exitosa";
+                        } else {
+                            echo "Error al actualizar el valor";
+                        }
+                        // Terminar la ejecución del script PHP
+                        exit();
+                    }
+                    ?>
 
                 </div>
             </div>
@@ -292,87 +342,9 @@ require_once '../lib/modulos.php';
     ?>
 
     <script>
-        function prueba() {
-            // Obtén todos los elementos con la clase "editable"
-            var editables = document.getElementsByClassName('editable');
-
-            // Agrega un controlador de eventos a cada elemento editable
-            for (var i = 0; i < editables.length; i++) {
-                editables[i].addEventListener('click', function () {
-                    if (!this.classList.contains('editing')) {
-                        // Marcar el elemento como en edición
-                        this.classList.add('editing');
-
-                        // Obtén el texto actual del valor
-                        var valorActual = this.innerText;
-
-                        // Obtén el nombre de la columna desde el id del elemento
-                        var columna = this.id;
-
-                        // Crea un input para editar
-                        var inputEdicion = document.createElement('input');
-                        inputEdicion.type = 'text';
-                        inputEdicion.value = valorActual;
-
-                        // Reemplaza el elemento "valor" con el input de edición
-                        this.innerText = '';
-                        this.appendChild(inputEdicion);
-
-                        // Poner el foco en el input de edición
-                        inputEdicion.focus();
-
-                        // Guardar los cambios al presionar Enter en el input de edición
-                        inputEdicion.addEventListener('keyup', function (event) {
-                            if (event.key === 'Enter') {
-                                // Obtén el nuevo valor del input de edición
-                                var nuevoValor = inputEdicion.value;
-
-                                // Realizar la actualización en el mismo archivo PHP
-                                var productoId = this.parentNode.getAttribute('data-producto-id');
-                                var url = 'administrador.php?editarProducto=' + productoId;
-                                var data = 'nuevoValor=' + nuevoValor + '&columna=' + columna;
-
-                                // Realizar una solicitud POST utilizando AJAX
-                                var xhr = new XMLHttpRequest();
-                                xhr.open('POST', url, true);
-                                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-                                xhr.onreadystatechange = function () {
-                                    if (xhr.readyState === 4 && xhr.status === 200) {
-                                        // Manejar la respuesta del servidor después de la actualización
-                                        console.log(xhr.responseText); // Puedes mostrar un mensaje de éxito o realizar alguna otra acción
-
-                                        // Restaurar el elemento original con el nuevo valor
-                                        var nuevoValorElemento = document.createElement('p');
-                                        nuevoValorElemento.className = 'editable';
-                                        nuevoValorElemento.id = columna; // Asegúrate de agregar el id de la columna al nuevo elemento
-                                        nuevoValorElemento.innerText = nuevoValor;
-                                        var parentElement = inputEdicion.parentNode;
-                                        parentElement.innerText = '';
-                                        parentElement.appendChild(nuevoValorElemento);
-                                        parentElement.classList.remove('editing');
-                                    }
-                                };
-                                xhr.send(data);
-                            }
-                        });
-
-                        // Cancelar la edición al presionar Esc en el input de edición
-                        inputEdicion.addEventListener('keyup', function (event) {
-                            if (event.key === 'Escape') {
-                                // Restaurar el elemento original sin realizar la actualización
-                                var parentElement = inputEdicion.parentNode;
-                                parentElement.innerText = valorActual;
-                                parentElement.classList.remove('editing');
-                            }
-                        });
-                    }
-                });
-            }
-        }
-
-        window.onload = prueba;
-
+        administradorProductos();
     </script>
+
 
 </body>
 

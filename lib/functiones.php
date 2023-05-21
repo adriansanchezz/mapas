@@ -266,18 +266,58 @@ function validarVigilante($id_user)
 function listarRoles($id_user)
 {
     // Consulta
-    $sql = "SELECT u.nombre, u.email, r.nombre as nombre_rol
+    $sql = "SELECT u.id_usuario , u.nombre, u.email, u.saldo, u.fecha_bloqueo, r.nombre as nombre_rol
         FROM usuarios u
         LEFT JOIN usuarios_roles ur ON u.id_usuario = ur.id_usuario
-        LEFT JOIN roles r ON ur.id_rol = r.id_rol";
+        LEFT JOIN roles r ON ur.id_rol = r.id_rol
+        ORDER BY u.nombre";
 
     // Guardar el resulatdo devulto
     $result = sqlSELECT($sql);
 
     // Comprobar si existe el compo de la consulta, y listar los datos
+    echo "
+        <table border='1'  style='border-collapse: collapse;'>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Saldo</th>
+                    <th>Bloqueo</th>
+                    <th>Rol</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+        ";
+
     while ($row = mysqli_fetch_assoc($result)) {
-        echo $row['nombre'] . "    -------    " . $row['email'] . "    -------    " . $row['nombre_rol'] . "<br>";
+        $id_usuario = $row['id_usuario'];
+        $nombre = $row['nombre'];
+        $email = $row['email'];
+        $saldo = $row['saldo'];
+        $fecha_bloqueo = $row['fecha_bloqueo'];
+        $nombre_rol = $row['nombre_rol'];
+
+        echo "
+            <tr>
+            
+                <td>$id_usuario</td>
+                <td><span class='editable' id='nombre' data-usuario-id='$id_usuario'>$nombre</span></td>
+                <td><span class='editable' id='email' data-usuario-id='$id_usuario'>$email</span></td>
+                <td><span class='editable' id='saldo' data-usuario-id='$id_usuario'>$saldo</span></td>
+                <td>$fecha_bloqueo</td>
+                <td><span class='editable' id='nombre_rol' data-usuario-id='$id_usuario'>$nombre_rol</span></td>
+                <td></td>
+            </tr>
+            ";
     }
+    echo "
+            </tbody>
+        </table>
+        ";
+
 }
 
 // Listar Propiedad y sus datos, para todo los usuraio que existe
@@ -318,7 +358,7 @@ function listarPublicidades($id_user)
         $precio = $row['precio'];
         $estado = $row['estado'];
 
-        echo"
+        echo "
         <tr>
             <td>$id_publicidad</td>
             <td>$tipo</td>
