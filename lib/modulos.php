@@ -160,7 +160,7 @@ function mapa($valor)
         ?>
         <!-- Se crea toda la maquetación del menú de empresa. -->
         <div class="flex-grow-1">
-            <div id="seccion1" class="p-3" style="display: block;">
+            <div  class="p-3" style="display: block;">
                 <div class="p-3" style="display: block;">
                     <form class="form-inline my-2 my-lg-0" action="empresa.php" method="post">
                         <button class="btn btn-outline-success my-2 my-sm-0" name="empresaCarrito"
@@ -293,7 +293,7 @@ function mapa($valor)
     if ($valor == "guardar") {
         ?>
         <div class="flex-grow-1">
-            <div id="seccion1" class="p-3" style="display: block;">
+            <div class="p-3" style="display: block;">
                 <h1>MAPA</h1>
                 ¿Quieres buscar una ubicación? <input type="text" id="direccion" placeholder="Buscar dirección">
                 <button onclick="buscarDireccion()">Buscar</button>
@@ -483,7 +483,7 @@ function mapa($valor)
     if ($valor == "vigilar") {
         ?>
         <div class="flex-grow-1">
-            <div id="seccion1" class="p-3" style="display: block;">
+            <div class="p-3" style="display: block;">
                 <h1>MISIONES</h1>
                 <div id="map"></div>
                 <div class="container mt-4">

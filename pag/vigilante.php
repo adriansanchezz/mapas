@@ -50,7 +50,7 @@ require_once '../lib/modulos.php';
             if (isset($_REQUEST['vigilantePrincipal'])) {
                 ?>
                 <div class="flex-grow-1">
-                    <div id="seccion1" class="p-3" style="display: block;">
+                    <div class="p-3" style="display: block;">
                         <h2>Noticias para vigilante</h2><br>
                     </div>
                 </div>
@@ -82,7 +82,7 @@ require_once '../lib/modulos.php';
             <?php
             if (isset($_REQUEST['recompesas'])) {
                 ?>
-                < div id="seccion1" class="p-3" style="display: block;">
+                < div class="p-3" style="display: block;">
                     <h1>Recompensas</h1>
 
             </div>
@@ -102,18 +102,16 @@ require_once '../lib/modulos.php';
                 $id_tipo = 1;
 
                 $conn = conectar();
-                
+
                 $sql = "SELECT * FROM misiones WHERE descripcion='$descripcion'";
                 $result = $conn->query($sql);
                 if ($result->num_rows > 0) {
-                    
-                }
-                else
-                {
+
+                } else {
                     if ($conn->connect_error) {
                         die("Error de conexión: " . $conn->connect_error);
                     }
-    
+
                     $stmt2 = $conn->prepare("INSERT INTO misiones (descripcion, id_tipo_mision, id_usuario) VALUES (?, ?, ?)");
                     $stmt2->bind_param("sii", $descripcion, $id_tipo, $id_usuario);
                     if ($stmt2->execute()) {
@@ -127,8 +125,8 @@ require_once '../lib/modulos.php';
                     $stmt2->close();
                     $conn->close();
                 }
-                
-                
+
+
             } else {
                 echo "El usuario no ha iniciado sesión.";
             }
