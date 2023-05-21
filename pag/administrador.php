@@ -9,7 +9,7 @@ require_once '../lib/modulos.php';
 <head>
     <!-- Meter informacion general de head -->
     <?php head_info(); ?>
-    <script src="../js/funciones.js"></script>
+    
     <title>DisplayAds</title>
 </head>
 
@@ -153,7 +153,7 @@ require_once '../lib/modulos.php';
                             while ($row = mysqli_fetch_assoc($result)) {
 
                                 echo "<tr>";
-                                echo "<td><span class='editableUsuario' id='nombre' data-producto-id='" . $row["id_producto"] . "'>" . $row["nombre"] . "</span></td>";
+                                echo "<td><span class='editableProducto' id='nombre' data-producto-id='" . $row["id_producto"] . "'>" . $row["nombre"] . "</span></td>";
                                 echo "<td><span class='editableProducto' id='descripcion' data-producto-id='" . $row["id_producto"] . "'>" . $row["descripcion"] . "</span></td>";
                                 echo "<td><span class='editableProducto' id='precio' data-producto-id='" . $row["id_producto"] . "'>" . $row["precio"] . "</span></td>";
 
@@ -300,15 +300,6 @@ require_once '../lib/modulos.php';
                         // Obtener el nombre de la columna a actualizar (puede venir como parámetro en la solicitud)
                         $columna = $_POST['columna']; // Asegúrate de validar y sanitizar este valor
                 
-                        // Validar y sanitizar el nombre de la columna
-                        // $columnasPermitidas = array('nombre', 'descripcion', 'precio'); // Lista de columnas permitidas
-                        // if (!in_array($columna, $columnasPermitidas)) {
-                        //     echo "Columna no válida";
-                        //     exit();
-                        // }
-                        // Realizar la lógica para actualizar el valor en la base de datos
-                        // Aquí debes escribir el código específico para tu base de datos y tabla
-                
                         // Por ejemplo, supongamos que tienes una tabla llamada "productos"
                         // Puedes utilizar una consulta SQL para actualizar el valor del producto en la columna específica
                         // Ejemplo con MySQLi:
@@ -341,7 +332,7 @@ require_once '../lib/modulos.php';
     ?>
 
     <script>
-        administradorUsuario();
+        administradorUsuarios();
         administradorProductos();
     </script>
 

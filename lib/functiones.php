@@ -270,7 +270,7 @@ function listarRoles($id_user)
         FROM usuarios u
         LEFT JOIN usuarios_roles ur ON u.id_usuario = ur.id_usuario
         LEFT JOIN roles r ON ur.id_rol = r.id_rol
-        ORDER BY u.nombre";
+        ORDER BY u.id_usuario";
 
     // Guardar el resulatdo devulto
     $result = sqlSELECT($sql);
@@ -304,8 +304,8 @@ function listarRoles($id_user)
             <tr>
             
                 <td>$id_usuario</td>
-                <td><span class='editableProducto' id='nombre' data-usuario-id='$id_usuario'>$nombre</span></td>
-                <td><span class='editableUsuario' id='email' data-usuario-id='$id_usuario'>$email</span></td>
+                <td><span class='editableUsuario nombre $ id_usuario' id='nombre' data-usuario-id='$id_usuario'>$nombre</span></td>
+                <td>$email</td>
                 <td><span class='editableUsuario' id='saldo' data-usuario-id='$id_usuario'>$saldo</span></td>
                 <td>$fecha_bloqueo</td>
                 <td>$nombre_rol</td>
@@ -363,8 +363,8 @@ function listarPublicidades($id_user)
             <td>$id_publicidad</td>
             <td>$tipo</td>
             <td>$provincia, $codigo_postal, $ubicacion</td>
-            <td>$descripcion</td>
-            <td>$precio</td>
+            <td><span class='editablePublicidad' id='descripcion' data-publicidad-id='$id_publicidad'>$descripcion</span></td>
+            <td><span class='editablePublicidad' id='precio' data-publicidad-id='$id_publicidad'>$precio</span></td>
             <td>$estado</td>
         </tr>
         ";

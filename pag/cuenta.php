@@ -41,7 +41,7 @@ require_once '../lib/modulos.php';
             color: #333;
         }
     </style>
-    
+
     <?php
     if (isset($_SESSION['usuario'])) {
         // Menu general
@@ -155,6 +155,37 @@ require_once '../lib/modulos.php';
                 guardarPassword($_POST['nuevoPass'], $_POST['nuevoPass2'], $_SESSION['usuario']['id_usuario']);
             }
             ?>
+
+            <?php
+            // Verificar si se recibió un pedido para editar un usuario
+            if (isset($_GET['editarPublicidad'])) {
+                // Obtener el ID del producto a editar
+                $publicidadId = $_GET['editarPublicidad'];
+
+                // Obtener el nuevo valor del producto
+                $nuevoValor = $_POST['nuevoValor'];
+
+                // Obtener el nombre de la columna a actualizar (puede venir como parámetro en la solicitud)
+                $columna = $_POST['columna']; // Asegúrate de validar y sanitizar este valor
+        
+                // Por ejemplo, supongamos que tienes una tabla llamada "productos"
+                // Puedes utilizar una consulta SQL para actualizar el valor del producto en la columna específica
+                // Ejemplo con MySQLi:
+                $conexion = conectar();
+                $columna = $conexion->real_escape_string($columna); // Escapar el nombre de la columna para evitar inyección de SQL
+                $consulta = "UPDATE publicidades SET $columna = '$nuevoValor' WHERE id_publicidad = $publicidadId";
+                $resultado = $conexion->query($consulta);
+
+                // Manejar la respuesta de la actualización (puedes enviar un mensaje de éxito o realizar alguna otra acción)
+                if ($resultado) {
+                    echo "Actualización exitosa";
+                } else {
+                    echo "Error al actualizar el valor";
+                }
+                // Terminar la ejecución del script PHP
+                exit();
+            }
+            ?>
         </div>
         <?php
     } else {
@@ -164,6 +195,9 @@ require_once '../lib/modulos.php';
     }
     ?>
 
+    <script>
+        administradorPublicidades();
+    </script>
 </body>
 
 </html>

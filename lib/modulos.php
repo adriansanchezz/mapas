@@ -146,6 +146,8 @@ function head_info()
     <link href="css/menu.css" rel="stylesheet" type="text/css">
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="../js/funciones.js"></script>
+    
     <?php
 }
 ?>
