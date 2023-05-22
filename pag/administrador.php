@@ -104,9 +104,18 @@ require_once '../lib/modulos.php';
                     if (isset($_REQUEST['eliminarRolUsuario'])) {
                         $id = $_POST['id_usuario'];
                         $nombre_rol = $_POST['nombre_rol'];
-                        eliminarRoles($id,$nombre_rol);
+                        eliminarRoles($id, $nombre_rol);
                     }
                     ?>
+
+                    <?php
+                    if (isset($_REQUEST['agregarRolUsuario'])) {
+                        $id = $_POST['id_usuario'];
+                        $nombre_rol = $_POST['nombre_rol'];
+                        agregarRoles($id, $nombre_rol);
+                    }
+                    ?>
+
 
                     <?php
                     if (isset($_REQUEST['administradorPanel'])) {

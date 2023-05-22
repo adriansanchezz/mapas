@@ -86,7 +86,7 @@ function registrarUser($username, $email, $telefono, $password, $password2)
             $sql = "SELECT id_usuario FROM usuarios WHERE email='$email'";
             $result = sqlSELECT($sql);
             while ($row = $result->fetch_assoc()) {
-                agregarRoles($row["id_usuario"]);
+                agregarRoles($row["id_usuario"], "Usuario");
             }
         }
     }
@@ -376,6 +376,22 @@ function listarUsuarios($id_user)
                         <button type='submit' name='bloquearUsuario' class='btn btn-warning'>Bloquear</button>
                         <button type='submit' name='eliminarRolUsuario' class='btn btn-danger'>Eliminar rol</button>
                     </form>
+                    <form action='administrador.php?administradorUsuarios' method='POST'>
+                        <input type='hidden' name='id_usuario' value='$id_usuario'>
+                        <div class='input-group'>
+                            <select name='nombre_rol' class='custom-select'>
+                                <option selected disabled>Selecciona un rol</option>
+                                <option value='Admin'>Admin</option>
+                                <option value='Usuario'>Usuario</option>
+                                <option value='Empresa'>Empresa</option>
+                                <option value='VIP'>VIP</option>
+                                <option value='Vigilante'>Vigilante</option>
+                            </select>
+                            <div class='input-group-append'>
+                            <button type='submit' name='agregarRolUsuario' class='btn btn-success'>Agregar rol</button>
+                            </div>
+                        </div>
+                    </form>
                 </td>
             </tr>
             ";
@@ -457,11 +473,28 @@ function listarPublicidades($id_user)
 }
 
 // Agregar rol de Usuario
-function agregarRoles($id_user)
+function agregarRoles($id_user, $nombre_rol)
 {
+    switch ($nombre_rol) {
+        case "Admin":
+            $id_rol = 1;
+            break;
+        case "Usuario":
+            $id_rol = 2;
+            break;
+        case "Empresa":
+            $id_rol = 3;
+            break;
+        case "VIP":
+            $id_rol = 4;
+            break;
+        case "Vigilante":
+            $id_rol = 5;
+            break;
+    }
     // Consulta
     $sql = "INSERT INTO usuarios_roles (id_usuario, id_rol)
-    VALUES ($id_user, 2)";
+    VALUES ($id_user, $id_rol)";
 
     // Ejecutar la consulta
     sqlINSERT($sql);
@@ -494,45 +527,6 @@ function eliminarRoles($id_user, $nombre_rol)
 
     // Ejecutar la consulta
     sqlDELETE($sql);
-}
-
-// Agregar rol de Empresa
-function agregarEmpresa($id_user)
-{
-    // Consulta
-    $sql = "INSERT INTO usuarios_roles (id_usuario, id_rol)
-    VALUES ($id_user, 3)";
-
-    // Ejecutar la consulta
-    sqlINSERT($sql);
-}
-
-// Agregar rol de VIP
-function agregarVIP($id_user)
-{
-    // Consulta
-    $sql = "INSERT INTO usuarios_roles (id_usuario, id_rol)
-    VALUES ($id_user, 4)";
-
-    // Ejecutar la consulta
-    sqlINSERT($sql);
-}
-
-// Agregar rol de Vigilante
-function agregarVigilante($id_user)
-{
-    // Consulta
-    $sql = "INSERT INTO usuarios_roles (id_usuario, id_rol)
-    VALUES ($id_user, 5)";
-
-    // Ejecutar la consulta
-    sqlINSERT($sql);
-}
-
-// Eliminar rol de Usuario
-function eliminarUsuario($id_user)
-{
-
 }
 
 // Actualizar dato de nombre, un parametro de nuevo nombre y id usuario
