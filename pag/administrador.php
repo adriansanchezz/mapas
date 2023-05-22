@@ -9,7 +9,7 @@ require_once '../lib/modulos.php';
 <head>
     <!-- Meter informacion general de head -->
     <?php head_info(); ?>
-    
+
     <title>DisplayAds</title>
 </head>
 
@@ -76,8 +76,15 @@ require_once '../lib/modulos.php';
                     </li>
                     <li class="nav-item">
                         <form action="administrador.php" method="get">
-                            <button type="submit" name="administradorNoticia" class="btn btn-link nav-link text-white">
-                                Noticia
+                            <button type="submit" name="administradorNoticias" class="btn btn-link nav-link text-white">
+                                Noticias
+                            </button>
+                        </form>
+                    </li>
+                    <li class="nav-item">
+                        <form action="administrador.php" method="get">
+                            <button type="submit" name="administradorMisiones" class="btn btn-link nav-link text-white">
+                                Misiones
                             </button>
                         </form>
                     </li>
@@ -238,7 +245,7 @@ require_once '../lib/modulos.php';
                             echo "Error al guardar el marcador.";
                         }
                     }
-                    
+
                     if (isset($_POST['borrarProducto'])) {
                         $id = $_POST['idProducto'];
                         $conn = conectar();
@@ -265,7 +272,7 @@ require_once '../lib/modulos.php';
 
                         // Obtener el nombre de la columna a actualizar (puede venir como parámetro en la solicitud)
                         $columna = $_POST['columna']; // Asegúrate de validar y sanitizar este valor
-
+                
                         // Realizar la lógica para actualizar el valor en la base de datos
                         // Aquí debes escribir el código específico para tu base de datos y tabla
                 

@@ -48,13 +48,17 @@ function registrarUser($username, $email, $telefono, $password, $password2)
 
     // Verificar si el nombre de usuario ya existe en la base de datos
     $sql = "SELECT * FROM usuarios WHERE nombre='$username'";
-    if (mysqli_num_rows(sqlSELECT($sql)) > 0) {
+    if (sqlSELECT($sql)->num_rows > 0
+
+    ) {
         $errors[] = "El nombre de usuario ya existe!";
     }
 
     // Verificar si el correo electrónico ya existe en la base de datos
     $sql = "SELECT * FROM usuarios WHERE email='$email'";
-    if (mysqli_num_rows(sqlSELECT($sql)) > 0) {
+    if (sqlSELECT($sql)->num_rows > 0
+
+    ) {
         $errors[] = "El correo electrónico ya existe!";
     }
 
@@ -103,7 +107,7 @@ function autenticarUser($email, $password)
         $sql = "SELECT * FROM usuarios WHERE email='$email'";
 
         //Verificar si el usuario existe o no
-        if ($row = mysqli_fetch_assoc(sqlSELECT($sql))) {
+        if ($row = sqlSELECT($sql)->fetch_assoc()) {
             $password_hash = $row['password'];
 
             // Verifica la contraseña
@@ -131,16 +135,16 @@ function sqlSELECT($sql)
         $conn = conectar();
 
         //Ejecutar
-        $result = mysqli_query($conn, $sql);
+        $result = $conn->query($sql);
 
         // Devolver el resultado
         return $result;
-
+        
     } catch (Exception $e) {
-        echo "Hay un fallo en la consulta: " . $e;
+        echo "Hay un fallo en la consulta: " . $e->getMessage();
     } finally {
         // Cerrar la conexión y liberar recursos
-        mysqli_close($conn);
+        $conn->close();
     }
 }
 
@@ -149,22 +153,29 @@ function sqlSELECT($sql)
 function sqlUPDATE($sql)
 {
     try {
-        //conexion
+        // Establecer conexión
         $conn = conectar();
 
-        if (mysqli_query($conn, $sql)) {
-            // Si la actualización fue exitosa, retorna un true
-            return true;
+        // Ejecutar consulta de actualización
+        if ($conn->query($sql)) {
+            // Verificar el número de filas afectadas
+            if ($conn->affected_rows > 0) {
+                // Si la actualización fue exitosa y se afectaron filas, retorna true
+                return true;
+            } else {
+                // Si la actualización fue exitosa pero no se afectaron filas, retorna false
+                return false;
+            }
         } else {
-            // Si la actualización falló, retorna un false
+            // Si la actualización falló, retorna false
             return false;
         }
     } catch (Exception $e) {
-        // Lanzar erro si falla
-        echo "Error al actualizar registro: " . $e;
+        // Lanzar error si falla
+        echo "Error al actualizar registro: " . $e->getMessage();
     } finally {
         // Cerrar la conexión a la base de datos
-        mysqli_close($conn);
+        $conn->close();
     }
 }
 
@@ -173,24 +184,65 @@ function sqlUPDATE($sql)
 function sqlINSERT($sql)
 {
     try {
-        //conexion
+        // Establecer conexión
         $conn = conectar();
 
-        if (mysqli_query($conn, $sql)) {
-            // Si la insercion fue exitosa, retorna un true
-            return true;
+        // Ejecutar consulta de inserción
+        if ($conn->query($sql)) {
+            // Verificar el número de filas afectadas
+            if ($conn->affected_rows > 0) {
+                // Si la inserción fue exitosa y se afectaron filas, retorna true
+                return true;
+            } else {
+                // Si la inserción fue exitosa pero no se afectaron filas, retorna false
+                return false;
+            }
         } else {
-            // Si la insercion falló, retorna un false
+            // Si la inserción falló, retorna false
             return false;
         }
     } catch (Exception $e) {
-        // Lanzar erro si falla
-        echo "Error al insertar registro: " . $e;
+        // Lanzar error si falla
+        echo "Error al insertar registro: " . $e->getMessage();
     } finally {
         // Cerrar la conexión a la base de datos
-        mysqli_close($conn);
+        $conn->close();
     }
 }
+
+
+// Sirve para las eliminar una columna
+// Duelve true o false
+function sqlDELETE($sql)
+{
+    try {
+        // Establecer conexión
+        $conn = conectar();
+
+        // Ejecutar consulta de eliminación
+        if ($conn->query($sql)) {
+            // Verificar el número de filas afectadas
+            if ($conn->affected_rows > 0) {
+                // Si la eliminación fue exitosa y se afectaron filas, retorna true
+                return true;
+            } else {
+                // Si la eliminación fue exitosa pero no se afectaron filas, retorna false
+                return false;
+            }
+        } else {
+            // Si la eliminación falló, retorna false
+            return false;
+        }
+    } catch (Exception $e) {
+        // Lanzar error si falla
+        echo "Error al eliminar registro: " . $e->getMessage();
+    } finally {
+        // Cerrar la conexión a la base de datos
+        $conn->close();
+    }
+}
+
+
 
 // Velificar si existe el rol de Usuario
 function validarUsuario($id_user)
@@ -199,7 +251,7 @@ function validarUsuario($id_user)
     $sql = "SELECT * FROM usuarios_roles WHERE id_usuario='$id_user' AND id_rol=(SELECT id_rol FROM roles WHERE nombre='Usuario')";
 
     // Devuelve si true o false, segun si tiene o no tiene este rol
-    if (mysqli_fetch_assoc(sqlSELECT($sql))) {
+    if (sqlSELECT($sql)->num_rows > 0) {
         return true;
     } else {
         return false;
@@ -213,7 +265,7 @@ function validarAdmin($id_user)
     $sql = "SELECT * FROM usuarios_roles WHERE id_usuario='$id_user' AND id_rol=(SELECT id_rol FROM roles WHERE nombre='Admin')";
 
     // Devuelve si true o false, según si tiene o no tiene este rol
-    if (mysqli_fetch_assoc(sqlSELECT($sql))) {
+    if (sqlSELECT($sql)->num_rows > 0) {
         return true;
     } else {
         return false;
@@ -227,7 +279,7 @@ function validarEmpresa($id_user)
     $sql = "SELECT * FROM usuarios_roles WHERE id_usuario='$id_user' AND id_rol=(SELECT id_rol FROM roles WHERE nombre='Empresa')";
 
     // Devuelve si true o false, según si tiene o no tiene este rol
-    if (mysqli_fetch_assoc(sqlSELECT($sql))) {
+    if (sqlSELECT($sql)->num_rows > 0) {
         return true;
     } else {
         return false;
@@ -241,7 +293,7 @@ function validarVIP($id_user)
     $sql = "SELECT * FROM usuarios_roles WHERE id_usuario='$id_user' AND id_rol=(SELECT id_rol FROM roles WHERE nombre='VIP')";
 
     // Devuelve si true o false, según si tiene o no tiene este rol
-    if (mysqli_fetch_assoc(sqlSELECT($sql))) {
+    if (sqlSELECT($sql)->num_rows > 0) {
         return true;
     } else {
         return false;
@@ -255,7 +307,7 @@ function validarVigilante($id_user)
     $sql = "SELECT * FROM usuarios_roles WHERE id_usuario='$id_user' AND id_rol=(SELECT id_rol FROM roles WHERE nombre='Vigilante')";
 
     // Devuelve si true o false, según si tiene o no tiene este rol
-    if (mysqli_fetch_assoc(sqlSELECT($sql))) {
+    if (sqlSELECT($sql)->num_rows > 0) {
         return true;
     } else {
         return false;
@@ -292,7 +344,7 @@ function listarRoles($id_user)
             <tbody>
         ";
 
-    while ($row = mysqli_fetch_assoc($result)) {
+    while ($row = $result->fetch_assoc()) {
         $id_usuario = $row['id_usuario'];
         $nombre = $row['nombre'];
         $email = $row['email'];
@@ -343,12 +395,13 @@ function listarPublicidades($id_user)
                 <th>Descripcion</th>
                 <th>Precio</th>
                 <th>Estado</th>
+                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
     ";
 
-    while ($row = mysqli_fetch_assoc($result)) {
+    while ($row = $result->fetch_assoc()) {
         $id_publicidad = $row['id_publicidad'];
         $tipo = $row['tipo'];
         $provincia = $row['provincia'];
@@ -356,7 +409,12 @@ function listarPublicidades($id_user)
         $codigo_postal = $row['codigo_postal'];
         $descripcion = $row['descripcion'];
         $precio = $row['precio'];
-        $estado = $row['estado'];
+
+        if($row['estado']==1){
+            $estado = "Activado";
+        }else{
+            $estado = "Desacticado";
+        }
 
         echo "
         <tr>
@@ -366,6 +424,14 @@ function listarPublicidades($id_user)
             <td><span class='editablePublicidad' id='descripcion' data-publicidad-id='$id_publicidad'>$descripcion</span></td>
             <td><span class='editablePublicidad' id='precio' data-publicidad-id='$id_publicidad'>$precio</span></td>
             <td>$estado</td>
+            <td>
+                <form action='cuenta.php' method='POST'>
+                    <input type='hidden' name='id_publicidad' value='$id_publicidad'>
+                    <button type='submit' name='activarPublicidad' class='btn btn-success'>Activar</button>
+                    <button type='submit' name='desactivarPublicidad' class='btn btn-secondary'>Desacticar</button>
+                    <button type='submit' name='borrarPublicidad' class='btn btn-danger'>Borrar</button>
+                </form>
+            </td>
         </tr>
         ";
     }
@@ -442,7 +508,7 @@ function guardarNombre($nombre, $id_user)
     $sql = "SELECT COUNT(*) as count FROM usuarios WHERE nombre = '$nombre'";
 
     // Meter el resultado devulto para un valor;
-    $datos = mysqli_fetch_assoc(sqlSELECT($sql));
+    $datos = sqlSELECT($sql)->fetch_assoc();
 
     // Comproba mediante count si existe ya ese nombre o es un nombre nuevo
     if ($datos["count"] > 0) {
@@ -471,7 +537,7 @@ function guardarCorreo($correo, $correo2, $id_user)
         $sql = "SELECT COUNT(*) as count FROM usuarios WHERE email = '$correo'";
 
         // Meter el resultado devulto para un valor;
-        $datos = mysqli_fetch_assoc(sqlSELECT($sql));
+        $datos = sqlSELECT($sql)->fetch_assoc();
 
         // Comproba mediante count si existe ya ese correo o no
         if ($datos["count"] > 0) {
@@ -538,7 +604,7 @@ function sumarVisitaTotal()
     $sql = "SELECT COUNT(*) as count, numero FROM pagina_info WHERE titulo = 'visitas'";
 
     // Meter el resultado devulto para un valor;
-    $datos = mysqli_fetch_assoc(sqlSELECT($sql));
+    $datos = sqlSELECT($sql)->fetch_assoc();
 
     // Comproba mediante count si existe ya ese correo o no
     if ($datos["count"] > 0) {
@@ -552,7 +618,7 @@ function sumarVisitaTotal()
         // no existe en la base de datos
         $sql = "INSERT INTO pagina_info (titulo, numero, descripcion)"
             . "VALUES ('visitas', 1, 'Visitas totales de la pagina')";
-        sqlSELECT($sql);
+        sqlINSERT($sql);
     }
 }
 
@@ -564,26 +630,36 @@ function verVisitaTotal()
     $sql = "SELECT numero FROM pagina_info WHERE titulo = 'visitas'";
 
     // Meter el resultado devulto para un valor;
-    $datos = mysqli_fetch_assoc(sqlSELECT($sql));
+    $datos = sqlSELECT($sql)->fetch_assoc();
     echo $datos["numero"];
 }
 
+function activarPublicidad($id_publicidad)
+{
+    // Consulta
+    $sql = "UPDATE publicidades SET estado='1' WHERE id_publicidad = $id_publicidad";
 
+    // Actualizar los datos
+    sqlUPDATE($sql);
+}
 
+function desactivarPublicidad($id_publicidad)
+{
+    // Consulta
+    $sql = "UPDATE publicidades SET estado='0' WHERE id_publicidad = $id_publicidad";
 
+    // Actualizar los datos
+    sqlUPDATE($sql);
+}
 
+function borrarPublicidad($id_publicidad)
+{
+    // Consulta
+    $sql = "DELETE FROM publicidades WHERE id_publicidad = $id_publicidad";
 
-
-
-
-
-
-
-
-
-
-
-
+    // Actualizar los datos
+    sqlDELETE($sql);
+}
 
 
 // Función utilizada para guardar un marcador en el mapa del menú de usuario. 

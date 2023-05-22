@@ -54,13 +54,6 @@ require_once '../lib/modulos.php';
                 <ul class="nav nav-pills flex-column mb-auto">
                     <li>
                         <form action="cuenta.php" method="post">
-                            <button type="submit" name="pricipal" class="btn btn-link nav-link text-white">Principal
-                            </button>
-                        </form>
-                    </li>
-
-                    <li>
-                        <form action="cuenta.php" method="post">
                             <button type="submit" name="cambiar_nombre" class="btn btn-link nav-link text-white">Cambiar
                                 nombre</button>
                         </form>
@@ -79,6 +72,36 @@ require_once '../lib/modulos.php';
                     </li>
                 </ul>
             </div>
+
+
+
+
+            <?php
+            // Verificar si se recibió un pedido para editar un usuario
+            if (isset($_REQUEST['activarPublicidad'])) {
+                $id = $_POST['id_publicidad'];
+                activarPublicidad($id);
+            }
+            ?>
+
+            <?php
+            // Verificar si se recibió un pedido para editar un usuario
+            if (isset($_REQUEST['desactivarPublicidad'])) {
+                $id = $_POST['id_publicidad'];
+                desactivarPublicidad($id);
+            }
+            ?>
+
+            <?php
+            // Verificar si se recibió un pedido para editar un usuario
+            if (isset($_REQUEST['borrarPublicidad'])) {
+                $id = $_POST['id_publicidad'];
+                borrarPublicidad($id);
+            }
+            ?>
+
+
+
 
             <div class="flex-grow-1">
                 <div id="seccion1" class="p-3" style="display: block;">
@@ -156,6 +179,31 @@ require_once '../lib/modulos.php';
             }
             ?>
 
+
+
+
+
+
+            <?php
+            if (isset($_POST['cambiar_contra'])) {
+                ?>
+                <div class="flex-grow-1">
+                    <div id="seccion1" class="p-3" style="display: block;">
+                        <form action="cuenta.php" method="post">
+                            <h3>Modificar la Constraseña</h3><br />
+                            <input type="password" name="nuevoPass" placeholder="Nuevo contraseña" required><br />
+                            <input type="password" name="nuevoPass2" placeholder="Confirmar contraseña" required><br /><br />
+
+                            <input type="submit" name="cambioContra" value="Confirmar" />
+                        </form>
+                    </div>
+                </div>
+                <?php
+            } else if (isset($_POST['cambioContra'])) {
+                guardarPassword($_POST['nuevoPass'], $_POST['nuevoPass2'], $_SESSION['usuario']['id_usuario']);
+            }
+            ?>
+
             <?php
             // Verificar si se recibió un pedido para editar un usuario
             if (isset($_GET['editarPublicidad'])) {
@@ -186,6 +234,7 @@ require_once '../lib/modulos.php';
                 exit();
             }
             ?>
+
         </div>
         <?php
     } else {
