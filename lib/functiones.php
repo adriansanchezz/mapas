@@ -48,7 +48,8 @@ function registrarUser($username, $email, $telefono, $password, $password2)
 
     // Verificar si el nombre de usuario ya existe en la base de datos
     $sql = "SELECT * FROM usuarios WHERE nombre='$username'";
-    if (sqlSELECT($sql)->num_rows > 0
+    if (
+        sqlSELECT($sql)->num_rows > 0
 
     ) {
         $errors[] = "El nombre de usuario ya existe!";
@@ -56,7 +57,8 @@ function registrarUser($username, $email, $telefono, $password, $password2)
 
     // Verificar si el correo electrónico ya existe en la base de datos
     $sql = "SELECT * FROM usuarios WHERE email='$email'";
-    if (sqlSELECT($sql)->num_rows > 0
+    if (
+        sqlSELECT($sql)->num_rows > 0
 
     ) {
         $errors[] = "El correo electrónico ya existe!";
@@ -80,6 +82,12 @@ function registrarUser($username, $email, $telefono, $password, $password2)
 
         if (sqlINSERT($sql)) {
             echo "Su usuario ha sido registrado correctamente!";
+            
+            $sql = "SELECT id_usuario FROM usuarios WHERE email='$email'";
+            $result = sqlSELECT($sql);
+            while ($row = $result->fetch_assoc()) {
+                agregarUsuario($row["id_usuario"]);
+            }
         }
     }
 }
@@ -139,7 +147,7 @@ function sqlSELECT($sql)
 
         // Devolver el resultado
         return $result;
-        
+
     } catch (Exception $e) {
         echo "Hay un fallo en la consulta: " . $e->getMessage();
     } finally {
@@ -315,7 +323,7 @@ function validarVigilante($id_user)
 }
 
 // Listar usuario y sus datos con rol, para todo los usuraio que existe
-function listarRoles($id_user)
+function listarUsuarios($id_user)
 {
     // Consulta
     $sql = "SELECT u.id_usuario , u.nombre, u.email, u.saldo, u.fecha_bloqueo, r.nombre as nombre_rol
@@ -336,8 +344,8 @@ function listarRoles($id_user)
                     <th>Nombre</th>
                     <th>Email</th>
                     <th>Saldo</th>
-                    <th>Bloqueo</th>
                     <th>Rol</th>
+                    <th>Bloqueo</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -359,9 +367,14 @@ function listarRoles($id_user)
                 <td><span class='editableUsuario nombre $ id_usuario' id='nombre' data-usuario-id='$id_usuario'>$nombre</span></td>
                 <td>$email</td>
                 <td><span class='editableUsuario' id='saldo' data-usuario-id='$id_usuario'>$saldo</span></td>
-                <td>$fecha_bloqueo</td>
                 <td>$nombre_rol</td>
-                <td></td>
+                <td>$fecha_bloqueo</td>
+                <td>
+                    <form action='administrador.php?administradorUsuarios' method='POST'>
+                        <input type='hidden' name='id_usuario' value='$id_usuario'>
+                        <button type='submit' name='bloquearUsuario' class='btn btn-warning'>Bloquear</button>
+                    </form>
+                </td>
             </tr>
             ";
     }
@@ -410,10 +423,10 @@ function listarPublicidades($id_user)
         $descripcion = $row['descripcion'];
         $precio = $row['precio'];
 
-        if($row['estado']==1){
+        if ($row['estado'] == 1) {
             $estado = "Activado";
-        }else{
-            $estado = "Desacticado";
+        } else {
+            $estado = "Desactivado";
         }
 
         echo "
@@ -444,31 +457,56 @@ function listarPublicidades($id_user)
 // Agregar rol de Usuario
 function agregarUsuario($id_user)
 {
+    // Consulta
+    $sql = "INSERT INTO usuarios_roles (id_usuario, id_rol)
+    VALUES ($id_user, 2)";
 
+    // Ejecutar la consulta
+    sqlINSERT($sql);    
 }
 
 // Agregar rol de Admin
 function agregarAdmin($id_user)
 {
+    // Consulta
+    $sql = "INSERT INTO usuarios_roles (id_usuario, id_rol)
+    VALUES ($id_user, 1)";
 
+    // Ejecutar la consulta
+    sqlINSERT($sql);  
 }
 
 // Agregar rol de Empresa
 function agregarEmpresa($id_user)
 {
+    // Consulta
+    $sql = "INSERT INTO usuarios_roles (id_usuario, id_rol)
+    VALUES ($id_user, 3)";
 
+    // Ejecutar la consulta
+    sqlINSERT($sql);  
 }
 
 // Agregar rol de VIP
 function agregarVIP($id_user)
 {
+    // Consulta
+    $sql = "INSERT INTO usuarios_roles (id_usuario, id_rol)
+    VALUES ($id_user, 4)";
 
+    // Ejecutar la consulta
+    sqlINSERT($sql);  
 }
 
 // Agregar rol de Vigilante
 function agregarVigilante($id_user)
 {
+    // Consulta
+    $sql = "INSERT INTO usuarios_roles (id_usuario, id_rol)
+    VALUES ($id_user, 5)";
 
+    // Ejecutar la consulta
+    sqlINSERT($sql);  
 }
 
 // Eliminar rol de Usuario
@@ -595,8 +633,6 @@ function repetirValor($valo, $valo2)
 
 
 
-
-
 // Actualizar dato de password, pasa parametro de nuevo pass y pass repetido, mas su id usuario
 function sumarVisitaTotal()
 {
@@ -661,11 +697,21 @@ function borrarPublicidad($id_publicidad)
     sqlDELETE($sql);
 }
 
+function bloquearUsuario($id_usuario)
+{
+    // 'Y': Representa el año con cuatro dígitos (ejemplo: 2023).
+    // 'y': Representa el año con dos dígitos (ejemplo: 23).
+    $fecha_actual = date('Y-m-d');
+    // Consulta
+    $sql = "UPDATE usuarios SET fecha_bloqueo = '$fecha_actual' WHERE id_usuario  = $id_usuario";
+
+    // Actualizar los datos
+    sqlUPDATE($sql);
+}
 
 // Función utilizada para guardar un marcador en el mapa del menú de usuario. 
 function guardarMarcador()
 {
-
     // Se verifica que la solicitud sea un método post.
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -713,7 +759,8 @@ function guardarMarcador()
 
 
 
-function debug_to_console($data) {
+function debug_to_console($data)
+{
     $output = $data;
     if (is_array($output))
         $output = implode(',', $output);
@@ -722,4 +769,3 @@ function debug_to_console($data) {
 }
 
 ?>
-

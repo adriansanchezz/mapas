@@ -113,7 +113,7 @@ require_once '../lib/modulos.php';
                     <h3>Nombre</h3>
                     <?php echo $_SESSION['usuario']['nombre']; ?> <br><br>
 
-                    <h3>Propiedades</h3>
+                    <h3>Publicidades</h3>
                     <?php listarPublicidades($_SESSION['usuario']['id_usuario']); ?>
                 </div>
             </div>
@@ -158,31 +158,6 @@ require_once '../lib/modulos.php';
                 guardarCorreo($_POST['nuevoCorreo'], $_POST['nuevoCorreo2'], $_SESSION['usuario']['id_usuario']);
             }
             ?>
-
-            <?php
-            if (isset($_POST['cambiar_contra'])) {
-                ?>
-                <div class="flex-grow-1">
-                    <div id="seccion1" class="p-3" style="display: block;">
-                        <form action="cuenta.php" method="post">
-                            <h3>Modificar la Constraseña</h3><br />
-                            <input type="password" name="nuevoPass" placeholder="Nuevo contraseña" required><br />
-                            <input type="password" name="nuevoPass2" placeholder="Confirmar contraseña" required><br /><br />
-
-                            <input type="submit" name="cambioContra" value="Confirmar" />
-                        </form>
-                    </div>
-                </div>
-                <?php
-            } else if (isset($_POST['cambioContra'])) {
-                guardarPassword($_POST['nuevoPass'], $_POST['nuevoPass2'], $_SESSION['usuario']['id_usuario']);
-            }
-            ?>
-
-
-
-
-
 
             <?php
             if (isset($_POST['cambiar_contra'])) {

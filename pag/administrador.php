@@ -93,6 +93,12 @@ require_once '../lib/modulos.php';
             <div class="flex-grow-1">
                 <div id="seccion1" class="p-3" style="display: block;">
 
+                    <?php
+                    if (isset($_REQUEST['bloquearUsuario'])) {
+                        $id = $_POST['id_usuario'];
+                        bloquearUsuario($id);
+                    }
+                    ?>
 
                     <?php
                     if (isset($_REQUEST['administradorPanel'])) {
@@ -108,7 +114,7 @@ require_once '../lib/modulos.php';
 
                     <?php
                     if (isset($_REQUEST['administradorUsuarios'])) {
-                        listarRoles($_SESSION['usuario']['id_usuario']);
+                        listarUsuarios($_SESSION['usuario']['id_usuario']);
                     }
 
 

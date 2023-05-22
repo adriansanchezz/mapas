@@ -214,3 +214,13 @@ function administradorPublicidades() {
         });
     }
 }
+
+function mostrarRolesEliminar() {
+    var lista = document.getElementById("listaDatos");
+    lista.style.display = "block";
+}
+
+function mostrarRolesAgregar() {
+    var lista = document.getElementById("listaDatos");
+    lista.style.display = "block";
+}
