@@ -423,7 +423,7 @@ require_once '../lib/modulos.php';
                     {
                         $id_mision = $_POST['id_mision'];
                         $conn = conectar();
-                        $sqlUpdate = "UPDATE `misiones` SET `aceptacion` = 1, `id_publicidad` = NULL WHERE `id_mision` = ?";
+                        $sqlUpdate = "UPDATE `misiones` SET `aceptacion` = 1 WHERE `id_mision` = ?";
                         $stmt = $conn->prepare($sqlUpdate);
                         $stmt->bind_param("i", $id_mision);
                         $stmt->execute();

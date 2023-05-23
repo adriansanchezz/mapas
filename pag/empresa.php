@@ -79,6 +79,12 @@ require_once '../lib/modulos.php';
             if (isset($_POST['add_to_cart'])) {
                 $product_id = $_POST['product_id'];
 
+                $conn = conectar();
+                $sqlUpdate = "UPDATE `publicidades` SET `ocupado` = 1 WHERE `id_publicidad` = ?";
+                $stmt = $conn->prepare($sqlUpdate);
+                $stmt->bind_param("i", $product_id);
+                $stmt->execute();
+
                 // Verificar si el carrito de compras ya está almacenado en la sesión
                 if (isset($_SESSION['empresaCart'])) {
                     $empresaCart = $_SESSION['empresaCart'];

@@ -18,7 +18,7 @@
     }
 
     // Consultar los marcadores existentes dentro del límite
-    $sql = "SELECT * FROM publicidades WHERE latitud BETWEEN ? AND ? AND longitud BETWEEN ? AND ? AND estado = 1";
+    $sql = "SELECT * FROM publicidades WHERE latitud BETWEEN ? AND ? AND longitud BETWEEN ? AND ? AND estado = 0 AND ocupado = 1";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("dddd", $latMin, $latMax, $lngMin, $lngMax);
     $stmt->execute();

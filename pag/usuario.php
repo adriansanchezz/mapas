@@ -161,7 +161,7 @@ require_once '../lib/modulos.php';
                 // Redirigir nuevamente al carrito
                 echo "<script>window.location.href = 'usuario.php?usuarioCarrito=1';</script>";
                 exit();
-                
+
             }
             ?>
 
@@ -248,13 +248,12 @@ require_once '../lib/modulos.php';
             if (isset($_REQUEST['guardarMarcador'])) {
                 guardarMarcador();
             }
-            if(isset($_POST['borrarMarcador']))
-            {
+            if (isset($_POST['borrarMarcador'])) {
                 $id = $_POST['id_publicidad'];
                 $conn = conectar();
-                $sql = "DELETE FROM `misiones` WHERE id_publicidad =". $id. ";";
+                $sql = "DELETE FROM `misiones` WHERE id_publicidad =" . $id . ";";
                 $resultado = mysqli_query($conn, $sql);
-                
+
                 $sql2 = "DELETE FROM `publicidades` WHERE id_publicidad =" . $id . ";";
                 $resultado2 = mysqli_query($conn, $sql2);
 
@@ -265,7 +264,7 @@ require_once '../lib/modulos.php';
                     echo "Error al ejecutar la consulta de eliminación: " . mysqli_error($conn);
                 }
             }
-                        
+
             if (isset($_POST['compraUbicacion'])) {
                 // Obtener los datos de la ubicación seleccionada desde la solicitud POST
                 $latitud = $_POST['lat'];

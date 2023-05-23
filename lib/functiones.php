@@ -719,6 +719,9 @@ function guardarMarcador()
         $idUser = $_SESSION['usuario']['id_usuario'];
 
 
+        
+
+
         // Establecer la conexión con la base de datos.
         $conn = conectar();
 
@@ -731,6 +734,7 @@ function guardarMarcador()
         $stmt->bind_param('ddssssssii', $lat, $lng, $provincia, $ciudad, $ubicacion, $codigo_postal, $descripcion, $precio, $tipoPublicidad, $idUser);
         // Se ejecuta la consulta.
         $stmt->execute();
+        $id_publicidad = $conn->insert_id;
 
         // Verificar si la inserción fue exitosa.
         if ($stmt->affected_rows > 0) {
@@ -740,6 +744,29 @@ function guardarMarcador()
         } else {
             // Si no lo fue, se indica un error.
             echo "Error al guardar el marcador.";
+        }
+
+        if (isset($_FILES['imagen'])) {
+            if ($_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
+                $imagen = $_FILES['imagen']['tmp_name'];
+                $contenidoImagen = file_get_contents($imagen);
+                $conn = conectar();
+                
+                $sql = "INSERT INTO `fotos`(`foto`, `id_publicidad`) VALUES (?, ?)";
+
+                $stmt2 = $conn->prepare($sql);
+                $stmt2->bind_param("si", $contenidoImagen, $id_publicidad);
+                // Ejecutar la consulta
+                if ($stmt2->execute()) {
+                    
+                    echo "<script>window.location.href = 'usuario.php?usuarioMapa=';</script>";
+                    exit();
+
+                } else {
+                    echo "Error al subir la imagen: " . $stmt->error;
+                }
+
+            }
         }
 
         // Se cierra la conexión sql.
