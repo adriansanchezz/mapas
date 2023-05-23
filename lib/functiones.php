@@ -48,13 +48,19 @@ function registrarUser($username, $email, $telefono, $password, $password2)
 
     // Verificar si el nombre de usuario ya existe en la base de datos
     $sql = "SELECT * FROM usuarios WHERE nombre='$username'";
-    if (mysqli_num_rows(sqlSELECT($sql)) > 0) {
+    if (
+        sqlSELECT($sql)->num_rows > 0
+
+    ) {
         $errors[] = "El nombre de usuario ya existe!";
     }
 
     // Verificar si el correo electrónico ya existe en la base de datos
     $sql = "SELECT * FROM usuarios WHERE email='$email'";
-    if (mysqli_num_rows(sqlSELECT($sql)) > 0) {
+    if (
+        sqlSELECT($sql)->num_rows > 0
+
+    ) {
         $errors[] = "El correo electrónico ya existe!";
     }
 
@@ -76,6 +82,12 @@ function registrarUser($username, $email, $telefono, $password, $password2)
 
         if (sqlINSERT($sql)) {
             echo "Su usuario ha sido registrado correctamente!";
+
+            $sql = "SELECT id_usuario FROM usuarios WHERE email='$email'";
+            $result = sqlSELECT($sql);
+            while ($row = $result->fetch_assoc()) {
+                agregarRoles($row["id_usuario"], "Usuario");
+            }
         }
     }
 }
@@ -103,7 +115,7 @@ function autenticarUser($email, $password)
         $sql = "SELECT * FROM usuarios WHERE email='$email'";
 
         //Verificar si el usuario existe o no
-        if ($row = mysqli_fetch_assoc(sqlSELECT($sql))) {
+        if ($row = sqlSELECT($sql)->fetch_assoc()) {
             $password_hash = $row['password'];
 
             // Verifica la contraseña
@@ -131,16 +143,16 @@ function sqlSELECT($sql)
         $conn = conectar();
 
         //Ejecutar
-        $result = mysqli_query($conn, $sql);
+        $result = $conn->query($sql);
 
         // Devolver el resultado
         return $result;
 
     } catch (Exception $e) {
-        echo "Hay un fallo en la consulta: " . $e;
+        echo "Hay un fallo en la consulta: " . $e->getMessage();
     } finally {
         // Cerrar la conexión y liberar recursos
-        mysqli_close($conn);
+        $conn->close();
     }
 }
 
@@ -149,22 +161,29 @@ function sqlSELECT($sql)
 function sqlUPDATE($sql)
 {
     try {
-        //conexion
+        // Establecer conexión
         $conn = conectar();
 
-        if (mysqli_query($conn, $sql)) {
-            // Si la actualización fue exitosa, retorna un true
-            return true;
+        // Ejecutar consulta de actualización
+        if ($conn->query($sql)) {
+            // Verificar el número de filas afectadas
+            if ($conn->affected_rows > 0) {
+                // Si la actualización fue exitosa y se afectaron filas, retorna true
+                return true;
+            } else {
+                // Si la actualización fue exitosa pero no se afectaron filas, retorna false
+                return false;
+            }
         } else {
-            // Si la actualización falló, retorna un false
+            // Si la actualización falló, retorna false
             return false;
         }
     } catch (Exception $e) {
-        // Lanzar erro si falla
-        echo "Error al actualizar registro: " . $e;
+        // Lanzar error si falla
+        echo "Error al actualizar registro: " . $e->getMessage();
     } finally {
         // Cerrar la conexión a la base de datos
-        mysqli_close($conn);
+        $conn->close();
     }
 }
 
@@ -173,24 +192,65 @@ function sqlUPDATE($sql)
 function sqlINSERT($sql)
 {
     try {
-        //conexion
+        // Establecer conexión
         $conn = conectar();
 
-        if (mysqli_query($conn, $sql)) {
-            // Si la insercion fue exitosa, retorna un true
-            return true;
+        // Ejecutar consulta de inserción
+        if ($conn->query($sql)) {
+            // Verificar el número de filas afectadas
+            if ($conn->affected_rows > 0) {
+                // Si la inserción fue exitosa y se afectaron filas, retorna true
+                return true;
+            } else {
+                // Si la inserción fue exitosa pero no se afectaron filas, retorna false
+                return false;
+            }
         } else {
-            // Si la insercion falló, retorna un false
+            // Si la inserción falló, retorna false
             return false;
         }
     } catch (Exception $e) {
-        // Lanzar erro si falla
-        echo "Error al insertar registro: " . $e;
+        // Lanzar error si falla
+        echo "Error al insertar registro: " . $e->getMessage();
     } finally {
         // Cerrar la conexión a la base de datos
-        mysqli_close($conn);
+        $conn->close();
     }
 }
+
+
+// Sirve para las eliminar una columna
+// Duelve true o false
+function sqlDELETE($sql)
+{
+    try {
+        // Establecer conexión
+        $conn = conectar();
+
+        // Ejecutar consulta de eliminación
+        if ($conn->query($sql)) {
+            // Verificar el número de filas afectadas
+            if ($conn->affected_rows > 0) {
+                // Si la eliminación fue exitosa y se afectaron filas, retorna true
+                return true;
+            } else {
+                // Si la eliminación fue exitosa pero no se afectaron filas, retorna false
+                return false;
+            }
+        } else {
+            // Si la eliminación falló, retorna false
+            return false;
+        }
+    } catch (Exception $e) {
+        // Lanzar error si falla
+        echo "Error al eliminar registro: " . $e->getMessage();
+    } finally {
+        // Cerrar la conexión a la base de datos
+        $conn->close();
+    }
+}
+
+
 
 // Velificar si existe el rol de Usuario
 function validarUsuario($id_user)
@@ -199,7 +259,7 @@ function validarUsuario($id_user)
     $sql = "SELECT * FROM usuarios_roles WHERE id_usuario='$id_user' AND id_rol=(SELECT id_rol FROM roles WHERE nombre='Usuario')";
 
     // Devuelve si true o false, segun si tiene o no tiene este rol
-    if (mysqli_fetch_assoc(sqlSELECT($sql))) {
+    if (sqlSELECT($sql)->num_rows > 0) {
         return true;
     } else {
         return false;
@@ -213,7 +273,7 @@ function validarAdmin($id_user)
     $sql = "SELECT * FROM usuarios_roles WHERE id_usuario='$id_user' AND id_rol=(SELECT id_rol FROM roles WHERE nombre='Admin')";
 
     // Devuelve si true o false, según si tiene o no tiene este rol
-    if (mysqli_fetch_assoc(sqlSELECT($sql))) {
+    if (sqlSELECT($sql)->num_rows > 0) {
         return true;
     } else {
         return false;
@@ -227,7 +287,7 @@ function validarEmpresa($id_user)
     $sql = "SELECT * FROM usuarios_roles WHERE id_usuario='$id_user' AND id_rol=(SELECT id_rol FROM roles WHERE nombre='Empresa')";
 
     // Devuelve si true o false, según si tiene o no tiene este rol
-    if (mysqli_fetch_assoc(sqlSELECT($sql))) {
+    if (sqlSELECT($sql)->num_rows > 0) {
         return true;
     } else {
         return false;
@@ -241,7 +301,7 @@ function validarVIP($id_user)
     $sql = "SELECT * FROM usuarios_roles WHERE id_usuario='$id_user' AND id_rol=(SELECT id_rol FROM roles WHERE nombre='VIP')";
 
     // Devuelve si true o false, según si tiene o no tiene este rol
-    if (mysqli_fetch_assoc(sqlSELECT($sql))) {
+    if (sqlSELECT($sql)->num_rows > 0) {
         return true;
     } else {
         return false;
@@ -255,7 +315,7 @@ function validarVigilante($id_user)
     $sql = "SELECT * FROM usuarios_roles WHERE id_usuario='$id_user' AND id_rol=(SELECT id_rol FROM roles WHERE nombre='Vigilante')";
 
     // Devuelve si true o false, según si tiene o no tiene este rol
-    if (mysqli_fetch_assoc(sqlSELECT($sql))) {
+    if (sqlSELECT($sql)->num_rows > 0) {
         return true;
     } else {
         return false;
@@ -263,7 +323,7 @@ function validarVigilante($id_user)
 }
 
 // Listar usuario y sus datos con rol, para todo los usuraio que existe
-function listarRoles($id_user)
+function listarUsuarios($id_user)
 {
     // Consulta
     $sql = "SELECT u.id_usuario , u.nombre, u.email, u.saldo, u.fecha_bloqueo, r.nombre as nombre_rol
@@ -284,15 +344,15 @@ function listarRoles($id_user)
                     <th>Nombre</th>
                     <th>Email</th>
                     <th>Saldo</th>
-                    <th>Bloqueo</th>
                     <th>Rol</th>
+                    <th>Bloqueo</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
         ";
 
-    while ($row = mysqli_fetch_assoc($result)) {
+    while ($row = $result->fetch_assoc()) {
         $id_usuario = $row['id_usuario'];
         $nombre = $row['nombre'];
         $email = $row['email'];
@@ -307,9 +367,32 @@ function listarRoles($id_user)
                 <td><span class='editableUsuario nombre $ id_usuario' id='nombre' data-usuario-id='$id_usuario'>$nombre</span></td>
                 <td>$email</td>
                 <td><span class='editableUsuario' id='saldo' data-usuario-id='$id_usuario'>$saldo</span></td>
-                <td>$fecha_bloqueo</td>
                 <td>$nombre_rol</td>
-                <td></td>
+                <td>$fecha_bloqueo</td>
+                <td>
+                    <form action='administrador.php?administradorUsuarios' method='POST'>
+                        <input type='hidden' name='id_usuario' value='$id_usuario'>
+                        <input type='hidden' name='nombre_rol' value='$nombre_rol'>
+                        <button type='submit' name='bloquearUsuario' class='btn btn-warning'>Bloquear</button>
+                        <button type='submit' name='eliminarRolUsuario' class='btn btn-danger'>Eliminar rol</button>
+                    </form>
+                    <form action='administrador.php?administradorUsuarios' method='POST'>
+                        <input type='hidden' name='id_usuario' value='$id_usuario'>
+                        <div class='input-group'>
+                            <select name='nombre_rol' class='custom-select'>
+                                <option selected disabled>Selecciona un rol</option>
+                                <option value='Admin'>Admin</option>
+                                <option value='Usuario'>Usuario</option>
+                                <option value='Empresa'>Empresa</option>
+                                <option value='VIP'>VIP</option>
+                                <option value='Vigilante'>Vigilante</option>
+                            </select>
+                            <div class='input-group-append'>
+                            <button type='submit' name='agregarRolUsuario' class='btn btn-success'>Agregar rol</button>
+                            </div>
+                        </div>
+                    </form>
+                </td>
             </tr>
             ";
     }
@@ -343,12 +426,13 @@ function listarPublicidades($id_user)
                 <th>Descripcion</th>
                 <th>Precio</th>
                 <th>Estado</th>
+                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
     ";
 
-    while ($row = mysqli_fetch_assoc($result)) {
+    while ($row = $result->fetch_assoc()) {
         $id_publicidad = $row['id_publicidad'];
         $tipo = $row['tipo'];
         $provincia = $row['provincia'];
@@ -356,7 +440,12 @@ function listarPublicidades($id_user)
         $codigo_postal = $row['codigo_postal'];
         $descripcion = $row['descripcion'];
         $precio = $row['precio'];
-        $estado = $row['estado'];
+
+        if ($row['estado'] == 1) {
+            $estado = "Activado";
+        } else {
+            $estado = "Desactivado";
+        }
 
         echo "
         <tr>
@@ -366,6 +455,14 @@ function listarPublicidades($id_user)
             <td><span class='editablePublicidad' id='descripcion' data-publicidad-id='$id_publicidad'>$descripcion</span></td>
             <td><span class='editablePublicidad' id='precio' data-publicidad-id='$id_publicidad'>$precio</span></td>
             <td>$estado</td>
+            <td>
+                <form action='cuenta.php' method='POST'>
+                    <input type='hidden' name='id_publicidad' value='$id_publicidad'>
+                    <button type='submit' name='activarPublicidad' class='btn btn-success'>Activar</button>
+                    <button type='submit' name='desactivarPublicidad' class='btn btn-secondary'>Desacticar</button>
+                    <button type='submit' name='borrarPublicidad' class='btn btn-danger'>Borrar</button>
+                </form>
+            </td>
         </tr>
         ";
     }
@@ -376,63 +473,60 @@ function listarPublicidades($id_user)
 }
 
 // Agregar rol de Usuario
-function agregarUsuario($id_user)
+function agregarRoles($id_user, $nombre_rol)
 {
+    switch ($nombre_rol) {
+        case "Admin":
+            $id_rol = 1;
+            break;
+        case "Usuario":
+            $id_rol = 2;
+            break;
+        case "Empresa":
+            $id_rol = 3;
+            break;
+        case "VIP":
+            $id_rol = 4;
+            break;
+        case "Vigilante":
+            $id_rol = 5;
+            break;
+    }
+    // Consulta
+    $sql = "INSERT INTO usuarios_roles (id_usuario, id_rol)
+    VALUES ($id_user, $id_rol)";
 
+    // Ejecutar la consulta
+    sqlINSERT($sql);
 }
 
 // Agregar rol de Admin
-function agregarAdmin($id_user)
+function eliminarRoles($id_user, $nombre_rol)
 {
+    switch ($nombre_rol) {
+        case "Admin":
+            $id_rol = 1;
+            break;
+        case "Usuario":
+            $id_rol = 2;
+            break;
+        case "Empresa":
+            $id_rol = 3;
+            break;
+        case "VIP":
+            $id_rol = 4;
+            break;
+        case "Vigilante":
+            $id_rol = 5;
+            break;
+    }
+    // Consulta
+    $sql = "DELETE FROM usuarios_roles
+    WHERE id_rol = $id_rol
+    AND id_usuario = $id_user";
 
-}
-
-// Agregar rol de Empresa
-function agregarEmpresa($id_user)
-{
-
-}
-
-// Agregar rol de VIP
-function agregarVIP($id_user)
-{
-
-}
-
-// Agregar rol de Vigilante
-function agregarVigilante($id_user)
-{
-
-}
-
-// Eliminar rol de Usuario
-function eliminarUsuario($id_user)
-{
-
-}
-
-// Eliminar rol de Admin
-function eliminarAdmin($id_user)
-{
-
-}
-
-// Eliminar rol de Empresa
-function eliminarEmpresa($id_user)
-{
-
-}
-
-// Eliminar rol de VIP
-function eliminarVIP($id_user)
-{
-
-}
-
-// Eliminar rol de Vigilante
-function eliminarVigilante($id_user)
-{
-
+    // Ejecutar la consulta
+    sqlDELETE($sql);
 }
 
 // Actualizar dato de nombre, un parametro de nuevo nombre y id usuario
@@ -442,7 +536,7 @@ function guardarNombre($nombre, $id_user)
     $sql = "SELECT COUNT(*) as count FROM usuarios WHERE nombre = '$nombre'";
 
     // Meter el resultado devulto para un valor;
-    $datos = mysqli_fetch_assoc(sqlSELECT($sql));
+    $datos = sqlSELECT($sql)->fetch_assoc();
 
     // Comproba mediante count si existe ya ese nombre o es un nombre nuevo
     if ($datos["count"] > 0) {
@@ -471,7 +565,7 @@ function guardarCorreo($correo, $correo2, $id_user)
         $sql = "SELECT COUNT(*) as count FROM usuarios WHERE email = '$correo'";
 
         // Meter el resultado devulto para un valor;
-        $datos = mysqli_fetch_assoc(sqlSELECT($sql));
+        $datos = sqlSELECT($sql)->fetch_assoc();
 
         // Comproba mediante count si existe ya ese correo o no
         if ($datos["count"] > 0) {
@@ -529,8 +623,6 @@ function repetirValor($valo, $valo2)
 
 
 
-
-
 // Actualizar dato de password, pasa parametro de nuevo pass y pass repetido, mas su id usuario
 function sumarVisitaTotal()
 {
@@ -538,7 +630,7 @@ function sumarVisitaTotal()
     $sql = "SELECT COUNT(*) as count, numero FROM pagina_info WHERE titulo = 'visitas'";
 
     // Meter el resultado devulto para un valor;
-    $datos = mysqli_fetch_assoc(sqlSELECT($sql));
+    $datos = sqlSELECT($sql)->fetch_assoc();
 
     // Comproba mediante count si existe ya ese correo o no
     if ($datos["count"] > 0) {
@@ -552,7 +644,7 @@ function sumarVisitaTotal()
         // no existe en la base de datos
         $sql = "INSERT INTO pagina_info (titulo, numero, descripcion)"
             . "VALUES ('visitas', 1, 'Visitas totales de la pagina')";
-        sqlSELECT($sql);
+        sqlINSERT($sql);
     }
 }
 
@@ -564,32 +656,52 @@ function verVisitaTotal()
     $sql = "SELECT numero FROM pagina_info WHERE titulo = 'visitas'";
 
     // Meter el resultado devulto para un valor;
-    $datos = mysqli_fetch_assoc(sqlSELECT($sql));
+    $datos = sqlSELECT($sql)->fetch_assoc();
     echo $datos["numero"];
 }
 
+function activarPublicidad($id_publicidad)
+{
+    // Consulta
+    $sql = "UPDATE publicidades SET estado='1' WHERE id_publicidad = $id_publicidad";
 
+    // Actualizar los datos
+    sqlUPDATE($sql);
+}
 
+function desactivarPublicidad($id_publicidad)
+{
+    // Consulta
+    $sql = "UPDATE publicidades SET estado='0' WHERE id_publicidad = $id_publicidad";
 
+    // Actualizar los datos
+    sqlUPDATE($sql);
+}
 
+function borrarPublicidad($id_publicidad)
+{
+    // Consulta
+    $sql = "DELETE FROM publicidades WHERE id_publicidad = $id_publicidad";
 
+    // Actualizar los datos
+    sqlDELETE($sql);
+}
 
+function bloquearUsuario($id_usuario)
+{
+    // 'Y': Representa el año con cuatro dígitos (ejemplo: 2023).
+    // 'y': Representa el año con dos dígitos (ejemplo: 23).
+    $fecha_actual = date('Y-m-d');
+    // Consulta
+    $sql = "UPDATE usuarios SET fecha_bloqueo = '$fecha_actual' WHERE id_usuario  = $id_usuario";
 
-
-
-
-
-
-
-
-
-
-
+    // Actualizar los datos
+    sqlUPDATE($sql);
+}
 
 // Función utilizada para guardar un marcador en el mapa del menú de usuario. 
 function guardarMarcador()
 {
-
     // Se verifica que la solicitud sea un método post.
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -637,7 +749,8 @@ function guardarMarcador()
 
 
 
-function debug_to_console($data) {
+function debug_to_console($data)
+{
     $output = $data;
     if (is_array($output))
         $output = implode(',', $output);
@@ -646,4 +759,3 @@ function debug_to_console($data) {
 }
 
 ?>
-

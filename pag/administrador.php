@@ -9,7 +9,7 @@ require_once '../lib/modulos.php';
 <head>
     <!-- Meter informacion general de head -->
     <?php head_info(); ?>
-    
+
     <title>DisplayAds</title>
     <style>
         img{
@@ -82,8 +82,15 @@ require_once '../lib/modulos.php';
                     </li>
                     <li class="nav-item">
                         <form action="administrador.php" method="get">
-                            <button type="submit" name="administradorNoticia" class="btn btn-link nav-link text-white">
-                                Noticia
+                            <button type="submit" name="administradorNoticias" class="btn btn-link nav-link text-white">
+                                Noticias
+                            </button>
+                        </form>
+                    </li>
+                    <li class="nav-item">
+                        <form action="administrador.php" method="get">
+                            <button type="submit" name="administradorMisiones" class="btn btn-link nav-link text-white">
+                                Misiones
                             </button>
                         </form>
                     </li>
@@ -98,6 +105,29 @@ require_once '../lib/modulos.php';
             </div>
             <div class="flex-grow-1">
                 <div id="seccion1" class="p-3" style="display: block;">
+
+                    <?php
+                    if (isset($_REQUEST['bloquearUsuario'])) {
+                        $id = $_POST['id_usuario'];
+                        bloquearUsuario($id);
+                    }
+                    ?>
+
+                    <?php
+                    if (isset($_REQUEST['eliminarRolUsuario'])) {
+                        $id = $_POST['id_usuario'];
+                        $nombre_rol = $_POST['nombre_rol'];
+                        eliminarRoles($id, $nombre_rol);
+                    }
+                    ?>
+
+                    <?php
+                    if (isset($_REQUEST['agregarRolUsuario'])) {
+                        $id = $_POST['id_usuario'];
+                        $nombre_rol = $_POST['nombre_rol'];
+                        agregarRoles($id, $nombre_rol);
+                    }
+                    ?>
 
 
                     <?php
@@ -114,7 +144,7 @@ require_once '../lib/modulos.php';
 
                     <?php
                     if (isset($_REQUEST['administradorUsuarios'])) {
-                        listarRoles($_SESSION['usuario']['id_usuario']);
+                        listarUsuarios($_SESSION['usuario']['id_usuario']);
                     }
 
 
@@ -248,7 +278,7 @@ require_once '../lib/modulos.php';
                             echo "Error al guardar el marcador.";
                         }
                     }
-                    
+
                     if (isset($_POST['borrarProducto'])) {
                         $id = $_POST['idProducto'];
                         $conn = conectar();
@@ -275,7 +305,7 @@ require_once '../lib/modulos.php';
 
                         // Obtener el nombre de la columna a actualizar (puede venir como parámetro en la solicitud)
                         $columna = $_POST['columna']; // Asegúrate de validar y sanitizar este valor
-
+                
                         // Realizar la lógica para actualizar el valor en la base de datos
                         // Aquí debes escribir el código específico para tu base de datos y tabla
                 

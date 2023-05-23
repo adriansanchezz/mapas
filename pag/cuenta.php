@@ -80,6 +80,31 @@ require_once '../lib/modulos.php';
                 </ul>
             </div>
 
+            <?php
+            if (isset($_REQUEST['activarPublicidad'])) {
+                $id = $_POST['id_publicidad'];
+                activarPublicidad($id);
+            }
+            ?>
+
+            <?php
+            if (isset($_REQUEST['desactivarPublicidad'])) {
+                $id = $_POST['id_publicidad'];
+                desactivarPublicidad($id);
+            }
+            ?>
+
+            <?php
+            if (isset($_REQUEST['borrarPublicidad'])) {
+                $id = $_POST['id_publicidad'];
+                borrarPublicidad($id);
+            }
+            ?>
+
+
+
+
+
             <div class="flex-grow-1">
                 <div id="seccion1" class="p-3" style="display: block;">
                     <h2>Informacion personal</h2><br>
