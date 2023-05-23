@@ -505,7 +505,7 @@ function mapa($valor)
                                 <?php
                                 $id_usuario = $_SESSION['usuario']['id_usuario'];
                                 $conn = conectar();
-                                $sql = "SELECT * FROM misiones WHERE id_usuario='$id_usuario' AND estado=0";
+                                $sql = "SELECT * FROM misiones WHERE id_usuario='$id_usuario' AND estado=0 AND aceptacion=0";
                                 $result = $conn->query($sql);
 
 

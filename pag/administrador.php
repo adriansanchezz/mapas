@@ -81,6 +81,13 @@ require_once '../lib/modulos.php';
                             </button>
                         </form>
                     </li>
+                    <li class="nav-item">
+                        <form action="administrador.php" method="get">
+                            <button type="submit" name="administradorMisiones" class="btn btn-link nav-link text-white">
+                                Administrar misiones
+                            </button>
+                        </form>
+                    </li>
                 </ul>
             </div>
             <div class="flex-grow-1">
@@ -191,10 +198,7 @@ require_once '../lib/modulos.php';
                         echo "</div>";
 
                     }
-                    if (isset($_REQUEST['anhadirProductos'])) {
-
-
-                    }
+                    
                     if (isset($_POST['nuevoProducto'])) {
                         $nombreProducto = $_POST['nombre'];
                         $descripcionProducto = $_POST['descripcion'];
@@ -316,6 +320,51 @@ require_once '../lib/modulos.php';
                         }
                         // Terminar la ejecución del script PHP
                         exit();
+                    }
+
+
+                    if(isset($_REQUEST['administradorMisiones']))
+                    {
+                        ?>
+                        <div class="flex-grow-1">
+                        <div class="p-3" style="display: block;">
+                            <h1>MISIONES</h1>
+                            <div id="map"></div>
+                            <div class="container mt-4">
+                                <div class="table-responsive mb-4">
+                                    Misiones en proceso:
+                                    <table id="tabla-puntos" class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Descripcion</th>
+                                                <th>Latitud</th>
+                                                <th>Longitud</th>
+                                                <th>Prueba</th>
+                                                <th>Aceptacion</th>
+                                            </tr>
+                                        </thead>
+                            <tbody>
+                        <?php
+                        $conn = conectar();
+                        $sql = "SELECT * FROM misiones WHERE  estado=1 AND aceptacion=0";
+                        $result = $conn->query($sql);
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                echo '<tr>';
+                                echo '<td>' . $row['descripcion'] . '</td>'; // Columna de descripción
+                                echo '<td>' . $row['fecha_fin'] . '</td>'; // Columna de fecha_fin
+                                echo '<td>' . $row['descripcion'] . '</td>'; // Columna de descripción
+                                echo "<td><form action='vigilante.php' method='POST' enctype='multipart/form-data'>";
+                                echo "<input type='hidden' name='id_mision' value='" . $row['id_mision'] . "'>";
+                                echo "<input type='file' name='imagen' accept='image/*' required>";
+                                echo "<input type='submit' name='imagenMision'></form></td>";
+                                echo "<td><form action='administrador.php?aceptarMision' method='POST'><input type='submit' value='Aceptar'></form></td>";
+                                echo '</tr>';
+                                
+                            }
+                            echo "</tbody>";
+                        }
+     
                     }
                     ?>
 
