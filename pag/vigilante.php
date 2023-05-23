@@ -17,6 +17,7 @@ require_once '../lib/modulos.php';
     if (isset($_SESSION['usuario'])) {
         // Menu general
         menu_general(); ?>
+        
         <!-- Crear submenu con sus opciones -->
         <div class="d-flex vh-100">
             <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 200px;">
@@ -44,6 +45,39 @@ require_once '../lib/modulos.php';
                 </ul>
             </div>
 
+            <?php 
+                $puntos = 0;
+                $id_usuario = $_SESSION['usuario']['id_usuario'];
+                $conn = conectar();
+                $sql = "SELECT * FROM misiones WHERE id_usuario='$id_usuario' AND estado=1";
+                $result = $conn->query($sql);
+
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        if($row['aceptacion'] == 1)
+                        {
+                            $puntos = $puntos + 10;
+                        }
+                    }
+                }
+                
+            ?>
+            <style>
+        .puntos-container {
+            background-color: #e9f2fe;
+            border: 1px solid #007bff;
+            padding: 10px;
+            height: 100px;
+            border-radius: 5px;
+            float: right;
+            margin-right: 20px;
+            margin-top: 20px;
+        }
+    </style>
+            <div class="puntos-container">
+                <h5>Tus puntos:</h5>
+                <p><?php echo $puntos; ?></p>
+            </div>
 
 
             <?php

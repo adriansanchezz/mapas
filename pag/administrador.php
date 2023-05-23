@@ -11,6 +11,12 @@ require_once '../lib/modulos.php';
     <?php head_info(); ?>
     
     <title>DisplayAds</title>
+    <style>
+        img{
+            width: 500px;
+            height: 500px;
+        }
+    </style>
 </head>
 
 <body>
@@ -354,17 +360,46 @@ require_once '../lib/modulos.php';
                                 echo '<td>' . $row['descripcion'] . '</td>'; // Columna de descripción
                                 echo '<td>' . $row['fecha_fin'] . '</td>'; // Columna de fecha_fin
                                 echo '<td>' . $row['descripcion'] . '</td>'; // Columna de descripción
-                                echo "<td><form action='vigilante.php' method='POST' enctype='multipart/form-data'>";
-                                echo "<input type='hidden' name='id_mision' value='" . $row['id_mision'] . "'>";
-                                echo "<input type='file' name='imagen' accept='image/*' required>";
-                                echo "<input type='submit' name='imagenMision'></form></td>";
-                                echo "<td><form action='administrador.php?aceptarMision' method='POST'><input type='submit' value='Aceptar'></form></td>";
+                                $sql2 = "SELECT * FROM `fotos` where id_mision =" . $row['id_mision'];
+                                    $result2 = $conn->query($sql2);
+
+                                echo "<td>";
+                                if ($result2->num_rows > 0) {
+                                    // Recuperar la información de la imagen
+                                    $row2 = $result2->fetch_assoc();
+                                    $imagen = $row2["foto"];
+
+                                    // Mostrar la imagen en la página
+                                    echo "<img src='data:image/jpeg;base64," . base64_encode($imagen) . "' alt='Imagen de la prueba.'>";
+                                } else {
+                                    echo "No se encontró la imagen asociada.";
+                                }
+                                echo "</td>";
+                                echo "<td>
+                                    <form action='administrador.php?aceptarMision' method='POST'>
+                                    <input type='hidden' name='id_mision' value='" . $row['id_mision'] . "'>
+                                    <input type='submit' name='aceptarMision' value='Aceptar'>
+                                    </form>
+                                    </td>";
+                                    
                                 echo '</tr>';
                                 
                             }
                             echo "</tbody>";
                         }
      
+                    }
+                    if(isset($_POST['aceptarMision']))
+                    {
+                        $id_mision = $_POST['id_mision'];
+                        $conn = conectar();
+                        $sqlUpdate = "UPDATE `misiones` SET `aceptacion` = 1, `id_publicidad` = NULL WHERE `id_mision` = ?";
+                        $stmt = $conn->prepare($sqlUpdate);
+                        $stmt->bind_param("i", $id_mision);
+                        $stmt->execute();
+                        
+                        echo "<script>window.location.href = 'administrador.php?administradorMisiones=';</script>";
+                        exit();
                     }
                     ?>
 

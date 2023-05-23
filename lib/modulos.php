@@ -239,7 +239,7 @@ function mapa($valor)
                                 // Crear un marcador para cada registro de la base de datos.
                                 var marker = L.marker([<?php echo $latitud; ?>, <?php echo $longitud; ?>]).addTo(map);
                                 // Se añade un popUp para que salga una ventana al clickar un marcador existente en el mapa.
-                                marker.bindPopup("<div class='popup-content'><h3><?php echo $nombre_tipo . " " . $ubicacion . " " . $precio . "€"; ?></h3><p><?php echo $descripcion; ?></p><img src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación'></div><form action='empresa.php' method='POST'><input type='hidden' name='product_id' value='<?php echo $row['id_publicidad'] ?>'><input type='hidden' name='lat' value='<?php echo $latitud; ?>'><input type='hidden' name='lng' value='<?php echo $longitud; ?>'><input type='hidden' name='ubicacion' value='<?php echo $ubicacion; ?>'><input type='hidden' name='descripcion' value='<?php echo $descripcion; ?>'><button type='submit' name='add_to_cart' value='1'>Seleccionar</button></form>");
+                                marker.bindPopup("<div class='popup-content'><h3><?php echo $nombre_tipo . " " . $ubicacion . " " . $precio . "€"; ?></h3><p><?php echo $descripcion; ?></p><img src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación'></div><form action='empresa.php' method='POST'><input type='hidden' name='product_id' value='<?php echo $row['id_publicidad'] ?>'><input type='hidden' name='lat' value='<?php echo $latitud; ?>'><input type='hidden' name='lng' value='<?php echo $longitud; ?>'><input type='hidden' name='ubicacion' value='<?php echo $ubicacion; ?>'><input type='hidden' name='descripcion' value='<?php echo $descripcion; ?>'><button type='submit' name='add_to_cart'>Seleccionar</button></form>");
 
 
                                 <?php
@@ -327,6 +327,62 @@ function mapa($valor)
                         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
                         maxZoom: 18,
                     }).addTo(map);
+
+
+                    <?php
+                        // Establecer la conexión con la base de datos.
+                        $conn = conectar();
+
+                        // Consultar los marcadores existentes en el mapa.
+                        $sql = "SELECT * FROM publicidades WHERE id_usuario =". $_SESSION['usuario']['id_usuario'];
+                        $result = $conn->query($sql);
+
+                        // Si da resultados entonces entra en el if.
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                // Se crean variables con los datos de la consulta que interesa sacar en pantalla u operar con ellos.
+                                $latitud = $row['latitud'];
+                                $longitud = $row['longitud'];
+                                $descripcion = $row['descripcion'];
+                                $ubicacion = $row['ubicacion'];
+                                $precio = $row['precio'];
+
+                                // Se obtiene la id del tipo de propiedad.
+                                $tipo = $row['id_tipo_publicidad'];
+
+                                // Y mediante una consulta a la tabla tipospropiedades se obtiene el nombre del tipo de propiedad que es.
+                                $sql2 = "SELECT nombre FROM tipospublicidades WHERE id_tipo_publicidad = $tipo";
+                                $result2 = $conn->query($sql2);
+
+                                // Si se obtiene resultado entonces se obtiene el nombre.
+                                if ($result2) {
+                                    $row2 = $result2->fetch_assoc();
+                                    $nombre_tipo = $row2['nombre'];
+                                } else {
+                                    // Si no, pone que no se ha encontrado.
+                                    $nombre_tipo = "Tipo de publicidad no encontrado";
+                                }
+                                // La api key de google. Para poder usar el google static map.
+                                $apiKey = 'AIzaSyADr5gpzLPePzkWwz8C94wBQ21DzQ4GGVU'; // Reemplaza con tu propia API Key de Google Maps Static
+                
+                                // Se obtiene una imagen de la localización mediante coordenadas.
+                                $imageUrl = 'https://maps.googleapis.com/maps/api/streetview?size=400x300&location=' . $latitud . ',' . $longitud . '&key=' . $apiKey;
+                                ?>
+
+                                // Crear un marcador para cada registro de la base de datos.
+                                var marker = L.marker([<?php echo $latitud; ?>, <?php echo $longitud; ?>]).addTo(map);
+                                // Se añade un popUp para que salga una ventana al clickar un marcador existente en el mapa.
+                                marker.bindPopup("<div class='popup-content'><h3><?php echo $nombre_tipo; ?></h3><h4><?php echo $ubicacion; ?></h4><h4><?php echo $precio . "€"; ?></h4><p><?php echo $descripcion; ?></p><img src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación'></div><form action='usuario.php' method='POST'><input type='hidden' name='id_publicidad' value='<?php echo $row['id_publicidad'] ?>'><button type='submit' name='borrarMarcador'>Borrar</button></form>");
+
+
+                                <?php
+                            }
+                        }
+                        
+                        // Se cierra la conexión de la BD.
+                        mysqli_close($conn);
+                        ?>
+
 
 
 
@@ -586,7 +642,7 @@ function mapa($valor)
                     </script>";
 
                 // Consulta para obtener los datos de publicidades y misiones
-                $sql2 = "SELECT * FROM publicidades AS p, misiones AS m WHERE p.id_publicidad = m.id_publicidad";
+                $sql2 = "SELECT * FROM publicidades AS p, misiones AS m WHERE p.id_publicidad = m.id_publicidad AND p.estado = 1";
                 $result2 = $conn->query($sql2);
                 if ($result2->num_rows > 0) {
                     while ($row2 = $result2->fetch_assoc()) {
