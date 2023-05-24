@@ -9,7 +9,7 @@ if (isset($_GET['subirMision'])) {
         $id_publicidad = $_POST['id_publicidad'];
         $id_tipo = 1;
         $conn = conectar();
-        $sql = "SELECT * FROM misiones WHERE id_publicidad='$id_publicidad'";
+        $sql = "SELECT * FROM misiones WHERE id_publicidad='$id_publicidad' AND aceptacion = 0 AND id_usuario=". $_SESSION['usuario']['id_usuario'] .";";
         $result = $conn->query($sql);
         if ($result->num_rows > 0) {
             echo "true";

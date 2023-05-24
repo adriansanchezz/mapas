@@ -17,6 +17,7 @@ require_once '../lib/modulos.php';
     if (isset($_SESSION['usuario'])) {
         // Menu general
         menu_general(); ?>
+        
         <!-- Crear submenu con sus opciones -->
         <div class="d-flex vh-100">
             <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 200px;">
@@ -44,6 +45,39 @@ require_once '../lib/modulos.php';
                 </ul>
             </div>
 
+            <?php 
+                $puntos = 0;
+                $id_usuario = $_SESSION['usuario']['id_usuario'];
+                $conn = conectar();
+                $sql = "SELECT * FROM misiones WHERE id_usuario='$id_usuario' AND estado=1";
+                $result = $conn->query($sql);
+
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        if($row['aceptacion'] == 1)
+                        {
+                            $puntos = $puntos + 10;
+                        }
+                    }
+                }
+                
+            ?>
+            <style>
+        .puntos-container {
+            background-color: #e9f2fe;
+            border: 1px solid #007bff;
+            padding: 10px;
+            height: 100px;
+            border-radius: 5px;
+            float: right;
+            margin-right: 20px;
+            margin-top: 20px;
+        }
+    </style>
+            <div class="puntos-container">
+                <h5>Tus puntos:</h5>
+                <p><?php echo $puntos; ?></p>
+            </div>
 
 
             <?php
@@ -90,34 +124,43 @@ require_once '../lib/modulos.php';
             }
             if (isset($_POST['imagenMision'])) {
                 $id_mision = $_POST['id_mision'];
-                echo "<h1>HOLA</h1>";
                 if (isset($_FILES['imagen'])) {
                     if ($_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
                         $imagen = $_FILES['imagen']['tmp_name'];
                         $contenidoImagen = file_get_contents($imagen);
                         $conn = conectar();
-                        $sql = "INSERT INTO `fotos`(`foto`, `id_mision`) VALUES (?, ?)";
-
-                        $stmt2 = $conn->prepare($sql);
-                        $stmt2->bind_param("si", $contenidoImagen, $id_mision);
-                        // Ejecutar la consulta
-                        if ($stmt2->execute()) {
+            
+                        // Actualizar campo `fecha_fin`
+                        $fechaFin = date('Y-m-d'); // Obtener fecha actual
+                        $sqlFechaFin = "UPDATE `misiones` SET `fecha_fin` = ? WHERE `id_mision` = ?";
+                        $stmtFechaFin = $conn->prepare($sqlFechaFin);
+                        $stmtFechaFin->bind_param("si", $fechaFin, $id_mision);
+                        $stmtFechaFin->execute();
+            
+                        // Insertar imagen en la tabla `fotos`
+                        $sqlInsertarFoto = "INSERT INTO `fotos` (`foto`, `id_mision`) VALUES (?, ?)";
+                        $stmtInsertarFoto = $conn->prepare($sqlInsertarFoto);
+                        $stmtInsertarFoto->bind_param("si", $contenidoImagen, $id_mision);
+            
+                        // Ejecutar la consulta de inserción
+                        if ($stmtInsertarFoto->execute()) {
+                            // Actualizar el estado de la misión
                             $sqlUpdate = "UPDATE `misiones` SET `estado` = 1 WHERE `id_mision` = ?";
-                            $stmt3 = $conn->prepare($sqlUpdate);
-                            $stmt3->bind_param("i", $id_mision);
-                            $stmt3->execute();
+                            $stmtUpdate = $conn->prepare($sqlUpdate);
+                            $stmtUpdate->bind_param("i", $id_mision);
+                            $stmtUpdate->execute();
+            
                             echo "<script>window.location.href = 'vigilante.php?misiones=';</script>";
                             exit();
-
                         } else {
-                            echo "Error al subir la imagen: " . $stmt->error;
+                            echo "Error al subir la imagen: " . $stmtInsertarFoto->error;
                         }
-
                     }
                 } else {
                     echo "<h1>ERROR</h1>";
                 }
             }
+            
             ?>
 
         </div>

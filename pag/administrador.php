@@ -11,6 +11,12 @@ require_once '../lib/modulos.php';
     <?php head_info(); ?>
 
     <title>DisplayAds</title>
+    <style>
+        img{
+            width: 500px;
+            height: 500px;
+        }
+    </style>
 </head>
 
 <body>
@@ -85,6 +91,13 @@ require_once '../lib/modulos.php';
                         <form action="administrador.php" method="get">
                             <button type="submit" name="administradorMisiones" class="btn btn-link nav-link text-white">
                                 Misiones
+                            </button>
+                        </form>
+                    </li>
+                    <li class="nav-item">
+                        <form action="administrador.php" method="get">
+                            <button type="submit" name="administradorMisiones" class="btn btn-link nav-link text-white">
+                                Administrar misiones
                             </button>
                         </form>
                     </li>
@@ -221,10 +234,7 @@ require_once '../lib/modulos.php';
                         echo "</div>";
 
                     }
-                    if (isset($_REQUEST['anhadirProductos'])) {
-
-
-                    }
+                    
                     if (isset($_POST['nuevoProducto'])) {
                         $nombreProducto = $_POST['nombre'];
                         $descripcionProducto = $_POST['descripcion'];
@@ -345,6 +355,80 @@ require_once '../lib/modulos.php';
                             echo "Error al actualizar el valor";
                         }
                         // Terminar la ejecución del script PHP
+                        exit();
+                    }
+
+
+                    if(isset($_REQUEST['administradorMisiones']))
+                    {
+                        ?>
+                        <div class="flex-grow-1">
+                        <div class="p-3" style="display: block;">
+                            <h1>MISIONES</h1>
+                            <div id="map"></div>
+                            <div class="container mt-4">
+                                <div class="table-responsive mb-4">
+                                    Misiones en proceso:
+                                    <table id="tabla-puntos" class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Descripcion</th>
+                                                <th>Latitud</th>
+                                                <th>Longitud</th>
+                                                <th>Prueba</th>
+                                                <th>Aceptacion</th>
+                                            </tr>
+                                        </thead>
+                            <tbody>
+                        <?php
+                        $conn = conectar();
+                        $sql = "SELECT * FROM misiones WHERE  estado=1 AND aceptacion=0";
+                        $result = $conn->query($sql);
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                echo '<tr>';
+                                echo '<td>' . $row['descripcion'] . '</td>'; // Columna de descripción
+                                echo '<td>' . $row['fecha_fin'] . '</td>'; // Columna de fecha_fin
+                                echo '<td>' . $row['descripcion'] . '</td>'; // Columna de descripción
+                                $sql2 = "SELECT * FROM `fotos` where id_mision =" . $row['id_mision'];
+                                    $result2 = $conn->query($sql2);
+
+                                echo "<td>";
+                                if ($result2->num_rows > 0) {
+                                    // Recuperar la información de la imagen
+                                    $row2 = $result2->fetch_assoc();
+                                    $imagen = $row2["foto"];
+
+                                    // Mostrar la imagen en la página
+                                    echo "<img src='data:image/jpeg;base64," . base64_encode($imagen) . "' alt='Imagen de la prueba.'>";
+                                } else {
+                                    echo "No se encontró la imagen asociada.";
+                                }
+                                echo "</td>";
+                                echo "<td>
+                                    <form action='administrador.php?aceptarMision' method='POST'>
+                                    <input type='hidden' name='id_mision' value='" . $row['id_mision'] . "'>
+                                    <input type='submit' name='aceptarMision' value='Aceptar'>
+                                    </form>
+                                    </td>";
+                                    
+                                echo '</tr>';
+                                
+                            }
+                            echo "</tbody>";
+                        }
+     
+                    }
+                    if(isset($_POST['aceptarMision']))
+                    {
+                        $id_mision = $_POST['id_mision'];
+                        $conn = conectar();
+                        $sqlUpdate = "UPDATE `misiones` SET `aceptacion` = 1 WHERE `id_mision` = ?";
+                        $stmt = $conn->prepare($sqlUpdate);
+                        $stmt->bind_param("i", $id_mision);
+                        $stmt->execute();
+                        
+                        echo "<script>window.location.href = 'administrador.php?administradorMisiones=';</script>";
                         exit();
                     }
                     ?>
