@@ -119,8 +119,8 @@ function menu_general()
                             value="Cuenta" />&nbsp;&nbsp;
                     </form>
 
-                    <form class="form-inline my-2 my-lg-0" action="ticket.php" method="post">
-                        <input class="btn btn-outline-success my-2 my-sm-0" type="submit" name="ticket" value="Ticket" />
+                    <form class="form-inline my-2 my-lg-0" action="soporte.php" method="post">
+                        <input class="btn btn-outline-success my-2 my-sm-0" type="submit" name="soporte" value="Soporte" />
                     </form>
 
                     <form class="form-inline my-2 my-lg-0" action="../index.php" method="post">
