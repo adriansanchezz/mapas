@@ -424,6 +424,18 @@ require_once '../lib/modulos.php';
                         echo "<script>window.location.href = 'administrador.php?administradorMisiones=';</script>";
                         exit();
                     }
+                    if(isset($_POST['rechazarMision']))
+                    {
+                        $id_mision = $_POST['id_mision'];
+                        $conn = conectar();
+                        $sqlUpdate = "UPDATE `misiones` SET `aceptacion` = 2 WHERE `id_mision` = ?";
+                        $stmt = $conn->prepare($sqlUpdate);
+                        $stmt->bind_param("i", $id_mision);
+                        $stmt->execute();
+                        
+                        echo "<script>window.location.href = 'administrador.php?administradorMisiones=';</script>";
+                        exit();
+                    }
                     ?>
 
                 </div>

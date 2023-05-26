@@ -199,6 +199,40 @@ require_once '../lib/modulos.php';
                     echo "<p>Total a pagar: $totalMoney €</p>";
                     ?>
                 </div>
+                <script
+                    src="https://www.paypal.com/sdk/js?client-id=Ae-QOggCqT3W10C1Q7U1lTDaYwmgEsmPuPxDuQEOD4uHZK0DMvJb2brCahcG-HMPPBti9IsX8pCsB-Db&currency=EUR"></script>
+                <!-- Set up a container element for the button -->
+                <div id="paypal-button-container"></div>
+                <script>
+                    paypal.Buttons({
+                        style: {
+                            color: 'blue',
+                            shape: 'pill',
+                            label: 'pay'
+                        },
+                        createOrder: function (data, actions) {
+                            return actions.order.create({
+                                purchase_units: [{
+                                    amount: {
+                                        value: '<?php echo $totalMoney; ?>' // Reemplazar "100" por el valor de $totalMoney
+                                    }
+                                }]
+                            })
+                        },
+
+                        onApprove: function (data, actions) {
+                            console.log("hola");
+                            actions.order.capture().then(function (detalles) {
+                                console.log(detalles);
+                            });
+
+                        },
+
+                        onCancel: function (data) {
+                            alert("pago cancelado")
+                        }
+                    }).render('#paypal-button-container');
+                </script>
                 <?php
             }
             ?>
