@@ -483,7 +483,8 @@ function listarTiposSoportes()
 
     // Comprobar si existe el compo de la consulta, y listar los datos
     echo '
-        <select name="opcion">
+    
+        <select name="opcion" class="custom-select">
             <option selected disabled>Selecciona un consulta</option>
     ';
     while ($row = $result->fetch_assoc()) {

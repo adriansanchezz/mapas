@@ -214,13 +214,3 @@ function administradorPublicidades() {
         });
     }
 }
-
-
-function tiposFormularios() {
-    var opcion = document.getElementById("opcion").value;
-    if (opcion === "Preguntas") {
-        window.location.href = "Preguntas.php";
-    } else if (opcion === "opcion2") {
-        window.location.href = "formulario2.php";
-    }
-}

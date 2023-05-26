@@ -42,28 +42,36 @@ require_once '../lib/modulos.php';
 </head>
 
 <body>
-    <div class="center-container">
-        <div class="button-container">
-            <form action="guias.php">
-                <button type="submit" class="btn btn-primary blue-button">Guías de usuarios</button>
-            </form>
-        </div>
 
-        <div class="button-container">
-            <button class="btn btn-primary blue-button">Soporte técnico</button>
-        </div>
-        
-        <?php
-        if (isset($_SESSION['usuario'])) {
-            // Menu general
-            menu_general();
-            ?>
-            <form action="soporte.php" method="POST">
-                <?php listarTiposSoportes(); ?>
-                <input type='submit' name='aceptarMision' class='btn btn-success' value='Aceptar'>
-            </form>
 
-            ?>
+    <?php
+    if (isset($_SESSION['usuario'])) {
+        // Menu general
+        menu_general();
+        ?>
+
+
+        <div class="center-container">
+            <div class="button-container">
+                <form action="guias.php">
+                    <button type="submit" class="btn btn-primary blue-button">Guías de usuarios</button>
+                </form>
+            </div>
+
+            <div class="button-container">
+                <form action="soporte.php" method="POST">
+                    <div class="input-group">
+
+                        <?php listarTiposSoportes(); ?>
+
+                        <div class="input-group-append">
+                            <input type='submit' name='aceptarMision' class='btn btn-success' value='Aceptar'>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+
             <?php
             if (isset($_POST['opcion'])) {
                 $soporte = $_POST['opcion'];
@@ -103,12 +111,12 @@ require_once '../lib/modulos.php';
             }
 
 
-        } else {
-            echo ('Acceso denegado');
-            print '<a href ="../index.php"><button>Volver</button></a>';
-            session_destroy();
-        }
-        ?>
+    } else {
+        echo ('Acceso denegado');
+        print '<a href ="../index.php"><button>Volver</button></a>';
+        session_destroy();
+    }
+    ?>
 
 </body>
 
