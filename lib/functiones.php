@@ -717,7 +717,7 @@ function guardarMarcador()
         $tipoPublicidad = $_POST['tipoPublicidad'];
         $precio = $_POST['precio'];
         $idUser = $_SESSION['usuario']['id_usuario'];
-
+        $estado = 1;
 
         
 
@@ -726,12 +726,12 @@ function guardarMarcador()
         $conn = conectar();
 
         // Realización de la consulta a la base de datos a través de un bind param.
-        $sql = "INSERT INTO publicidades (latitud, longitud, provincia, ciudad, ubicacion, codigo_postal, descripcion, precio, id_tipo_publicidad, id_usuario) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO publicidades (latitud, longitud, provincia, ciudad, ubicacion, codigo_postal, descripcion, estado, precio, id_tipo_publicidad, id_usuario) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         // Se comprueba que la consulta sea adecuada.
         $stmt = $conn->prepare($sql);
         // Y mediante un bind_param se establecen los valores.
-        $stmt->bind_param('ddssssssii', $lat, $lng, $provincia, $ciudad, $ubicacion, $codigo_postal, $descripcion, $precio, $tipoPublicidad, $idUser);
+        $stmt->bind_param('ddsssssidii', $lat, $lng, $provincia, $ciudad, $ubicacion, $codigo_postal, $descripcion, $estado, $precio, $tipoPublicidad, $idUser);
         // Se ejecuta la consulta.
         $stmt->execute();
         $id_publicidad = $conn->insert_id;

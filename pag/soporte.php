@@ -51,7 +51,10 @@ require_once '../lib/modulos.php';
 
         <div class="center-container">
             <div class="button-container">
-                <button class="btn btn-primary blue-button">Guías de usuarios</button>
+                <form action="guias.php">
+                    <button type="submit" class="btn btn-primary blue-button">Guías de usuarios</button>
+                </form>
+
             </div>
             <div class="button-container">
                 <button class="btn btn-primary blue-button">Soporte técnico</button>

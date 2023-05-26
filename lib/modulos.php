@@ -317,51 +317,7 @@ function mapa($valor)
                         /* Sombra */
                     }
 
-                    .popup-content {
-                        padding: 10px;
-                        text-align: center;
-                    }
-
-                    .popup-title {
-                        font-size: 18px;
-                        font-weight: bold;
-                        margin-bottom: 5px;
-                    }
-
-                    .popup-location {
-                        font-size: 14px;
-                        color: #888;
-                        margin-bottom: 5px;
-                    }
-
-                    .popup-price {
-                        font-size: 16px;
-                        margin-bottom: 10px;
-                    }
-
-                    .popup-description {
-                        font-size: 14px;
-                        margin-bottom: 10px;
-                    }
-
-                    .popup-image {
-                        max-width: 100%;
-                        height: auto;
-                        margin-bottom: 10px;
-                    }
-
-                    .popup-delete-button {
-                        background-color: #f44336;
-                        color: white;
-                        border: none;
-                        padding: 5px 10px;
-                        font-size: 14px;
-                        cursor: pointer;
-                    }
-
-                    .popup-delete-button:hover {
-                        background-color: #d32f2f;
-                    }
+                    
                 </style>
 
 
@@ -451,7 +407,7 @@ function mapa($valor)
                                 // Crear un marcador para cada registro de la base de datos.
                                 var marker = L.marker([<?php echo $latitud; ?>, <?php echo $longitud; ?>]).addTo(map);
                                 // Se añade un popUp para que salga una ventana al clickar un marcador existente en el mapa.
-                                marker.bindPopup("<div class='popup-content'><h3 class='popup-title'><?php echo $nombre_tipo; ?></h3><h4 class='popup-location'><?php echo $ubicacion; ?></h4><h4 class='popup-price'><?php echo $precio . '€'; ?></h4><p class='popup-description'><?php echo $descripcion; ?></p>Imagen Google: <img class='popup-image' src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación'>Imagen usuario <?php echo $mostrarImagen; ?></div><form action='usuario.php' method='POST'><input type='hidden' name='id_publicidad' value='<?php echo $row['id_publicidad']; ?>'><button class='popup-delete-button' type='submit' name='borrarMarcador'>Borrar</button></form>");
+                                marker.bindPopup("<style>img{height: 200px;}</style><div class='popup-content'><h3 class='popup-title'><?php echo $nombre_tipo; ?></h3><h4 class='popup-location'><?php echo $ubicacion; ?></h4><h4 class='popup-price'><?php echo $precio . '€'; ?></h4><p class='popup-description'><?php echo $descripcion; ?></p>Imagen Google: <img class='popup-image' src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación'>Imagen usuario <?php echo $mostrarImagen; ?></div><form action='usuario.php' method='POST'><input type='hidden' name='id_publicidad' value='<?php echo $row['id_publicidad']; ?>'><button class='popup-delete-button' type='submit' name='borrarMarcador'>Borrar</button></form>");
 
                                 <?php
                             }
