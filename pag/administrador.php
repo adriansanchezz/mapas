@@ -409,6 +409,12 @@ require_once '../lib/modulos.php';
                                     <form action='administrador.php?aceptarMision' method='POST'>
                                     <input type='hidden' name='id_mision' value='" . $row['id_mision'] . "'>
                                     <input type='submit' name='aceptarMision' value='Aceptar'>
+                                    
+                                    </form>
+                                    <form action='administrador.php?rechazarMision' method='POST'>
+                                    <input type='hidden' name='id_mision' value='" . $row['id_mision'] . "'>
+                                    <input type='submit' name='rechazarMision' value='Rechazar'>
+                                    
                                     </form>
                                     </td>";
                                     
@@ -424,6 +430,18 @@ require_once '../lib/modulos.php';
                         $id_mision = $_POST['id_mision'];
                         $conn = conectar();
                         $sqlUpdate = "UPDATE `misiones` SET `aceptacion` = 1 WHERE `id_mision` = ?";
+                        $stmt = $conn->prepare($sqlUpdate);
+                        $stmt->bind_param("i", $id_mision);
+                        $stmt->execute();
+                        
+                        echo "<script>window.location.href = 'administrador.php?administradorMisiones=';</script>";
+                        exit();
+                    }
+                    if(isset($_POST['rechazarMision']))
+                    {
+                        $id_mision = $_POST['id_mision'];
+                        $conn = conectar();
+                        $sqlUpdate = "UPDATE `misiones` SET `aceptacion` = 2 WHERE `id_mision` = ?";
                         $stmt = $conn->prepare($sqlUpdate);
                         $stmt->bind_param("i", $id_mision);
                         $stmt->execute();

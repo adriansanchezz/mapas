@@ -388,64 +388,75 @@ function mapa($valor)
                     $conn = conectar();
 
                     // Consultar los marcadores existentes en el mapa.
-                    $sql = "SELECT * FROM publicidades WHERE id_usuario =" . $_SESSION['usuario']['id_usuario'];
-                    $result = $conn->query($sql);
+                    $sql = "SELECT * FROM publicidades WHERE id_usuario = ?";
+                    $stmt = $conn->prepare($sql);
 
-                    // Si da resultados entonces entra en el if.
-                    if ($result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                            // Se crean variables con los datos de la consulta que interesa sacar en pantalla u operar con ellos.
-                            $latitud = $row['latitud'];
-                            $longitud = $row['longitud'];
-                            $descripcion = $row['descripcion'];
-                            $ubicacion = $row['ubicacion'];
-                            $precio = $row['precio'];
+                    if ($stmt) {
+                        // Asignar el valor del parámetro
+                        $id_usuario = $_SESSION['usuario']['id_usuario'];
 
-                            // Se obtiene la id del tipo de propiedad.
-                            $tipo = $row['id_tipo_publicidad'];
+                        // Vincular el parámetro a la sentencia preparada
+                        $stmt->bind_param("i", $id_usuario);
 
-                            // Y mediante una consulta a la tabla tipospublicidades se obtiene el nombre del tipo de propiedad que es.
-                            $sql2 = "SELECT nombre FROM tipospublicidades WHERE id_tipo_publicidad = $tipo";
-                            $result2 = $conn->query($sql2);
+                        // Ejecutar la consulta
+                        $stmt->execute();
 
-                            // Si se obtiene resultado entonces se obtiene el nombre.
-                            if ($result2) {
-                                $row2 = $result2->fetch_assoc();
-                                $nombre_tipo = $row2['nombre'];
-                            } else {
-                                // Si no, pone que no se ha encontrado.
-                                $nombre_tipo = "Tipo de publicidad no encontrado";
-                            }
+                        // Obtener los resultados
+                        $result = $stmt->get_result();
 
-                            $sql3 = "SELECT * FROM fotos WHERE id_publicidad =" . $row['id_publicidad'];
-                            $result3 = $conn->query($sql3);
-                            $mostrarImagen = '';
-                            if ($result3->num_rows > 0) {
-                                // Recuperar la información de la imagen
-                                $row3 = $result3->fetch_assoc();
-                                $imagen = $row3["foto"];
-                                // Mostrar la imagen en la página
-                                $mostrarImagen = "<img src='data:image/jpeg;base64," . base64_encode($imagen) . "' alt='Imagen del producto'>";
-                            }
+                        // Si da resultados entonces entra en el if.
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                // Se crean variables con los datos de la consulta que interesa sacar en pantalla u operar con ellos.
+                                $latitud = $row['latitud'];
+                                $longitud = $row['longitud'];
+                                $descripcion = $row['descripcion'];
+                                $ubicacion = $row['ubicacion'];
+                                $precio = $row['precio'];
 
-                            // La api key de google. Para poder usar el google static map.
-                            $apiKey = 'AIzaSyADr5gpzLPePzkWwz8C94wBQ21DzQ4GGVU'; // Reemplaza con tu propia API Key de Google Maps Static
+                                // Se obtiene la id del tipo de propiedad.
+                                $tipo = $row['id_tipo_publicidad'];
+
+                                // Y mediante una consulta a la tabla tipospublicidades se obtiene el nombre del tipo de propiedad que es.
+                                $sql2 = "SELECT nombre FROM tipospublicidades WHERE id_tipo_publicidad = $tipo";
+                                $result2 = $conn->query($sql2);
+
+                                // Si se obtiene resultado entonces se obtiene el nombre.
+                                if ($result2) {
+                                    $row2 = $result2->fetch_assoc();
+                                    $nombre_tipo = $row2['nombre'];
+                                } else {
+                                    // Si no, pone que no se ha encontrado.
+                                    $nombre_tipo = "Tipo de publicidad no encontrado";
+                                }
+
+                                $sql3 = "SELECT * FROM fotos WHERE id_publicidad =" . $row['id_publicidad'];
+                                $result3 = $conn->query($sql3);
+                                $mostrarImagen = '';
+                                if ($result3->num_rows > 0) {
+                                    // Recuperar la información de la imagen
+                                    $row3 = $result3->fetch_assoc();
+                                    $imagen = $row3["foto"];
+                                    // Mostrar la imagen en la página
+                                    $mostrarImagen = "<img src='data:image/jpeg;base64," . base64_encode($imagen) . "' alt='Imagen del producto'>";
+                                }
+
+                                // La api key de google. Para poder usar el google static map.
+                                $apiKey = 'AIzaSyADr5gpzLPePzkWwz8C94wBQ21DzQ4GGVU'; // Reemplaza con tu propia API Key de Google Maps Static
             
-                            // Se obtiene una imagen de la localización mediante coordenadas.
-                            $imageUrl = 'https://maps.googleapis.com/maps/api/streetview?size=400x300&location=' . $latitud . ',' . $longitud . '&key=' . $apiKey;
-                            ?>
+                                // Se obtiene una imagen de la localización mediante coordenadas.
+                                $imageUrl = 'https://maps.googleapis.com/maps/api/streetview?size=400x300&location=' . $latitud . ',' . $longitud . '&key=' . $apiKey;
+                                ?>
 
-                            // Crear un marcador para cada registro de la base de datos.
-                            var marker = L.marker([<?php echo $latitud; ?>, <?php echo $longitud; ?>]).addTo(map);
-                            // Se añade un popUp para que salga una ventana al clickar un marcador existente en el mapa.
-                            marker.bindPopup("<div class='popup-content'><h3 class='popup-title'><?php echo $nombre_tipo; ?></h3><h4 class='popup-location'><?php echo $ubicacion; ?></h4><h4 class='popup-price'><?php echo $precio . '€'; ?></h4><p class='popup-description'><?php echo $descripcion; ?></p>Imagen Google: <img class='popup-image' src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación'>Imagen usuario <?php echo $mostrarImagen; ?></div><form action='usuario.php' method='POST'><input type='hidden' name='id_publicidad' value='<?php echo $row['id_publicidad']; ?>'><button class='popup-delete-button' type='submit' name='borrarMarcador'>Borrar</button></form>");
+                                // Crear un marcador para cada registro de la base de datos.
+                                var marker = L.marker([<?php echo $latitud; ?>, <?php echo $longitud; ?>]).addTo(map);
+                                // Se añade un popUp para que salga una ventana al clickar un marcador existente en el mapa.
+                                marker.bindPopup("<div class='popup-content'><h3 class='popup-title'><?php echo $nombre_tipo; ?></h3><h4 class='popup-location'><?php echo $ubicacion; ?></h4><h4 class='popup-price'><?php echo $precio . '€'; ?></h4><p class='popup-description'><?php echo $descripcion; ?></p>Imagen Google: <img class='popup-image' src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación'>Imagen usuario <?php echo $mostrarImagen; ?></div><form action='usuario.php' method='POST'><input type='hidden' name='id_publicidad' value='<?php echo $row['id_publicidad']; ?>'><button class='popup-delete-button' type='submit' name='borrarMarcador'>Borrar</button></form>");
 
-                            <?php
+                                <?php
+                            }
                         }
                     }
-
-
-
                     // Se cierra la conexión de la BD.
                     mysqli_close($conn);
                     ?>
@@ -475,6 +486,8 @@ function mapa($valor)
                     // Event listener de click.
                     map.on('click', function (e) {
                         try {
+
+
                             // Control para saber si el click ha sido dentro de los límites establecidos.
                             if (!spainBounds.contains(e.latlng)) {
                                 alert('Por favor, coloque puntos dentro de España.');
@@ -495,6 +508,10 @@ function mapa($valor)
                             // Actualizar campos ocultos en el formulario con las coordenadas.
                             document.getElementById('lat').value = e.latlng.lat;
                             document.getElementById('lng').value = e.latlng.lng;
+                            var apiKey = 'AIzaSyADr5gpzLPePzkWwz8C94wBQ21DzQ4GGVU'; // Reemplaza con tu propia API Key de Google Maps Static
+                            var img = document.getElementById('imagenMuestra');
+                            img.src = 'https://maps.googleapis.com/maps/api/streetview?size=400x300&location=' + e.latlng.lat + ',' + e.latlng.lng + '&key=' + apiKey;
+
 
                             // Realizar la solicitud de geocodificación a Nominatim.
                             var url = 'https://nominatim.openstreetmap.org/reverse?lat=' + e.latlng.lat + '&lon=' + e.latlng.lng + '&format=json';
@@ -558,11 +575,15 @@ function mapa($valor)
                                         })
                                         .then(function (data) {
                                             if (data && data.address) {
+                                                console.log(data);
                                                 // Se obtienen los elementos mediante id y se rellenan con los obtenido.
                                                 document.getElementById('provincia').value = data.address.state || '';
                                                 document.getElementById('ciudad').value = data.address.city || '';
                                                 document.getElementById('ubicacion').value = data.address.road || '';
                                                 document.getElementById('codigo_postal').value = data.address.postcode || '';
+                                                var apiKey = 'AIzaSyADr5gpzLPePzkWwz8C94wBQ21DzQ4GGVU'; // Reemplaza con tu propia API Key de Google Maps Static
+                                                var img = document.getElementById('imagenMuestra');
+                                                img.src = 'https://maps.googleapis.com/maps/api/streetview?size=400x300&location=' + data.lat + ',' + data.lon + '&key=' + apiKey;
                                             }
                                         })
                                         .catch(function (error) {
@@ -633,8 +654,7 @@ function mapa($valor)
                     <input type="text" id="precio" name="precio" placeholder="Precio" required>
                     <label>Sube una foto:</label>
                     <input type='file' name='imagen' accept='image/*' required>
-
-
+                    <span>Esta es la foto que Google ha tomado:<img id="imagenMuestra"></img></span>
                     <button type="submit" name="guardarMarcador">Guardar</button>
                 </form>
 
@@ -721,8 +741,14 @@ function mapa($valor)
                                         echo '<td>' . $row['codigo_postal'] . '</td>'; // Columna de código postal de misiones
                                         echo '<td>' . $row['publicidad_descripcion'] . '</td>'; // Columna de descripción de publicidades
                                         echo '<td>' . $row['mision_descripcion'] . '</td>'; // Columna de descripción de publicidades
+                                        if ($row['aceptacion'] == 0) {
+                                            echo '<td>EN ESPERA...</td>'; // Columna de descripción de publicidades
+                                        }
                                         if ($row['aceptacion'] == 1) {
                                             echo '<td>APROBADA</td>'; // Columna de descripción de publicidades
+                                        }
+                                        if ($row['aceptacion'] == 2) {
+                                            echo '<td>RECHAZADA</td>'; // Columna de descripción de publicidades
                                         }
                                         echo '</tr>';
                                     }
@@ -755,7 +781,7 @@ function mapa($valor)
                     </script>";
 
                 // Consulta para obtener los datos de publicidades y misiones
-                $sql2 = "SELECT * FROM publicidades AS p, misiones AS m WHERE p.id_publicidad = m.id_publicidad AND p.estado = 0 AND ocupado = 1 AND m.aceptacion = 0 AND m.id_usuario =" . $_SESSION['usuario']['id_usuario'] . ";";
+                $sql2 = "SELECT * FROM publicidades AS p, misiones AS m WHERE p.id_publicidad = m.id_publicidad AND p.estado = 1 AND ocupado = 1 AND m.aceptacion = 0 AND m.id_usuario =" . $_SESSION['usuario']['id_usuario'] . ";";
                 $result2 = $conn->query($sql2);
                 if ($result2->num_rows > 0) {
                     while ($row2 = $result2->fetch_assoc()) {
