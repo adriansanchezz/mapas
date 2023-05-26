@@ -209,7 +209,7 @@ function mapa($valor)
                         $conn = conectar();
 
                         // Consultar los marcadores existentes en el mapa.
-                        $sql = "SELECT * FROM publicidades WHERE estado = 0 AND ocupado = 0";
+                        $sql = "SELECT * FROM publicidades WHERE estado = 1 AND ocupado = 0";
                         $result = $conn->query($sql);
 
                         // Si da resultados entonces entra en el if.
