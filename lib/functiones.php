@@ -472,6 +472,31 @@ function listarPublicidades($id_user)
     ";
 }
 
+// Listar Propiedad y sus datos, para todo los usuraio que existe
+function listarTiposSoportes()
+{
+    // Consulta
+    $sql = 'SELECT * FROM tipossoportes';
+
+    // Guardar el resulatdo devulto
+    $result = sqlSELECT($sql);
+
+    // Comprobar si existe el compo de la consulta, y listar los datos
+    echo '
+        <select name="opcion">
+            <option selected disabled>Selecciona un consulta</option>
+    ';
+    while ($row = $result->fetch_assoc()) {
+        $tipo_soporte = $row['nombre'];
+        echo "
+            <option value='$tipo_soporte'>$tipo_soporte</option>
+        ";
+    }
+    echo '
+        </select>
+    ';
+}
+
 // Agregar rol de Usuario
 function agregarRoles($id_user, $nombre_rol)
 {
@@ -491,13 +516,21 @@ function agregarRoles($id_user, $nombre_rol)
         case "Vigilante":
             $id_rol = 5;
             break;
+        default:
+            $id_rol = 0;
+            break;
     }
-    // Consulta
-    $sql = "INSERT INTO usuarios_roles (id_usuario, id_rol)
-    VALUES ($id_user, $id_rol)";
+    if ($id_rol != 0) {
+        // Consulta
+        $sql = "INSERT INTO usuarios_roles (id_usuario, id_rol)
+        VALUES ($id_user, $id_rol)";
 
-    // Ejecutar la consulta
-    sqlINSERT($sql);
+        // Ejecutar la consulta
+        sqlINSERT($sql);
+    } else {
+        return false;
+    }
+
 }
 
 // Agregar rol de Admin
@@ -519,14 +552,23 @@ function eliminarRoles($id_user, $nombre_rol)
         case "Vigilante":
             $id_rol = 5;
             break;
+        default:
+            $id_rol = 0;
+            break;
     }
-    // Consulta
-    $sql = "DELETE FROM usuarios_roles
+
+
+    if ($id_rol != 0) {
+        // Consulta
+        $sql = "DELETE FROM usuarios_roles
     WHERE id_rol = $id_rol
     AND id_usuario = $id_user";
 
-    // Ejecutar la consulta
-    sqlDELETE($sql);
+        // Ejecutar la consulta
+        sqlDELETE($sql);
+    } else {
+        return false;
+    }
 }
 
 // Actualizar dato de nombre, un parametro de nuevo nombre y id usuario
@@ -554,7 +596,6 @@ function guardarNombre($nombre, $id_user)
         }
     }
 }
-
 
 // Actualizar dato de correo, y pasa parametro de nuevo correo y correo repetido, mas su id usuario
 function guardarCorreo($correo, $correo2, $id_user)
@@ -585,7 +626,6 @@ function guardarCorreo($correo, $correo2, $id_user)
         echo "<div class='flex-grow-1'>Los correo no son iguales!</div>";
     }
 }
-
 
 // Actualizar dato de password, pasa parametro de nuevo pass y pass repetido, mas su id usuario
 function guardarPassword($pass, $pass2, $id_user)
@@ -621,8 +661,6 @@ function repetirValor($valo, $valo2)
     }
 }
 
-
-
 // Actualizar dato de password, pasa parametro de nuevo pass y pass repetido, mas su id usuario
 function sumarVisitaTotal()
 {
@@ -647,8 +685,6 @@ function sumarVisitaTotal()
         sqlINSERT($sql);
     }
 }
-
-
 
 function verVisitaTotal()
 {
@@ -718,10 +754,6 @@ function guardarMarcador()
         $precio = $_POST['precio'];
         $idUser = $_SESSION['usuario']['id_usuario'];
 
-
-        
-
-
         // Establecer la conexión con la base de datos.
         $conn = conectar();
 
@@ -751,14 +783,14 @@ function guardarMarcador()
                 $imagen = $_FILES['imagen']['tmp_name'];
                 $contenidoImagen = file_get_contents($imagen);
                 $conn = conectar();
-                
+
                 $sql = "INSERT INTO `fotos`(`foto`, `id_publicidad`) VALUES (?, ?)";
 
                 $stmt2 = $conn->prepare($sql);
                 $stmt2->bind_param("si", $contenidoImagen, $id_publicidad);
                 // Ejecutar la consulta
                 if ($stmt2->execute()) {
-                    
+
                     echo "<script>window.location.href = 'usuario.php?usuarioMapa=';</script>";
                     exit();
 

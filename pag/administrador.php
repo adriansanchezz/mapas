@@ -94,13 +94,6 @@ require_once '../lib/modulos.php';
                             </button>
                         </form>
                     </li>
-                    <li class="nav-item">
-                        <form action="administrador.php" method="get">
-                            <button type="submit" name="administradorMisiones" class="btn btn-link nav-link text-white">
-                                Administrar misiones
-                            </button>
-                        </form>
-                    </li>
                 </ul>
             </div>
             <div class="flex-grow-1">
@@ -408,7 +401,7 @@ require_once '../lib/modulos.php';
                                 echo "<td>
                                     <form action='administrador.php?aceptarMision' method='POST'>
                                     <input type='hidden' name='id_mision' value='" . $row['id_mision'] . "'>
-                                    <input type='submit' name='aceptarMision' value='Aceptar'>
+                                    <input type='submit' name='aceptarMision' class='btn btn-success' value='Aceptar'>
                                     </form>
                                     </td>";
                                     
