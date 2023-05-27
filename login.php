@@ -9,7 +9,7 @@ require_once 'lib/modulos.php';
 <head>
     <!-- Meter informacion general de head -->
     <?php head_info(); ?>
-    <link href="css/login.css" rel="stylesheet" type="text/css">
+    <link href="css/login_registro.css" rel="stylesheet" type="text/css">
     <title>DisplayAds</title>
 </head>
 
@@ -29,12 +29,11 @@ require_once 'lib/modulos.php';
                 <label>Contraseña</label>
             </div>
 
-            
             <input type="submit" name="iniciar" value="Iniciar">
-            <div class="registrarse">
+            <div class="redirigir">
                 ¿Aún no tienes una cuenta? <a href="registro.php">Registrarse</a>
             </div>
-            <div class="olvidadar">¿Has olvido su contraseña?</div>
+            <div class="olvidadar"><a href="registro.php">¿Has olvido su contraseña?</a></div>
         </form>
     </div>
 
