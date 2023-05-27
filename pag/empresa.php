@@ -80,7 +80,7 @@ require_once '../lib/modulos.php';
                 $product_id = $_POST['product_id'];
 
                 $conn = conectar();
-                $sqlUpdate = "UPDATE `publicidades` SET `ocupado` = 1 WHERE `id_publicidad` = ?";
+                $sqlUpdate = "UPDATE `publicidades` SET `comprador` = '" . $_SESSION['usuario']['id_usuario'] . "' WHERE `id_publicidad` = ?";
                 $stmt = $conn->prepare($sqlUpdate);
                 $stmt->bind_param("i", $product_id);
                 $stmt->execute();

@@ -17,7 +17,8 @@ require_once '../lib/modulos.php';
     <?php
     if (isset($_SESSION['usuario'])) {
         // Menu general
-        menu_general(); ?>
+        menu_general(); 
+        notificaciones(); ?>
         <!-- Crear submenu con sus opciones -->
         <div class="d-flex vh-100">
             <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 200px;">
@@ -319,6 +320,9 @@ require_once '../lib/modulos.php';
                 header("Location: empresa.php?empresaCarrito=1");
                 exit();
             }
+
+
+            
             ?>
         </div>
         <?php

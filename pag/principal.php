@@ -137,7 +137,7 @@ require_once '../lib/modulos.php';
                 <h2>¿Eres una entidad empresarial y quieres formar parte de nuestra aplicación?</h2>
                 <div>
                     <form>
-                        <input type="button" value="SER EMPRESA"
+                        <input type="button" value="CLICK AQUÍ"
                             style="font-size: 20px; background-color: blue; border: none; color: white; padding: 10px 20px; border-radius: 5px;">
                     </form>
                 </div>

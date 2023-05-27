@@ -37,7 +37,7 @@ sumarVisitaTotal();
     <br>
     <div class="container">
         <div class="row">
-            <div class="col-md-9">
+            <div class="col-md-7">
                 <!-- Contenedor de la izquierda -->
                 <h2>¿Qué es DisplayADS?</h2>
                 <p>DisplayADS es una aplicación web desde la que empresas podrán acceder a un mapa de lugares con
@@ -66,7 +66,7 @@ sumarVisitaTotal();
                     a ganar algo de dinero sin hacer casi nada.</p>
             </div>
 
-            <div class="col-md-3">
+            <div class="col-md-5">
                 <!-- Contenedor de la derecha -->
                 <h2>¿Quieres ver nuestro mapa?</h2>
                 <div id="map"></div>
@@ -182,8 +182,7 @@ sumarVisitaTotal();
                             });
                     }
                 </script>
-                <!-- Contenedor de la derecha -->
-                <h2>CARROUSEL DE IMAGENES SOBRE NUESTRA APLICACION</h2>
+                <br>
                 <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
                     <div class="carousel-inner">
                         <div class="carousel-item active">

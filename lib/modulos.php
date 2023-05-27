@@ -1,4 +1,8 @@
+
+
+
 <?php
+
 // Menu index
 function menu_index()
 {
@@ -113,7 +117,7 @@ function menu_general()
                         ?>
 
                     </ul>
-
+                    
                     <form class="form-inline my-2 my-lg-0" action="cuenta.php" method="post">
                         <input class="btn btn-outline-success my-2 my-sm-0" type="submit" name="cuenta"
                             value="Cuenta" />&nbsp;&nbsp;
@@ -958,4 +962,133 @@ function mapa($valor)
     }
 
 }
+?>
+
+
+<?php
+
+    function notificaciones()
+    {
+?>
+    <style>
+        /* Estilos para la campana */
+        .bell {
+            position: fixed;
+            top: 15px;
+            right: 300px;
+            width: 40px;
+            height: 40px;
+            background-color: #f2f2f2;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        /* Estilos para la barra de notificaciones */
+        .notification-bar {
+            position: fixed;
+            top: 50px;
+            right: 0;
+            width: 500px;
+            max-height: 300px;
+            background-color: #ffffff;
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+            overflow-y: auto;
+            display: none;
+            z-index: 9999;
+        }
+
+
+        /* Estilos para los elementos de la barra de notificaciones */
+        .notification {
+            padding: 10px;
+            border-bottom: 1px solid #f2f2f2;
+        }
+
+        .notification:last-child {
+            border-bottom: none;
+        }
+    </style>
+    <div class="bell">
+        🔔
+    </div>
+
+    <div class="notification-bar">
+        <?php
+        $conn = conectar();
+
+        // Consultar los productos desde la base de datos
+        
+       
+        $sql = "SELECT * FROM publicidades WHERE comprador IS NOT NULL AND id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND id_usuario <> comprador";
+        $result = $conn->query($sql);
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $sql2 = "SELECT * FROM empresas WHERE id_empresa = " . $row['comprador'];
+                $result2 = $conn->query($sql2);
+                if($result2->num_rows > 0)
+                {
+                    if($row['ocupado']==0)
+                    {
+                        while ($row2 = $result2->fetch_assoc()) {
+                            echo "<div class='notification'>Una empresa: ".$row2['nombre']. " quiere publicitarse en tu ubicacion: ". $row['ubicacion']. "<form action='usuario.php' method='POST'><input type='hidden' name='id_publicidad' value='".$row['id_publicidad']."'><input type='submit' name='aceptarEmpresa' value='aceptar'></form><form action='usuario.php'><input type='hidden' name='id_publicidad' value='".$row['id_publicidad']."'><input type='button' name='rechazarEmpresa' value='rechazar'></form></div>";
+                        }
+                    }
+                    else
+                    {
+                        while ($row2 = $result2->fetch_assoc()) {
+                            echo "<div class='notification'>Una empresa: ".$row2['nombre']. " quiere publicitarse en tu ubicacion: ". $row['ubicacion']. " <span style='color: red;'>Aceptada.</span></div>";
+                        } 
+                    }
+                    
+                }
+                
+            }
+            
+
+        }
+        if(isset($_POST['aceptarEmpresa']))
+        {
+            $id_publicidad = $_POST['id_publicidad'];
+            $sql = "UPDATE publicidades SET ocupado = 1 WHERE id_publicidad = ".$id_publicidad;
+            if(sqlUPDATE($sql))
+            {
+                echo "<script>window.location.href = 'usuario.php?usuarioMapa';</script>";
+                exit();
+            }
+
+            
+        }
+        if(isset($_REQUEST['rechazarEmpresa']))
+        {
+            
+        }
+
+        ?>
+        <div class="notification">Una empresa: nombreempresa quiere publicitarse en tu ubicacion: ver ubicación</div>
+        <div class="notification">Notificación 2</div>
+        <div class="notification">Notificación 3</div>
+        <div class="notification">Notificación 4</div>
+        <div class="notification">Notificación 5</div>
+        <div class="notification">Notificación 6</div>
+        <div class="notification">Notificación 7</div>
+        <div class="notification">Notificación 8</div>
+        <div class="notification">Notificación 9</div>
+        <div class="notification">Notificación 10</div>
+    </div>
+
+    <script>
+        const bell = document.querySelector('.bell');
+        const notificationBar = document.querySelector('.notification-bar');
+
+        bell.addEventListener('click', () => {
+            notificationBar.style.display = notificationBar.style.display === 'none' ? 'block' : 'none';
+        });
+    </script>
+<?php
+    }
+
 ?>
