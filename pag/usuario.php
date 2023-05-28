@@ -175,12 +175,12 @@ require_once '../lib/modulos.php';
             }
 
             if (isset($_REQUEST['actualizarPedido'])) {
-
-                $id_pedido = obtenerUltimoIdPedido(); // Obtener el último ID de pedido insertado
-                $sqlPedido = "UPDATE pedidos SET fecha_fin = NOW() WHERE id_pedido = " . $id_pedido;
+                $importe = $_GET['importe']; // Obtener el valor de importe desde los parámetros de la solicitud
+        
+                // Actualizar el pedido en la base de datos utilizando el valor de importe
+                $id_pedido = obtenerUltimoIdPedido();
+                $sqlPedido = "UPDATE pedidos SET fecha_fin = NOW(), importe = " . $importe . " WHERE id_pedido = " . $id_pedido;
                 sqlUPDATE($sqlPedido);
-                
-
             }
             ?>
 
@@ -268,17 +268,18 @@ require_once '../lib/modulos.php';
                             return actions.order.create({
                                 purchase_units: [{
                                     amount: {
-                                        value: '<?php echo $importe; ?>' // Reemplazar "100" por el valor de $totalMoney
+                                        value: '<?php echo $importe; ?>'
                                     }
                                 }]
                             })
                         },
 
                         onApprove: function (data, actions) {
-                            console.log("hola");
+
                             actions.order.capture().then(function (detalles) {
                                 var xhr = new XMLHttpRequest();
-                                xhr.open('GET', 'usuario.php?actualizarPedido', true);
+                                var importe = '<?php echo $importe; ?>'; // Obtener el valor de $importe en JavaScript
+                                xhr.open('GET', 'usuario.php?actualizarPedido&importe=' + importe, true);
                                 xhr.onreadystatechange = function () {
                                     if (xhr.readyState === 4 && xhr.status === 200) {
                                         console.log('El pedido se actualizó correctamente.');
@@ -300,6 +301,7 @@ require_once '../lib/modulos.php';
 
                 <?php
             }
+
             ?>
 
             <?php

@@ -128,7 +128,7 @@ require_once '../lib/modulos.php';
 
             if (isset($_POST['remove_from_cart'])) {
                 $product_id = trim($_POST['product_id']);
-                
+
                 $conn = conectar();
                 $sql = "UPDATE publicidades SET comprador = NULL WHERE id_publicidad = ?";
                 $stmt = $conn->prepare($sql);
@@ -152,12 +152,12 @@ require_once '../lib/modulos.php';
             }
 
             if (isset($_REQUEST['actualizarPedido'])) {
-
-                $id_pedido = obtenerUltimoIdPedido(); // Obtener el último ID de pedido insertado
-                $sqlPedido = "UPDATE pedidos SET fecha_fin = NOW() WHERE id_pedido = " . $id_pedido;
+                $importe = $_GET['importe']; // Obtener el valor de importe desde los parámetros de la solicitud
+        
+                // Actualizar el pedido en la base de datos utilizando el valor de importe
+                $id_pedido = obtenerUltimoIdPedido();
+                $sqlPedido = "UPDATE pedidos SET fecha_fin = NOW(), importe = " . $importe . " WHERE id_pedido = " . $id_pedido;
                 sqlUPDATE($sqlPedido);
-
-
             }
             ?>
 
@@ -173,15 +173,19 @@ require_once '../lib/modulos.php';
 
                     // Consultar los productos desde la base de datos
                     $sql = "SELECT *
-                            FROM lineas_pedidos AS lp
-                            INNER JOIN publicidades AS publi ON lp.id_publicidad = publi.id_publicidad
-                            INNER JOIN pedidos AS pedido ON lp.id_pedido = pedido.id_pedido
-                            WHERE lp.id_pedido = " . $id_pedido . " AND lp.cantidad > 0 AND pedido.fecha_fin IS NULL
-                            GROUP BY lp.id_publicidad";
+                FROM lineas_pedidos AS lp
+                INNER JOIN publicidades AS publi ON lp.id_publicidad = publi.id_publicidad
+                INNER JOIN pedidos AS pedido ON lp.id_pedido = pedido.id_pedido
+                WHERE lp.id_pedido = " . $id_pedido . " AND lp.cantidad > 0 AND pedido.fecha_fin IS NULL AND publi.ocupado = 1
+                GROUP BY lp.id_publicidad";
 
                     $result = $conn->query($sql);
 
                     if ($result->num_rows > 0) {
+                        $importe = 0;
+                        // Antes del bucle 'while' que itera sobre los productos en el carrito
+                        $product_prices = array();
+
                         // Iterar sobre los productos en el carrito
                         while ($row = $result->fetch_assoc()) {
                             $product_id = $row['id_publicidad'];
@@ -189,34 +193,74 @@ require_once '../lib/modulos.php';
                             $product_description = $row['provincia'];
                             $product_price = $row['precio'];
 
-                            // Calcular el subtotal por producto
-                            $subtotal = $product_price;
+                            // Almacenar el precio del producto en el array asociativo
+                            $product_prices[$product_id] = $product_price;
+
+                            // Obtener el valor seleccionado de meses
+                            $selected_months = isset($_POST["months_$product_id"]) ? intval($_POST["months_$product_id"]) : 1;
+
+                            // Calcular el subtotal por producto considerando el aumento de precios por mes
+                            $subtotal = $product_price * $selected_months;
 
                             // Agregar el subtotal al total de dinero
-                            $totalMoney += $subtotal;
+                            $importe += $subtotal;
 
                             // Mostrar los detalles del producto en el carrito
                             echo "<div class='product card border-primary mb-3' style='max-width: 18rem;'>";
                             echo "<div class='card-header bg-primary text-white'>$product_name</div>";
                             echo "<div class='card-body text-primary'>";
                             echo "<h5 class='card-title'>$product_description</h5>";
-                            echo "<p class='card-text'>Precio: $product_price</p>";
+                            echo "<p class='card-text'>Precio por mes: $product_price €</p>";
+                            echo "<p class='card-text'>Meses seleccionados: <span id='months_selected_$product_id'>$selected_months</span></p>";
                             echo "<form action='empresa.php' method='post'>";
                             echo "<input type='hidden' name='product_id' value='$product_id'>";
+                            echo "<label for='months_$product_id'>Meses:</label>";
+                            echo "<input type='number' name='months_$product_id' id='months_$product_id' min='1' max='12' value='$selected_months' onchange='updateTotalPrice($product_id)'>";
                             echo "<button class='btn btn-danger' name='remove_from_cart' value='$product_id' type='submit'>Eliminar</button>";
                             echo "</form>";
+                            echo "<p id='total_price_$product_id'>Subtotal: " . ($product_price * $selected_months) . " €</p>";
                             echo "</div>";
                             echo "</div>";
-
-                            mysqli_close($conn);
                         }
 
+                        // Mostrar el total de dinero en el carrito
+                        echo "<p id='total_importe'>Total a pagar: $importe €</p>";
+                    } else {
+                        echo "El carrito de compras está vacío.";
                     }
 
 
-                    // Mostrar el total de dinero en el carrito
-                    echo "<p>Total a pagar: $totalMoney €</p>";
+
                     ?>
+                    <script>
+                        function updateTotalPrice(productId) {
+                            var productPrices = <?php echo json_encode($product_prices); ?>;
+                            var products = document.getElementsByClassName('product');
+                            var totalImporte = 0;
+
+                            for (var i = 0; i < products.length; i++) {
+                                var product = products[i];
+                                var productIdElement = product.querySelector('input[name="product_id"]');
+                                var monthsSelector = product.querySelector('input[name^="months_"]');
+                                var totalPriceElement = product.querySelector('[id^="total_price_"]');
+
+                                var currentProductId = parseInt(productIdElement.value);
+                                var currentProductPrice = parseFloat(productPrices[currentProductId]);
+                                var currentSelectedMonths = parseInt(monthsSelector.value);
+                                var currentTotalPrice = currentProductPrice * currentSelectedMonths;
+
+                                // Actualizar el precio total del producto
+                                totalPriceElement.textContent = 'Subtotal: ' + currentTotalPrice + ' €';
+
+                                // Agregar el precio del producto al importe total
+                                totalImporte += currentTotalPrice;
+                            }
+
+                            // Mostrar el importe total actualizado
+                            var totalImporteElement = document.getElementById('total_importe');
+                            totalImporteElement.textContent = 'Total a pagar: ' + totalImporte + ' €';
+                        }
+                    </script>
                 </div>
                 <script
                     src="https://www.paypal.com/sdk/js?client-id=Ae-QOggCqT3W10C1Q7U1lTDaYwmgEsmPuPxDuQEOD4uHZK0DMvJb2brCahcG-HMPPBti9IsX8pCsB-Db&currency=EUR"></script>
@@ -233,16 +277,26 @@ require_once '../lib/modulos.php';
                             return actions.order.create({
                                 purchase_units: [{
                                     amount: {
-                                        value: '<?php echo $totalMoney; ?>' // Reemplazar "100" por el valor de $totalMoney
+                                        value: '<?php echo $importe; ?>' // Reemplazar "100" por el valor de $totalMoney
                                     }
                                 }]
                             })
                         },
 
                         onApprove: function (data, actions) {
-                            console.log("hola");
+
                             actions.order.capture().then(function (detalles) {
-                                console.log(detalles);
+                                var xhr = new XMLHttpRequest();
+                                var importe = '<?php echo $importe; ?>'; // Obtener el valor de $importe en JavaScript
+                                xhr.open('GET', 'empresa.php?actualizarPedido&importe=' + importe, true);
+                                xhr.onreadystatechange = function () {
+                                    if (xhr.readyState === 4 && xhr.status === 200) {
+                                        console.log('El pedido se actualizó correctamente.');
+                                        window.location.href = 'usuario.php?usuarioCarrito=1';
+                                        exit();
+                                    }
+                                };
+                                xhr.send();
                             });
 
                         },
