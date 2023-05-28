@@ -819,4 +819,21 @@ function debug_to_console($data)
     echo "<script>console.log('Debug Objects: " . $output . "' );</script>";
 }
 
+
+function obtenerUltimoIdPedido()
+{
+    $conn = conectar();
+    // Realiza la consulta para obtener el último ID de pedido insertado
+    $sql = "SELECT MAX(id_pedido) AS ultimo_id FROM pedidos WHERE id_usuario = ". $_SESSION['usuario']['id_usuario'];
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            return $row['ultimo_id'];
+        }
+    }
+    // Si no se pudo obtener el último ID de pedido, retorna un valor predeterminado
+    return 0;
+}
+
 ?>

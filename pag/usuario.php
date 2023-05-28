@@ -17,8 +17,10 @@ require_once '../lib/modulos.php';
     <?php
     if (isset($_SESSION['usuario'])) {
         // Menu general
-        menu_general(); 
-        notificaciones(); ?>
+        menu_general();
+        notificaciones();
+
+        ?>
         <!-- Crear submenu con sus opciones -->
         <div class="d-flex vh-100">
             <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 200px;">
@@ -72,6 +74,8 @@ require_once '../lib/modulos.php';
                             // Establecer la conexión con la base de datos utilizando una función de conexión existente
                             $conn = conectar();
 
+
+
                             // Consultar los productos desde la base de datos
                             $sql = "SELECT * FROM productos";
                             $result = $conn->query($sql);
@@ -86,7 +90,8 @@ require_once '../lib/modulos.php';
                                     echo "<p class='card-text'>" . $row['descripcion'] . "</p>";
                                     echo "<p class='card-text'>Precio: $" . $row['precio'] . "</p>";
                                     echo "<form action='usuario.php' method='post'>";
-                                    echo "<input type='hidden' name='product_id' value='" . $row['id_producto'] . "'>";
+                                    echo "<input type='hidden' name='id_producto' value='" . $row['id_producto'] . "'>";
+                                    echo "<input type='hidden' name='precio' value='" . $row['precio'] . "'>";
                                     echo "<input class='btn btn-primary' type='submit' name='add_to_cart' value='Agregar al carrito'>";
                                     echo "</form>";
                                     echo "</div>";
@@ -108,61 +113,73 @@ require_once '../lib/modulos.php';
             ?>
             <?php
             if (isset($_POST['add_to_cart'])) {
-                $product_id = $_POST['product_id'];
+                $product_id = $_POST['id_producto'];
+                $precio = $_POST['precio'];
 
-                // Verificar si el carrito de compras ya está almacenado en la sesión
-                if (isset($_SESSION['cart'])) {
-                    $cart = $_SESSION['cart'];
+                $sql = "SELECT * FROM pedidos as p, lineas_pedidos as lp WHERE p.id_pedido = lp.id_pedido AND p.fecha_fin IS NULL AND p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND lp.id_producto = " . $product_id . ";";
+
+                if (sqlSELECT($sql)->num_rows > 0) {
+                    $id_pedido = obtenerUltimoIdPedido(); // Obtener el último ID de pedido insertado
+                    $sqlPedido = "UPDATE lineas_pedidos SET cantidad = cantidad + 1 WHERE id_pedido = " . $id_pedido;
+                    sqlUPDATE($sqlPedido);
+
                 } else {
-                    $cart = array(); // Crear un nuevo carrito si no existe
+                    $sql = "SELECT * FROM pedidos as p, lineas_pedidos as lp WHERE p.id_pedido = lp.id_pedido AND p.fecha_fin IS NULL AND p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND lp.id_producto IS NOT NULL;";
+
+                    if (sqlSELECT($sql)->num_rows > 0) {
+                        $id_pedido = obtenerUltimoIdPedido(); // Obtener el último ID de pedido insertado
+                        $sqlLinea = "INSERT INTO `lineas_pedidos`(`precio`, `cantidad`, `id_producto`, `id_publicidad`, `id_pedido`) VALUES ($precio, 1, $product_id, NULL, $id_pedido)";
+                        sqlINSERT($sqlLinea);
+                    } else {
+                        $cantidad = 0;
+                        $importe = 0;
+                        $fecha_fin = "NULL"; // Asignar NULL a la columna fecha_fin
+                        $id_usuario = $_SESSION['usuario']['id_usuario'];
+
+                        $sqlPedido = "INSERT INTO `pedidos`(`cantidad`, `importe`, `fecha_fin`, `id_usuario`) VALUES ($cantidad, $importe, $fecha_fin, $id_usuario)";
+                        sqlINSERT($sqlPedido);
+
+
+                        $id_pedido = obtenerUltimoIdPedido(); // Obtener el último ID de pedido insertado
+                        $sqlLinea = "INSERT INTO `lineas_pedidos`(`precio`, `cantidad`, `id_producto`, `id_publicidad`, `id_pedido`) VALUES ($precio, 1, $product_id, NULL, $id_pedido)";
+                        sqlINSERT($sqlLinea);
+                    }
                 }
 
-                // Verificar si el producto ya existe en el carrito
-                if (isset($cart[$product_id])) {
-                    // Incrementar la cantidad del producto en 1
-                    $cart[$product_id]++;
-                } else {
-                    // Agregar el producto al carrito con una cantidad de 1
-                    $cart[$product_id] = 1;
-                }
-
-                // Guardar el carrito actualizado en la sesión
-                $_SESSION['cart'] = $cart;
-
-                echo "<script>window.location.href = 'usuario.php?usuarioTienda';</script>";
+                echo "<script>window.location.href = 'usuario.php?usuarioTienda=1';</script>";
                 exit();
             }
 
-            // Calcular el total de dinero en el carrito
-            $totalMoney = 0;
+
             ?>
 
             <?php
             if (isset($_POST['remove_from_cart'])) {
-                $product_id = $_POST['product_id'];
+                $product_id = $_POST['id_producto'];
 
-                // Verificar si el carrito de compras está almacenado en la sesión
-                if (isset($_SESSION['cart'])) {
-                    $cart = $_SESSION['cart'];
 
-                    // Verificar si el producto existe en el carrito
-                    if (isset($cart[$product_id])) {
-                        // Restar una cantidad del producto en el carrito
-                        $cart[$product_id]--;
+                $sql = "SELECT * FROM pedidos AS p JOIN lineas_pedidos AS lp ON p.id_pedido = lp.id_pedido WHERE p.fecha_fin IS NULL AND lp.cantidad > 0 AND p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . ";";
 
-                        // Verificar si la cantidad llega a cero o menos y eliminar el producto del carrito si es así
-                        if ($cart[$product_id] <= 0) {
-                            unset($cart[$product_id]);
-                        }
+                if (sqlSELECT($sql)->num_rows > 0) {
 
-                        // Guardar el carrito actualizado en la sesión
-                        $_SESSION['cart'] = $cart;
-                    }
+                    $id_pedido = obtenerUltimoIdPedido(); // Obtener el último ID de pedido insertado
+                    $sqlPedido = "UPDATE lineas_pedidos SET cantidad = cantidad - 1 WHERE id_pedido = " . $id_pedido . " AND id_producto = " . $product_id;
+                    sqlUPDATE($sqlPedido);
+
                 }
 
                 // Redirigir nuevamente al carrito
                 echo "<script>window.location.href = 'usuario.php?usuarioCarrito=1';</script>";
                 exit();
+
+            }
+
+            if (isset($_REQUEST['actualizarPedido'])) {
+
+                $id_pedido = obtenerUltimoIdPedido(); // Obtener el último ID de pedido insertado
+                $sqlPedido = "UPDATE pedidos SET fecha_fin = NOW() WHERE id_pedido = " . $id_pedido;
+                sqlUPDATE($sqlPedido);
+                
 
             }
             ?>
@@ -179,59 +196,60 @@ require_once '../lib/modulos.php';
                         <div class="products">
                             <?php
                             // Verificar si el carrito de compras está almacenado en la sesión
-                            if (isset($_SESSION['cart'])) {
-                                $cart = $_SESSION['cart'];
+                    
+                            $id_pedido = obtenerUltimoIdPedido();
+                            $conn = conectar();
 
-                                // Consultar los productos desde la base de datos utilizando los IDs en el carrito
-                                // Consultar los productos desde la base de datos utilizando los IDs en el carrito
-                                $productIds = array_keys($cart);
-                                if (!empty($productIds)) {
-                                    $productIdsString = implode(",", $productIds);
-                                    $sql = "SELECT id_producto, nombre, descripcion, precio FROM productos WHERE id_producto IN ($productIdsString)";
-                                    $conn = conectar();
-                                    $result = $conn->query($sql);
+                            // Consultar los productos desde la base de datos
+                            $sql = "SELECT lp.id_producto, lp.cantidad, prod.nombre, prod.descripcion, prod.precio
+                                    FROM lineas_pedidos AS lp
+                                    INNER JOIN productos AS prod ON lp.id_producto = prod.id_producto
+                                    INNER JOIN pedidos AS pedido ON lp.id_pedido = pedido.id_pedido
+                                    WHERE lp.id_pedido = " . $id_pedido . " AND lp.cantidad > 0 AND pedido.fecha_fin IS NULL
+                                    GROUP BY lp.id_producto";
 
+                            $result = $conn->query($sql);
 
+                            if ($result->num_rows > 0) {
+                                $importe = 0;
 
-                                    if ($result->num_rows > 0) {
-                                        // Iterar sobre los productos en el carrito
-                                        while ($row = $result->fetch_assoc()) {
-                                            $product_id = $row['id_producto'];
-                                            $product_name = $row['nombre'];
-                                            $product_description = $row['descripcion'];
-                                            $product_price = $row['precio'];
-                                            $product_quantity = $cart[$product_id];
+                                // Iterar sobre los productos en el carrito
+                                while ($row = $result->fetch_assoc()) {
+                                    $product_id = $row['id_producto'];
+                                    $product_name = $row['nombre'];
+                                    $product_description = $row['descripcion'];
+                                    $product_price = $row['precio'];
+                                    $product_quantity = $row['cantidad'];
 
-                                            // Calcular el subtotal por producto
-                                            $subtotal = $product_price * $product_quantity;
+                                    // Calcular el subtotal por producto
+                                    $subtotal = $product_price * $product_quantity;
+                                    $importe += $subtotal;
 
-                                            // Agregar el subtotal al total de dinero
-                                            $totalMoney += $subtotal;
-
-                                            // Mostrar los detalles del producto en el carrito
-                                            echo "<div class='product card border-primary mb-3' style='max-width: 18rem;'>";
-                                            echo "<div class='card-header bg-primary text-white'>$product_name</div>";
-                                            echo "<div class='card-body text-primary'>";
-                                            echo "<h5 class='card-title'>$product_description</h5>";
-                                            echo "<p class='card-text'>Precio: $product_price</p>";
-                                            echo "<p class='card-text'>Cantidad: $product_quantity</p>";
-                                            echo "<p class='card-text'>Subtotal: $subtotal</p>";
-                                            echo "<form action='usuario.php' method='post'>";
-                                            echo "<input type='hidden' name='product_id' value='$product_id'>";
-                                            echo "<button class='btn btn-danger' name='remove_from_cart' type='submit'>Eliminar</button>";
-                                            echo "</form>";
-                                            echo "</div>";
-                                            echo "</div>";
-                                        }
-                                    }
-                                    mysqli_close($conn);
+                                    // Mostrar los detalles del producto en el carrito
+                                    echo "<div class='product card border-primary mb-3' style='max-width: 18rem;'>";
+                                    echo "<div class='card-header bg-primary text-white'>$product_name</div>";
+                                    echo "<div class='card-body text-primary'>";
+                                    echo "<h5 class='card-title'>$product_description</h5>";
+                                    echo "<p class='card-text'>Precio: $product_price</p>";
+                                    echo "<p class='card-text'>Cantidad: $product_quantity</p>";
+                                    echo "<p class='card-text'>Subtotal: $subtotal</p>";
+                                    echo "<form action='usuario.php' method='post'>";
+                                    echo "<input type='hidden' name='id_producto' value='$product_id'>";
+                                    echo "<button class='btn btn-danger' name='remove_from_cart' type='submit'>Eliminar</button>";
+                                    echo "</form>";
+                                    echo "</div>";
+                                    echo "</div>";
                                 }
 
+                                // Mostrar el total de dinero en el carrito
+                                echo "<p>Total a pagar: $importe €</p>";
+                            } else {
+                                echo "El carrito de compras está vacío.";
                             }
 
-                            // Mostrar el total de dinero en el carrito
-                            echo "<p>Total a pagar: $totalMoney €</p>";
+                            mysqli_close($conn);
                             ?>
+
                         </div>
                     </div>
                 </div>
@@ -250,7 +268,7 @@ require_once '../lib/modulos.php';
                             return actions.order.create({
                                 purchase_units: [{
                                     amount: {
-                                        value: '<?php echo $totalMoney; ?>' // Reemplazar "100" por el valor de $totalMoney
+                                        value: '<?php echo $importe; ?>' // Reemplazar "100" por el valor de $totalMoney
                                     }
                                 }]
                             })
@@ -259,7 +277,17 @@ require_once '../lib/modulos.php';
                         onApprove: function (data, actions) {
                             console.log("hola");
                             actions.order.capture().then(function (detalles) {
-                                console.log(detalles);
+                                var xhr = new XMLHttpRequest();
+                                xhr.open('GET', 'usuario.php?actualizarPedido', true);
+                                xhr.onreadystatechange = function () {
+                                    if (xhr.readyState === 4 && xhr.status === 200) {
+                                        console.log('El pedido se actualizó correctamente.');
+                                        window.location.href = 'usuario.php?usuarioCarrito=1';
+                                        exit();
+                                    }
+                                };
+                                xhr.send();
+
                             });
 
                         },
@@ -322,7 +350,7 @@ require_once '../lib/modulos.php';
             }
 
 
-            
+
             ?>
         </div>
         <?php

@@ -12,7 +12,7 @@ require_once '../lib/modulos.php';
 
     <title>DisplayAds</title>
     <style>
-        img{
+        img {
             width: 500px;
             height: 500px;
         }
@@ -131,6 +131,49 @@ require_once '../lib/modulos.php';
                         Visitas total obtenida:
                         <?php
                         verVisitaTotal();
+
+
+                        $conn = conectar();
+
+                        // Consultar los productos desde la base de datos
+                
+                        $sql = "SELECT * FROM publicidades as p, usuarios as u WHERE p.comprador IS NOT NULL AND p.id_usuario <> p.comprador AND p.ocupado = 1 AND p.id_usuario = u.id_usuario";
+                        $result = $conn->query($sql);
+                        echo "<h1>UBICACIONES COMPRADAS</h1>";
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                $sql2 = "SELECT * FROM empresas WHERE id_empresa = " . $row['comprador'];
+                                $result2 = $conn->query($sql2);
+                                if ($result2->num_rows > 0) {
+
+                                    while ($row2 = $result2->fetch_assoc()) {
+                                        echo "<table>
+                                              <tr>
+                                              <th>Usuario</th>
+                                              <th>Ubicación Envío</th>
+                                              <th>Código Postal</th>
+                                              <th>Empresa Compra</th>
+                                              <th>Estado</th>
+                                              </tr>
+                                              <tr>
+                                                <td>". $row['email']."</td>
+                                                <td>". $row['ubicacion'] ."</td>
+                                                <td>". $row['codigo_postal']."</td>
+                                                <td>". $row2['nombre'] ."</td>
+                                                <td>
+                                                    <form action administrador.php
+                                                </td>
+                                              </tr>";
+                                        
+                                    }
+
+
+                                }
+
+                            }
+
+
+                        }
                     }
                     ?>
 
@@ -157,7 +200,7 @@ require_once '../lib/modulos.php';
                         echo "</div>";
                         echo "<div class='form-group'>";
                         echo "<label for='precio'>Precio del producto:</label>";
-                        echo "<input type='number' name='precio' id='precio' class='form-control' required>";
+                        echo "<input type='text' name='precio' id='precio' class='form-control' required>";
                         echo "</div>";
                         echo "<div class='form-group'>";
                         echo "<input type='file' name='imagen' accept='image/*' required>";
@@ -227,7 +270,7 @@ require_once '../lib/modulos.php';
                         echo "</div>";
 
                     }
-                    
+
                     if (isset($_POST['nuevoProducto'])) {
                         $nombreProducto = $_POST['nombre'];
                         $descripcionProducto = $_POST['descripcion'];
@@ -352,97 +395,94 @@ require_once '../lib/modulos.php';
                     }
 
 
-                    if(isset($_REQUEST['administradorMisiones']))
-                    {
+                    if (isset($_REQUEST['administradorMisiones'])) {
                         ?>
                         <div class="flex-grow-1">
-                        <div class="p-3" style="display: block;">
-                            <h1>MISIONES</h1>
-                            <div id="map"></div>
-                            <div class="container mt-4">
-                                <div class="table-responsive mb-4">
-                                    Misiones en proceso:
-                                    <table id="tabla-puntos" class="table">
-                                        <thead>
-                                            <tr>
-                                                <th>Descripcion</th>
-                                                <th>Latitud</th>
-                                                <th>Longitud</th>
-                                                <th>Prueba</th>
-                                                <th>Aceptacion</th>
-                                            </tr>
-                                        </thead>
-                            <tbody>
-                        <?php
-                        $conn = conectar();
-                        $sql = "SELECT * FROM misiones WHERE  estado=1 AND aceptacion=0";
-                        $result = $conn->query($sql);
-                        if ($result->num_rows > 0) {
-                            while ($row = $result->fetch_assoc()) {
-                                echo '<tr>';
-                                echo '<td>' . $row['descripcion'] . '</td>'; // Columna de descripción
-                                echo '<td>' . $row['fecha_fin'] . '</td>'; // Columna de fecha_fin
-                                echo '<td>' . $row['descripcion'] . '</td>'; // Columna de descripción
-                                $sql2 = "SELECT * FROM `fotos` where id_mision =" . $row['id_mision'];
-                                    $result2 = $conn->query($sql2);
+                            <div class="p-3" style="display: block;">
+                                <h1>MISIONES</h1>
+                                <div id="map"></div>
+                                <div class="container mt-4">
+                                    <div class="table-responsive mb-4">
+                                        Misiones en proceso:
+                                        <table id="tabla-puntos" class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Descripcion</th>
+                                                    <th>Latitud</th>
+                                                    <th>Longitud</th>
+                                                    <th>Prueba</th>
+                                                    <th>Aceptacion</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                $conn = conectar();
+                                                $sql = "SELECT * FROM misiones WHERE  estado=1 AND aceptacion=0";
+                                                $result = $conn->query($sql);
+                                                if ($result->num_rows > 0) {
+                                                    while ($row = $result->fetch_assoc()) {
+                                                        echo '<tr>';
+                                                        echo '<td>' . $row['descripcion'] . '</td>'; // Columna de descripción
+                                                        echo '<td>' . $row['fecha_fin'] . '</td>'; // Columna de fecha_fin
+                                                        echo '<td>' . $row['descripcion'] . '</td>'; // Columna de descripción
+                                                        $sql2 = "SELECT * FROM `fotos` where id_mision =" . $row['id_mision'];
+                                                        $result2 = $conn->query($sql2);
 
-                                echo "<td>";
-                                if ($result2->num_rows > 0) {
-                                    // Recuperar la información de la imagen
-                                    $row2 = $result2->fetch_assoc();
-                                    $imagen = $row2["foto"];
+                                                        echo "<td>";
+                                                        if ($result2->num_rows > 0) {
+                                                            // Recuperar la información de la imagen
+                                                            $row2 = $result2->fetch_assoc();
+                                                            $imagen = $row2["foto"];
 
-                                    // Mostrar la imagen en la página
-                                    echo "<img src='data:image/jpeg;base64," . base64_encode($imagen) . "' alt='Imagen de la prueba.'>";
-                                } else {
-                                    echo "No se encontró la imagen asociada.";
-                                }
-                                echo "</td>";
-                                echo "<td>
+                                                            // Mostrar la imagen en la página
+                                                            echo "<img src='data:image/jpeg;base64," . base64_encode($imagen) . "' alt='Imagen de la prueba.'>";
+                                                        } else {
+                                                            echo "No se encontró la imagen asociada.";
+                                                        }
+                                                        echo "</td>";
+                                                        echo "<td>
                                     <form action='administrador.php?aceptarMision' method='POST'>
                                     <input type='hidden' name='id_mision' value='" . $row['id_mision'] . "'>
                                     <input type='submit' name='aceptarMision' class='btn btn-success' value='Aceptar'>
                                     </form>
                                     </td>";
-                                    
-                                echo '</tr>';
-                                
-                            }
-                            echo "</tbody>";
-                        }
-     
+
+                                                        echo '</tr>';
+
+                                                    }
+                                                    echo "</tbody>";
+                                                }
+
                     }
-                    if(isset($_POST['aceptarMision']))
-                    {
+                    if (isset($_POST['aceptarMision'])) {
                         $id_mision = $_POST['id_mision'];
                         $conn = conectar();
                         $sqlUpdate = "UPDATE `misiones` SET `aceptacion` = 1 WHERE `id_mision` = ?";
                         $stmt = $conn->prepare($sqlUpdate);
                         $stmt->bind_param("i", $id_mision);
                         $stmt->execute();
-                        
+
                         echo "<script>window.location.href = 'administrador.php?administradorMisiones=';</script>";
                         exit();
                     }
-                    if(isset($_POST['rechazarMision']))
-                    {
+                    if (isset($_POST['rechazarMision'])) {
                         $id_mision = $_POST['id_mision'];
                         $conn = conectar();
                         $sqlUpdate = "UPDATE `misiones` SET `aceptacion` = 2 WHERE `id_mision` = ?";
                         $stmt = $conn->prepare($sqlUpdate);
                         $stmt->bind_param("i", $id_mision);
                         $stmt->execute();
-                        
+
                         echo "<script>window.location.href = 'administrador.php?administradorMisiones=';</script>";
                         exit();
                     }
                     ?>
 
-                </div>
-            </div>
-        </div>
+                                </div>
+                            </div>
+                        </div>
 
-        <?php
+                        <?php
     } else {
         echo ('Acceso denegado');
         print '<a href ="../index.php"><button>Volver</button></a>';
@@ -450,10 +490,10 @@ require_once '../lib/modulos.php';
     }
     ?>
 
-    <script>
-        administradorUsuarios();
-        administradorProductos();
-    </script>
+                    <script>
+                        administradorUsuarios();
+                        administradorProductos();
+                    </script>
 
 
 </body>

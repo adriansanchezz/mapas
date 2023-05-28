@@ -78,35 +78,47 @@ require_once '../lib/modulos.php';
 
             if (isset($_POST['add_to_cart'])) {
                 $product_id = $_POST['product_id'];
-
+                $precio = $_POST['precio'];
+                $id_empresa = $_SESSION['usuario']['id_usuario'];
                 $conn = conectar();
-                $sqlUpdate = "UPDATE `publicidades` SET `comprador` = '" . $_SESSION['usuario']['id_usuario'] . "' WHERE `id_publicidad` = ?";
-                $stmt = $conn->prepare($sqlUpdate);
-                $stmt->bind_param("i", $product_id);
+                $sql = "UPDATE publicidades SET comprador = ? WHERE id_publicidad = ?";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("ii", $id_empresa, $product_id);
                 $stmt->execute();
+                $stmt->close();
+                $sql = "SELECT * FROM pedidos as p, lineas_pedidos as lp WHERE p.id_pedido = lp.id_pedido AND p.fecha_fin IS NULL AND p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND lp.id_publicidad = " . $product_id . " AND lp.cantidad > 0;";
 
-                // Verificar si el carrito de compras ya está almacenado en la sesión
-                if (isset($_SESSION['empresaCart'])) {
-                    $empresaCart = $_SESSION['empresaCart'];
+                if (sqlSELECT($sql)->num_rows > 0) {
+                    echo "<script>
+                            alert('¡Atención! Este producto ya se encuentra en el carrito.');
+                            window.location.href = 'empresa.php?empresaMapa=1';
+                        </script>";
+                    exit();
+
                 } else {
-                    $empresaCart = array(); // Crear un nuevo carrito si no existe
+                    $sql = "SELECT * FROM pedidos as p, lineas_pedidos as lp WHERE p.id_pedido = lp.id_pedido AND p.fecha_fin IS NULL AND p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND lp.id_publicidad IS NOT NULL;";
+
+                    if (sqlSELECT($sql)->num_rows > 0) {
+                        $id_pedido = obtenerUltimoIdPedido(); // Obtener el último ID de pedido insertado
+                        $sqlLinea = "INSERT INTO `lineas_pedidos`(`precio`, `cantidad`, `id_producto`, `id_publicidad`, `id_pedido`) VALUES ($precio, 1, NULL, $product_id, $id_pedido)";
+                        sqlINSERT($sqlLinea);
+                    } else {
+                        $cantidad = 0;
+                        $importe = 0;
+                        $fecha_fin = "NULL"; // Asignar NULL a la columna fecha_fin
+                        $id_usuario = $_SESSION['usuario']['id_usuario'];
+
+                        $sqlPedido = "INSERT INTO `pedidos`(`cantidad`, `importe`, `fecha_fin`, `id_usuario`) VALUES ($cantidad, $importe, $fecha_fin, $id_usuario)";
+                        sqlINSERT($sqlPedido);
+
+
+                        $id_pedido = obtenerUltimoIdPedido(); // Obtener el último ID de pedido insertado
+                        $sqlLinea = "INSERT INTO `lineas_pedidos`(`precio`, `cantidad`, `id_producto`, `id_publicidad`, `id_pedido`) VALUES ($precio, 1, NULL, $product_id, $id_pedido)";
+                        sqlINSERT($sqlLinea);
+                    }
                 }
-
-                // Verificar si el producto ya existe en el carrito
-                if (isset($empresaCart[$product_id])) {
-                    // Incrementar la cantidad del producto en 1
-                    $empresaCart[$product_id]++;
-                } else {
-                    // Agregar el producto al carrito con una cantidad de 1
-                    $empresaCart[$product_id] = 1;
-                }
-
-                // Guardar el carrito actualizado en la sesión
-                $_SESSION['empresaCart'] = $empresaCart;
-
                 echo "<script>window.location.href = 'empresa.php?empresaMapa=1';</script>";
                 exit();
-
             }
 
             // Calcular el total de dinero en el carrito
@@ -116,25 +128,36 @@ require_once '../lib/modulos.php';
 
             if (isset($_POST['remove_from_cart'])) {
                 $product_id = trim($_POST['product_id']);
-                echo $product_id;
-                // Verificar si el carrito de compras está almacenado en la sesión
-                if (isset($_SESSION['empresaCart'])) {
-                    $cart = $_SESSION['empresaCart'];
+                
+                $conn = conectar();
+                $sql = "UPDATE publicidades SET comprador = NULL WHERE id_publicidad = ?";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("i", $product_id);
+                $stmt->execute();
+                $stmt->close();
 
-                    // Verificar si el producto existe en el carrito
-        
-                    if (isset($cart[$product_id])) {
+                $sql = "SELECT * FROM pedidos AS p JOIN lineas_pedidos AS lp ON p.id_pedido = lp.id_pedido WHERE p.fecha_fin IS NULL AND lp.cantidad > 0 AND p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . ";";
 
-                        unset($cart[$product_id]);
+                if (sqlSELECT($sql)->num_rows > 0) {
 
-                        // Guardar el carrito actualizado en la sesión
-                        $_SESSION['empresaCart'] = $cart;
-                    }
+                    $id_pedido = obtenerUltimoIdPedido(); // Obtener el último ID de pedido insertado
+                    $sqlPedido = "UPDATE lineas_pedidos SET cantidad = cantidad - 1 WHERE id_pedido = " . $id_pedido . " AND id_publicidad = " . $product_id;
+                    sqlUPDATE($sqlPedido);
+
                 }
 
                 // Redirigir nuevamente al carrito
                 echo "<script>window.location.href = 'empresa.php?empresaCarrito=1';</script>";
                 exit();
+            }
+
+            if (isset($_REQUEST['actualizarPedido'])) {
+
+                $id_pedido = obtenerUltimoIdPedido(); // Obtener el último ID de pedido insertado
+                $sqlPedido = "UPDATE pedidos SET fecha_fin = NOW() WHERE id_pedido = " . $id_pedido;
+                sqlUPDATE($sqlPedido);
+
+
             }
             ?>
 
@@ -145,50 +168,46 @@ require_once '../lib/modulos.php';
                 <div class="products">
                     <?php
                     // Verificar si el carrito de compras está almacenado en la sesión
-                    if (isset($_SESSION['empresaCart'])) {
-                        $empresaCart = $_SESSION['empresaCart'];
+                    $id_pedido = obtenerUltimoIdPedido();
+                    $conn = conectar();
 
-                        // Consultar los productos desde la base de datos utilizando los IDs en el carrito
-                        // Consultar los productos desde la base de datos utilizando los IDs en el carrito
-                        $productIds = array_keys($empresaCart);
+                    // Consultar los productos desde la base de datos
+                    $sql = "SELECT *
+                            FROM lineas_pedidos AS lp
+                            INNER JOIN publicidades AS publi ON lp.id_publicidad = publi.id_publicidad
+                            INNER JOIN pedidos AS pedido ON lp.id_pedido = pedido.id_pedido
+                            WHERE lp.id_pedido = " . $id_pedido . " AND lp.cantidad > 0 AND pedido.fecha_fin IS NULL
+                            GROUP BY lp.id_publicidad";
 
-                        if (!empty($productIds)) {
-                            $placeholders = implode(',', array_fill(0, count($productIds), '?'));
-                            $sql = "SELECT * FROM publicidades WHERE id_publicidad IN ($placeholders)";
-                            $conn = conectar();
-                            $stmt = $conn->prepare($sql);
-                            $stmt->bind_param(str_repeat('s', count($productIds)), ...$productIds);
-                            $stmt->execute();
-                            $result = $stmt->get_result();
+                    $result = $conn->query($sql);
 
-                            if ($result->num_rows > 0) {
-                                // Iterar sobre los productos en el carrito
-                                while ($row = $result->fetch_assoc()) {
-                                    $product_id = $row['id_publicidad'];
-                                    $product_name = $row['ubicacion'];
-                                    $product_description = $row['provincia'];
-                                    $product_price = $row['precio'];
+                    if ($result->num_rows > 0) {
+                        // Iterar sobre los productos en el carrito
+                        while ($row = $result->fetch_assoc()) {
+                            $product_id = $row['id_publicidad'];
+                            $product_name = $row['ubicacion'];
+                            $product_description = $row['provincia'];
+                            $product_price = $row['precio'];
 
-                                    // Calcular el subtotal por producto
-                                    $subtotal = $product_price;
+                            // Calcular el subtotal por producto
+                            $subtotal = $product_price;
 
-                                    // Agregar el subtotal al total de dinero
-                                    $totalMoney += $subtotal;
+                            // Agregar el subtotal al total de dinero
+                            $totalMoney += $subtotal;
 
-                                    // Mostrar los detalles del producto en el carrito
-                                    echo "<div class='product card border-primary mb-3' style='max-width: 18rem;'>";
-                                    echo "<div class='card-header bg-primary text-white'>$product_name</div>";
-                                    echo "<div class='card-body text-primary'>";
-                                    echo "<h5 class='card-title'>$product_description</h5>";
-                                    echo "<p class='card-text'>Precio: $product_price</p>";
-                                    echo "<form action='empresa.php' method='post'>";
-                                    echo "<input type='hidden' name='product_id' value='$product_id'>";
-                                    echo "<button class='btn btn-danger' name='remove_from_cart' value='$product_id' type='submit'>Eliminar</button>";
-                                    echo "</form>";
-                                    echo "</div>";
-                                    echo "</div>";
-                                }
-                            }
+                            // Mostrar los detalles del producto en el carrito
+                            echo "<div class='product card border-primary mb-3' style='max-width: 18rem;'>";
+                            echo "<div class='card-header bg-primary text-white'>$product_name</div>";
+                            echo "<div class='card-body text-primary'>";
+                            echo "<h5 class='card-title'>$product_description</h5>";
+                            echo "<p class='card-text'>Precio: $product_price</p>";
+                            echo "<form action='empresa.php' method='post'>";
+                            echo "<input type='hidden' name='product_id' value='$product_id'>";
+                            echo "<button class='btn btn-danger' name='remove_from_cart' value='$product_id' type='submit'>Eliminar</button>";
+                            echo "</form>";
+                            echo "</div>";
+                            echo "</div>";
+
                             mysqli_close($conn);
                         }
 
