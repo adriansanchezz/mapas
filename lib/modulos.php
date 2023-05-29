@@ -251,27 +251,27 @@ function mapa($valor)
                                 var marker = L.marker([<?php echo $latitud; ?>, <?php echo $longitud; ?>]).addTo(map);
                                 // Se añade un popUp para que salga una ventana al clickar un marcador existente en el mapa.
                                 marker.bindPopup(`
-                                                                                                                                                <div class='popup-content'>
-                                                                                                                                                <h3><?php echo $nombre_tipo . " " . $ubicacion . " " . $precio . "€"; ?></h3>
-                                                                                                                                                <p><?php echo $descripcion; ?></p>
-                                                                                                                                                <img src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación'>
-                                                                                                                                                </div>
-                                                                                                                                                <form action='empresa.php' method='POST'>
-                                                                                                                                                <input type='hidden' name='product_id' value='<?php echo $row['id_publicidad'] ?>'>
-                                                                                                                                                <input type='hidden' name='lat' value='<?php echo $latitud; ?>'>
-                                                                                                                                                <input type='hidden' name='lng' value='<?php echo $longitud; ?>'>
-                                                                                                                                                <input type='hidden' name='ubicacion' value='<?php echo $ubicacion; ?>'>
-                                                                                                                                                <input type='hidden' name='descripcion' value='<?php echo $descripcion; ?>'>
-                                                                                                                                                <input type='hidden' name='precio' value='<?php echo $precio; ?>'>
-                                                                                                                                                <?php
-                                                                                                                                                $sql = "SELECT * FROM pedidos as p, lineas_pedidos as lp WHERE p.id_pedido = lp.id_pedido AND p.fecha_fin IS NULL AND p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND lp.id_publicidad = " . $row['id_publicidad'] . " AND lp.cantidad > 0;";
-                                                                                                                                                if (sqlSELECT($sql)->num_rows > 0) {
-                                                                                                                                                    echo "<p style='color: red;'>YA SELECCIONADA</p>";
-                                                                                                                                                }
-                                                                                                                                                ?>
-                                                                                                                                                    <button type='submit' name='add_to_cart' value='1'>Seleccionar</button>
-                                                                                                                                                    </form>
-                                                                                                                                                `);
+                                                <div class='popup-content'>
+                                                <h3><?php echo $nombre_tipo . " " . $ubicacion . " " . $precio . "€"; ?></h3>
+                                                <p><?php echo $descripcion; ?></p>
+                                                <img src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación'>
+                                                </div>
+                                                <form action='empresa.php' method='POST'>
+                                                <input type='hidden' name='product_id' value='<?php echo $row['id_publicidad'] ?>'>
+                                                <input type='hidden' name='lat' value='<?php echo $latitud; ?>'>
+                                                <input type='hidden' name='lng' value='<?php echo $longitud; ?>'>
+                                                <input type='hidden' name='ubicacion' value='<?php echo $ubicacion; ?>'>
+                                                <input type='hidden' name='descripcion' value='<?php echo $descripcion; ?>'>
+                                                <input type='hidden' name='precio' value='<?php echo $precio; ?>'>
+                                                <?php
+                                                    $sql = "SELECT * FROM pedidos as p, lineas_pedidos as lp WHERE p.id_pedido = lp.id_pedido AND p.fecha_fin IS NULL AND p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND lp.id_publicidad = " . $row['id_publicidad'] . " AND lp.cantidad > 0;";
+                                                    if (sqlSELECT($sql)->num_rows > 0) {
+                                                        echo "<p style='color: red;'>YA SELECCIONADA</p>";
+                                                    }
+                                                ?>
+                                                <button type='submit' name='add_to_cart' value='1'>Seleccionar</button>
+                                                </form>
+                                                `);
 
 
 
