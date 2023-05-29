@@ -251,30 +251,31 @@ function mapa($valor)
                                 var marker = L.marker([<?php echo $latitud; ?>, <?php echo $longitud; ?>]).addTo(map);
                                 // Se añade un popUp para que salga una ventana al clickar un marcador existente en el mapa.
                                 marker.bindPopup(`
-                                            <div class='popup-content'>
-                                                <h3><?php echo $nombre_tipo . " " . $ubicacion . " " . $precio . "€"; ?></h3>
-                                                <p><?php echo $descripcion; ?></p>
-                                                <img src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación'>
-                                            </div>
-                                            <form action='empresa.php' method='POST'>
-                                                <input type='hidden' name='product_id' value='<?php echo $row['id_publicidad'] ?>'>
-                                                <input type='hidden' name='lat' value='<?php echo $latitud; ?>'>
-                                                <input type='hidden' name='lng' value='<?php echo $longitud; ?>'>
-                                                <input type='hidden' name='ubicacion' value='<?php echo $ubicacion; ?>'>
-                                                <input type='hidden' name='descripcion' value='<?php echo $descripcion; ?>'>
-                                                <input type='hidden' name='precio' value='<?php echo $precio; ?>'>
-                                                <?php
-                                                $sql = "SELECT * FROM pedidos as p, lineas_pedidos as lp WHERE p.id_pedido = lp.id_pedido AND p.fecha_fin IS NULL AND p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND lp.id_publicidad = " . $row['id_publicidad'] . " AND lp.cantidad > 0;";
-                                                if (sqlSELECT($sql)->num_rows > 0) {
-                                                    echo "<p style='color: red;'>YA SELECCIONADA</p>";
-                                                }
-                                                ?>
-                                                <button type='submit' name='add_to_cart' value='1'>Seleccionar</button>
-                                            </form>
-                                        `);
+                                                                                                                                                <div class='popup-content'>
+                                                                                                                                                <h3><?php echo $nombre_tipo . " " . $ubicacion . " " . $precio . "€"; ?></h3>
+                                                                                                                                                <p><?php echo $descripcion; ?></p>
+                                                                                                                                                <img src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación'>
+                                                                                                                                                </div>
+                                                                                                                                                <form action='empresa.php' method='POST'>
+                                                                                                                                                <input type='hidden' name='product_id' value='<?php echo $row['id_publicidad'] ?>'>
+                                                                                                                                                <input type='hidden' name='lat' value='<?php echo $latitud; ?>'>
+                                                                                                                                                <input type='hidden' name='lng' value='<?php echo $longitud; ?>'>
+                                                                                                                                                <input type='hidden' name='ubicacion' value='<?php echo $ubicacion; ?>'>
+                                                                                                                                                <input type='hidden' name='descripcion' value='<?php echo $descripcion; ?>'>
+                                                                                                                                                <input type='hidden' name='precio' value='<?php echo $precio; ?>'>
+                                                                                                                                                <?php
+                                                                                                                                                $sql = "SELECT * FROM pedidos as p, lineas_pedidos as lp WHERE p.id_pedido = lp.id_pedido AND p.fecha_fin IS NULL AND p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND lp.id_publicidad = " . $row['id_publicidad'] . " AND lp.cantidad > 0;";
+                                                                                                                                                if (sqlSELECT($sql)->num_rows > 0) {
+                                                                                                                                                    echo "<p style='color: red;'>YA SELECCIONADA</p>";
+                                                                                                                                                }
+                                                                                                                                                ?>
+                                                                                                                                                    <button type='submit' name='add_to_cart' value='1'>Seleccionar</button>
+                                                                                                                                                    </form>
+                                                                                                                                                `);
 
 
-                        <?php
+
+                                <?php
                             }
                         }
                         // Se cierra la conexión de la BD.
@@ -439,41 +440,35 @@ function mapa($valor)
                                 // Crear un marcador para cada registro de la base de datos.
                                 var marker = L.marker([<?php echo $latitud; ?>, <?php echo $longitud; ?>]).addTo(map);
                                 // Se añade un popUp para que salga una ventana al clickar un marcador existente en el mapa.
-                                
-                                marker.bindPopup(`
-                                                <style>
-                                                    img {
-                                                        height: 200px;
-                                                    }
-                                                </style>
-                                                <div class='popup-content'>
-                                                    <h3 class='popup-title'>${nombre_tipo}</h3>
-                                                    <h4 class='popup-location'>${ubicacion}</h4>
-                                                    <h4 class='popup-price'>${precio}€</h4>
-                                                    <p class='popup-description'>${descripcion}</p>
-                                                    Imagen Google: <img class='popup-image' src='${imageUrl}' alt='Imagen de la ubicación'>
-                                                    Imagen usuario ${mostrarImagen}
-                                                </div>
-                                                <form action='usuario.php' method='POST'>
-                                                    <input type='hidden' name='id_publicidad' value='${row['id_publicidad']}'>
-                                                    <?php
-                                                    $conn = conectar();
-                                                    $sql = "SELECT * FROM publicidades as p, empresas as em WHERE p.ocupado = 1 AND p.estado = 1 AND p.comprador IS NOT NULL AND p.comprador = em.id_empresa AND p.id_publicidad = " . $row['id_publicidad'];
+                                marker.bindPopup(`<style>img{height: 200px;}</style><div class='popup-content'>
+                                                                                    <h3 class='popup-title'><?php echo $nombre_tipo; ?></h3>
+                                                                                    <h4 class='popup-location'><?php echo $ubicacion; ?></h4>
+                                                                                    <h4 class='popup-price'><?php echo $precio . '€'; ?></h4>
+                                                                                    <p class='popup-description'><?php echo $descripcion; ?></p>
+                                                                                    Imagen Google: <img class='popup-image' src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación'>
+                                                                                    Imagen usuario <?php echo $mostrarImagen; ?></div>
+                                                                                    <form action='usuario.php' method='POST'>
+                                                                                    <input type='hidden' name='id_publicidad' value='<?php echo $row['id_publicidad']; ?>'>
+                                                                                    <?php
+                                                                                    $conn = conectar();
+                                                                                    $sql = "SELECT * FROM publicidades as p, empresas as em WHERE p.ocupado = 1 AND p.estado = 1 AND p.comprador IS NOT NULL AND p.comprador = em.id_empresa AND p.id_publicidad = " . $row['id_publicidad'];
 
-                                                    $resultado = $conn->query($sql);
+                                                                                    $resultado = $conn->query($sql);
 
-                                                    if ($resultado->num_rows > 0) {
-                                                        // Si se obtienen resultados, se recorren las filas
-                                                        $row4 = $resultado->fetch_assoc();
+                                                                                    if ($resultado->num_rows > 0) {
+                                                                                        // Si se obtienen resultados, se recorren las filas
+                                                                                        $row4 = $resultado->fetch_assoc();
 
-                                                        // Mostrar el mensaje de publicidad vendida
-                                                        echo "<p style='color: red;'>YA VENDIDA A " . $row4['nombre'] . "</p>";
-                                                    }
-                                                    ?>
-                                                    <button class='popup-delete-button' type='submit' name='borrarMarcador'>Borrar</button>
-                                                </form>
-                                            `);
-                    <?php
+                                                                                        // Mostrar el mensaje de publicidad vendida
+                                                                                        echo "<p style='color: red;'>YA VENDIDA A " . $row4['nombre'] . "</p>";
+                                                                                    }
+                                                                                    ?>
+
+                                                                                    <button class='popup-delete-button' type='submit' name='borrarMarcador'>Borrar</button>
+                                                                                </form>`);
+
+
+                                                            <?php
                             }
                         }
                     }
