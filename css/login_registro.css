@@ -20,6 +20,12 @@ body {
     border-bottom: 2px solid rgb(221, 221, 221);
 }
 
+.formulario h3{
+    text-align: center;
+    padding: 20px 0 20px 0;
+    border-bottom: 2px solid rgb(221, 221, 221);
+}
+
 .formulario form{
     padding: 0 40px;
     box-sizing: border-box;
@@ -50,15 +56,6 @@ form .datos{
     font-size: 16px;
     pointer-events: none;
     transition: .5s;
-}
-
-.olvidadar{
-    text-align: center;
-    margin: -5px 0px 20px 5px;
-}
-
-.olvidadar:hover{
-    text-decoration: underline;
 }
 
 input[type="submit"]{

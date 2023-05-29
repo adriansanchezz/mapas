@@ -10,7 +10,6 @@ require_once 'lib/modulos.php';
     <!-- Meter informacion general de head -->
     <?php head_info(); ?>
     <link href="css/login_registro.css" rel="stylesheet" type="text/css">
-    <title>DisplayAds</title>
 </head>
 
 <body>
@@ -33,15 +32,16 @@ require_once 'lib/modulos.php';
             <div class="redirigir">
                 ¿Aún no tienes una cuenta? <a href="registro.php">Registrarse</a>
             </div>
-            <div class="olvidadar"><a href="registro.php">¿Has olvido su contraseña?</a></div>
-        </form>
-    </div>
-
-    <?php
+            <div class="redirigir"><a href="recuperar.php">¿Has olvido su contraseña?</a></div>
+            <?php
     if (isset($_POST['iniciar'])) {
         autenticarUser($_POST['correo'], $_POST['password']);
     }
     ?>
+        </form>
+    </div>
+
+
 
 </body>
 

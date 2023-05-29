@@ -48,19 +48,13 @@ function registrarUser($username, $email, $telefono, $password, $password2)
 
     // Verificar si el nombre de usuario ya existe en la base de datos
     $sql = "SELECT * FROM usuarios WHERE nombre='$username'";
-    if (
-        sqlSELECT($sql)->num_rows > 0
-
-    ) {
+    if (sqlSELECT($sql)->num_rows > 0) {
         $errors[] = "El nombre de usuario ya existe!";
     }
 
     // Verificar si el correo electrónico ya existe en la base de datos
     $sql = "SELECT * FROM usuarios WHERE email='$email'";
-    if (
-        sqlSELECT($sql)->num_rows > 0
-
-    ) {
+    if (sqlSELECT($sql)->num_rows > 0) {
         $errors[] = "El correo electrónico ya existe!";
     }
 
@@ -133,6 +127,18 @@ function autenticarUser($email, $password)
     }
 }
 
+function validarCorreo($email)
+{
+    // Verificar si el correo electrónico ya existe en la base de datos
+    $sql = "SELECT * FROM usuarios WHERE email='$email'";
+    if (sqlSELECT($sql)->num_rows > 0) {
+        // existe el usuario
+        return true;
+    } else {
+        // no existe el usaruio
+        return false;
+    }
+}
 
 // Para realizar consulta, recordar que para while hace falta meterlo a un atributo, luego meter a mysqli_fetch_assoc($result)
 // De vuelve el resultado de la consulta
@@ -808,6 +814,19 @@ function guardarMarcador()
     }
 }
 
+function generarCode()
+{
+    // Generar un número aleatorio de 6 dígitos
+    $numeroAleatorio = mt_rand(100000, 999999);
+    // Generar una cadena de texto aleatoria de 6 caracteres
+    $caracteres = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $textoAleatorio = substr(str_shuffle($caracteres), 0, 6);
+
+    $concatenacion = $numeroAleatorio . $textoAleatorio;
+    $conjunto = substr(str_shuffle($concatenacion), 0, 6);
+
+    $_SESSION['recuperarCode'] = $conjunto;
+}
 
 
 function debug_to_console($data)
@@ -824,7 +843,7 @@ function obtenerUltimoIdPedido()
 {
     $conn = conectar();
     // Realiza la consulta para obtener el último ID de pedido insertado
-    $sql = "SELECT MAX(id_pedido) AS ultimo_id FROM pedidos WHERE id_usuario = ". $_SESSION['usuario']['id_usuario'];
+    $sql = "SELECT MAX(id_pedido) AS ultimo_id FROM pedidos WHERE id_usuario = " . $_SESSION['usuario']['id_usuario'];
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
@@ -834,6 +853,23 @@ function obtenerUltimoIdPedido()
     }
     // Si no se pudo obtener el último ID de pedido, retorna un valor predeterminado
     return 0;
+}
+
+
+function recuperarCuenta($pass, $email)
+{
+    //Hashar la contra
+    $password_hash = password_hash($pass, PASSWORD_DEFAULT);
+
+    //consulta
+    $sql = "UPDATE usuarios SET password='$password_hash' WHERE email = '$email'";
+
+    if (sqlUPDATE($sql)) {
+        echo "La contraseña de usuario se ha modificado correctamente.";
+    } else {
+        // Se produjo un error al actualizar el registro, mostrar un mensaje de error
+        echo "Error al modificar la contraseña de usuario!";
+    }
 }
 
 ?>

@@ -156,7 +156,7 @@ function head_info()
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="../js/funciones.js"></script>
-
+    <title>DisplayAds</title>
     <?php
 }
 ?>
@@ -248,30 +248,30 @@ function mapa($valor)
                                 // Crear un marcador para cada registro de la base de datos.
                                 var marker = L.marker([<?php echo $latitud; ?>, <?php echo $longitud; ?>]).addTo(map);
                                 // Se añade un popUp para que salga una ventana al clickar un marcador existente en el mapa.
+                                var marker = L.marker([<?php echo $latitud; ?>, <?php echo $longitud; ?>]).addTo(map);
+                                // Se añade un popUp para que salga una ventana al clickar un marcador existente en el mapa.
                                 marker.bindPopup(`
-                                                                                                                                                <div class='popup-content'>
-                                                                                                                                                <h3><?php echo $nombre_tipo . " " . $ubicacion . " " . $precio . "€"; ?></h3>
-                                                                                                                                                <p><?php echo $descripcion; ?></p>
-                                                                                                                                                <img src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación'>
-                                                                                                                                                </div>
-                                                                                                                                                <form action='empresa.php' method='POST'>
-                                                                                                                                                <input type='hidden' name='product_id' value='<?php echo $row['id_publicidad'] ?>'>
-                                                                                                                                                <input type='hidden' name='lat' value='<?php echo $latitud; ?>'>
-                                                                                                                                                <input type='hidden' name='lng' value='<?php echo $longitud; ?>'>
-                                                                                                                                                <input type='hidden' name='ubicacion' value='<?php echo $ubicacion; ?>'>
-                                                                                                                                                <input type='hidden' name='descripcion' value='<?php echo $descripcion; ?>'>
-                                                                                                                                                <input type='hidden' name='precio' value='<?php echo $precio; ?>'>
-                                                                                                                                                <?php
-                                                                                                                                                $sql = "SELECT * FROM pedidos as p, lineas_pedidos as lp WHERE p.id_pedido = lp.id_pedido AND p.fecha_fin IS NULL AND p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND lp.id_publicidad = " . $row['id_publicidad'] . " AND lp.cantidad > 0;";
-
-                                                                                                                                                if (sqlSELECT($sql)->num_rows > 0) {
-                                                                                                                                                    echo "<p style='color: red;'>YA SELECCIONADA</p>";
-
-                                                                                                                                                }
-                                                                                                                                                ?>
-                                                                                                                                                    <button type='submit' name='add_to_cart' value='1'>Seleccionar</button>
-                                                                                                                                                    </form>
-                                                                                                                                                `);
+                                                                                                                                <div class='popup-content'>
+                                                                                                                                <h3><?php echo $nombre_tipo . " " . $ubicacion . " " . $precio . "€"; ?></h3>
+                                                                                                                                <p><?php echo $descripcion; ?></p>
+                                                                                                                                <img src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación'>
+                                                                                                                                </div>
+                                                                                                                                <form action='empresa.php' method='POST'>
+                                                                                                                                <input type='hidden' name='product_id' value='<?php echo $row['id_publicidad'] ?>'>
+                                                                                                                                <input type='hidden' name='lat' value='<?php echo $latitud; ?>'>
+                                                                                                                                <input type='hidden' name='lng' value='<?php echo $longitud; ?>'>
+                                                                                                                                <input type='hidden' name='ubicacion' value='<?php echo $ubicacion; ?>'>
+                                                                                                                                <input type='hidden' name='descripcion' value='<?php echo $descripcion; ?>'>
+                                                                                                                                <input type='hidden' name='precio' value='<?php echo $precio; ?>'>
+                                                                                                                                <?php
+                                                                                                                                $sql = "SELECT * FROM pedidos as p, lineas_pedidos as lp WHERE p.id_pedido = lp.id_pedido AND p.fecha_fin IS NULL AND p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND lp.id_publicidad = " . $row['id_publicidad'] . " AND lp.cantidad > 0;";
+                                                                                                                                if (sqlSELECT($sql)->num_rows > 0) {
+                                                                                                                                    echo "<p style='color: red;'>YA SELECCIONADA</p>";
+                                                                                                                                }
+                                                                                                                                ?>
+                                                                                                                                    <button type='submit' name='add_to_cart' value='1'>Seleccionar</button>
+                                                                                                                                    </form>
+                                                                                                                                `);
 
 
 
@@ -441,34 +441,34 @@ function mapa($valor)
                                 var marker = L.marker([<?php echo $latitud; ?>, <?php echo $longitud; ?>]).addTo(map);
                                 // Se añade un popUp para que salga una ventana al clickar un marcador existente en el mapa.
                                 marker.bindPopup(`<style>img{height: 200px;}</style><div class='popup-content'>
-                                                                                                        <h3 class='popup-title'><?php echo $nombre_tipo; ?></h3>
-                                                                                                        <h4 class='popup-location'><?php echo $ubicacion; ?></h4>
-                                                                                                        <h4 class='popup-price'><?php echo $precio . '€'; ?></h4>
-                                                                                                        <p class='popup-description'><?php echo $descripcion; ?></p>
-                                                                                                        Imagen Google: <img class='popup-image' src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación'>
-                                                                                                        Imagen usuario <?php echo $mostrarImagen; ?></div>
-                                                                                                        <form action='usuario.php' method='POST'>
-                                                                                                        <input type='hidden' name='id_publicidad' value='<?php echo $row['id_publicidad']; ?>'>
-                                                                                                        <?php
-                                                                                                        $conn = conectar();
-                                                                                                        $sql = "SELECT * FROM publicidades as p, empresas as em WHERE p.ocupado = 1 AND p.estado = 1 AND p.comprador IS NOT NULL AND p.comprador = em.id_empresa AND p.id_publicidad = " . $row['id_publicidad'];
+                                                                <h3 class='popup-title'><?php echo $nombre_tipo; ?></h3>
+                                                                <h4 class='popup-location'><?php echo $ubicacion; ?></h4>
+                                                                <h4 class='popup-price'><?php echo $precio . '€'; ?></h4>
+                                                                <p class='popup-description'><?php echo $descripcion; ?></p>
+                                                                Imagen Google: <img class='popup-image' src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación'>
+                                                                Imagen usuario <?php echo $mostrarImagen; ?></div>
+                                                                <form action='usuario.php' method='POST'>
+                                                                <input type='hidden' name='id_publicidad' value='<?php echo $row['id_publicidad']; ?>'>
+                                                                <?php
+                                                                $conn = conectar();
+                                                                $sql = "SELECT * FROM publicidades as p, empresas as em WHERE p.ocupado = 1 AND p.estado = 1 AND p.comprador IS NOT NULL AND p.comprador = em.id_empresa AND p.id_publicidad = " . $row['id_publicidad'];
 
-                                                                                                        $resultado = $conn->query($sql);
+                                                                $resultado = $conn->query($sql);
 
-                                                                                                        if ($resultado->num_rows > 0) {
-                                                                                                            // Si se obtienen resultados, se recorren las filas
-                                                                                                            $row4 = $resultado->fetch_assoc();
+                                                                if ($resultado->num_rows > 0) {
+                                                                    // Si se obtienen resultados, se recorren las filas
+                                                                    $row4 = $resultado->fetch_assoc();
 
-                                                                                                            // Mostrar el mensaje de publicidad vendida
-                                                                                                            echo "<p style='color: red;'>YA VENDIDA A " . $row4['nombre'] . "</p>";
-                                                                                                        }
-                                                                                                        ?>
+                                                                    // Mostrar el mensaje de publicidad vendida
+                                                                    echo "<p style='color: red;'>YA VENDIDA A " . $row4['nombre'] . "</p>";
+                                                                }
+                                                                ?>
 
-                                                                                                        <button class='popup-delete-button' type='submit' name='borrarMarcador'>Borrar</button>
-                                                                                                    </form>`);
+                                                                <button class='popup-delete-button' type='submit' name='borrarMarcador'>Borrar</button>
+                                                            </form>`);
 
 
-                                                                                <?php
+                                        <?php
                             }
                         }
                     }
@@ -518,7 +518,7 @@ function mapa($valor)
                             // Se crea un nuevo marcador y se añade al mapa.
                             marker2 = L.marker(e.latlng).addTo(map);
                             var apiKey = 'AIzaSyADr5gpzLPePzkWwz8C94wBQ21DzQ4GGVU'; // Reemplaza con tu propia API Key de Google Maps Static
-                            
+
                             var img = new Image();
                             img.src = 'https://maps.googleapis.com/maps/api/streetview?size=400x300&location=' + e.latlng.lat + ',' + e.latlng.lng + '&key=' + apiKey;
 
@@ -858,178 +858,159 @@ function mapa($valor)
                 }
                 ?>
                 <script>
-                // Obtener la ubicación actual del usuario
-                if ("geolocation" in navigator) {
-                    navigator.geolocation.getCurrentPosition(function(position) {
-                    var userLat = position.coords.latitude;
-                    var userLng = position.coords.longitude;
+                    // Obtener la ubicación actual del usuario
+                    if ("geolocation" in navigator) {
+                        navigator.geolocation.getCurrentPosition(function (position) {
+                            var userLat = position.coords.latitude;
+                            var userLng = position.coords.longitude;
 
-                    // Centrar el mapa en la ubicación del usuario
-                    map.setView([userLat, userLng], 13);
+                            // Centrar el mapa en la ubicación del usuario
+                            map.setView([userLat, userLng], 13);
 
-                    // Crear un círculo alrededor de la ubicación del usuario
-                    var userCircle = L.circle([userLat, userLng], {
-                        color: 'blue',
-                        fillColor: 'blue',
-                        fillOpacity: 0.2,
-                        radius: 500 // Radio del círculo en metros
-                    }).addTo(map);
+                            // Crear un círculo alrededor de la ubicación del usuario
+                            var userCircle = L.circle([userLat, userLng], {
+                                color: 'blue',
+                                fillColor: 'blue',
+                                fillOpacity: 0.2,
+                                radius: 500 // Radio del círculo en metros
+                            }).addTo(map);
+                            var circleBounds = userCircle.getBounds();
+                            var circleBoundsNE = circleBounds.getNorthEast();
+                            var circleBoundsSW = circleBounds.getSouthWest();
+                            var circleBoundsLatMin = circleBoundsSW.lat;
+                            var circleBoundsLngMin = circleBoundsSW.lng;
+                            var circleBoundsLatMax = circleBoundsNE.lat;
+                            var circleBoundsLngMax = circleBoundsNE.lng;
 
-                    // Obtener los límites del círculo
-                    var circleBounds = userCircle.getBounds();
-                    var circleBoundsNE = circleBounds.getNorthEast();
-                    var circleBoundsSW = circleBounds.getSouthWest();
-                    var circleBoundsLatMin = circleBoundsSW.lat;
-                    var circleBoundsLngMin = circleBoundsSW.lng;
-                    var circleBoundsLatMax = circleBoundsNE.lat;
-                    var circleBoundsLngMax = circleBoundsNE.lng;
+                            // Consultar los marcadores dentro del límite
+                            // Reemplaza esta sección con el código PHP correspondiente
+                            fetch('../lib/obtenerMarcadores.php', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    latMin: circleBoundsLatMin,
+                                    lngMin: circleBoundsLngMin,
+                                    latMax: circleBoundsLatMax,
+                                    lngMax: circleBoundsLngMax
+                                })
+                            })
+                                .then(function (response) {
+                                    return response.json();
+                                })
+                                .then(function (markers) {
+                                    markers.forEach(function (marker) {
+                                        var lat = marker.latitud;
+                                        var lng = marker.longitud;
+                                        var nombreTipo = marker.nombre_tipo;
+                                        var ubicacion = marker.ubicacion;
+                                        var precio = marker.precio;
+                                        var descripcion = marker.descripcion;
+                                        var imageUrl = marker.imagen_url;
 
-                    // Consultar los marcadores dentro del límite
-                    // Reemplaza esta sección con el código PHP correspondiente
-                    fetch('../lib/obtenerMarcadores.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            latMin: circleBoundsLatMin,
-                            lngMin: circleBoundsLngMin,
-                            latMax: circleBoundsLatMax,
-                            lngMax: circleBoundsLngMax
-                        })
-                        })
-                        .then(function(response) {
-                        return response.json();
-                        })
-                        .then(function(markers) {
-                        markers.forEach(function(marker) {
-                            var lat = marker.latitud;
-                            var lng = marker.longitud;
-                            var nombreTipo = marker.nombre_tipo;
-                            var ubicacion = marker.ubicacion;
-                            var precio = marker.precio;
-                            var descripcion = marker.descripcion;
-                            var imageUrl = marker.imagen_url;
+                                        // Crear un marcador para cada registro de la base de datos dentro del límite
+                                        var marker = L.marker([lat, lng]).addTo(map);
+                                    });
+                                    console.log("MARCADORE: " + markers.length);
+                                    obtenerMision(markers);
+                                })
+                                .catch(function (error) {
+                                    console.log("Error al obtener los marcadores: " + error.message);
+                                });
 
-                            // Crear un marcador para cada registro de la base de datos dentro del límite
-                            var marker = L.marker([lat, lng]).addTo(map);
+                        }, function (error) {
+                            console.log("Error al obtener la ubicación del usuario: " + error.message);
                         });
-                        console.log("MARCADORE: " + markers.length);
-                        obtenerMision(markers);
-                        })
-                        .catch(function(error) {
-                        console.log("Error al obtener los marcadores: " + error.message);
-                        });
+                    } else {
+                        console.log("Geolocalización no es compatible en este navegador.");
+                    }
 
-                    }, function(error) {
-                    console.log("Error al obtener la ubicación del usuario: " + error.message);
-                    });
-                } else {
-                    console.log("Geolocalización no es compatible en este navegador.");
-                }
+                    function obtenerMision(markers) {
+                        console.log(markers);
+                        var botonSolicitarMision = document.getElementById('solicitarMision');
+                        botonSolicitarMision.addEventListener('click', seleccionarPunto);
 
-                function obtenerMision(markers) {
-                    console.log(markers);
-                    var botonSolicitarMision = document.getElementById('solicitarMision');
-                    botonSolicitarMision.addEventListener('click', seleccionarPunto);
+                        // Función para seleccionar un punto aleatorio y resaltarlo en el mapa
+                        function seleccionarPunto() {
+                            // Obtener todos los marcadores en el mapa
+                            var marcadores = L.layerGroup(markers); // Suponiendo que 'markers' es un array de objetos con atributos de marcadores
 
-                    // Función para seleccionar un punto aleatorio y resaltarlo en el mapa
-                    function seleccionarPunto() {
-                    // Obtener todos los marcadores en el mapa
-                    var marcadores = L.layerGroup(markers); // Suponiendo que 'markers' es un array de objetos con atributos de marcadores
+                            // Generar un índice aleatorio
+                            var indiceAleatorio = Math.floor(Math.random() * marcadores.getLayers().length);
 
-                    // Generar un índice aleatorio
-                    var indiceAleatorio = Math.floor(Math.random() * marcadores.getLayers().length);
+                            // Obtener el objeto JSON correspondiente al índice aleatorio
+                            var marcadorJSON = markers[indiceAleatorio];
+                            console.log("MARCADOR:" + marcadorJSON.id_publicidad);
 
-                    // Obtener el objeto JSON correspondiente al índice aleatorio
-                    var marcadorJSON = markers[indiceAleatorio];
-                    console.log("MARCADOR:" + marcadorJSON.id_publicidad);
+                            // Obtener la ubicación (latitud y longitud) del marcador
+                            var latitud = marcadorJSON.latitud;
+                            var longitud = marcadorJSON.longitud;
 
-                    // Obtener la ubicación (latitud y longitud) del marcador
-                    var latitud = marcadorJSON.latitud;
-                    var longitud = marcadorJSON.longitud;
+                            var data = "descripcion=" + encodeURIComponent("Ve al lugar y saca una foto");
+                            data += "&id_publicidad=" + encodeURIComponent(marcadorJSON.id_publicidad);
+                            var url = '../lib/ejecutarMision.php?subirMision';
+                            var xhr = new XMLHttpRequest();
+                            xhr.open('POST', url, true);
+                            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                            xhr.onreadystatechange = function () {
+                                if (xhr.readyState === 4) {
+                                    if (xhr.status === 200) {
+                                        console.log("correcto");
+                                        var resultado = xhr.responseText.trim();
+                                        console.log(resultado);
 
-                    var data = "descripcion=" + encodeURIComponent("Ve al lugar y saca una foto");
-                    data += "&id_publicidad=" + encodeURIComponent(marcadorJSON.id_publicidad);
-                    var url = '../lib/ejecutarMision.php?subirMision';
-                    var xhr = new XMLHttpRequest();
-                    xhr.open('POST', url, true);
-                    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-                    xhr.onreadystatechange = function() {
-                        if (xhr.readyState === 4) {
-                        if (xhr.status === 200) {
-                            console.log("correcto");
-                            var resultado = xhr.responseText.trim();
-                            console.log(resultado);
+                                        if (resultado === "true") {
+                                            console.log("La condición es verdadera. Realizando acción A.");                                     // Realiza la acción A                                 }                                 if (resultado === "false") {                                     console.log("La condición es falsa. Realizando acción B.");                                     // Crear una tabla con las características de la misión:                                     // Obtener la tabla existente                                     var tabla = document.getElementById('tabla-puntos');
+                                            // Crear una nueva fila de tabla                                     var fila = document.createElement('tr');
+                                            // Crear las celdas de la fila con los datos del punto                                     var celdaId = document.createElement('td');                                     celdaId.textContent = marcadorJSON.ubicacion;                                     fila.appendChild(celdaId);
+                                            var celdaLatitud = document.createElement('td'); celdaLatitud.textContent = latitud; fila.appendChild(celdaLatitud);
+                                            var celdaLongitud = document.createElement('td'); celdaLongitud.textContent = longitud; fila.appendChild(celdaLongitud);
+                                            var celdaInput = document.createElement('td');
+                                            fila.appendChild(celdaInput);
+                                            // Agregar la fila a la tabla                                     tabla.appendChild(fila);                                     window.location.href = 'vigilante.php?misiones=';                                     exit();                                 }                             } else {                                 console.log("Error en la solicitud AJAX. Estado de la respuesta: " + xhr.status);                             }                         }                     };                     xhr.onerror = function () {                         console.log("Error en la solicitud AJAX");                     };                     xhr.send(data);
 
-                            if (resultado === "true") {
-                            console.log("La condición es verdadera. Realizando acción A.");
-                            // Realiza la acción A
-                            }
-                            if (resultado === "false") {
-                            console.log("La condición es falsa. Realizando acción B.");
-                            // Crear una tabla con las características de la misión:
-                            // Obtener la tabla existente
-                            var tabla = document.getElementById('tabla-puntos');
+                                            // Crear un marcador de Leaflet utilizando la ubicación                     var marcadorLeaflet = L.marker([latitud, longitud]);
+                                            // Hacer algo con el marcador seleccionado (por ejemplo, resaltarlo en el mapa)                     resaltarMarcadorEnMapa(marcadorLeaflet);                 }
+                                            // Función para resaltar un marcador en el mapa                 function resaltarMarcadorEnMapa(marcador) {                     console.log(marcador);                     if (marcador) {                         // Código para resaltar el marcador                         marcador.setIcon(L.icon({                             iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Red_circle_frame_transparent.svg/1200px-Red_circle_frame_transparent.svg.png',                             iconSize: [25, 25],                             iconAnchor: [12, 12]                         }));
+                                            // Agregar el marcador resaltado al mapa                         marcador.addTo(map);                     }                 }             }
 
-                            // Crear una nueva fila de tabla
-                            var fila = document.createElement('tr');
+                                            window.location.href = 'vigilante.php?misiones=';
+                                            exit();
+                                        }
+                                    } else {
+                                        console.log("Error en la solicitud AJAX. Estado de la respuesta: " + xhr.status);
+                                    }
+                                }
+                            };
+                            xhr.onerror = function () {
+                                console.log("Error en la solicitud AJAX");
+                            };
+                            xhr.send(data);
 
-                            // Crear las celdas de la fila con los datos del punto
-                            var celdaId = document.createElement('td');
-                            celdaId.textContent = marcadorJSON.ubicacion;
-                            fila.appendChild(celdaId);
+                            // Crear un marcador de Leaflet utilizando la ubicación
+                            var marcadorLeaflet = L.marker([latitud, longitud]);
 
-                            var celdaLatitud = document.createElement('td');
-                            celdaLatitud.textContent = latitud;
-                            fila.appendChild(celdaLatitud);
-
-                            var celdaLongitud = document.createElement('td');
-                            celdaLongitud.textContent = longitud;
-                            fila.appendChild(celdaLongitud);
-
-                            var celdaInput = document.createElement('td');
-                            fila.appendChild(celdaInput);
-
-                            // Agregar la fila a la tabla
-                            tabla.appendChild(fila);
-
-                            window.location.href = 'vigilante.php?misiones=';
-                            exit();
-                            }
-                        } else {
-                            console.log("Error en la solicitud AJAX. Estado de la respuesta: " + xhr.status);
+                            // Hacer algo con el marcador seleccionado (por ejemplo, resaltarlo en el mapa)
+                            resaltarMarcadorEnMapa(marcadorLeaflet);
                         }
+
+                        // Función para resaltar un marcador en el mapa
+                        function resaltarMarcadorEnMapa(marcador) {
+                            console.log(marcador);
+                            if (marcador) {
+                                // Código para resaltar el marcador
+                                marcador.setIcon(L.icon({
+                                    iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Red_circle_frame_transparent.svg/1200px-Red_circle_frame_transparent.svg.png',
+                                    iconSize: [25, 25],
+                                    iconAnchor: [12, 12]
+                                }));
+
+                                // Agregar el marcador resaltado al mapa
+                                marcador.addTo(map);
+                            }
                         }
-                    };
-                    xhr.onerror = function() {
-                        console.log("Error en la solicitud AJAX");
-                    };
-                    xhr.send(data);
-
-                    // Crear un marcador de Leaflet utilizando la ubicación
-                    var marcadorLeaflet = L.marker([latitud, longitud]);
-
-                    // Hacer algo con el marcador seleccionado (por ejemplo, resaltarlo en el mapa)
-                    resaltarMarcadorEnMapa(marcadorLeaflet);
                     }
-
-                    // Función para resaltar un marcador en el mapa
-                    function resaltarMarcadorEnMapa(marcador) {
-                    console.log(marcador);
-                    if (marcador) {
-                        // Código para resaltar el marcador
-                        marcador.setIcon(L.icon({
-                        iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Red_circle_frame_transparent.svg/1200px-Red_circle_frame_transparent.svg.png',
-                        iconSize: [25, 25],
-                        iconAnchor: [12, 12]
-                        }));
-
-                        // Agregar el marcador resaltado al mapa
-                        marcador.addTo(map);
-                    }
-                    }
-                }
                 </script>
 
 
@@ -1159,7 +1140,7 @@ function notificaciones()
     </div>
 
     <script>     const bell = document.querySelector('.bell'); const notificationBar = document.querySelector('.notification-bar');
-                            bell.addEventListener('click', () => { notificationBar.style.display = notificationBar.style.display === 'none' ? 'block' : 'none'; });
+        bell.addEventListener('click', () => { notificationBar.style.display = notificationBar.style.display === 'none' ? 'block' : 'none'; });
     </script>
     <?php
 }
