@@ -141,8 +141,8 @@ require_once '../lib/modulos.php';
                 if (sqlSELECT($sql)->num_rows > 0) {
 
                     $id_pedido = obtenerUltimoIdPedido(); // Obtener el último ID de pedido insertado
-                    $sqlPedido = "UPDATE lineas_pedidos SET cantidad = cantidad - 1 WHERE id_pedido = " . $id_pedido . " AND id_publicidad = " . $product_id;
-                    sqlUPDATE($sqlPedido);
+                    $sqlPedido = "DELETE FROM `lineas_pedidos` WHERE id_pedido = " . $id_pedido . " AND id_publicidad = " . $product_id;
+                    sqlDELETE($sqlPedido);
 
                 }
 
@@ -152,12 +152,29 @@ require_once '../lib/modulos.php';
             }
 
             if (isset($_REQUEST['actualizarPedido'])) {
-                $importe = $_GET['importe']; // Obtener el valor de importe desde los parámetros de la solicitud
+                $importe = $_REQUEST['importe']; // Obtener el valor de importe desde los parámetros de la solicitud
         
                 // Actualizar el pedido en la base de datos utilizando el valor de importe
                 $id_pedido = obtenerUltimoIdPedido();
                 $sqlPedido = "UPDATE pedidos SET fecha_fin = NOW(), importe = " . $importe . " WHERE id_pedido = " . $id_pedido;
                 sqlUPDATE($sqlPedido);
+                foreach ($_REQUEST as $key => $value) {
+                    if (strpos($key, 'months_') === 0) {
+                        // Obtener la ID del producto
+                        $product_id = substr($key, 7);
+
+                        // Obtener el valor de los meses seleccionados
+                        $selected_months = intval($value);
+
+                        // Realizar la consulta de actualización
+                        $fecha_según_mes = date('Y-m-d', strtotime("+$selected_months months"));
+                        $query = "UPDATE publicidades SET caducidad_compra = '$fecha_según_mes' WHERE id_publicidad = $product_id";
+
+                        // Ejecutar la consulta en tu base de datos
+                        // ...
+                        sqlUPDATE($query);
+                    }
+                }
             }
             ?>
 
@@ -173,11 +190,11 @@ require_once '../lib/modulos.php';
 
                     // Consultar los productos desde la base de datos
                     $sql = "SELECT *
-                FROM lineas_pedidos AS lp
-                INNER JOIN publicidades AS publi ON lp.id_publicidad = publi.id_publicidad
-                INNER JOIN pedidos AS pedido ON lp.id_pedido = pedido.id_pedido
-                WHERE lp.id_pedido = " . $id_pedido . " AND lp.cantidad > 0 AND pedido.fecha_fin IS NULL AND publi.ocupado = 1
-                GROUP BY lp.id_publicidad";
+                            FROM lineas_pedidos AS lp
+                            INNER JOIN publicidades AS publi ON lp.id_publicidad = publi.id_publicidad
+                            INNER JOIN pedidos AS pedido ON lp.id_pedido = pedido.id_pedido
+                            WHERE lp.id_pedido = " . $id_pedido . " AND lp.cantidad > 0 AND pedido.fecha_fin IS NULL AND publi.ocupado = 1
+                            GROUP BY lp.id_publicidad";
 
                     $result = $conn->query($sql);
 
@@ -274,21 +291,51 @@ require_once '../lib/modulos.php';
                             label: 'pay'
                         },
                         createOrder: function (data, actions) {
+                            var productPrices = <?php echo json_encode($product_prices); ?>;
+                            var products = document.getElementsByClassName('product');
+                            var totalImporte = 0;
+
+                            for (var i = 0; i < products.length; i++) {
+                                var product = products[i];
+                                var productIdElement = product.querySelector('input[name="product_id"]');
+                                var monthsSelector = product.querySelector('input[name^="months_"]');
+
+                                var currentProductId = parseInt(productIdElement.value);
+                                var currentProductPrice = parseFloat(productPrices[currentProductId]);
+                                var currentSelectedMonths = parseInt(monthsSelector.value);
+                                var currentTotalPrice = currentProductPrice * currentSelectedMonths;
+
+                                // Agregar el precio del producto al importe total
+                                totalImporte += currentTotalPrice;
+                            }
+
                             return actions.order.create({
                                 purchase_units: [{
                                     amount: {
-                                        value: '<?php echo $importe; ?>' // Reemplazar "100" por el valor de $totalMoney
+                                        value: totalImporte.toFixed(2) // Redondear el importe a 2 decimales
                                     }
                                 }]
                             })
                         },
 
                         onApprove: function (data, actions) {
-
                             actions.order.capture().then(function (detalles) {
                                 var xhr = new XMLHttpRequest();
                                 var importe = '<?php echo $importe; ?>'; // Obtener el valor de $importe en JavaScript
-                                xhr.open('GET', 'empresa.php?actualizarPedido&importe=' + importe, true);
+
+                                // Obtener los meses y las IDs de productos seleccionados
+                                var mesesSeleccionados = document.querySelectorAll('input[type="number"]');
+                                var parametros = 'actualizarPedido&importe=' + importe;
+
+                                // Agregar los meses y las IDs de productos a los parámetros de la solicitud
+                                for (var i = 0; i < mesesSeleccionados.length; i++) {
+                                    var product_id = mesesSeleccionados[i].getAttribute('id').substring(7);
+                                    var selected_months = mesesSeleccionados[i].value;
+
+                                    parametros += '&months_' + product_id + '=' + selected_months;
+                                }
+
+                                xhr.open('GET', 'empresa.php?' + parametros, true);
                                 xhr.onreadystatechange = function () {
                                     if (xhr.readyState === 4 && xhr.status === 200) {
                                         console.log('El pedido se actualizó correctamente.');
@@ -298,11 +345,10 @@ require_once '../lib/modulos.php';
                                 };
                                 xhr.send();
                             });
-
                         },
 
                         onCancel: function (data) {
-                            alert("pago cancelado")
+                            alert("Pago cancelado");
                         }
                     }).render('#paypal-button-container');
                 </script>
