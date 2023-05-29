@@ -959,25 +959,45 @@ function mapa($valor)
                                         console.log("correcto");
                                         var resultado = xhr.responseText.trim();
                                         console.log(resultado);
-
                                         if (resultado === "true") {
-                                            console.log("La condición es verdadera. Realizando acción A.");                                     // Realiza la acción A                                 }                                 if (resultado === "false") {                                     console.log("La condición es falsa. Realizando acción B.");                                     // Crear una tabla con las características de la misión:                                     // Obtener la tabla existente                                     var tabla = document.getElementById('tabla-puntos');
-                                            // Crear una nueva fila de tabla                                     var fila = document.createElement('tr');
-                                            // Crear las celdas de la fila con los datos del punto                                     var celdaId = document.createElement('td');                                     celdaId.textContent = marcadorJSON.ubicacion;                                     fila.appendChild(celdaId);
-                                            var celdaLatitud = document.createElement('td'); celdaLatitud.textContent = latitud; fila.appendChild(celdaLatitud);
-                                            var celdaLongitud = document.createElement('td'); celdaLongitud.textContent = longitud; fila.appendChild(celdaLongitud);
+                                            console.log("La condición es verdadera. Realizando acción A.");
+                                            // Realiza la acción A
+                                        }
+
+                                        if (resultado === "false") {
+                                            console.log("La condición es falsa. Realizando acción B.");
+
+                                            // Crear una tabla con las características de la misión:
+                                            // Obtener la tabla existente
+                                            var tabla = document.getElementById('tabla-puntos');
+
+                                            // Crear una nueva fila de tabla
+                                            var fila = document.createElement('tr');
+
+                                            // Crear las celdas de la fila con los datos del punto
+                                            var celdaId = document.createElement('td');
+                                            celdaId.textContent = marcadorJSON.ubicacion;
+                                            fila.appendChild(celdaId);
+
+                                            var celdaLatitud = document.createElement('td');
+                                            celdaLatitud.textContent = latitud;
+                                            fila.appendChild(celdaLatitud);
+
+                                            var celdaLongitud = document.createElement('td');
+                                            celdaLongitud.textContent = longitud;
+                                            fila.appendChild(celdaLongitud);
+
                                             var celdaInput = document.createElement('td');
                                             fila.appendChild(celdaInput);
-                                            // Agregar la fila a la tabla                                     tabla.appendChild(fila);                                     window.location.href = 'vigilante.php?misiones=';                                     exit();                                 }                             } else {                                 console.log("Error en la solicitud AJAX. Estado de la respuesta: " + xhr.status);                             }                         }                     };                     xhr.onerror = function () {                         console.log("Error en la solicitud AJAX");                     };                     xhr.send(data);
 
-                                            // Crear un marcador de Leaflet utilizando la ubicación                     var marcadorLeaflet = L.marker([latitud, longitud]);
-                                            // Hacer algo con el marcador seleccionado (por ejemplo, resaltarlo en el mapa)                     resaltarMarcadorEnMapa(marcadorLeaflet);                 }
-                                            // Función para resaltar un marcador en el mapa                 function resaltarMarcadorEnMapa(marcador) {                     console.log(marcador);                     if (marcador) {                         // Código para resaltar el marcador                         marcador.setIcon(L.icon({                             iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Red_circle_frame_transparent.svg/1200px-Red_circle_frame_transparent.svg.png',                             iconSize: [25, 25],                             iconAnchor: [12, 12]                         }));
-                                            // Agregar el marcador resaltado al mapa                         marcador.addTo(map);                     }                 }             }
+                                            // Agregar la fila a la tabla
+                                            tabla.appendChild(fila);
 
                                             window.location.href = 'vigilante.php?misiones=';
                                             exit();
                                         }
+
+                                        
                                     } else {
                                         console.log("Error en la solicitud AJAX. Estado de la respuesta: " + xhr.status);
                                     }
