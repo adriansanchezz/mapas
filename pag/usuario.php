@@ -69,43 +69,50 @@ require_once '../lib/modulos.php';
                                 type="submit">Carrito</button>
                         </form>
                         <h1>TIENDA</h1>
-                        <div class="products">
-                            <?php
-                            // Establecer la conexión con la base de datos utilizando una función de conexión existente
-                            $conn = conectar();
+                        <div class="container">
+                            <div class="row">
+                                <?php
+                                // Establecer la conexión con la base de datos utilizando una función de conexión existente
+                                $conn = conectar();
 
+                                // Consultar los productos desde la base de datos
+                                $sql = "SELECT * FROM productos as p, fotos as f WHERE f.id_producto = p.id_producto";
+                                $result = $conn->query($sql);
 
+                                // Verificar si se encontraron productos
+                                if ($result->num_rows > 0) {
+                                    // Iterar sobre los productos y mostrarlos en la página
+                                    while ($row = $result->fetch_assoc()) {
+                                        echo "<div class='col-lg-4 mb-3'>";
+                                        echo "<div class='card border-primary'>";
+                                        echo "<div class='card-body'>";
+                                        echo "<h3 class='card-title'>" . $row['nombre'] . "</h3>";
+                                        echo "<p class='card-text'>" . $row['descripcion'] . "</p>";
+                                        $imagen = $row["foto"];
 
-                            // Consultar los productos desde la base de datos
-                            $sql = "SELECT * FROM productos";
-                            $result = $conn->query($sql);
-
-                            // Verificar si se encontraron productos
-                            if ($result->num_rows > 0) {
-                                // Iterar sobre los productos y mostrarlos en la página
-                                while ($row = $result->fetch_assoc()) {
-                                    echo "<div class='product card border-primary mb-3' style='max-width: 18rem;'>";
-                                    echo "<div class='card-body'>";
-                                    echo "<h3 class='card-title'>" . $row['nombre'] . "</h3>";
-                                    echo "<p class='card-text'>" . $row['descripcion'] . "</p>";
-                                    echo "<p class='card-text'>Precio: $" . $row['precio'] . "</p>";
-                                    echo "<form action='usuario.php' method='post'>";
-                                    echo "<input type='hidden' name='id_producto' value='" . $row['id_producto'] . "'>";
-                                    echo "<input type='hidden' name='precio' value='" . $row['precio'] . "'>";
-                                    echo "<input class='btn btn-primary' type='submit' name='add_to_cart' value='Agregar al carrito'>";
-                                    echo "</form>";
-                                    echo "</div>";
-                                    echo "</div>";
+                                        // Mostrar la imagen en la página
+                                        echo "<img src='data:image/jpeg;base64," . base64_encode($imagen) . "' alt='Imagen del producto'>";
+                                        echo "<p class='card-text'>Precio: $" . $row['precio'] . "</p>";
+                                        echo "<form action='usuario.php' method='post'>";
+                                        echo "<input type='hidden' name='id_producto' value='" . $row['id_producto'] . "'>";
+                                        echo "<input type='hidden' name='precio' value='" . $row['precio'] . "'>";
+                                        echo "<input class='btn btn-primary' type='submit' name='add_to_cart' value='Agregar al carrito'>";
+                                        echo "</form>";
+                                        echo "</div>";
+                                        echo "</div>";
+                                        echo "</div>";
+                                    }
+                                } else {
+                                    echo "No se encontraron productos";
                                 }
-                            } else {
-                                echo "No se encontraron productos";
-                            }
 
-                            mysqli_close($conn);
-                            ?>
+                                mysqli_close($conn);
+                                ?>
+                            </div>
                         </div>
                     </div>
                 </div>
+
                 <?php
             }
 
