@@ -200,66 +200,82 @@ require_once '../lib/modulos.php';
                 <div class="flex-grow-1">
                     <div id="seccion1" class="p-3" style="display: block;">
                         <h1>Carrito</h1>
-                        <div class="products">
-                            <?php
-                            // Verificar si el carrito de compras está almacenado en la sesión
-                    
-                            $id_pedido = obtenerUltimoIdPedido();
-                            $conn = conectar();
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <div class="products">
+                                        <?php
+                                        // Verificar si el carrito de compras está almacenado en la sesión
+                                        $id_pedido = obtenerUltimoIdPedido();
+                                        $conn = conectar();
 
-                            // Consultar los productos desde la base de datos
-                            $sql = "SELECT lp.id_producto, lp.cantidad, prod.nombre, prod.descripcion, prod.precio
-                                    FROM lineas_pedidos AS lp
-                                    INNER JOIN productos AS prod ON lp.id_producto = prod.id_producto
-                                    INNER JOIN pedidos AS pedido ON lp.id_pedido = pedido.id_pedido
-                                    WHERE lp.id_pedido = " . $id_pedido . " AND lp.cantidad > 0 AND pedido.fecha_fin IS NULL
-                                    GROUP BY lp.id_producto";
+                                        // Consultar los productos desde la base de datos
+                                        $sql = "SELECT lp.id_producto, lp.cantidad, prod.nombre, prod.descripcion, prod.precio
+                                FROM lineas_pedidos AS lp
+                                INNER JOIN productos AS prod ON lp.id_producto = prod.id_producto
+                                INNER JOIN pedidos AS pedido ON lp.id_pedido = pedido.id_pedido
+                                WHERE lp.id_pedido = " . $id_pedido . " AND lp.cantidad > 0 AND pedido.fecha_fin IS NULL
+                                GROUP BY lp.id_producto";
 
-                            $result = $conn->query($sql);
+                                        $result = $conn->query($sql);
 
-                            if ($result->num_rows > 0) {
-                                $importe = 0;
+                                        if ($result->num_rows > 0) {
+                                            $importe = 0;
 
-                                // Iterar sobre los productos en el carrito
-                                while ($row = $result->fetch_assoc()) {
-                                    $product_id = $row['id_producto'];
-                                    $product_name = $row['nombre'];
-                                    $product_description = $row['descripcion'];
-                                    $product_price = $row['precio'];
-                                    $product_quantity = $row['cantidad'];
+                                            // Iterar sobre los productos en el carrito
+                                            while ($row = $result->fetch_assoc()) {
+                                                $product_id = $row['id_producto'];
+                                                $product_name = $row['nombre'];
+                                                $product_description = $row['descripcion'];
+                                                $product_price = $row['precio'];
+                                                $product_quantity = $row['cantidad'];
 
-                                    // Calcular el subtotal por producto
-                                    $subtotal = $product_price * $product_quantity;
-                                    $importe += $subtotal;
+                                                // Calcular el subtotal por producto
+                                                $subtotal = $product_price * $product_quantity;
+                                                $importe += $subtotal;
 
-                                    // Mostrar los detalles del producto en el carrito
-                                    echo "<div class='product card border-primary mb-3' style='max-width: 18rem;'>";
-                                    echo "<div class='card-header bg-primary text-white'>$product_name</div>";
-                                    echo "<div class='card-body text-primary'>";
-                                    echo "<h5 class='card-title'>$product_description</h5>";
-                                    echo "<p class='card-text'>Precio: $product_price</p>";
-                                    echo "<p class='card-text'>Cantidad: $product_quantity</p>";
-                                    echo "<p class='card-text'>Subtotal: $subtotal</p>";
-                                    echo "<form action='usuario.php' method='post'>";
-                                    echo "<input type='hidden' name='id_producto' value='$product_id'>";
-                                    echo "<button class='btn btn-danger' name='remove_from_cart' type='submit'>Eliminar</button>";
-                                    echo "</form>";
-                                    echo "</div>";
-                                    echo "</div>";
-                                }
+                                                // Mostrar los detalles del producto en el carrito
+                                                echo "<div class='col-lg-4 mb-4'>";
+                                                echo "<div class='card'>";
+                                                echo "<div class='card-header bg-primary text-white'>$product_name</div>";
+                                                echo "<div class='card-body'>";
+                                                echo "<h5 class='card-title'>$product_description</h5>";
+                                                echo "<p class='card-text'>Precio: $product_price</p>";
+                                                echo "<p class='card-text'>Cantidad: $product_quantity</p>";
+                                                echo "<p class='card-text'>Subtotal: $subtotal</p>";
+                                                echo "<form action='usuario.php' method='post'>";
+                                                echo "<input type='hidden' name='id_producto' value='$product_id'>";
+                                                echo "<button class='btn btn-danger' name='remove_from_cart' type='submit'>Eliminar</button>";
+                                                echo "</form>";
+                                                echo "</div>";
+                                                echo "</div>";
+                                                echo "</div>";
+                                            }
 
-                                // Mostrar el total de dinero en el carrito
-                                echo "<p>Total a pagar: $importe €</p>";
-                            } else {
-                                echo "El carrito de compras está vacío.";
-                            }
+                                            // Mostrar el total de dinero en el carrito
+                                            echo "<div class='col-lg-12 mt-3'>";
+                                            echo "<div class='card'>";
+                                            echo "<div class='card-body'>";
+                                            echo "<h5 class='card-title'>Total a pagar:</h5>";
+                                            echo "<p class='card-text'>$importe €</p>";
+                                            echo "</div>";
+                                            echo "</div>";
+                                            echo "</div>";
+                                        } else {
+                                            echo "<div class='col-lg-12'>";
+                                            echo "<div class='alert alert-info'>El carrito de compras está vacío.</div>";
+                                            echo "</div>";
+                                        }
 
-                            mysqli_close($conn);
-                            ?>
-
+                                        mysqli_close($conn);
+                                        ?>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+
                 <script
                     src="https://www.paypal.com/sdk/js?client-id=Ae-QOggCqT3W10C1Q7U1lTDaYwmgEsmPuPxDuQEOD4uHZK0DMvJb2brCahcG-HMPPBti9IsX8pCsB-Db&currency=EUR"></script>
                 <!-- Set up a container element for the button -->

@@ -48,17 +48,18 @@ require_once '../lib/modulos.php';
             background-color: #ddd;
             color: #333;
         }
+        
     </style>
     <?php
     if (isset($_SESSION['usuario'])) {
         // Menu general
         menu_general(); ?>
-        <!-- Menu horizontal -->
+        <!-- Menu lateral -->
         <div class="d-flex vh-100">
-            <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 200px;">
+            <div class="menu-lateral d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 200px;">
                 <hr>
                 <!-- Crear submenu con sus opciones -->
-                <ul class="nav nav-pills flex-column mb-auto">
+                <ul class="nav nav-pills flex-column mb-auto flex-grow-1">
                     <li class="nav-item">
                         <form action="administrador.php" method="get">
                             <button type="submit" name="administradorPanel" class="btn btn-link nav-link text-white">
