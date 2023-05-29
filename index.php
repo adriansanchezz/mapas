@@ -13,28 +13,15 @@ sumarVisitaTotal();
 <head>
 
     <!-- Meter informacion general de head -->
-    <?php head_info(); ?>
-    <title>DisplayAds</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-    <style>
-        /* Mantener la relación de aspecto de las imágenes */
-        .carousel-inner img {
-            object-fit: contain;
-            height: 250px;
-        }
-        .carousel{
-            width: 40vh;
-        }
-    </style>
+    <?php head_index(); ?>
+    <link href="css/principal.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
     <!-- Imprimir menu del index, de forma modular sin introducir los codigos -->
     <?php menu_index(); ?>
     <br>
-    <br>
+
     <div class="container">
         <div class="row">
             <div class="col-md-7">

@@ -17,6 +17,7 @@ require_once '../lib/modulos.php';
             height: 500px;
         }
     </style>
+    <script src="../js/funciones.js"></script>
 </head>
 
 <body>
@@ -48,7 +49,6 @@ require_once '../lib/modulos.php';
             background-color: #ddd;
             color: #333;
         }
-        
     </style>
     <?php
     if (isset($_SESSION['usuario'])) {
@@ -143,7 +143,7 @@ require_once '../lib/modulos.php';
                         echo "<h1>UBICACIONES COMPRADAS</h1>";
                         if ($result->num_rows > 0) {
                             echo "<table>";
-                                    echo "<tr>
+                            echo "<tr>
                                     <th>Usuario</th>
                                     <th>Ubicación Envío</th>
                                     <th>Código Postal</th>
@@ -154,28 +154,27 @@ require_once '../lib/modulos.php';
                                 $sql2 = "SELECT * FROM empresas WHERE id_empresa = " . $row['comprador'];
                                 $result2 = $conn->query($sql2);
                                 if ($result2->num_rows > 0) {
-                                    
+
                                     while ($row2 = $result2->fetch_assoc()) {
                                         echo "
                                               
                                               <tr>
-                                                <td>". $row['email']."</td>
-                                                <td>". $row['ubicacion'] ."</td>
-                                                <td>". $row['codigo_postal']."</td>
-                                                <td>". $row2['nombre'] ."</td>
+                                                <td>" . $row['email'] . "</td>
+                                                <td>" . $row['ubicacion'] . "</td>
+                                                <td>" . $row['codigo_postal'] . "</td>
+                                                <td>" . $row2['nombre'] . "</td>
                                                 <td>
                                                     <form action administrador.php
                                                 </td>
                                               </tr>";
-                                        
                                     }
 
-                                    
+
                                 }
 
                             }
 
-                            echo "</table>";  
+                            echo "</table>";
                         }
                     }
                     ?>

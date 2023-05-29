@@ -1,0 +1,8 @@
+        /* Mantener la relación de aspecto de las imágenes */
+        .carousel-inner img {
+            object-fit: contain;
+            height: 250px;
+        }
+        .carousel{
+            width: 40vh;
+        }

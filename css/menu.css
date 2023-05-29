@@ -1,0 +1,104 @@
+* {
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    height: 100vh;
+}
+
+header {
+    height: 70px;
+    z-index: 100;
+    position: relative;
+    display: flex;
+    width: 100%;
+    min-width: 900px;
+    padding: 20px 0;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #24252A;
+    color: #fff;
+}
+
+.logo {
+    margin-left: 50px;
+    text-decoration: none;
+    /* Quitar subrayado */
+    color: white;
+    /* Heredar el color original */
+}
+
+.logo:hover {
+    margin-left: 50px;
+    text-decoration: none;
+    /* Quitar subrayado */
+    color: white;
+    /* Heredar el color original */
+}
+
+.cont-ul {
+    right: 0;
+    display: flex;
+    position: absolute;
+    top: 3px;
+    justify-content: space-between;
+    margin-right: 50px;
+    align-items: center;
+}
+a {
+    text-decoration: none;
+    /* Quitar subrayado */
+    color: white;
+    /* Heredar el color original */
+}
+li a {
+    text-decoration: none;
+    /* Quitar subrayado */
+    color: white;
+    /* Heredar el color original */
+}
+
+li a:hover {
+    text-decoration: none;
+    /* Quitar subrayado */
+    color: white;
+    /* Heredar el color original */
+}
+
+li {
+    list-style: none;
+    cursor: pointer;
+    padding: 20px;
+    transition: all 0.3s ease 0s;
+
+}
+
+li:hover {
+    background-color: #008849;
+    transform: scale(1.1);
+}
+
+.ul-second {
+    position: absolute;
+    display: none;
+    transform: translateY(20px);
+}
+
+.ul-second>li {
+    border-bottom: solid 1px #fff;
+    text-align: center;
+    background-color: rgba(40, 39, 39, 0.5);
+    padding: 20px;
+    transform: translateX(-52px);
+}
+
+.ul-second>li:hover {
+    background-color: #008849;
+}
+
+.nosotros:hover>.ul-second {
+    display: block;
+}

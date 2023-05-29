@@ -7,7 +7,7 @@ require_once 'lib/modulos.php';
 <html>
     <head>
         <!-- Meter informacion general de head -->
-        <?php head_info(); ?>
+        <?php head_index(); ?>
         <title>DisplayAds</title>
     </head>
     <body>

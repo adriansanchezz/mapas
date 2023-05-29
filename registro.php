@@ -15,7 +15,7 @@ require_once 'lib/modulos.php';
 
 <body>
     <!-- Imprimir menu del index, de forma modular sin introducir los codigos -->
-    <?php menu_index(); ?>
+    <?php head_index(); ?>
     <div class="formulario">
         <h1>Registrate</h1>
         <form action="registro.php" method="post">

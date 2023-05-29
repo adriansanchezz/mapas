@@ -4,35 +4,20 @@
 function menu_index()
 {
     ?>
-    <div class="NAVBAR">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="#">LOGO DE EMPRESA</a>
-
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="index.php">INICIO <span class="sr-only">(current)</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="nosotros.php">Nosotros</a>
-                    </li>
+    <header>
+        <a class="logo" href="index.php">DisplayAds</a>
+        <ul class="cont-ul">
+            <li><a href="index.php">Inicio</a></li>
+            <li class="nosotros">
+            <a href="nosotros.php">Nosotros</a>
+                <ul class="ul-second">
+                    <li><a href="nosotros.php">Contacto</a></li>
+                    <li><a href="nosotros.php">Ayuda</a></li>
                 </ul>
-
-                <form class="form-inline my-2 my-lg-0" action="login.php">
-                    <button class="btn btn-outline-success my-2 my-sm-0" name="login" type="submit">Iniciar Sesión</button>
-                </form>
-
-                <form class="form-inline my-2 my-lg-0" action="registro.php">
-                    <button class="btn btn-outline-success my-2 my-sm-0" name="registro" type="submit">Registrarse</button>
-                </form>
-            </div>
-        </nav>
-    </div>
+            </li>
+            <li><a href="login.php"><i class="fa-solid fa-right-to-bracket"></i></a></li>
+        </ul>
+    </header>
     <?php
 }
 ?>
@@ -45,7 +30,7 @@ function menu_general()
     <div class="NAVBAR">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container-fluid">
-                <a class="navbar-brand">DisplayADS</a>
+                <a class="navbar-brand">DisplayAds</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -150,12 +135,36 @@ function head_info()
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-    <link href="css/style.css" rel="stylesheet" type="text/css">
-    <link href="css/modulos.css" rel="stylesheet" type="text/css">
-    <link href="css/menu.css" rel="stylesheet" type="text/css">
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="../js/funciones.js"></script>
+    <link href="../css/style.css" rel="stylesheet" type="text/css">
+    <title>DisplayAds</title>
+    <?php
+}
+?>
+
+<?php
+// Link de head index
+function head_index()
+{
+    ?>
+    <meta charset="UTF-8">
+    <meta name="description"
+        content="Aplicación web que facilita a las empresas publicitarse a un precio asequible y a las personas ganar dinero por hacer de publicitadores">
+    <meta name="keywords"
+        content="anuncios, empresas, pequeñas empresas, recompensas, publicidad, publicitadores, crecer, carteles, ubicaciones">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="css/menu.css" rel="stylesheet" type="text/css">
+    <link href="css/principal.css" rel="stylesheet" type="text/css">
+    <link href="css/style.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     <title>DisplayAds</title>
     <?php
 }
@@ -205,119 +214,119 @@ function mapa($valor)
                             maxZoom: 18,
                         }).addTo(map);
 
-                        <?php
-                        // Establecer la conexión con la base de datos.
-                        $conn = conectar();
+                                <?php
+                                // Establecer la conexión con la base de datos.
+                                $conn = conectar();
 
-                        // Consultar los marcadores existentes en el mapa.
-                        $sql = "SELECT * FROM publicidades WHERE estado = 1 AND ocupado = 0 AND comprador IS NULL";
-                        $result = $conn->query($sql);
+                                // Consultar los marcadores existentes en el mapa.
+                                $sql = "SELECT * FROM publicidades WHERE estado = 1 AND ocupado = 0 AND comprador IS NULL";
+                                $result = $conn->query($sql);
 
-                        // Si da resultados entonces entra en el if.
-                        if ($result->num_rows > 0) {
-                            while ($row = $result->fetch_assoc()) {
-                                // Se crean variables con los datos de la consulta que interesa sacar en pantalla u operar con ellos.
-                                $latitud = $row['latitud'];
-                                $longitud = $row['longitud'];
-                                $descripcion = $row['descripcion'];
-                                $ubicacion = $row['ubicacion'];
-                                $precio = $row['precio'];
+                                // Si da resultados entonces entra en el if.
+                                if ($result->num_rows > 0) {
+                                    while ($row = $result->fetch_assoc()) {
+                                        // Se crean variables con los datos de la consulta que interesa sacar en pantalla u operar con ellos.
+                                        $latitud = $row['latitud'];
+                                        $longitud = $row['longitud'];
+                                        $descripcion = $row['descripcion'];
+                                        $ubicacion = $row['ubicacion'];
+                                        $precio = $row['precio'];
 
-                                // Se obtiene la id del tipo de propiedad.
-                                $tipo = $row['id_tipo_publicidad'];
+                                        // Se obtiene la id del tipo de propiedad.
+                                        $tipo = $row['id_tipo_publicidad'];
 
-                                // Y mediante una consulta a la tabla tipospropiedades se obtiene el nombre del tipo de propiedad que es.
-                                $sql2 = "SELECT nombre FROM tipospublicidades WHERE id_tipo_publicidad = $tipo";
-                                $result2 = $conn->query($sql2);
+                                        // Y mediante una consulta a la tabla tipospropiedades se obtiene el nombre del tipo de propiedad que es.
+                                        $sql2 = "SELECT nombre FROM tipospublicidades WHERE id_tipo_publicidad = $tipo";
+                                        $result2 = $conn->query($sql2);
 
-                                // Si se obtiene resultado entonces se obtiene el nombre.
-                                if ($result2) {
-                                    $row2 = $result2->fetch_assoc();
-                                    $nombre_tipo = $row2['nombre'];
-                                } else {
-                                    // Si no, pone que no se ha encontrado.
-                                    $nombre_tipo = "Tipo de publicidad no encontrado";
+                                        // Si se obtiene resultado entonces se obtiene el nombre.
+                                        if ($result2) {
+                                            $row2 = $result2->fetch_assoc();
+                                            $nombre_tipo = $row2['nombre'];
+                                        } else {
+                                            // Si no, pone que no se ha encontrado.
+                                            $nombre_tipo = "Tipo de publicidad no encontrado";
+                                        }
+                                        // La api key de google. Para poder usar el google static map.
+                                        $apiKey = 'AIzaSyADr5gpzLPePzkWwz8C94wBQ21DzQ4GGVU'; // Reemplaza con tu propia API Key de Google Maps Static
+                        
+                                        // Se obtiene una imagen de la localización mediante coordenadas.
+                                        $imageUrl = 'https://maps.googleapis.com/maps/api/streetview?size=400x300&location=' . $latitud . ',' . $longitud . '&key=' . $apiKey;
+                                        ?>
+
+                                                // Crear un marcador para cada registro de la base de datos.
+                                                var marker = L.marker([<?php echo $latitud; ?>, <?php echo $longitud; ?>]).addTo(map);
+                                        // Se añade un popUp para que salga una ventana al clickar un marcador existente en el mapa.
+                                        var marker = L.marker([<?php echo $latitud; ?>, <?php echo $longitud; ?>]).addTo(map);
+                                        // Se añade un popUp para que salga una ventana al clickar un marcador existente en el mapa.
+                                        marker.bindPopup(`
+                                                                <div class='popup-content'>
+                                                                <h3><?php echo $nombre_tipo . " " . $ubicacion . " " . $precio . "€"; ?></h3>
+                                                                <p><?php echo $descripcion; ?></p>
+                                                                <img src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación'>
+                                                                </div>
+                                                                <form action='empresa.php' method='POST'>
+                                                                <input type='hidden' name='product_id' value='<?php echo $row['id_publicidad'] ?>'>
+                                                                <input type='hidden' name='lat' value='<?php echo $latitud; ?>'>
+                                                                <input type='hidden' name='lng' value='<?php echo $longitud; ?>'>
+                                                                <input type='hidden' name='ubicacion' value='<?php echo $ubicacion; ?>'>
+                                                                <input type='hidden' name='descripcion' value='<?php echo $descripcion; ?>'>
+                                                                <input type='hidden' name='precio' value='<?php echo $precio; ?>'>
+                                                                <?php
+                                                                $sql = "SELECT * FROM pedidos as p, lineas_pedidos as lp WHERE p.id_pedido = lp.id_pedido AND p.fecha_fin IS NULL AND p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND lp.id_publicidad = " . $row['id_publicidad'] . " AND lp.cantidad > 0;";
+                                                                if (sqlSELECT($sql)->num_rows > 0) {
+                                                                    echo "<p style='color: red;'>YA SELECCIONADA</p>";
+                                                                }
+                                                                ?>
+                                                                <button type='submit' name='add_to_cart' value='1'>Seleccionar</button>
+                                                                </form>
+                                                                `);
+
+
+
+                                                <?php
+                                    }
                                 }
-                                // La api key de google. Para poder usar el google static map.
-                                $apiKey = 'AIzaSyADr5gpzLPePzkWwz8C94wBQ21DzQ4GGVU'; // Reemplaza con tu propia API Key de Google Maps Static
-                
-                                // Se obtiene una imagen de la localización mediante coordenadas.
-                                $imageUrl = 'https://maps.googleapis.com/maps/api/streetview?size=400x300&location=' . $latitud . ',' . $longitud . '&key=' . $apiKey;
+                                // Se cierra la conexión de la BD.
+                                mysqli_close($conn);
                                 ?>
 
-                                // Crear un marcador para cada registro de la base de datos.
-                                var marker = L.marker([<?php echo $latitud; ?>, <?php echo $longitud; ?>]).addTo(map);
-                                // Se añade un popUp para que salga una ventana al clickar un marcador existente en el mapa.
-                                var marker = L.marker([<?php echo $latitud; ?>, <?php echo $longitud; ?>]).addTo(map);
-                                // Se añade un popUp para que salga una ventana al clickar un marcador existente en el mapa.
-                                marker.bindPopup(`
-                                                <div class='popup-content'>
-                                                <h3><?php echo $nombre_tipo . " " . $ubicacion . " " . $precio . "€"; ?></h3>
-                                                <p><?php echo $descripcion; ?></p>
-                                                <img src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación'>
-                                                </div>
-                                                <form action='empresa.php' method='POST'>
-                                                <input type='hidden' name='product_id' value='<?php echo $row['id_publicidad'] ?>'>
-                                                <input type='hidden' name='lat' value='<?php echo $latitud; ?>'>
-                                                <input type='hidden' name='lng' value='<?php echo $longitud; ?>'>
-                                                <input type='hidden' name='ubicacion' value='<?php echo $ubicacion; ?>'>
-                                                <input type='hidden' name='descripcion' value='<?php echo $descripcion; ?>'>
-                                                <input type='hidden' name='precio' value='<?php echo $precio; ?>'>
-                                                <?php
-                                                    $sql = "SELECT * FROM pedidos as p, lineas_pedidos as lp WHERE p.id_pedido = lp.id_pedido AND p.fecha_fin IS NULL AND p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND lp.id_publicidad = " . $row['id_publicidad'] . " AND lp.cantidad > 0;";
-                                                    if (sqlSELECT($sql)->num_rows > 0) {
-                                                        echo "<p style='color: red;'>YA SELECCIONADA</p>";
-                                                    }
-                                                ?>
-                                                <button type='submit' name='add_to_cart' value='1'>Seleccionar</button>
-                                                </form>
-                                                `);
+                            // Función para buscar una dirección mediante una barra de búsqueda.
+                            function buscarDireccion() {
+                                var direccion = document.getElementById('direccion').value;
 
+                                // Realizar la petición de geocodificación mediante un fetch.then.then.catch para asegurarse de que funciona.
+                                fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + direccion)
+                                    .then(function (response) {
+                                        return response.json();
+                                    })
+                                    .then(function (data) {
+                                        if (data.length > 0) {
+                                            var latitud = parseFloat(data[0].lat);
+                                            var longitud = parseFloat(data[0].lon);
 
+                                            // Centrar el mapa en la ubicación encontrada.
+                                            map.setView([latitud, longitud], 13);
 
-                                <?php
-                            }
-                        }
-                        // Se cierra la conexión de la BD.
-                        mysqli_close($conn);
-                        ?>
+                                            if (marker) {
+                                                map.removeLayer(marker);
+                                            }
 
-                        // Función para buscar una dirección mediante una barra de búsqueda.
-                        function buscarDireccion() {
-                            var direccion = document.getElementById('direccion').value;
+                                            marker = L.marker([latitud, longitud]).addTo(map);
+                                            marker.bindPopup("Ubicación encontrada").openPopup();
 
-                            // Realizar la petición de geocodificación mediante un fetch.then.then.catch para asegurarse de que funciona.
-                            fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + direccion)
-                                .then(function (response) {
-                                    return response.json();
-                                })
-                                .then(function (data) {
-                                    if (data.length > 0) {
-                                        var latitud = parseFloat(data[0].lat);
-                                        var longitud = parseFloat(data[0].lon);
-
-                                        // Centrar el mapa en la ubicación encontrada.
-                                        map.setView([latitud, longitud], 13);
-
-                                        if (marker) {
-                                            map.removeLayer(marker);
+                                            // Actualizar campos ocultos en el formulario con las coordenadas.
+                                            document.getElementById('lat').value = latitud;
+                                            document.getElementById('lng').value = longitud;
+                                        } else {
+                                            alert("No se encontró la dirección especificada.");
                                         }
-
-                                        marker = L.marker([latitud, longitud]).addTo(map);
-                                        marker.bindPopup("Ubicación encontrada").openPopup();
-
-                                        // Actualizar campos ocultos en el formulario con las coordenadas.
-                                        document.getElementById('lat').value = latitud;
-                                        document.getElementById('lng').value = longitud;
-                                    } else {
-                                        alert("No se encontró la dirección especificada.");
-                                    }
-                                })
-                                .catch(function (error) {
-                                    // Por consola se señala el error.
-                                    console.log('Error:', error);
-                                });
-                        }
+                                    })
+                                    .catch(function (error) {
+                                        // Por consola se señala el error.
+                                        console.log('Error:', error);
+                                    });
+                            }
                     </script>
                 </div>
             </div>
@@ -372,109 +381,109 @@ function mapa($valor)
                     }).addTo(map);
 
 
-                    <?php
-                    // Establecer la conexión con la base de datos.
-                    $conn = conectar();
+                            <?php
+                            // Establecer la conexión con la base de datos.
+                            $conn = conectar();
 
-                    // Consultar los marcadores existentes en el mapa.
-                    $sql = "SELECT * FROM publicidades WHERE id_usuario = ?";
-                    $stmt = $conn->prepare($sql);
+                            // Consultar los marcadores existentes en el mapa.
+                            $sql = "SELECT * FROM publicidades WHERE id_usuario = ?";
+                            $stmt = $conn->prepare($sql);
 
-                    if ($stmt) {
-                        // Asignar el valor del parámetro
-                        $id_usuario = $_SESSION['usuario']['id_usuario'];
+                            if ($stmt) {
+                                // Asignar el valor del parámetro
+                                $id_usuario = $_SESSION['usuario']['id_usuario'];
 
-                        // Vincular el parámetro a la sentencia preparada
-                        $stmt->bind_param("i", $id_usuario);
+                                // Vincular el parámetro a la sentencia preparada
+                                $stmt->bind_param("i", $id_usuario);
 
-                        // Ejecutar la consulta
-                        $stmt->execute();
+                                // Ejecutar la consulta
+                                $stmt->execute();
 
-                        // Obtener los resultados
-                        $result = $stmt->get_result();
+                                // Obtener los resultados
+                                $result = $stmt->get_result();
 
-                        // Si da resultados entonces entra en el if.
-                        if ($result->num_rows > 0) {
-                            while ($row = $result->fetch_assoc()) {
-                                // Se crean variables con los datos de la consulta que interesa sacar en pantalla u operar con ellos.
-                                $latitud = $row['latitud'];
-                                $longitud = $row['longitud'];
-                                $descripcion = $row['descripcion'];
-                                $ubicacion = $row['ubicacion'];
-                                $precio = $row['precio'];
+                                // Si da resultados entonces entra en el if.
+                                if ($result->num_rows > 0) {
+                                    while ($row = $result->fetch_assoc()) {
+                                        // Se crean variables con los datos de la consulta que interesa sacar en pantalla u operar con ellos.
+                                        $latitud = $row['latitud'];
+                                        $longitud = $row['longitud'];
+                                        $descripcion = $row['descripcion'];
+                                        $ubicacion = $row['ubicacion'];
+                                        $precio = $row['precio'];
 
-                                // Se obtiene la id del tipo de propiedad.
-                                $tipo = $row['id_tipo_publicidad'];
+                                        // Se obtiene la id del tipo de propiedad.
+                                        $tipo = $row['id_tipo_publicidad'];
 
-                                // Y mediante una consulta a la tabla tipospublicidades se obtiene el nombre del tipo de propiedad que es.
-                                $sql2 = "SELECT nombre FROM tipospublicidades WHERE id_tipo_publicidad = $tipo";
-                                $result2 = $conn->query($sql2);
+                                        // Y mediante una consulta a la tabla tipospublicidades se obtiene el nombre del tipo de propiedad que es.
+                                        $sql2 = "SELECT nombre FROM tipospublicidades WHERE id_tipo_publicidad = $tipo";
+                                        $result2 = $conn->query($sql2);
 
-                                // Si se obtiene resultado entonces se obtiene el nombre.
-                                if ($result2) {
-                                    $row2 = $result2->fetch_assoc();
-                                    $nombre_tipo = $row2['nombre'];
-                                } else {
-                                    // Si no, pone que no se ha encontrado.
-                                    $nombre_tipo = "Tipo de publicidad no encontrado";
+                                        // Si se obtiene resultado entonces se obtiene el nombre.
+                                        if ($result2) {
+                                            $row2 = $result2->fetch_assoc();
+                                            $nombre_tipo = $row2['nombre'];
+                                        } else {
+                                            // Si no, pone que no se ha encontrado.
+                                            $nombre_tipo = "Tipo de publicidad no encontrado";
+                                        }
+
+                                        $sql3 = "SELECT * FROM fotos WHERE id_publicidad =" . $row['id_publicidad'];
+                                        $result3 = $conn->query($sql3);
+                                        $mostrarImagen = '';
+                                        if ($result3->num_rows > 0) {
+                                            // Recuperar la información de la imagen
+                                            $row3 = $result3->fetch_assoc();
+                                            $imagen = $row3["foto"];
+                                            // Mostrar la imagen en la página
+                                            $mostrarImagen = "<img src='data:image/jpeg;base64," . base64_encode($imagen) . "' alt='Imagen del producto'>";
+                                        }
+
+                                        // La api key de google. Para poder usar el google static map.
+                                        $apiKey = 'AIzaSyADr5gpzLPePzkWwz8C94wBQ21DzQ4GGVU'; // Reemplaza con tu propia API Key de Google Maps Static
+                    
+                                        // Se obtiene una imagen de la localización mediante coordenadas.
+                                        $imageUrl = 'https://maps.googleapis.com/maps/api/streetview?size=400x300&location=' . $latitud . ',' . $longitud . '&key=' . $apiKey;
+                                        ?>
+
+                                                    // Crear un marcador para cada registro de la base de datos.
+                                                    var marker = L.marker([<?php echo $latitud; ?>, <?php echo $longitud; ?>]).addTo(map);
+                                            // Se añade un popUp para que salga una ventana al clickar un marcador existente en el mapa.
+                                            marker.bindPopup(`<style>img{height: 200px;}</style><div class='popup-content'>
+                                                                                                        <h3 class='popup-title'><?php echo $nombre_tipo; ?></h3>
+                                                                                                        <h4 class='popup-location'><?php echo $ubicacion; ?></h4>
+                                                                                                        <h4 class='popup-price'><?php echo $precio . '€'; ?></h4>
+                                                                                                        <p class='popup-description'><?php echo $descripcion; ?></p>
+                                                                                                        Imagen Google: <img class='popup-image' src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación'>
+                                                                                                        Imagen usuario <?php echo $mostrarImagen; ?></div>
+                                                                                                        <form action='usuario.php' method='POST'>
+                                                                                                        <input type='hidden' name='id_publicidad' value='<?php echo $row['id_publicidad']; ?>'>
+                                                                                                        <?php
+                                                                                                        $conn = conectar();
+                                                                                                        $sql = "SELECT * FROM publicidades as p, empresas as em WHERE p.ocupado = 1 AND p.estado = 1 AND p.comprador IS NOT NULL AND p.comprador = em.id_empresa AND p.id_publicidad = " . $row['id_publicidad'];
+
+                                                                                                        $resultado = $conn->query($sql);
+
+                                                                                                        if ($resultado->num_rows > 0) {
+                                                                                                            // Si se obtienen resultados, se recorren las filas
+                                                                                                            $row4 = $resultado->fetch_assoc();
+
+                                                                                                            // Mostrar el mensaje de publicidad vendida
+                                                                                                            echo "<p style='color: red;'>YA VENDIDA A " . $row4['nombre'] . "</p>";
+                                                                                                        }
+                                                                                                        ?>
+
+                                                                                                        <button class='popup-delete-button' type='submit' name='borrarMarcador'>Borrar</button>
+                                                                                                    </form>`);
+
+
+                                                                                <?php
+                                    }
                                 }
-
-                                $sql3 = "SELECT * FROM fotos WHERE id_publicidad =" . $row['id_publicidad'];
-                                $result3 = $conn->query($sql3);
-                                $mostrarImagen = '';
-                                if ($result3->num_rows > 0) {
-                                    // Recuperar la información de la imagen
-                                    $row3 = $result3->fetch_assoc();
-                                    $imagen = $row3["foto"];
-                                    // Mostrar la imagen en la página
-                                    $mostrarImagen = "<img src='data:image/jpeg;base64," . base64_encode($imagen) . "' alt='Imagen del producto'>";
-                                }
-
-                                // La api key de google. Para poder usar el google static map.
-                                $apiKey = 'AIzaSyADr5gpzLPePzkWwz8C94wBQ21DzQ4GGVU'; // Reemplaza con tu propia API Key de Google Maps Static
-            
-                                // Se obtiene una imagen de la localización mediante coordenadas.
-                                $imageUrl = 'https://maps.googleapis.com/maps/api/streetview?size=400x300&location=' . $latitud . ',' . $longitud . '&key=' . $apiKey;
-                                ?>
-
-                                // Crear un marcador para cada registro de la base de datos.
-                                var marker = L.marker([<?php echo $latitud; ?>, <?php echo $longitud; ?>]).addTo(map);
-                                // Se añade un popUp para que salga una ventana al clickar un marcador existente en el mapa.
-                                marker.bindPopup(`<style>img{height: 200px;}</style><div class='popup-content'>
-                                                                                    <h3 class='popup-title'><?php echo $nombre_tipo; ?></h3>
-                                                                                    <h4 class='popup-location'><?php echo $ubicacion; ?></h4>
-                                                                                    <h4 class='popup-price'><?php echo $precio . '€'; ?></h4>
-                                                                                    <p class='popup-description'><?php echo $descripcion; ?></p>
-                                                                                    Imagen Google: <img class='popup-image' src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación'>
-                                                                                    Imagen usuario <?php echo $mostrarImagen; ?></div>
-                                                                                    <form action='usuario.php' method='POST'>
-                                                                                    <input type='hidden' name='id_publicidad' value='<?php echo $row['id_publicidad']; ?>'>
-                                                                                    <?php
-                                                                                    $conn = conectar();
-                                                                                    $sql = "SELECT * FROM publicidades as p, empresas as em WHERE p.ocupado = 1 AND p.estado = 1 AND p.comprador IS NOT NULL AND p.comprador = em.id_empresa AND p.id_publicidad = " . $row['id_publicidad'];
-
-                                                                                    $resultado = $conn->query($sql);
-
-                                                                                    if ($resultado->num_rows > 0) {
-                                                                                        // Si se obtienen resultados, se recorren las filas
-                                                                                        $row4 = $resultado->fetch_assoc();
-
-                                                                                        // Mostrar el mensaje de publicidad vendida
-                                                                                        echo "<p style='color: red;'>YA VENDIDA A " . $row4['nombre'] . "</p>";
-                                                                                    }
-                                                                                    ?>
-
-                                                                                    <button class='popup-delete-button' type='submit' name='borrarMarcador'>Borrar</button>
-                                                                                </form>`);
-
-
-                                                            <?php
                             }
-                        }
-                    }
-                    // Se cierra la conexión de la BD.
-                    mysqli_close($conn);
-                    ?>
+                            // Se cierra la conexión de la BD.
+                            mysqli_close($conn);
+                            ?>
 
 
 
@@ -1155,7 +1164,7 @@ function notificaciones()
         }
 
         ?>
-        <div class="notification">¡Bienvenido a DisplayADS</div>
+        <div class="notification">¡Bienvenido a DisplayAds</div>
 
     </div>
 
