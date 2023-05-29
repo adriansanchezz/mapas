@@ -50,15 +50,16 @@ require_once 'lib/modulos.php';
             <div class="redirigir">
                 ¿Ya tienes una cuenta? <a href="login.php">Iniciar Sesion</a>
             </div>
-        </form>
-
-
-    </div>
-    <?php
+            <?php
     if (isset($_POST['registrar'])) {
         registrarUser($_POST['username'], $_POST['correo'], $_POST['telefono'], $_POST['password'], $_POST['password2']);
     }
     ?>
+        </form>
+
+
+    </div>
+
 </body>
 
 </html>
