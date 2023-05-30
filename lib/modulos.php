@@ -178,6 +178,7 @@ function mapa($valor)
     // Esta función está enfocada al menú de empresa.
     if ($valor == "ver") {
         ?>
+        
         <!-- Se crea toda la maquetación del menú de empresa. -->
         <div class="flex-grow-1">
             <div class="p-3" style="display: block;">
@@ -186,12 +187,14 @@ function mapa($valor)
                         <button class="btn btn-outline-success my-2 my-sm-0" name="empresaCarrito"
                             type="submit">Carrito</button>
                     </form>
-                    <h1>Bienvenido a nuestro mapa. </h1>
+                    <h1>Bienvenido a nuestro mapa</h1>
                     <h4>Selecciona alguna ubicación para ver información:</h4>
                     <h6>O busca la ubicación que desees.</h6>
-                    ¿Quieres buscar una ubicación?<input type="text" id="direccion" placeholder="Buscar ubicación...">
-                    <button type="button" onclick="buscarDireccion()">Buscar</button>
-
+                    <div>
+                        ¿Quieres buscar una ubicación?
+                        <input type="text" id="direccion" placeholder="Buscar ubicación...">
+                        <button type="button" onclick="buscarDireccion()">Buscar</button>
+                    </div>
                     <div id="map"></div>
                     <!-- Se le da estilos al mapa para que quede más estético. -->
                     <style>
@@ -203,7 +206,7 @@ function mapa($valor)
                             /* Sombra */
                         }
                     </style>
-                    <div id="infoContainer"></div>
+                    
                     <script>
                         // Creación del mapa.
                         var map = L.map('map').setView([43.3828500, -3.2204300], 13);
