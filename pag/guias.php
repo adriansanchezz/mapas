@@ -18,7 +18,7 @@ require_once '../lib/modulos.php';
 </head>
 
 <body>
-<div class="separar">
+    <div class="separar">
         <?php
         if (isset($_SESSION['usuario'])) {
             // Menu general
@@ -203,12 +203,12 @@ require_once '../lib/modulos.php';
             ?>
 
             <?php
-    } else {
-        echo ('Acceso denegado');
-        print '<a href ="../index.php"><button>Volver</button></a>';
-        session_destroy();
-    }
-    ?>
+        } else {
+            echo ('Acceso denegado');
+            print '<a href ="../index.php"><button>Volver</button></a>';
+            session_destroy();
+        }
+        ?>
 </body>
 
 </html>
