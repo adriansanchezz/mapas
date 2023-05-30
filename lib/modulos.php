@@ -27,28 +27,19 @@ function menu_index()
 function menu_general()
 {
     ?>
-    <div class="NAVBAR">
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div class="container-fluid">
-                <a class="navbar-brand">DisplayAds</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-item active">
-                            <form action="principal.php">
-                                <button class="btn nav-link" name="inicio" type="submit">Inicio </button>
-                            </form>
-                        </li>
+            <header>
+            <div class="cuerpo-menu">
+                <nav class="menu">
+                    <ul>
+                        <li><a href="principal.php" id="selected"></a></li>
                         <?php
                         if (validarUsuario($_SESSION['usuario']['id_usuario'])) {
                             ?>
-                            <li class="nav-item">
-                                <form action="usuario.php">
-                                    <button class="btn nav-link" name="usuarioPrincipal" type="submit">Usuario</button>
-                                </form>
+                            <li><a href="usuario.php">Usuario</a>
+                                <ul>
+                                    <li><a href="usuario.php?usuarioMapa">Mapa</a></li>
+                                    <li><a href="usuario.php?usuarioTienda">Tienda</a></li>
+                                </ul>
                             </li>
                             <?php
                         }
@@ -57,10 +48,11 @@ function menu_general()
                         <?php
                         if (validarVigilante($_SESSION['usuario']['id_usuario'])) {
                             ?>
-                            <li class="nav-item">
-                                <form action="vigilante.php">
-                                    <button class="btn nav-link" name="vigilantePrincipal" type="submit">Vigilante</button>
-                                </form>
+                            <li><a href="vigilante.php?vigilantePrincipal">Vigilante</a>
+                                <ul>
+                                    <li><a href="vigilante.php?misiones">Misiones</a></li>
+                                    <li><a href="vigilante.php?recompesas">Recompensas</a></li>
+                                </ul>
                             </li>
                             <?php
                         }
@@ -69,57 +61,53 @@ function menu_general()
                         <?php
                         if (validarEmpresa($_SESSION['usuario']['id_usuario'])) {
                             ?>
-                            <li class="nav-item">
-                                <form action="empresa.php">
-                                    <button class="btn nav-link" name="empresaPrincipal" type="submit">Empresa</button>
-                                </form>
+                            <li><a href="empresa.php?empresaPrincipal">Empresa</a>
+                                <ul>
+                                    <li><a href="empresa.php?empresaMapa">Publicitarse</a></li>
+                                    <li><a href="empresa.php?">Informacion</a></li>
+                                </ul>
                             </li>
                             <?php
                         } else {
                             ?>
-                            <li class="nav-item">
-                                <form action="empresa.php">
-                                    <button class="btn nav-link" name="noEmpresaPrincipal" type="submit">Empresa</button>
-                                </form>
-                            </li>
+                            <li><a href="empresa.php?empresaPrincipal">Empresa</a></li>
                             <?php
                         }
                         ?>
-
+                        
                         <?php
                         if (validarAdmin($_SESSION['usuario']['id_usuario'])) {
                             ?>
-                            <li class="nav-item">
-                                <form action="administrador.php">
-                                    <button class="btn nav-link" name="administradorPanel" type="submit">Administrador</button>
-                                </form>
+                            <li><a href="administrador.php?administradorPanel">Administrador</a>
+                                <ul>
+                                    <li><a href="administrador.php?administradorUsuarios">Usuario</a></li>
+                                    <li><a href="administrador.php?administradorProductos">Productos</a></li>
+                                    <li><a href="administrador.php?administradorNoticias">Noticias</a></li>
+                                    <li><a href="administrador.php?administradorMisiones">Misiones</a></li>
+                                </ul>
                             </li>
                             <?php
                         }
                         ?>
+                        <li><a href="cuenta.php">Cuenta</a></li>
+                        <li><a href="soporte.php">Soporte</a></li>
 
-                    </ul>
+                        <li>                    
+                            <div class="nav-link">
+                                <i class="fa-sharp fa-solid fa-bell bell"  style="color: #ffffff;"></i>
+                            </div>
+                        </li>
+                        
 
-                    <form class="form-inline my-2 my-lg-0" action="cuenta.php" method="post">
-                        <input class="btn btn-outline-success my-2 my-sm-0" type="submit" name="cuenta"
-                            value="Cuenta" />&nbsp;&nbsp;
-                    </form>
+                        <li>                    
+                            <form class="form-inline my-2 my-lg-0" action="../index.php" method="post">
+                                <button class="btn nav-link" name="cerrarSesion" type="submit">
+                                    <i class="fa-solid fa-right-from-bracket" style="color: #ffffff;"></i>
+                                </button>
+                            </form>
+                        </li>
 
-                    <form class="form-inline my-2 my-lg-0" action="soporte.php" method="post">
-                        <input class="btn btn-outline-success my-2 my-sm-0" type="submit" name="soporte" value="Soporte" />
-                    </form>
-
-                    <div class="nav-link">
-                        <i class="fa-sharp fa-solid fa-bell bell"  style="color: #ffffff;"></i>
-                    </div>
-
-                    <form class="form-inline my-2 my-lg-0" action="../index.php" method="post">
-                        <button class="btn nav-link" name="cerrarSesion" type="submit">
-                            <i class="fa-solid fa-right-from-bracket" style="color: #ffffff;"></i>
-                        </button>
-                    </form>
-
-                    <div class="notification-bar">
+                        <div class="notification-bar">
                         <?php
                         // Consultar los productos desde la base de datos
                     
@@ -186,10 +174,10 @@ function menu_general()
                         bell.addEventListener('click', () => { notificationBar.style.display = notificationBar.style.display === 'none' ? 'block' : 'none'; });
                     </script>
 
-                </div>
+                    </ul>
+                </nav>
             </div>
-        </nav>
-    </div>
+        </header>
     <?php
 }
 ?>

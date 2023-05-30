@@ -77,10 +77,15 @@ require_once '../lib/modulos.php';
             background-color: #0056b3;
         }
     </style>
-    <?php
-    if (isset($_SESSION['usuario'])) {
-        // Menu general
-        menu_general();
+    <div class="separar">
+        <?php
+        if (isset($_SESSION['usuario'])) {
+            // Menu general
+            menu_general();
+            ?>
+        </div>
+
+        <?php
 
         if (isset($_POST['opcion'])) {
             ?>
@@ -113,9 +118,10 @@ require_once '../lib/modulos.php';
                         </div>
 
                         <?php
-                        if ($soporte == "Reportar") {
+                        if ($soporte == "Reportar" || $soporte == "Error") {
                             ?>
                             <div class='form-group'>
+                                <label for="foto">Imagen:</label>
                                 <input type='file' name='imagen' accept='image/*' required>
                             </div>
                             <?php
@@ -199,12 +205,12 @@ require_once '../lib/modulos.php';
             }
         }
 
-    } else {
-        echo ('Acceso denegado');
-        print '<a href ="../index.php"><button>Volver</button></a>';
-        session_destroy();
-    }
-    ?>
+        } else {
+            echo ('Acceso denegado');
+            print '<a href ="../index.php"><button>Volver</button></a>';
+            session_destroy();
+        }
+        ?>
 
 </body>
 

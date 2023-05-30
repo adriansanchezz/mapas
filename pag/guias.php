@@ -18,10 +18,12 @@ require_once '../lib/modulos.php';
 </head>
 
 <body>
-    <?php
-    if (isset($_SESSION['usuario'])) {
-        // Menu general
-        menu_general(); ?>
+<div class="separar">
+        <?php
+        if (isset($_SESSION['usuario'])) {
+            // Menu general
+            menu_general(); ?>
+        </div>
         <!-- Crear submenu con sus opciones -->
         <div class="d-flex vh-100">
             <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 200px;">

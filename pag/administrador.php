@@ -50,10 +50,12 @@ require_once '../lib/modulos.php';
             color: #333;
         }
     </style>
-    <?php
-    if (isset($_SESSION['usuario'])) {
-        // Menu general
-        menu_general(); ?>
+    <div class="separar">
+        <?php
+        if (isset($_SESSION['usuario'])) {
+            // Menu general
+            menu_general(); ?>
+        </div>
         <!-- Menu lateral -->
         <div class="d-flex vh-100">
             <div class="menu-lateral d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 200px;">
