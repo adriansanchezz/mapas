@@ -1,3 +1,7 @@
+/* Estilos para la campana */
+.bell {
+    cursor: pointer;
+}
 
 /* Estilos para la barra de notificaciones */
 .notification-bar {
