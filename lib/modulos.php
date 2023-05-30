@@ -82,7 +82,7 @@ function menu_general()
                                 <ul>
                                     <li><a href="administrador.php?administradorUsuarios">Usuario</a></li>
                                     <li><a href="administrador.php?administradorProductos">Productos</a></li>
-                                    <li><a href="administrador.php?administradorNoticias">Noticias</a></li>
+                                    <!-- <li><a href="administrador.php?administradorNoticias">Noticias</a></li> -->
                                     <li><a href="administrador.php?administradorMisiones">Misiones</a></li>
                                 </ul>
                             </li>

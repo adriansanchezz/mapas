@@ -83,13 +83,13 @@ require_once '../lib/modulos.php';
                             </button>
                         </form>
                     </li>
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <form action="administrador.php" method="get">
                             <button type="submit" name="administradorNoticias" class="btn btn-link nav-link text-white">
                                 Noticias
                             </button>
                         </form>
-                    </li>
+                    </li> -->
                     <li class="nav-item">
                         <form action="administrador.php" method="get">
                             <button type="submit" name="administradorMisiones" class="btn btn-link nav-link text-white">
