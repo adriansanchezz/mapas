@@ -10,18 +10,7 @@ require_once '../lib/modulos.php';
     <!-- Meter informacion general de head -->
     <?php head_info(); ?>
     <title>DisplayAds</title>
-    <style>
-        .popup-content {
-            max-width: 300px;
-            /* Ajusta el ancho máximo según tus necesidades */
-        }
-
-        .popup-content img {
-            max-width: 100%;
-            max-height: 300px;
-            /* Ajusta la altura máxima según tus necesidades */
-        }
-    </style>
+    <link rel="stylesheet" href="../css/empresa.css">
 </head>
 
 <body>
