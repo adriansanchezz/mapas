@@ -18,8 +18,7 @@ require_once '../lib/modulos.php';
     if (isset($_SESSION['usuario'])) {
         // Menu general
         menu_general();
-        notificaciones();
-
+        
         ?>
         <!-- Crear submenu con sus opciones -->
         <div class="d-flex vh-100">

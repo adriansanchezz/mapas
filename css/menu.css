@@ -19,7 +19,7 @@ header {
     padding: 20px 0;
     justify-content: space-between;
     align-items: center;
-    background-color: #24252A;
+    background: linear-gradient(10deg, rgb(226, 249, 255), rgb(0, 102, 131));
     color: #fff;
 }
 
@@ -27,7 +27,7 @@ header {
     margin-left: 50px;
     text-decoration: none;
     /* Quitar subrayado */
-    color: white;
+    color: black;
     /* Heredar el color original */
 }
 
@@ -48,20 +48,22 @@ header {
     margin-right: 50px;
     align-items: center;
 }
+
 a {
     text-decoration: none;
     /* Quitar subrayado */
     color: white;
     /* Heredar el color original */
 }
-li a {
+
+ul a {
     text-decoration: none;
     /* Quitar subrayado */
     color: white;
     /* Heredar el color original */
 }
 
-li a:hover {
+ul a:hover {
     text-decoration: none;
     /* Quitar subrayado */
     color: white;
@@ -69,6 +71,7 @@ li a:hover {
 }
 
 li {
+    font-weight: bold;
     list-style: none;
     cursor: pointer;
     padding: 20px;
@@ -87,7 +90,7 @@ li:hover {
     transform: translateY(20px);
 }
 
-.ul-second>li {
+.ul-second>a>li {
     border-bottom: solid 1px #fff;
     text-align: center;
     background-color: rgba(40, 39, 39, 0.5);
@@ -95,7 +98,7 @@ li:hover {
     transform: translateX(-52px);
 }
 
-.ul-second>li:hover {
+.ul-second>a>li:hover {
     background-color: #008849;
 }
 
