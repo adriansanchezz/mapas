@@ -48,7 +48,7 @@ nav ul li{
 
 /*Dar tamaño, imagen para el icono de la pagina*/
 nav > ul > li:first-child > a{
-    background-image: url(icono_menu.png);
+    background-image: url(../img/icono/icono_menu.png);
     background-size: 26px;
     background-repeat: no-repeat;
     background-position: center center;
@@ -57,7 +57,7 @@ nav > ul > li:first-child > a{
 
 /*Dar tamaño, imagen para el icono de la pagina al pulsar*/
 nav > ul > li:first-child:hover > a{
-    background-image: url(icono_menu.png);
+    background-image: url(../img/icono/icono_menu.png);
     background-size: 26px;
     background-repeat: no-repeat;
     background-position: center center;
