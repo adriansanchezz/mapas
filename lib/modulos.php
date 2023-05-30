@@ -424,6 +424,11 @@ function mapa($valor)
                         box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
                         /* Sombra */
                     }
+
+                    #imagenPopUp{
+                        width: 30vh;
+                    }
+                    
                 </style>
 
 
@@ -596,7 +601,7 @@ function mapa($valor)
                             img.src = 'https://maps.googleapis.com/maps/api/streetview?size=400x300&location=' + e.latlng.lat + ',' + e.latlng.lng + '&key=' + apiKey;
 
 
-                            marker2.bindPopup("<img src='" + img.src + "' width='400' height='300'><br>Ubicación seleccionada").openPopup();
+                            marker2.bindPopup("<img src='" + img.src + "' width='400' height='300' id='imagenPopUp'><br>Ubicación seleccionada").openPopup();
 
                             // Actualizar campos ocultos en el formulario con las coordenadas.
                             document.getElementById('lat').value = e.latlng.lat;
@@ -775,7 +780,8 @@ function mapa($valor)
                                     <input type="file" class="form-control-file" name="imagen" accept="image/*" required>
                                 </div>
                                 <span>Esta es la foto que Google ha tomado:</span>
-                                <img id="imagenMuestra" class="img-fluid"></img>
+                                
+                                <img id="imagenMuestra"></img>
                                 <button type="submit" class="btn btn-primary" name="guardarMarcador">Guardar</button>
                             </div>
                         </div>
