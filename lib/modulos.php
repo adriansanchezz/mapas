@@ -114,11 +114,16 @@ function menu_general()
                             </button>
                         </form>
                     </li>
-
-                    <div class="notification-bar">
+                    <style>
+                        .notification-bar{
+                            margin-right: 20vh;
+                            
+                        }
+                    </style>
+                    <div class="notification-bar shadow-sm p-3 mb-5 bg-white rounded border border-primary float-left">
+                        <h4>Notificaciones</h4>
                         <?php
-                        // Consultar los productos desde la base de datos
-                    
+                        
 
                         $sql = "SELECT * FROM publicidades WHERE comprador IS NOT NULL AND id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND id_usuario <> comprador";
                         $result = sqlSELECT($sql);
@@ -260,7 +265,7 @@ function mapa($valor)
         <?php
         // Establecer la conexión con la base de datos.
         // Consultar los marcadores existentes en el mapa.
-        $sql = "SELECT * FROM publicidades WHERE estado = 1 AND ocupado = 0 AND comprador IS NULL";
+        $sql = "SELECT * FROM publicidades WHERE estado = 1 AND ocupado = 0 AND comprador IS NULL AND id_usuario <> " . $_SESSION['usuario']['id_usuario'];
         $result = sqlSELECT($sql);
 
         // Si da resultados entonces entra en el if.
