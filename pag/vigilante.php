@@ -73,6 +73,14 @@ require_once '../lib/modulos.php';
                     margin-right: 20px;
                     margin-top: 20px;
                 }
+
+                #map {
+                    height: 70vh;
+                    border: 8px solid #2c3e50;
+                    /* Color del borde */
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+                    /* Sombra */
+                }
             </style>
             <div class="puntos-container">
                 <h5>Tus puntos:</h5>
@@ -97,15 +105,13 @@ require_once '../lib/modulos.php';
             <?php
             if (isset($_REQUEST['misiones'])) {
                 ?>
+                <div class="flex-grow-1">
+                        <?php mapa("vigilar"); ?>
+                </div>
 
-
-                <?php mapa("vigilar"); ?>
                 <?php
-
                 echo '<input type="submit" class="btn btn-primary" id="solicitarMision" value="Solicitar mision">';
-                ?>
 
-                <?php
             }
             if (isset($_REQUEST['solicitarMision'])) {
                 function randomMission()

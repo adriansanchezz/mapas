@@ -329,7 +329,42 @@ require_once '../lib/modulos.php';
 
             <?php
             if (isset($_REQUEST['usuarioMapa'])) {
-                mapa("guardar");
+                ?>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-9">
+                            <div class="p-3">
+                                <h1 class="text-primary">MAPA</h1>
+                                <p>¿Quieres buscar una ubicación?</p>
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" id="direccion" placeholder="Buscar dirección">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary" onclick="buscarDireccion()">Buscar</button>
+                                    </div>
+                                </div>
+                                <div id="map"></div>
+                            </div>
+                        </div>
+                        <style>
+                            #map {
+                                height: 70vh;
+
+                                border: 8px solid #2c3e50;
+                                /* Color del borde */
+                                box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+                                /* Sombra */
+                            }
+
+                            #imagenPopUp {
+                                width: 30vh;
+                            }
+                        </style>
+                        <?php mapa("guardar"); ?>
+                    </div>
+                </div>
+
+
+                <?php
             }
             ?>
             <?php

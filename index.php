@@ -59,20 +59,20 @@ sumarVisitaTotal();
                 <div class="row">
                     <div class="col-12">
                         <!-- Contenedor de la derecha -->
-                        <h2>¿Quieres ver nuestro mapa?</h2>
+                        <h2 class="titulo_mapa">¿Quieres ver nuestro mapa?</h2>
                         <div id="map"></div>
                         <!-- Se le da estilos al mapa para que quede más estético. -->
                         <style>
                             #map {
+                                z-index: 0;
                                 height: 300px;
-                                width: 300px;
+                                width: 375px;
                                 border: 8px solid #2c3e50;
                                 /* Color del borde */
                                 box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
                                 /* Sombra */
                             }
                         </style>
-                        <div id="infoContainer"></div>
                         <script>
                             // Creación del mapa.
                             var map = L.map('map').setView([43.3828500, -3.2204300], 13);
@@ -82,53 +82,54 @@ sumarVisitaTotal();
                                 attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
                                 maxZoom: 18,
                             }).addTo(map);
-
-                    <?php
-                    // Consultar los marcadores existentes en el mapa.
-                    $sql = "SELECT * FROM publicidades";
-                    $result = sqlSELECT($sql);
-
-                    // Si da resultados entonces entra en el if.
-                    if ($result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                            // Se crean variables con los datos de la consulta que interesa sacar en pantalla u operar con ellos.
-                            $latitud = $row['latitud'];
-                            $longitud = $row['longitud'];
-                            $descripcion = $row['descripcion'];
-                            $ubicacion = $row['ubicacion'];
-                            $precio = $row['precio'];
-
-                            // Se obtiene la id del tipo de propiedad.
-                            $tipo = $row['id_tipo_publicidad'];
-
-                            // Y mediante una consulta a la tabla tipospropiedades se obtiene el nombre del tipo de propiedad que es.
-                            $sql2 = "SELECT nombre FROM tipospublicidades WHERE id_tipo_publicidad = $tipo";
-                            $result2 = sqlSELECT($sql2);
-
-                            // Si se obtiene resultado entonces se obtiene el nombre.
-                            if ($result2) {
-                                $row2 = $result2->fetch_assoc();
-                                $nombre_tipo = $row2['nombre'];
-                            } else {
-                                // Si no, pone que no se ha encontrado.
-                                $nombre_tipo = "Tipo de publicidad no encontrado";
-                            }
-                            // La api key de google. Para poder usar el google static map.
-                            $apiKey = 'AIzaSyADr5gpzLPePzkWwz8C94wBQ21DzQ4GGVU'; // Reemplaza con tu propia API Key de Google Maps Static
-                    
-                            // Se obtiene una imagen de la localización mediante coordenadas.
-                            $imageUrl = 'https://maps.googleapis.com/maps/api/streetview?size=400x300&location=' . $latitud . ',' . $longitud . '&key=' . $apiKey;
-                            ?>
-                                                                                                                            // Crear un marcador para cada registro de la base de datos.
-                                                                                                                            var marker = L.marker([<?php echo $latitud; ?>, <?php echo $longitud; ?>]).addTo(map);
-                                            // Se añade un popUp para que salga una ventana al clickar un marcador existente en el mapa.
-                                            marker.bindPopup("<div class='popup-content'><h3><?php echo $nombre_tipo . " " . $ubicacion . " " . $precio . "€"; ?></h3><p><?php echo $descripcion; ?></p><img src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación'></div><form action='empresa.php' method='POST'><input type='hidden' name='product_id' value='<?php echo $row['id_publicidad'] ?>'><input type='hidden' name='lat' value='<?php echo $latitud; ?>'><input type='hidden' name='lng' value='<?php echo $longitud; ?>'><input type='hidden' name='ubicacion' value='<?php echo $ubicacion; ?>'><input type='hidden' name='descripcion' value='<?php echo $descripcion; ?>'><button type='submit' name='add_to_cart' value='1'>Seleccionar</button></form>");
-                                                                                                                            <?php
-                        }
-                    }
-                    ?>
-
                         </script>
+
+                        <?php
+                        // Consultar los marcadores existentes en el mapa.
+                        $sql = "SELECT * FROM publicidades";
+                        $result = sqlSELECT($sql);
+
+                        // Si da resultados entonces entra en el if.
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                // Se crean variables con los datos de la consulta que interesa sacar en pantalla u operar con ellos.
+                                $latitud = $row['latitud'];
+                                $longitud = $row['longitud'];
+                                $descripcion = $row['descripcion'];
+                                $ubicacion = $row['ubicacion'];
+                                $precio = $row['precio'];
+
+                                // Se obtiene la id del tipo de propiedad.
+                                $tipo = $row['id_tipo_publicidad'];
+
+                                // Y mediante una consulta a la tabla tipospropiedades se obtiene el nombre del tipo de propiedad que es.
+                                $sql2 = "SELECT nombre FROM tipospublicidades WHERE id_tipo_publicidad = $tipo";
+                                $result2 = sqlSELECT($sql2);
+
+                                // Si se obtiene resultado entonces se obtiene el nombre.
+                                if ($result2) {
+                                    $row2 = $result2->fetch_assoc();
+                                    $nombre_tipo = $row2['nombre'];
+                                } else {
+                                    // Si no, pone que no se ha encontrado.
+                                    $nombre_tipo = "Tipo de publicidad no encontrado";
+                                }
+                                // La api key de google. Para poder usar el google static map.
+                                $apiKey = 'AIzaSyADr5gpzLPePzkWwz8C94wBQ21DzQ4GGVU'; // Reemplaza con tu propia API Key de Google Maps Static
+                                // Se obtiene una imagen de la localización mediante coordenadas.
+                                $imageUrl = 'https://maps.googleapis.com/maps/api/streetview?size=400x300&location=' . $latitud . ',' . $longitud . '&key=' . $apiKey;
+                                ?>
+                                <script>
+                                    // Crear un marcador para cada registro de la base de datos.
+                                    var marker = L.marker([<?php echo $latitud; ?>, <?php echo $longitud; ?>]).addTo(map);
+                                    // Se añade un popUp para que salga una ventana al clickar un marcador existente en el mapa.
+                                    marker.bindPopup("<div class='popup-content'><h3><?php echo $nombre_tipo . " " . $ubicacion . " " . $precio . "€"; ?></h3><p><?php echo $descripcion; ?></p><img src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación'></div><form action='empresa.php' method='POST'><input type='hidden' name='product_id' value='<?php echo $row['id_publicidad'] ?>'><input type='hidden' name='lat' value='<?php echo $latitud; ?>'><input type='hidden' name='lng' value='<?php echo $longitud; ?>'><input type='hidden' name='ubicacion' value='<?php echo $ubicacion; ?>'><input type='hidden' name='descripcion' value='<?php echo $descripcion; ?>'><button type='submit' name='add_to_cart' value='1'>Seleccionar</button></form>");
+                                </script>
+                                <?php
+                            }
+                        }
+                        ?>
+
                     </div>
                     <br>
                     <div class="col-12">

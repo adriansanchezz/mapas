@@ -17,6 +17,7 @@ header{
     height: 70px;
     background: linear-gradient(10deg, rgb(226, 249, 255), rgb(0, 102, 131));
     padding: 0px 20px;
+    justify-content: center;
 }
 
 
@@ -26,6 +27,9 @@ header{
     max-width: 1200px;
     margin: auto;
     height: 100%;
+    align-items: center;
+    display: flex;
+    justify-content: center;
 }
 
 /*Dar altura para que luego pueda reconocer center*/
@@ -37,6 +41,7 @@ nav {
 nav > ul{
     height: 100%;
     display: flex;
+    margin-top: 10px;
 }
 
 /*Relacionar y dar estilo a los opciones de menu principal*/

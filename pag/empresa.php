@@ -74,10 +74,45 @@ require_once '../lib/modulos.php';
 
             <?php
             if (isset($_REQUEST['empresaMapa'])) {
-                mapa("ver");
+                ?>
+                <!-- Se crea toda la maquetación del menú de empresa. -->
+                <div class="flex-grow-1">
+                    <div class="p-3" style="display: block;">
+                        <div class="p-3" style="display: block;">
+                            <form class="form-inline my-2 my-lg-0" action="empresa.php" method="post">
+                                <button class="btn btn-outline-success my-2 my-sm-0" name="empresaCarrito"
+                                    type="submit">Carrito</button>
+                            </form>
+                            <h1>Bienvenido a nuestro mapa</h1>
+                            <h4>Selecciona alguna ubicación para ver información:</h4>
+                            <h6>O busca la ubicación que desees.</h6>
+                            <div>
+                                ¿Quieres buscar una ubicación?
+                                <input type="text" id="direccion" placeholder="Buscar ubicación...">
+                                <button type="button" onclick="buscarDireccion()">Buscar</button>
+                            </div>
+                            <div id="map"></div>
+                            <!-- Se le da estilos al mapa para que quede más estético. -->
+                            <style>
+                                #map {
+                                    height: 70vh;
+                                    border: 8px solid #2c3e50;
+                                    /* Color del borde */
+                                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+                                    /* Sombra */
+                                }
+                            </style>
+                            <?php mapa("ver"); ?>
+                        </div>
+                    </div>
+                </div>
+                <?php
             }
 
+            ?>
 
+
+            <?php
             if (isset($_POST['add_to_cart'])) {
                 $product_id = $_POST['product_id'];
                 $precio = $_POST['precio'];

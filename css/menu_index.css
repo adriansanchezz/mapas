@@ -15,7 +15,6 @@ header {
     position: relative;
     display: flex;
     width: 100%;
-    min-width: 900px;
     padding: 20px 0;
     justify-content: space-between;
     align-items: center;
@@ -26,17 +25,13 @@ header {
 .logo {
     margin-left: 50px;
     text-decoration: none;
-    /* Quitar subrayado */
     color: black;
-    /* Heredar el color original */
 }
 
 .logo:hover {
     margin-left: 50px;
     text-decoration: none;
-    /* Quitar subrayado */
     color: white;
-    /* Heredar el color original */
 }
 
 .cont-ul {
@@ -51,23 +46,17 @@ header {
 
 a {
     text-decoration: none;
-    /* Quitar subrayado */
     color: white;
-    /* Heredar el color original */
 }
 
 ul a {
     text-decoration: none;
-    /* Quitar subrayado */
     color: white;
-    /* Heredar el color original */
 }
 
 ul a:hover {
     text-decoration: none;
-    /* Quitar subrayado */
     color: white;
-    /* Heredar el color original */
 }
 
 li {
@@ -76,7 +65,6 @@ li {
     cursor: pointer;
     padding: 20px;
     transition: all 0.3s ease 0s;
-
 }
 
 li:hover {
@@ -90,7 +78,7 @@ li:hover {
     transform: translateY(20px);
 }
 
-.ul-second>a>li {
+.ul-second > a > li {
     border-bottom: solid 1px #fff;
     text-align: center;
     background-color: rgba(40, 39, 39, 0.5);
@@ -98,10 +86,48 @@ li:hover {
     transform: translateX(-52px);
 }
 
-.ul-second>a>li:hover {
+.ul-second > a > li:hover {
     background-color: #008849;
 }
 
-.nosotros:hover>.ul-second {
+.nosotros:hover > .ul-second {
     display: block;
+}
+
+/* Media Query para pantallas más pequeñas */
+@media (max-width: 768px) {
+    .logo {
+        margin-left: 20px;
+    }
+
+    .cont-ul {
+        margin-right: 0px;
+        top: 0px;
+    }
+
+    ul {
+        position: absolute;
+        top: 60px;
+        background-color: #008849;
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    ul li {
+        width: 100%;
+        text-align: center;
+        padding: 10px 0;
+    }
+
+    .nosotros {
+        position: relative;
+    }
+
+    .nosotros:hover > ul {
+        background-color: transparent;
+        left: 20px;
+        width: 100%;
+        top: 25px;
+    }
 }
