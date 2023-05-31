@@ -117,7 +117,6 @@ function menu_general()
                     <style>
                         .notification-bar{
                             margin-right: 20vh;
-                            
                         }
                     </style>
                     <div class="notification-bar shadow-sm p-3 mb-5 bg-white rounded border border-primary float-left">
@@ -156,6 +155,15 @@ function menu_general()
                             while ($row = $result->fetch_assoc()) {
                                 echo "<div class='notification'>La empresa compradora de la ubicacion: " . $row['ubicacion'] . " ha decidido rechazar la publicidad. <form action='usuario.php' method='POST'><input type='hidden' name='id_publicidad' value='" . $row['id_publicidad'] . "'><input type='submit' name='rechazarEmpresa' value='Visto'></form></div>";
                             }
+                        }
+
+                        $sql = "SELECT * FROM publicidades WHERE comprador = " . $_SESSION['usuario']['id_usuario'] . " AND ocupado IS NOT NULL AND estado = 1 AND caducidad_compra IS NULL";
+                        $result = sqlSELECT($sql);
+
+                        if ($result->num_rows > 0) {
+                            
+                            echo "<div class='notification'>Un usuario ha aceptado la solicitud de compra. Revisa el carrito de la sección empresa para poder ver la ubicación y confirmar la compra.</div>";
+                            
                         }
 
                         if (isset($_POST['aceptarEmpresa'])) {
