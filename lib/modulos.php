@@ -120,75 +120,77 @@ function menu_general()
                         }
                     </style>
                     <div class="notification-bar shadow-sm p-3 mb-5 bg-white rounded border border-primary float-left">
-                        <h4>Notificaciones</h4>
-                        <?php
-                        
+    <h4>Notificaciones</h4>
+    <?php
+    $sql = "SELECT * FROM publicidades WHERE comprador IS NOT NULL AND id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND id_usuario <> comprador";
+    $result = sqlSELECT($sql);
 
-                        $sql = "SELECT * FROM publicidades WHERE comprador IS NOT NULL AND id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND id_usuario <> comprador";
-                        $result = sqlSELECT($sql);
+    $notificaciones = array(); // Array para almacenar las notificaciones
 
-                        if ($result->num_rows > 0) {
-                            while ($row = $result->fetch_assoc()) {
-                                $sql2 = "SELECT * FROM empresas WHERE id_empresa = " . $row['comprador'];
-                                $result2 = sqlSELECT($sql2);
-                                if ($result2->num_rows > 0) {
-                                    if ($row['ocupado'] == 0) {
-                                        while ($row2 = $result2->fetch_assoc()) {
-                                            echo "<div class='notification'>Una empresa: " . $row2['nombre'] . " quiere publicitarse en tu ubicacion: " . $row['ubicacion'] . "<form action='usuario.php' method='POST'><input type='hidden' name='id_publicidad' value='" . $row['id_publicidad'] . "'><input type='submit' name='aceptarEmpresa' value='aceptar'></form><form action='usuario.php' method='POST'><input type='hidden' name='id_publicidad' value='" . $row['id_publicidad'] . "'><input type='submit' name='rechazarEmpresa' value='rechazar'></form></div>";
-                                        }
-                                    } else {
-                                        while ($row2 = $result2->fetch_assoc()) {
-                                            echo "<div class='notification'>Una empresa: " . $row2['nombre'] . " quiere publicitarse en tu ubicacion: " . $row['ubicacion'] . " <span style='color: red;'>Aceptada.</span></div>";
-                                        }
-                                    }
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $sql2 = "SELECT * FROM empresas WHERE id_empresa = " . $row['comprador'];
+            $result2 = sqlSELECT($sql2);
+            if ($result2->num_rows > 0) {
+                if ($row['ocupado'] == 0) {
+                    while ($row2 = $result2->fetch_assoc()) {
+                        $notificacion = "<div class='notification'>Una empresa: " . $row2['nombre'] . " quiere publicitarse en tu ubicacion: " . $row['ubicacion'] . "<form action='usuario.php' method='POST'><input type='hidden' name='id_publicidad' value='" . $row['id_publicidad'] . "'><input type='submit' name='aceptarEmpresa' value='aceptar'></form><form action='usuario.php' method='POST'><input type='hidden' name='id_publicidad' value='" . $row['id_publicidad'] . "'><input type='submit' name='rechazarEmpresa' value='rechazar'></form></div>";
+                        array_push($notificaciones, $notificacion);
+                    }
+                } else {
+                    while ($row2 = $result2->fetch_assoc()) {
+                        $notificacion = "<div class='notification'>Una empresa: " . $row2['nombre'] . " quiere publicitarse en tu ubicacion: " . $row['ubicacion'] . " <span style='color: red;'>Aceptada.</span></div>";
+                        array_push($notificaciones, $notificacion);
+                    }
+                }
+            }
+        }
+    }
 
-                                }
+    $sql = "SELECT * FROM publicidades WHERE comprador IS NULL AND id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND ocupado = 1";
+    $result = sqlSELECT($sql);
 
-                            }
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $notificacion = "<div class='notification'>La empresa compradora de la ubicacion: " . $row['ubicacion'] . " ha decidido rechazar la publicidad. <form action='usuario.php' method='POST'><input type='hidden' name='id_publicidad' value='" . $row['id_publicidad'] . "'><input type='submit' name='rechazarEmpresa' value='Visto'></form></div>";
+            array_push($notificaciones, $notificacion);
+        }
+    }
 
+    $sql = "SELECT * FROM publicidades WHERE comprador = " . $_SESSION['usuario']['id_usuario'] . " AND ocupado = 1 AND estado = 1 AND caducidad_compra IS NULL";
+    $result = sqlSELECT($sql);
 
-                        }
-                        $sql = "SELECT * FROM publicidades WHERE comprador IS NULL AND id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND ocupado = 1";
-                        $result = sqlSELECT($sql);
+    if ($result->num_rows > 0) {
+        $notificacion = "<div class='notification'>Un usuario ha aceptado la solicitud de compra. Revisa el carrito de la sección empresa para poder ver la ubicación y confirmar la compra.</div>";
+        array_push($notificaciones, $notificacion);
+    }
 
-                        if ($result->num_rows > 0) {
-                            while ($row = $result->fetch_assoc()) {
-                                echo "<div class='notification'>La empresa compradora de la ubicacion: " . $row['ubicacion'] . " ha decidido rechazar la publicidad. <form action='usuario.php' method='POST'><input type='hidden' name='id_publicidad' value='" . $row['id_publicidad'] . "'><input type='submit' name='rechazarEmpresa' value='Visto'></form></div>";
-                            }
-                        }
+    if (isset($_POST['aceptarEmpresa'])) {
+        $id_publicidad = $_POST['id_publicidad'];
+        $sql = "UPDATE publicidades SET ocupado = 1 WHERE id_publicidad = " . $id_publicidad;
+        if (sqlUPDATE($sql)) {
+            echo "<script>window.location.href = 'usuario.php?usuarioMapa';</script>";
+            exit();
+        }
+    }
+    if (isset($_POST['rechazarEmpresa'])) {
+        $id_publicidad = $_POST['id_publicidad'];
+        $sql = "UPDATE publicidades SET ocupado = 0, comprador = NULL WHERE id_publicidad = " . $id_publicidad;
+        if (sqlUPDATE($sql)) {
+            echo "<script>window.location.href = 'usuario.php?usuarioMapa';</script>";
+            exit();
+        }
+    }
 
-                        $sql = "SELECT * FROM publicidades WHERE comprador = " . $_SESSION['usuario']['id_usuario'] . " AND ocupado IS NOT NULL AND estado = 1 AND caducidad_compra IS NULL";
-                        $result = sqlSELECT($sql);
+    // Imprimir las notificaciones en orden inverso
+    for ($i = count($notificaciones) - 1; $i >= 0; $i--) {
+        echo $notificaciones[$i];
+    }
 
-                        if ($result->num_rows > 0) {
-                            
-                            echo "<div class='notification'>Un usuario ha aceptado la solicitud de compra. Revisa el carrito de la sección empresa para poder ver la ubicación y confirmar la compra.</div>";
-                            
-                        }
+    ?>
+    <div class="notification">¡Bienvenido a DisplayAds</div>
+</div>
 
-                        if (isset($_POST['aceptarEmpresa'])) {
-                            $id_publicidad = $_POST['id_publicidad'];
-                            $sql = "UPDATE publicidades SET ocupado = 1 WHERE id_publicidad = " . $id_publicidad;
-                            if (sqlUPDATE($sql)) {
-                                echo "<script>window.location.href = 'usuario.php?usuarioMapa';</script>";
-                                exit();
-                            }
-
-
-                        }
-                        if (isset($_POST['rechazarEmpresa'])) {
-                            $id_publicidad = $_POST['id_publicidad'];
-                            $sql = "UPDATE publicidades SET ocupado = 0, comprador = NULL WHERE id_publicidad = " . $id_publicidad;
-                            if (sqlUPDATE($sql)) {
-                                echo "<script>window.location.href = 'usuario.php?usuarioMapa';</script>";
-                                exit();
-                            }
-                        }
-
-                        ?>
-                        <div class="notification">¡Bienvenido a DisplayAds</div>
-
-                    </div>
 
                     <script>
                         const bell = document.querySelector('.bell'); const notificationBar = document.querySelector('.notification-bar');
