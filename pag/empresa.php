@@ -51,7 +51,7 @@ require_once '../lib/modulos.php';
                     </li>
                     <li>
                         <form action="empresa.php" method="post">
-                            <button type="submit" name="empresaVigia"
+                            <button type="submit" name="empresaInfo"
                                 class="btn btn-link nav-link text-white">Informacion</button>
                         </form>
                     </li>
@@ -390,6 +390,37 @@ require_once '../lib/modulos.php';
                     }).render('#paypal-button-container');
                 </script>
                 <?php
+            }
+            if(isset($_REQUEST['empresaInfo']))
+            {
+                $sql = "SELECT p.ubicacion, p.codigo_postal, f.foto, u.email, p.caducidad_compra FROM publicidades as p, usuarios as u, fotos as f WHERE p.id_usuario = u.id_usuario AND f.id_publicidad = p.id_publicidad AND p.comprador = " . $_SESSION['usuario']['id_usuario'] . " AND p.ocupado = 1 AND p.caducidad_compra IS NOT NULL";
+                $result = sqlSELECT($sql);
+
+                if ($result->num_rows > 0) {
+                    
+                    echo "<table class='table table-striped table-bordered'>";
+                    echo "<thead class='thead-dark'>";
+                    echo "<tr>";
+                    echo "<th>Ubicación</th>";
+                    echo "<th>Código Postal</th>";
+                    echo "<th>Foto</th>";
+                    echo "<th>Dueño</th>";
+                    echo "<th>Fecha de Finalización</th>";
+                    echo "</tr>";
+                    echo "</thead>";
+                    echo "<tbody>";
+                    while ($row = $result->fetch_assoc()) {
+                      echo "<tr>";
+                      echo "<td>". $row['ubicacion'] ."</td>";
+                      echo "<td>". $row['codigo_postal'] ."</td>";
+                      echo "<td><img src='data:image/jpeg;base64,". base64_encode($row['foto']) ."' alt='Imagen del producto' class='img-thumbnail'></td>";
+                      echo "<td>". $row['email'] ."</td>";
+                      echo "<td>". $row['caducidad_compra'] ."</td>";
+                      echo "</tr>";
+                    }
+                    echo "</tbody>";
+                    echo "</table>";
+                  }
             }
             ?>
         </div>
