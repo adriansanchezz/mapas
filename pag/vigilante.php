@@ -114,7 +114,6 @@ require_once '../lib/modulos.php';
             }
             
             ?>
-
             <?php
             if (isset($_REQUEST['recompensas'])) {
                 ?>
