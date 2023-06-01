@@ -142,14 +142,17 @@ require_once '../lib/modulos.php';
                 
                         $sql = "SELECT * FROM publicidades as p, usuarios as u WHERE p.comprador IS NOT NULL AND p.id_usuario <> p.comprador AND p.ocupado = 1 AND p.id_usuario = u.id_usuario";
                         $result = $conn->query($sql);
-                        echo "<h1>UBICACIONES COMPRADAS</h1>";
+                        echo "<br><br><h1>Ubicaciones compradas</h1><br>";
                         if ($result->num_rows > 0) {
                             echo "<table>";
                             echo "<tr>
-                                    <th>Usuario</th>
+                                    <th>Usuario/Dueño</th>
                                     <th>Ubicación Envío</th>
                                     <th>Código Postal</th>
-                                    <th>Empresa Compra</th>
+                                    <th>Empresa Compradora</th>
+                                    <th>Precio</th>
+                                    <th>Fecha final</th>
+                                    <th>Precio total</th>
                                     <th>Estado</th>
                                     </tr>";
                             while ($row = $result->fetch_assoc()) {
@@ -162,20 +165,29 @@ require_once '../lib/modulos.php';
                                         <td>" . $row['ubicacion'] . "</td>
                                         <td>" . $row['codigo_postal'] . "</td>
                                         <td>" . $row2['nombre'] . "</td>
-                                        <td>";
+                                        <td>" . $row['precio'] . "</td>
+                                        <td>" . $row['caducidad_compra'] . "</td>";
 
-                                        $sql3 = "SELECT * FROM publicidades WHERE id_publicidad = " . $row['id_publicidad'] . " AND revision IS NULL";
-                                        $result3 = sqlSELECT($sql3);
+                                        $sql3 = "SELECT * FROM pedidos as p, lineas_pedidos as lp WHERE p.id_pedido = lp.id_pedido AND lp.id_publicidad = " . $row['id_publicidad'];
+                                        $result3 = $conn->query($sql3);
+                                        if ($result3->num_rows > 0) {
+                                            while ($row3 = $result3->fetch_assoc()) {
+                                                echo "<td>" . $row3['importe'] . "</td>";
+                                            }
+                                        }
+                                        
+
+                                        echo "<td>";
+                                        $sql4 = "SELECT * FROM publicidades WHERE id_publicidad = " . $row['id_publicidad'] . " AND revision IS NULL";
+                                        $result4 = sqlSELECT($sql4);
 
                                         // Si da resultados entonces entra en el if.
-                                        if ($result3->num_rows > 0) {
+                                        if ($result4->num_rows > 0) {
                                             echo "<form action='administrador.php' method='POST'>
                                             <input type='hidden' name='id_publicidad' value='" . $row['id_publicidad'] . "'>
-                                            <input type='submit' name='revisarCompra' value='Revisado'>
+                                            <input type='submit' name='revisarCompraUbicacion' value='Revisado'>
                                             </form>";
-                                        }
-                                        else
-                                        {
+                                        } else {
                                             echo "<p>REVISADO</p>";
                                         }
 
@@ -186,16 +198,72 @@ require_once '../lib/modulos.php';
                             }
                             echo "</table>";
                         }
+                        echo "<br><br><h1>Productos comprados</h1><br>";
+                        $sql4 = "SELECT * FROM pedidos WHERE fecha_fin IS NOT NULL";
+                        $result = $conn->query($sql4);
+                        if ($result->num_rows > 0) {
+                            echo "<table>";
+                            echo "<tr>
+                                    <th>Usuario</th>
+                                    <th>Importe</th>
+                                    <th>Ubicación</th>
+                                    <th>Fecha</th>
+                                    <th>Estado</th>
+                                    </tr>";
+                            while ($row3 = $result->fetch_assoc()) {
+
+                                echo "<tr>";
+
+                                $sql5 = "SELECT * FROM usuarios WHERE id_usuario = " . $row3['id_usuario'];
+                                $result3 = sqlSELECT($sql5);
+
+                                // Si da resultados entonces entra en el if.
+                                if ($result3->num_rows > 0) {
+                                    while ($row4 = $result3->fetch_assoc()) {
+
+                                        echo "<td>" . $row4['email'] . "</td>";
+                                    }
+                                }
+
+                                echo "<td>" . $row3['importe'] . "</td>
+                                    <td>" . $row3['ubicacion'] . "</td>
+                                    <td>" . $row3['fecha_fin'] . "</td>";
+                                echo "<td>";
+                                if ($row3['administrado'] != NULL) {
+                                    echo "<p>Enviado</p>";
+                                }
+                                if ($row3['administrado'] == NULL) {
+                                    echo "<form action='administrador.php' method='POST'>
+                                            <input type='hidden' name='id_pedido' value='" . $row3['id_pedido'] . "'>
+                                            <input type='submit' name='revisarCompraProducto' value='Revisado'>
+                                            </form>";
+                                }
+                                echo "</td>";
+                                echo "</tr>";
+
+                            }
+                            echo "</table>";
+                        }
+
                     }
-                    if (isset($_POST['revisarCompra'])) {
+                    if (isset($_POST['revisarCompraUbicacion'])) {
                         $id_publicidad = $_POST['id_publicidad'];
                         $sql = "UPDATE publicidades SET revision = 1 WHERE id_publicidad = " . $id_publicidad;
-                        
+
                         if (sqlUPDATE($sql)) {
-                          echo "<script>window.location.href = 'administrador.php?administradorPanel';</script>";
-                          exit();
+                            echo "<script>window.location.href = 'administrador.php?administradorPanel';</script>";
+                            exit();
                         }
-                      }
+                    }
+                    if (isset($_POST['revisarCompraProducto'])) {
+                        $id_pedido = $_POST['id_pedido'];
+                        $sql = "UPDATE pedidos SET administrado = 1 WHERE id_pedido = " . $id_pedido;
+
+                        if (sqlUPDATE($sql)) {
+                            echo "<script>window.location.href = 'administrador.php?administradorPanel';</script>";
+                            exit();
+                        }
+                    }
                     ?>
 
 
@@ -486,7 +554,10 @@ require_once '../lib/modulos.php';
                         $stmt = $conn->prepare($sqlUpdate);
                         $stmt->bind_param("i", $id_mision);
                         $stmt->execute();
-
+                        $sqlUpdate = "UPDATE usuarios AS u, misiones AS m SET u.puntos = u.puntos + 10 WHERE m.id_mision = ? AND u.id_usuario = m.id_usuario";
+                        $stmt = $conn->prepare($sqlUpdate);
+                        $stmt->bind_param("i", $id_mision);
+                        $stmt->execute();
                         echo "<script>window.location.href = 'administrador.php?administradorMisiones=';</script>";
                         exit();
                     }
