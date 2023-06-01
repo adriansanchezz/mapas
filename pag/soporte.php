@@ -136,28 +136,72 @@ require_once '../lib/modulos.php';
                 </div>
             </form>
             <?php
-        } else {
+        } else if (!isset($_REQUEST['solicitarEmpresa'])) {
+            ?>
+                <div class="container">
+                    <h2>Ayuda y Soporte</h2>
+
+                    <div class="description">Guía de Usuario:</div>
+                    <form action="guias.php">
+                        <button type="submit" class="btn btn-info">Guías de usuarios</button>
+                    </form>
+
+                    <br>
+                    <div class="description">Tipo de soporte y envíe su mensaje:</div>
+                    <form action="soporte.php" method="POST">
+                        <div class="input-group">
+                        <?php listarTiposSoportes(); ?>
+                            <div class="input-group-append">
+                                <input type='submit' name='aceptarMision' class='btn btn-success' value='Aceptar'>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            <?php
+        }
+
+        if (isset($_REQUEST['solicitarEmpresa'])) {
             ?>
             <div class="container">
-                <h2>Ayuda y Soporte</h2>
-
-                <div class="description">Guía de Usuario:</div>
-                <form action="guias.php">
-                    <button type="submit" class="btn btn-info">Guías de usuarios</button>
-                </form>
-
-                <br>
-                <div class="description">Tipo de soporte y envíe su mensaje:</div>
-                <form action="soporte.php" method="POST">
-                    <div class="input-group">
-                        <?php listarTiposSoportes(); ?>
-                        <div class="input-group-append">
-                            <input type='submit' name='aceptarMision' class='btn btn-success' value='Aceptar'>
-                        </div>
+            <h4>Solicitud para ser empresa</h4><br>
+                <form>
+                    <div class="form-group">
+                        <label for="cif">CIF</label>
+                        <input type="text" class="form-control" id="cif" name="cif">
                     </div>
+                    <div class="form-group">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre">
+                    </div>
+                    <div class="form-group">
+                        <label for="telefono">Teléfono</label>
+                        <input type="tel" class="form-control" id="telefono" name="telefono">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" id="email" name="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="direccion">Dirección</label>
+                        <input type="text" class="form-control" id="direccion" name="direccion">
+                    </div>
+                    <div class="form-group">
+                        <label for="logo">Subir Logo</label>
+                        <input type="file" class="form-control-file" id="logo" name="logo">
+                    </div>
+                    <div class="form-group">
+                        <label for="tipoEmpresa">Tipo de Empresa</label>
+                        <select class="form-control" id="tipoEmpresa" name="tipoEmpresa">
+                            <option selected>Selecciona...</option>
+                            <option value="tipo1">Tipo 1</option>
+                            <option value="tipo2">Tipo 2</option>
+                            <option value="tipo3">Tipo 3</option>
+                            <!-- Añade más opciones según necesites -->
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Enviar</button>
                 </form>
             </div>
-
             <?php
         }
 
@@ -165,7 +209,6 @@ require_once '../lib/modulos.php';
             $nombreProducto = $_POST['nombre'];
             $descripcionProducto = $_POST['descripcion'];
             $precioProducto = $_POST['precio'];
-
 
             $conn = conectar();
             $sql = "INSERT INTO `productos`(`nombre`, `descripcion`, `precio`) VALUES (?, ?, ?)";
@@ -193,17 +236,17 @@ require_once '../lib/modulos.php';
                         } else {
                             echo "Error al subir la imagen: " . $stmt->error;
                         }
-
                     }
                 } else {
                     echo "<h1>ERROR</h1>";
                 }
-
             } else {
                 // Si no lo fue, se indica un error.
                 echo "Error al guardar el marcador.";
             }
         }
+
+
 
         } else {
             echo ('Acceso denegado');
