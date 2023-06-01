@@ -78,7 +78,7 @@ function menu_general()
                         <?php
                     } else {
                         ?>
-                        <li><a href="empresa.php?empresaPrincipal">Empresa</a></li>
+                        <li><a href="soporte.php?solicitarEmpresa">Empresa</a></li>
                         <?php
                     }
                     ?>
