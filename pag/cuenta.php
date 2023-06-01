@@ -171,6 +171,10 @@ require_once '../lib/modulos.php';
                         <form action="cuenta.php" method="post">
                             <h5>Modificar la Constraseña</h5><br>
                             <div class="form-group">
+                                <label for="contraseña">Contraseña actual</label>
+                                <input type="password" class="form-control" name="antiguoPass" placeholder="Introducir la contraseña" required>
+                            </div>
+                            <div class="form-group">
                                 <label for="contraseña">Nuevo contraseña</label>
                                 <input type="password" class="form-control" name="nuevoPass" placeholder="Introducir la contraseña" required>
                             </div>
@@ -184,7 +188,7 @@ require_once '../lib/modulos.php';
                 </div>
                 <?php
             } else if (isset($_POST['cambioContra'])) {
-                guardarPassword($_POST['nuevoPass'], $_POST['nuevoPass2'], $_SESSION['usuario']['id_usuario']);
+                guardarPassword($_POST['antiguoPass'], $_POST['nuevoPass'], $_POST['nuevoPass2'], $_SESSION['usuario']['id_usuario']);
             }
             ?>
 

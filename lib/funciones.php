@@ -140,6 +140,26 @@ function validarCorreo($email)
     }
 }
 
+function comprobarPassword($password, $id_user)
+{
+    //Consulta
+    $sql = "SELECT * FROM usuarios WHERE id_usuario='$id_user'";
+
+    //Verificar si el usuario existe o no
+    if ($row = sqlSELECT($sql)->fetch_assoc()) {
+        $password_hash = $row['password'];
+
+        // Verifica la contraseña
+        if (password_verify($password, $password_hash)) {
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        echo "El usuario no existe!";
+    }
+}
+
 // Para realizar consulta, recordar que para while hace falta meterlo a un atributo, luego meter a mysqli_fetch_assoc($result)
 // De vuelve el resultado de la consulta
 function sqlSELECT($sql)
@@ -635,8 +655,9 @@ function guardarCorreo($correo, $correo2, $id_user)
 }
 
 // Actualizar dato de password, pasa parametro de nuevo pass y pass repetido, mas su id usuario
-function guardarPassword($pass, $pass2, $id_user)
+function guardarPassword($antiguoPass, $pass, $pass2, $id_user)
 {
+    if(comprobarPassword($antiguoPass,$id_user)){
     // Verificar si los datos repite o no
     if (repetirValor($pass, $pass2)) {
 
@@ -655,6 +676,10 @@ function guardarPassword($pass, $pass2, $id_user)
     } else {
         echo "<div class='flex-grow-1'><div class='alert alert-danger' role='alert'>Las contraseñas no son iguales!</div></div>";
     }
+    } else {
+        echo "<div class='flex-grow-1'><div class='alert alert-danger' role='alert'>Las contraseñas actual es incorrecta!</div></div>";
+    }
+
 }
 
 // Pasar los valores para comprovar si repeti o no
