@@ -1,5 +1,5 @@
 <?php
-require_once '../lib/functiones.php';
+require_once '../lib/funciones.php';
 if (isset($_GET['subirMision'])) {
     // Verifica si el usuario ha iniciado sesión y obtén su ID de usuario
     if (isset($_SESSION['usuario']['id_usuario'])) {

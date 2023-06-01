@@ -1,6 +1,6 @@
 <?php
 
-    require_once '../lib/functiones.php';
+    require_once '../lib/funciones.php';
     require_once '../lib/modulos.php';
     // Obtener los valores enviados desde JavaScript
     $data = json_decode(file_get_contents('php://input'), true);

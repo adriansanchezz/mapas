@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <?php
-//Importar y abrir session que esta dentro de functiones.php
-require_once '../lib/functiones.php';
+//Importar y abrir session que esta dentro de funciones.php
+require_once '../lib/funciones.php';
 require_once '../lib/modulos.php';
 ?>
 <html>
@@ -62,19 +62,19 @@ require_once '../lib/modulos.php';
 
                     <li>
                         <form action="cuenta.php" method="post">
-                            <button type="submit" name="cambiar_nombre" class="btn btn-link nav-link text-white">Cambiar
+                            <button type="submit" name="cambiar_nombre" class="btn btn-link nav-link text-white">Modificar
                                 nombre</button>
                         </form>
                     </li>
                     <li>
                         <form action="cuenta.php" method="post">
-                            <button type="submit" name="cambiar_correo" class="btn btn-link nav-link text-white">Cambiar
+                            <button type="submit" name="cambiar_correo" class="btn btn-link nav-link text-white">Modificar
                                 correo</button>
                         </form>
                     </li>
                     <li>
                         <form action="cuenta.php" method="post">
-                            <button type="submit" name="cambiar_contra" class="btn btn-link nav-link text-white">Cambiar
+                            <button type="submit" name="cambiar_contra" class="btn btn-link nav-link text-white">Modificar
                                 constraseña</button>
                         </form>
                     </li>
@@ -102,10 +102,6 @@ require_once '../lib/modulos.php';
             }
             ?>
 
-
-
-
-
             <div class="flex-grow-1">
                 <div id="seccion1" class="p-3" style="display: block;">
                     <h2>Informacion personal</h2><br>
@@ -121,23 +117,23 @@ require_once '../lib/modulos.php';
                 </div>
             </div>
 
-
-
             <?php
             if (isset($_POST['cambiar_nombre'])) {
                 ?>
                 <div class="flex-grow-1">
                     <div id="seccion1" class="p-3" style="display: block;">
                         <form action="cuenta.php" method="post">
-                            <h3>Modificar el Nombre</h3><br />
-                            <input type="text" name="nuevoNombre" placeholder="Nuevo nombre" required><br /><br />
-
-                            <input type="submit" name="guardarNombre" value="Guardar" />
+                            <h5>Modificar el Nombre</h5><br>
+                            <div class="form-group">
+                                <label for="nombre">Nombre nuevo</label>
+                                <input type="text" class="form-control" name="nuevoNombre" placeholder="Introduce el nombre" required>
+                            </div>
+                            <input type="submit" class="btn btn-primary" name="guardarNombre" value="Confirmar">
                         </form>
                     </div>
                 </div>
                 <?php
-            } else if (isset($_POST['guardarNombre'])) {
+            } else if (isset($_REQUEST['guardarNombre'])) {
                 guardarNombre($_POST['nuevoNombre'], $_SESSION['usuario']['id_usuario']);
             }
             ?>
@@ -148,11 +144,16 @@ require_once '../lib/modulos.php';
                 <div class="flex-grow-1">
                     <div id="seccion1" class="p-3" style="display: block;">
                         <form action="cuenta.php" method="post">
-                            <h3>Modificar el Correo</h3><br />
-                            <input type="email" name="nuevoCorreo" placeholder="Nuevo correo" required><br />
-                            <input type="email" name="nuevoCorreo2" placeholder="Confirmar correo" required><br /><br />
-
-                            <input type="submit" name="confirmarCorreo" value="Confirmar" />
+                            <h5>Modificar el Correo</h5><br>
+                            <div class="form-group">
+                                <label for="correo">Nuevo correo</label>
+                                <input type="email" class="form-control" name="nuevoCorreo" placeholder="Introducir el correo" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="correo">Confirmar correo</label>
+                                <input type="email" class="form-control" name="nuevoCorreo2" placeholder="Confirmar el correo" required>
+                            </div>
+                            <input type="submit" class="btn btn-primary" name="confirmarCorreo" value="Confirmar">
                         </form>
                     </div>
                 </div>
@@ -168,11 +169,16 @@ require_once '../lib/modulos.php';
                 <div class="flex-grow-1">
                     <div id="seccion1" class="p-3" style="display: block;">
                         <form action="cuenta.php" method="post">
-                            <h3>Modificar la Constraseña</h3><br />
-                            <input type="password" name="nuevoPass" placeholder="Nuevo contraseña" required><br />
-                            <input type="password" name="nuevoPass2" placeholder="Confirmar contraseña" required><br /><br />
-
-                            <input type="submit" name="cambioContra" value="Confirmar" />
+                            <h5>Modificar la Constraseña</h5><br>
+                            <div class="form-group">
+                                <label for="contraseña">Nuevo contraseña</label>
+                                <input type="password" class="form-control" name="nuevoPass" placeholder="Introducir la contraseña" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contraseña">Confirmar contraseña</label>
+                                <input type="password" class="form-control" name="nuevoPass2" placeholder="Confirmar la contraseña" required>
+                            </div>
+                            <input type="submit" class="btn btn-primary" name="cambioContra" value="Confirmar">
                         </form>
                     </div>
                 </div>

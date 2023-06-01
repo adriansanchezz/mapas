@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <?php
-//Importar y abrir session que esta dentro de functiones.php
-require_once 'lib/functiones.php';
+//Importar y abrir session que esta dentro de funciones.php
+require_once 'lib/funciones.php';
 require_once 'lib/modulos.php';
 if (isset($_POST['cerrarSesion'])) {
     session_destroy(); // Destruye todas las variables de sesión

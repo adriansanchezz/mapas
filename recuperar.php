@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <?php
-//Importar y abrir session que esta dentro de functiones.php
+//Importar y abrir session que esta dentro de funciones.php
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 require_once 'lib/phpmailer/Exception.php';
 require_once 'lib/phpmailer/PHPMailer.php';
 require_once 'lib/phpmailer/SMTP.php';
-require_once 'lib/functiones.php';
+require_once 'lib/funciones.php';
 require_once 'lib/modulos.php';
 ?>
 <html>

@@ -590,13 +590,13 @@ function guardarNombre($nombre, $id_user)
     // Comproba mediante count si existe ya ese nombre o es un nombre nuevo
     if ($datos["count"] > 0) {
         // El nuevo nombre de usuario ya existe en la base de datos, mostrar un mensaje de error
-        echo "<div class='flex-grow-1'>El nuevo nombre de usuario ya existe.</div>";
+        echo "<div class='flex-grow-1'><div class='alert alert-danger' role='alert'>El nuevo nombre de usuario ya existe.</div></div>";
     } else {
         // El nuevo nombre de usuario no existe en la base de datos, actualizar el registro correspondiente
         $sql = "UPDATE usuarios SET nombre='$nombre' WHERE id_usuario = '$id_user'";
 
         if (sqlUPDATE($sql)) {
-            echo "<div class='flex-grow-1'>El nombre de usuario se ha modificado correctamente.</div>";
+            echo "<div class='flex-grow-1'><div class='alert alert-success' role='alert'>El nombre de usuario se ha modificado correctamente.</div></div>";
         } else {
             // Se produjo un error al actualizar el registro, mostrar un mensaje de error
             echo "Error al modificar el nombre de usuario!";
@@ -618,12 +618,12 @@ function guardarCorreo($correo, $correo2, $id_user)
         // Comproba mediante count si existe ya ese correo o no
         if ($datos["count"] > 0) {
             // El nuevo correo de usuario ya existe en la base de datos, mostrar un mensaje de error
-            echo "<div class='flex-grow-1'>El nuevo correo de usuario ya existe.</div>";
+            echo "<div class='flex-grow-1'><div class='alert alert-danger' role='alert'>El nuevo correo de usuario ya existe.</div></div>";
         } else {
             // El nuevo correo de usuario no existe en la base de datos, actualizar el registro correspondiente
             $sql = "UPDATE usuarios SET email='$correo' WHERE id_usuario = '$id_user'";
             if (sqlUPDATE($sql)) {
-                echo "<div class='flex-grow-1'>El correo de usuario se ha modificado correctamente.</div>";
+                echo "<div class='flex-grow-1'><div class='alert alert-success' role='alert'>El correo de usuario se ha modificado correctamente.</div></div>";
             } else {
                 // Se produjo un error al actualizar el registro, mostrar un mensaje de error
                 echo "Error al modificar el correo de usuario!";
@@ -647,13 +647,13 @@ function guardarPassword($pass, $pass2, $id_user)
         $sql = "UPDATE usuarios SET password='$password_hash' WHERE id_usuario = '$id_user'";
 
         if (sqlUPDATE($sql)) {
-            echo "<div class='flex-grow-1'>La contraseña de usuario se ha modificado correctamente.</div>";
+            echo "<div class='flex-grow-1'><div class='alert alert-success' role='alert'>La contraseña de usuario se ha modificado correctamente.</div></div>";
         } else {
             // Se produjo un error al actualizar el registro, mostrar un mensaje de error
             echo "Error al modificar la contraseña de usuario!";
         }
     } else {
-        echo "<div class='flex-grow-1'>Las contraseñas no son iguales!</div>";
+        echo "<div class='flex-grow-1'><div class='alert alert-danger' role='alert'>Las contraseñas no son iguales!</div></div>";
     }
 }
 
