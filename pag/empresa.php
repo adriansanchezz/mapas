@@ -140,12 +140,12 @@ require_once '../lib/modulos.php';
                         $sqlLinea = "INSERT INTO `lineas_pedidos`(`precio`, `cantidad`, `id_producto`, `id_publicidad`, `id_pedido`) VALUES ($precio, 1, NULL, $product_id, $id_pedido)";
                         sqlINSERT($sqlLinea);
                     } else {
-                        $cantidad = 0;
+                        
                         $importe = 0;
                         $fecha_fin = "NULL"; // Asignar NULL a la columna fecha_fin
                         $id_usuario = $_SESSION['usuario']['id_usuario'];
 
-                        $sqlPedido = "INSERT INTO `pedidos`(`cantidad`, `importe`, `fecha_fin`, `id_usuario`) VALUES ($cantidad, $importe, $fecha_fin, $id_usuario)";
+                        $sqlPedido = "INSERT INTO `pedidos`(`importe`, `fecha_fin`, `id_usuario`) VALUES ($importe, $fecha_fin, $id_usuario)";
                         sqlINSERT($sqlPedido);
 
 
