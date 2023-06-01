@@ -13,6 +13,11 @@ require_once '../lib/modulos.php';
 </head>
 
 <body>
+    <style>
+        #map {
+            z-index: 0;
+        }
+    </style>
     <div class="separar">
         <?php
         if (isset($_SESSION['usuario'])) {
@@ -57,7 +62,7 @@ require_once '../lib/modulos.php';
                 while ($row = $result->fetch_assoc()) {
                     $puntos = $row['puntos'];
                 }
-                
+
             }
 
             ?>
@@ -112,14 +117,14 @@ require_once '../lib/modulos.php';
                 echo '<input type="submit" class="btn btn-primary" id="solicitarMision" value="Solicitar mision">';
 
             }
-            
+
             ?>
             <?php
             if (isset($_REQUEST['recompensas'])) {
                 ?>
                 <div class="flex-grow-1">
                     <div class="p-3" style="display: block;">
-                        
+
                         <h1>RECOMPENSAS</h1>
                         <div class="products">
                             <?php
