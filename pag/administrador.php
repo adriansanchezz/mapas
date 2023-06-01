@@ -462,11 +462,15 @@ require_once '../lib/modulos.php';
                                                         }
                                                         echo "</td>";
                                                         echo "<td>
-                                    <form action='administrador.php?aceptarMision' method='POST'>
-                                    <input type='hidden' name='id_mision' value='" . $row['id_mision'] . "'>
-                                    <input type='submit' name='aceptarMision' class='btn btn-success' value='Aceptar'>
-                                    </form>
-                                    </td>";
+                                                        <form action='administrador.php' method='POST'>
+                                                        <input type='hidden' name='id_mision' value='" . $row['id_mision'] . "'>
+                                                        <input type='submit' name='aceptarMision' class='btn btn-success' value='Aceptar'>
+                                                        </form>
+                                                        <form action='administrador.php' method='POST'>
+                                                        <input type='hidden' name='id_mision' value='" . $row['id_mision'] . "'>
+                                                        <input type='submit' name='rechazarMision' class='btn btn-success' value='Rechazar'>
+                                                        </form>
+                                                        </td>";
 
                                                         echo '</tr>';
 
