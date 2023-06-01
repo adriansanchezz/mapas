@@ -156,29 +156,46 @@ require_once '../lib/modulos.php';
                                 $sql2 = "SELECT * FROM empresas WHERE id_empresa = " . $row['comprador'];
                                 $result2 = $conn->query($sql2);
                                 if ($result2->num_rows > 0) {
-
                                     while ($row2 = $result2->fetch_assoc()) {
-                                        echo "
-                                              
-                                              <tr>
-                                                <td>" . $row['email'] . "</td>
-                                                <td>" . $row['ubicacion'] . "</td>
-                                                <td>" . $row['codigo_postal'] . "</td>
-                                                <td>" . $row2['nombre'] . "</td>
-                                                <td>
-                                                    <form action administrador.php
-                                                </td>
-                                              </tr>";
+                                        echo "<tr>
+                                        <td>" . $row['email'] . "</td>
+                                        <td>" . $row['ubicacion'] . "</td>
+                                        <td>" . $row['codigo_postal'] . "</td>
+                                        <td>" . $row2['nombre'] . "</td>
+                                        <td>";
+
+                                        $sql3 = "SELECT * FROM publicidades WHERE id_publicidad = " . $row['id_publicidad'] . " AND revision IS NULL";
+                                        $result3 = sqlSELECT($sql3);
+
+                                        // Si da resultados entonces entra en el if.
+                                        if ($result3->num_rows > 0) {
+                                            echo "<form action='administrador.php' method='POST'>
+                                            <input type='hidden' name='id_publicidad' value='" . $row['id_publicidad'] . "'>
+                                            <input type='submit' name='revisarCompra' value='Revisado'>
+                                            </form>";
+                                        }
+                                        else
+                                        {
+                                            echo "<p>REVISADO</p>";
+                                        }
+
+                                        echo "</td>
+                                        </tr>";
                                     }
-
-
                                 }
-
                             }
-
                             echo "</table>";
                         }
                     }
+                    if (isset($_POST['revisarCompra'])) {
+                        $id_publicidad = $_POST['id_publicidad'];
+                        $sql = "UPDATE publicidades SET revision = 1 WHERE id_publicidad = " . $id_publicidad;
+                        
+                        if (sqlUPDATE($sql)) {
+                          echo "<script>window.location.href = 'administrador.php?administradorPanel';</script>";
+                          exit();
+                        }
+                      }
                     ?>
 
 
@@ -487,12 +504,12 @@ require_once '../lib/modulos.php';
                         </div>
 
                         <?php
-    } else {
-        echo ('Acceso denegado');
-        print '<a href ="../index.php"><button>Volver</button></a>';
-        session_destroy();
-    }
-    ?>
+        } else {
+            echo ('Acceso denegado');
+            print '<a href ="../index.php"><button>Volver</button></a>';
+            session_destroy();
+        }
+        ?>
 
                     <script>
                         administradorUsuarios();

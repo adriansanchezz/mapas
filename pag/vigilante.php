@@ -39,7 +39,7 @@ require_once '../lib/modulos.php';
                     </li>
                     <li>
                         <form action="vigilante.php" method="post">
-                            <button type="submit" name="recompesas" class="btn btn-link nav-link text-white">Recompensas
+                            <button type="submit" name="recompensas" class="btn btn-link nav-link text-white">Recompensas
                             </button>
                         </form>
                     </li>
@@ -50,15 +50,14 @@ require_once '../lib/modulos.php';
             $puntos = 0;
             $id_usuario = $_SESSION['usuario']['id_usuario'];
             $conn = conectar();
-            $sql = "SELECT * FROM misiones WHERE id_usuario='$id_usuario' AND estado=1";
+            $sql = "SELECT * FROM usuarios WHERE id_usuario='$id_usuario'";
             $result = $conn->query($sql);
 
             if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
-                    if ($row['aceptacion'] == 1) {
-                        $puntos = $puntos + 10;
-                    }
+                    $puntos = $row['puntos'];
                 }
+                
             }
 
             ?>
@@ -106,38 +105,30 @@ require_once '../lib/modulos.php';
             if (isset($_REQUEST['misiones'])) {
                 ?>
                 <div class="flex-grow-1">
-                        <?php mapa("vigilar"); ?>
+                    <?php mapa("vigilar"); ?>
                 </div>
 
                 <?php
                 echo '<input type="submit" class="btn btn-primary" id="solicitarMision" value="Solicitar mision">';
 
             }
-            if (isset($_REQUEST['solicitarMision'])) {
-                function randomMission()
-                {
-
-                }
-            }
+            
             ?>
 
             <?php
-            if (isset($_REQUEST['recompesas'])) {
+            if (isset($_REQUEST['recompensas'])) {
                 ?>
                 <div class="flex-grow-1">
                     <div class="p-3" style="display: block;">
-                        <form class="form-inline my-2 my-lg-0" action="usuario.php" method="post">
-                            <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioCarrito"
-                                type="submit">Carrito</button>
-                        </form>
-                        <h1>TIENDA</h1>
+                        
+                        <h1>RECOMPENSAS</h1>
                         <div class="products">
                             <?php
                             // Establecer la conexión con la base de datos utilizando una función de conexión existente
                             $conn = conectar();
 
                             // Consultar los productos desde la base de datos
-                            $sql = "SELECT * FROM productos";
+                            $sql = "SELECT * FROM productos as p, fotos as f WHERE f.id_producto = p.id_producto";
                             $result = $conn->query($sql);
 
                             // Verificar si se encontraron productos
@@ -148,10 +139,11 @@ require_once '../lib/modulos.php';
                                     echo "<div class='card-body'>";
                                     echo "<h3 class='card-title'>" . $row['nombre'] . "</h3>";
                                     echo "<p class='card-text'>" . $row['descripcion'] . "</p>";
-                                    echo "<p class='card-text'>Precio: $" . $row['precio'] . "</p>";
-                                    echo "<form action='usuario.php' method='post'>";
+                                    echo "<td><img src='data:image/jpeg;base64," . base64_encode($row['foto']) . "' alt='Imagen del producto' class='img-thumbnail'></td>";
+                                    echo "<p class='card-text'>Puntos: " . (int) $row['precio'] * 10 . "</p>";
+                                    echo "<form action='vigilante.php' method='post'>";
                                     echo "<input type='hidden' name='product_id' value='" . $row['id_producto'] . "'>";
-                                    echo "<input class='btn btn-primary' type='submit'  value='Reclamar'>";
+                                    echo "<input class='btn btn-primary' type='submit'  name='reclamarRecompensa' value='Reclamar'>";
                                     echo "</form>";
                                     echo "</div>";
                                     echo "</div>";
@@ -168,6 +160,34 @@ require_once '../lib/modulos.php';
 
             </div>
             <?php
+            }
+            if (isset($_POST['reclamarRecompensa'])) {
+
+                $id_usuario = $_SESSION['usuario']['id_usuario'];
+                $product_id = $_POST['product_id'];
+                $sql = "SELECT * FROM productos WHERE id_producto = " . $product_id;
+                $result = sqlSELECT($sql);
+
+                // Si da resultados entonces entra en el if.
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        $precio = $row['precio'];
+                        $sqlPedido = "INSERT INTO `pedidos`(`importe`, `fecha_fin`, `id_usuario`) VALUES ($precio, NOW(), $id_usuario)";
+                        sqlINSERT($sqlPedido);
+
+
+                        $id_pedido = obtenerUltimoIdPedido(); // Obtener el último ID de pedido insertado
+                        $sqlLinea = "INSERT INTO `lineas_pedidos`(`precio`, `cantidad`, `id_producto`, `id_publicidad`, `id_pedido`) VALUES ($precio, 1, $product_id, NULL, $id_pedido)";
+                        sqlINSERT($sqlLinea);
+
+                        $sql2 = "UPDATE usuarios SET puntos = puntos - " . (int) $row['precio'] * 10 . " WHERE id_usuario = " . $_SESSION['usuario']['id_usuario'];
+                        sqlUPDATE($sql2);
+                    }
+
+                }
+
+                echo "<script>window.location.href = 'vigilante.php?recompensas';</script>";
+                exit();
             }
             if (isset($_POST['imagenMision'])) {
                 $id_mision = $_POST['id_mision'];
