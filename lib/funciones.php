@@ -786,19 +786,35 @@ function guardarMarcador()
         $precio = $_POST['precio'];
         $idUser = $_SESSION['usuario']['id_usuario'];
         $estado = 1;
-
+        $revisionPiso = 0;
         // Establecer la conexión con la base de datos.
         $conn = conectar();
 
-        // Realización de la consulta a la base de datos a través de un bind param.
-        $sql = "INSERT INTO publicidades (latitud, longitud, provincia, ciudad, ubicacion, codigo_postal, descripcion, estado, precio, id_tipo_publicidad, id_usuario) 
+        if($tipoPublicidad == 5)
+        {
+            // Realización de la consulta a la base de datos a través de un bind param.
+            $sql = "INSERT INTO publicidades (latitud, longitud, provincia, ciudad, ubicacion, codigo_postal, descripcion, estado, precio, id_tipo_publicidad, id_usuario, revision) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            // Se comprueba que la consulta sea adecuada.
+            $stmt = $conn->prepare($sql);
+            // Y mediante un bind_param se establecen los valores.
+            $stmt->bind_param('ddsssssidiii', $lat, $lng, $provincia, $ciudad, $ubicacion, $codigo_postal, $descripcion, $estado, $precio, $tipoPublicidad, $idUser, $revisionPiso);
+            // Se ejecuta la consulta.
+            $stmt->execute();
+        }
+        else
+        {
+            // Realización de la consulta a la base de datos a través de un bind param.
+            $sql = "INSERT INTO publicidades (latitud, longitud, provincia, ciudad, ubicacion, codigo_postal, descripcion, estado, precio, id_tipo_publicidad, id_usuario) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        // Se comprueba que la consulta sea adecuada.
-        $stmt = $conn->prepare($sql);
-        // Y mediante un bind_param se establecen los valores.
-        $stmt->bind_param('ddsssssidii', $lat, $lng, $provincia, $ciudad, $ubicacion, $codigo_postal, $descripcion, $estado, $precio, $tipoPublicidad, $idUser);
-        // Se ejecuta la consulta.
-        $stmt->execute();
+            // Se comprueba que la consulta sea adecuada.
+            $stmt = $conn->prepare($sql);
+            // Y mediante un bind_param se establecen los valores.
+            $stmt->bind_param('ddsssssidii', $lat, $lng, $provincia, $ciudad, $ubicacion, $codigo_postal, $descripcion, $estado, $precio, $tipoPublicidad, $idUser);
+            // Se ejecuta la consulta.
+            $stmt->execute();
+        }
+        
         $id_publicidad = $conn->insert_id;
 
         // Verificar si la inserción fue exitosa.
@@ -812,26 +828,34 @@ function guardarMarcador()
         }
 
         if (isset($_FILES['imagen'])) {
-            if ($_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
-                $imagen = $_FILES['imagen']['tmp_name'];
-                $contenidoImagen = file_get_contents($imagen);
-                $conn = conectar();
-
-                $sql = "INSERT INTO `fotos`(`foto`, `id_publicidad`) VALUES (?, ?)";
-
-                $stmt2 = $conn->prepare($sql);
-                $stmt2->bind_param("si", $contenidoImagen, $id_publicidad);
-                // Ejecutar la consulta
-                if ($stmt2->execute()) {
-
-                    echo "<script>window.location.href = 'usuario.php?usuarioMapa=';</script>";
-                    exit();
-
+            $conn = conectar();
+        
+            // Iterar sobre cada imagen enviada
+            for ($i = 0; $i < count($_FILES['imagen']['name']); $i++) {
+                // Verificar si no hubo errores en la subida del archivo
+                if ($_FILES['imagen']['error'][$i] === UPLOAD_ERR_OK) {
+                    $imagen = $_FILES['imagen']['tmp_name'][$i];
+                    $contenidoImagen = file_get_contents($imagen);
+        
+                    $sql = "INSERT INTO `fotos`(`foto`, `id_publicidad`) VALUES (?, ?)";
+        
+                    $stmt = $conn->prepare($sql);
+                    $stmt->bind_param("si", $contenidoImagen, $id_publicidad);
+        
+                    // Ejecutar la consulta para cada imagen
+                    if ($stmt->execute()) {
+                        echo "La imagen " . $_FILES['imagen']['name'][$i] . " se ha subido correctamente.<br>";
+                    } else {
+                        echo "Error al subir la imagen " . $_FILES['imagen']['name'][$i] . ": " . $stmt->error . "<br>";
+                    }
                 } else {
-                    echo "Error al subir la imagen: " . $stmt->error;
+                    echo "Error al subir la imagen " . $_FILES['imagen']['name'][$i] . ": " . $_FILES['imagen']['error'][$i] . "<br>";
                 }
-
             }
+        
+            // Redirigir o realizar alguna acción adicional después de procesar todas las imágenes
+            echo "<script>window.location.href = 'usuario.php?usuarioMapa=';</script>";
+            exit();
         }
 
         // Se cierra la conexión sql.

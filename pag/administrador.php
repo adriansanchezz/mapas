@@ -198,6 +198,8 @@ require_once '../lib/modulos.php';
                             }
                             echo "</table>";
                         }
+
+
                         echo "<br><br><h1>Productos comprados</h1><br>";
                         $sql4 = "SELECT * FROM pedidos WHERE fecha_fin IS NOT NULL";
                         $result = $conn->query($sql4);
@@ -244,6 +246,62 @@ require_once '../lib/modulos.php';
                             }
                             echo "</table>";
                         }
+
+                        echo "<br><br><h1>Solicitudes de Pisos</h1><br>";
+                        $sql5 = "SELECT * FROM publicidades as p, usuarios as u WHERE p.revision = 0 AND p.id_usuario = u.id_usuario";
+                        $result = $conn->query($sql5);
+                        if ($result->num_rows > 0) {
+                            echo "<table>";
+                            echo "<tr>
+                                    <th>Usuario</th>
+                                    <th>Importe</th>
+                                    <th>Ubicación</th>
+                                    <th>Fecha</th>
+                                    <th>Aceptación</th>
+                                    </tr>";
+                                
+                            while ($row5 = $result->fetch_assoc()) {
+                                
+                                echo "<tr>";
+                                  
+
+                                
+                                echo "<td>" . $row5['email'] . "</td>";
+                                echo "<td>" . $row5['email'] . "</td>";
+                                echo "<td>" . $row5['email'] . "</td>";
+                                $sql6 = "SELECT * FROM fotos WHERE id_publicidad = ". $row5['id_publicidad'];
+                                $result = $conn->query($sql6);
+                                if ($result->num_rows > 0) { 
+                                    echo "<td>";
+                                    while ($row6 = $result->fetch_assoc()) {
+                                        $imagen = $row6["foto"];
+                                        // Mostrar la imagen en la página
+                                        $mostrarImagen = "<img src='data:image/jpeg;base64," . base64_encode($imagen) . "' alt='Imagen del producto'>"; 
+                                        echo $mostrarImagen;
+                                    }
+                                    echo "</td>";
+                                } 
+                                echo "<td><form action='administrador.php' method='POST'>
+                                            <input type='hidden' name='id_publicidad' value='" . $row5['id_publicidad'] . "'>
+                                            <input type='submit' name='aceptarCertificado' value='Aceptar'>
+                                            </form></td>";
+                                echo "</tr>";
+
+                            }
+
+                        }
+
+                    }
+                    if (isset($_POST['aceptarCertificado'])) {
+
+                        $id_publicidad = $_POST['id_publicidad'];
+                        $sql = "UPDATE publicidades SET revision = NULL WHERE id_publicidad = " . $id_publicidad;
+
+                        if (sqlUPDATE($sql)) {
+                            echo "<script>window.location.href = 'administrador.php?administradorPanel';</script>";
+                            exit();
+                        }
+
 
                     }
                     if (isset($_POST['revisarCompraUbicacion'])) {

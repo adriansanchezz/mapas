@@ -310,7 +310,7 @@ function mapa($valor)
         <?php
         // Establecer la conexión con la base de datos.
         // Consultar los marcadores existentes en el mapa.
-        $sql = "SELECT * FROM publicidades WHERE estado = 1 AND ocupado = 0 AND comprador IS NULL AND id_usuario <> " . $_SESSION['usuario']['id_usuario'];
+        $sql = "SELECT * FROM publicidades WHERE revision IS NULL OR revision = 1 AND estado = 1 AND ocupado = 0 AND comprador IS NULL AND id_usuario <> " . $_SESSION['usuario']['id_usuario'];
         $result = sqlSELECT($sql);
 
         // Si da resultados entonces entra en el if.
@@ -757,7 +757,7 @@ function mapa($valor)
                         </div>
                         <div class="form-group">
                             <label for="tipoPublicidad">Tipo de Publicidad:</label>
-                            <select class="form-control" name="tipoPublicidad" required>
+                            <select class="form-control" name="tipoPublicidad" id="tipoPublicidad" required>
                                 <?php
                                 $conn = conectar();
                                 $sql = "SELECT id_tipo_publicidad, nombre FROM tipospublicidades";
@@ -780,8 +780,9 @@ function mapa($valor)
                             <input type="text" class="form-control" id="precio" name="precio" placeholder="Precio" required>
                         </div>
                         <div class="form-group">
-                            <label for="imagen">Sube una foto:</label>
-                            <input type="file" class="form-control-file" name="imagen" accept="image/*" required>
+                            <label for="imagen" id="imagensubir">Sube una foto:</label>
+                            <span id="mensajePiso" style="display: none; color: red;">(*) Recuerda subir un papel certificado de la comunidad de vecinos.</span>
+                            <input type="file" name="imagen[]" multiple>
                         </div>
                         <span>Esta es la foto que Google ha tomado:</span>
 
@@ -791,6 +792,18 @@ function mapa($valor)
                 </div>
             </form>
         </div>
+        <script>
+            document.getElementById("tipoPublicidad").addEventListener("change", function() {
+                var seleccionado = this.options[this.selectedIndex].text;
+                var mensajePiso = document.getElementById("mensajePiso");
+                if (seleccionado === "Piso") {
+                    mensajePiso.style.display = "block";
+                } else {
+                    mensajePiso.style.display = "none";
+                }
+            });
+        </script>
+
         <?php
     }
     if ($valor == "vigilar") {
