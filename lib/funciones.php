@@ -482,7 +482,7 @@ function listarPublicidades($id_user)
             <td><span class='editablePublicidad' id='precio' data-publicidad-id='$id_publicidad'>$precio</span></td>
             <td>$estado</td>
             <td>
-                <form action='cuenta.php' method='POST'>
+                <form action='cuenta.php?publicidades' method='POST'>
                     <input type='hidden' name='id_publicidad' value='$id_publicidad'>
                     <button type='submit' name='activarPublicidad' class='btn btn-success'>Activar</button>
                     <button type='submit' name='desactivarPublicidad' class='btn btn-secondary'>Desacticar</button>
@@ -625,57 +625,52 @@ function guardarNombre($nombre, $id_user)
 }
 
 // Actualizar dato de correo, y pasa parametro de nuevo correo y correo repetido, mas su id usuario
-function guardarCorreo($correo, $correo2, $id_user)
+function guardarCorreo($correo, $id_user)
 {
-    // Verificar si los datos repite o no
-    if (repetirValor($correo, $correo2)) {
-        // Consulta
-        $sql = "SELECT COUNT(*) as count FROM usuarios WHERE email = '$correo'";
+    // Consulta
+    $sql = "SELECT COUNT(*) as count FROM usuarios WHERE email = '$correo'";
 
-        // Meter el resultado devulto para un valor;
-        $datos = sqlSELECT($sql)->fetch_assoc();
+    // Meter el resultado devulto para un valor;
+    $datos = sqlSELECT($sql)->fetch_assoc();
 
-        // Comproba mediante count si existe ya ese correo o no
-        if ($datos["count"] > 0) {
-            // El nuevo correo de usuario ya existe en la base de datos, mostrar un mensaje de error
-            echo "<div class='flex-grow-1'><div class='alert alert-danger' role='alert'>El nuevo correo de usuario ya existe.</div></div>";
-        } else {
-            // El nuevo correo de usuario no existe en la base de datos, actualizar el registro correspondiente
-            $sql = "UPDATE usuarios SET email='$correo' WHERE id_usuario = '$id_user'";
-            if (sqlUPDATE($sql)) {
-                echo "<div class='flex-grow-1'><div class='alert alert-success' role='alert'>El correo de usuario se ha modificado correctamente.</div></div>";
-            } else {
-                // Se produjo un error al actualizar el registro, mostrar un mensaje de error
-                echo "Error al modificar el correo de usuario!";
-            }
-        }
+    // Comproba mediante count si existe ya ese correo o no
+    if ($datos["count"] > 0) {
+        // El nuevo correo de usuario ya existe en la base de datos, mostrar un mensaje de error
+        echo "<div class='flex-grow-1'><div class='alert alert-danger' role='alert'>El nuevo correo de usuario ya existe.</div></div>";
     } else {
-        echo "<div class='flex-grow-1'>Los correo no son iguales!</div>";
+        // El nuevo correo de usuario no existe en la base de datos, actualizar el registro correspondiente
+        $sql = "UPDATE usuarios SET email='$correo' WHERE id_usuario = '$id_user'";
+        if (sqlUPDATE($sql)) {
+            echo "<div class='flex-grow-1'><div class='alert alert-success' role='alert'>El correo de usuario se ha modificado correctamente.</div></div>";
+        } else {
+            // Se produjo un error al actualizar el registro, mostrar un mensaje de error
+            echo "Error al modificar el correo de usuario!";
+        }
     }
 }
 
 // Actualizar dato de password, pasa parametro de nuevo pass y pass repetido, mas su id usuario
 function guardarPassword($antiguoPass, $pass, $pass2, $id_user)
 {
-    if(comprobarPassword($antiguoPass,$id_user)){
-    // Verificar si los datos repite o no
-    if (repetirValor($pass, $pass2)) {
+    if (comprobarPassword($antiguoPass, $id_user)) {
+        // Verificar si los datos repite o no
+        if (repetirValor($pass, $pass2)) {
 
-        //Hashar la contra
-        $password_hash = password_hash($pass, PASSWORD_DEFAULT);
+            //Hashar la contra
+            $password_hash = password_hash($pass, PASSWORD_DEFAULT);
 
-        //consulta
-        $sql = "UPDATE usuarios SET password='$password_hash' WHERE id_usuario = '$id_user'";
+            //consulta
+            $sql = "UPDATE usuarios SET password='$password_hash' WHERE id_usuario = '$id_user'";
 
-        if (sqlUPDATE($sql)) {
-            echo "<div class='flex-grow-1'><div class='alert alert-success' role='alert'>La contraseña de usuario se ha modificado correctamente.</div></div>";
+            if (sqlUPDATE($sql)) {
+                echo "<div class='flex-grow-1'><div class='alert alert-success' role='alert'>La contraseña de usuario se ha modificado correctamente.</div></div>";
+            } else {
+                // Se produjo un error al actualizar el registro, mostrar un mensaje de error
+                echo "Error al modificar la contraseña de usuario!";
+            }
         } else {
-            // Se produjo un error al actualizar el registro, mostrar un mensaje de error
-            echo "Error al modificar la contraseña de usuario!";
+            echo "<div class='flex-grow-1'><div class='alert alert-danger' role='alert'>Las contraseñas no son iguales!</div></div>";
         }
-    } else {
-        echo "<div class='flex-grow-1'><div class='alert alert-danger' role='alert'>Las contraseñas no son iguales!</div></div>";
-    }
     } else {
         echo "<div class='flex-grow-1'><div class='alert alert-danger' role='alert'>Las contraseñas actual es incorrecta!</div></div>";
     }
@@ -790,8 +785,7 @@ function guardarMarcador()
         // Establecer la conexión con la base de datos.
         $conn = conectar();
 
-        if($tipoPublicidad == 5)
-        {
+        if ($tipoPublicidad == 5) {
             // Realización de la consulta a la base de datos a través de un bind param.
             $sql = "INSERT INTO publicidades (latitud, longitud, provincia, ciudad, ubicacion, codigo_postal, descripcion, estado, precio, id_tipo_publicidad, id_usuario, revision) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -801,9 +795,7 @@ function guardarMarcador()
             $stmt->bind_param('ddsssssidiii', $lat, $lng, $provincia, $ciudad, $ubicacion, $codigo_postal, $descripcion, $estado, $precio, $tipoPublicidad, $idUser, $revisionPiso);
             // Se ejecuta la consulta.
             $stmt->execute();
-        }
-        else
-        {
+        } else {
             // Realización de la consulta a la base de datos a través de un bind param.
             $sql = "INSERT INTO publicidades (latitud, longitud, provincia, ciudad, ubicacion, codigo_postal, descripcion, estado, precio, id_tipo_publicidad, id_usuario) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -814,7 +806,7 @@ function guardarMarcador()
             // Se ejecuta la consulta.
             $stmt->execute();
         }
-        
+
         $id_publicidad = $conn->insert_id;
 
         // Verificar si la inserción fue exitosa.
@@ -829,19 +821,19 @@ function guardarMarcador()
 
         if (isset($_FILES['imagen'])) {
             $conn = conectar();
-        
+
             // Iterar sobre cada imagen enviada
             for ($i = 0; $i < count($_FILES['imagen']['name']); $i++) {
                 // Verificar si no hubo errores en la subida del archivo
                 if ($_FILES['imagen']['error'][$i] === UPLOAD_ERR_OK) {
                     $imagen = $_FILES['imagen']['tmp_name'][$i];
                     $contenidoImagen = file_get_contents($imagen);
-        
+
                     $sql = "INSERT INTO `fotos`(`foto`, `id_publicidad`) VALUES (?, ?)";
-        
+
                     $stmt = $conn->prepare($sql);
                     $stmt->bind_param("si", $contenidoImagen, $id_publicidad);
-        
+
                     // Ejecutar la consulta para cada imagen
                     if ($stmt->execute()) {
                         echo "La imagen " . $_FILES['imagen']['name'][$i] . " se ha subido correctamente.<br>";
@@ -852,7 +844,7 @@ function guardarMarcador()
                     echo "Error al subir la imagen " . $_FILES['imagen']['name'][$i] . ": " . $_FILES['imagen']['error'][$i] . "<br>";
                 }
             }
-        
+
             // Redirigir o realizar alguna acción adicional después de procesar todas las imágenes
             echo "<script>window.location.href = 'usuario.php?usuarioMapa=';</script>";
             exit();

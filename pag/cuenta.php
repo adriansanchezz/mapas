@@ -58,23 +58,10 @@ require_once '../lib/modulos.php';
                             </button>
                         </form>
                     </li>
-
                     <li>
                         <form action="cuenta.php" method="post">
-                            <button type="submit" name="cambiar_nombre" class="btn btn-link nav-link text-white">Modificar
-                                nombre</button>
-                        </form>
-                    </li>
-                    <li>
-                        <form action="cuenta.php" method="post">
-                            <button type="submit" name="cambiar_correo" class="btn btn-link nav-link text-white">Modificar
-                                correo</button>
-                        </form>
-                    </li>
-                    <li>
-                        <form action="cuenta.php" method="post">
-                            <button type="submit" name="cambiar_contra" class="btn btn-link nav-link text-white">Modificar
-                                constraseña</button>
+                            <button type="submit" name="publicidades"
+                                class="btn btn-link nav-link text-white">Publicidades</button>
                         </form>
                     </li>
                     <li>
@@ -123,18 +110,13 @@ require_once '../lib/modulos.php';
                                     <input type="email" class="form-control" name="nuevoCorreo"
                                         placeholder="Introducir el correo" required>
                                 </div>
-                                <div class="form-group">
-                                    <label for="correo">Confirmar correo</label>
-                                    <input type="email" class="form-control" name="nuevoCorreo2"
-                                        placeholder="Confirmar el correo" required>
-                                </div>
                                 <input type="submit" class="btn btn-primary" name="confirmarCorreo" value="Confirmar">
                             </form>
                         </div><br><br>
 
 
                         <h3>Nombre</h3><br>
-                        <?php echo "<b>Nombre actual<: /b>" . $_SESSION['usuario']['nombre']; ?> <br><br>
+                        <?php echo "<b>Nombre actual: </b>" . $_SESSION['usuario']['nombre']; ?> <br><br>
                         <div class="flex-grow-1">
                             <form action="cuenta.php" method="post">
                                 <div class="form-group">
@@ -168,10 +150,6 @@ require_once '../lib/modulos.php';
                                 <input type="submit" class="btn btn-primary" name="cambioContra" value="Confirmar">
                             </form>
                         </div><br><br>
-
-
-                        <h3>Propiedades</h3>
-                        <?php listarPublicidades($_SESSION['usuario']['id_usuario']); ?>
                     </div>
                 </div>
                 <?php
@@ -182,7 +160,7 @@ require_once '../lib/modulos.php';
             }
 
             if (isset($_POST['confirmarCorreo'])) {
-                guardarCorreo($_POST['nuevoCorreo'], $_POST['nuevoCorreo2'], $_SESSION['usuario']['id_usuario']);
+                guardarCorreo($_POST['nuevoCorreo'], $_SESSION['usuario']['id_usuario']);
             }
 
             if (isset($_POST['cambioContra'])) {
@@ -190,65 +168,52 @@ require_once '../lib/modulos.php';
             }
             ?>
 
-            <?php
-            if (isset($_POST['cambiar_nombre'])) {
-                ?>
-
-                <?php
-            } else
-            ?>
-
-            <?php
-            if (isset($_POST['cambiar_correo'])) {
-                ?>
-
-                <?php
-            } else
-            ?>
-
-            <?php
-            if (isset($_POST['cambiar_contra'])) {
-                ?>
-
-                <?php
-            } else
-            ?>
-
-
 
             <?php
             // Verificar si se recibió un pedido para editar un usuario
-            if (isset($_GET['editarPublicidad'])) {
-                // Obtener el ID del producto a editar
-                $publicidadId = $_GET['editarPublicidad'];
+            if (isset($_REQUEST['suscripcion'])) {
+                ?>
+                <div class="flex-grow-1">
+                    <div class="p-3" style="display: block;">
 
-                // Obtener el nuevo valor del producto
-                $nuevoValor = $_POST['nuevoValor'];
 
-                // Obtener el nombre de la columna a actualizar (puede venir como parámetro en la solicitud)
-                $columna = $_POST['columna']; // Asegúrate de validar y sanitizar este valor
-        
-                // Por ejemplo, supongamos que tienes una tabla llamada "productos"
-                // Puedes utilizar una consulta SQL para actualizar el valor del producto en la columna específica
-                // Ejemplo con MySQLi:
-                $conexion = conectar();
-                $columna = $conexion->real_escape_string($columna); // Escapar el nombre de la columna para evitar inyección de SQL
-                $consulta = "UPDATE publicidades SET $columna = '$nuevoValor' WHERE id_publicidad = $publicidadId";
-                $resultado = $conexion->query($consulta);
 
-                // Manejar la respuesta de la actualización (puedes enviar un mensaje de éxito o realizar alguna otra acción)
-                if ($resultado) {
-                    echo "Actualización exitosa";
-                } else {
-                    echo "Error al actualizar el valor";
-                }
-                // Terminar la ejecución del script PHP
-                exit();
+                    </div>
+                </div>
+                <?php
             }
             ?>
 
+            <?php
+            // Verificar si se recibió un pedido para editar un usuario
+            if (isset($_REQUEST['suscripcion'])) {
+                ?>
+                <div class="flex-grow-1">
+                    <div class="p-3" style="display: block;">
 
 
+
+                    </div>
+                </div>
+                <?php
+            }
+            ?>
+
+            <?php
+            // Verificar si se recibió un pedido para editar un usuario
+            if (isset($_REQUEST['publicidades'])) {
+                ?>
+                <div class="flex-grow-1">
+                    <div class="p-3" style="display: block;">
+
+                        <h3>Propiedades</h3>
+                        <?php listarPublicidades($_SESSION['usuario']['id_usuario']); ?>
+
+                    </div>
+                </div>
+                <?php
+            }
+            ?>
 
             <?php
             // Verificar si se recibió un pedido para editar un usuario
