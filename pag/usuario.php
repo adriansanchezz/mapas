@@ -182,13 +182,15 @@ require_once '../lib/modulos.php';
             }
 
             if (isset($_REQUEST['actualizarPedido'])) {
-                $importe = $_GET['importe']; // Obtener el valor de importe desde los parámetros de la solicitud
-        
-                // Actualizar el pedido en la base de datos utilizando el valor de importe
+                $importe = $_GET['importe'];
+                $ubicacion = $_GET['ubicacion'];
+                
+                // Actualizar el pedido en la base de datos utilizando el valor de importe y ubicacion
                 $id_pedido = obtenerUltimoIdPedido();
-                $sqlPedido = "UPDATE pedidos SET fecha_fin = NOW(), importe = " . $importe . " WHERE id_pedido = " . $id_pedido;
+                $sqlPedido = "UPDATE pedidos SET fecha_fin = NOW(), importe = '" . $importe . "', ubicacion = '". $ubicacion ."' WHERE id_pedido = " . $id_pedido;
                 sqlUPDATE($sqlPedido);
             }
+            
             ?>
 
 
@@ -243,6 +245,7 @@ require_once '../lib/modulos.php';
                                                 echo "<p class='card-text'>Precio: $product_price</p>";
                                                 echo "<p class='card-text'>Cantidad: $product_quantity</p>";
                                                 echo "<p class='card-text'>Subtotal: $subtotal</p>";
+                                                echo "<input type='text' id='ubicacion-input' name='ubicacion' placeholder='Indica la ubicación a la que enviar el producto'>";
                                                 echo "<form action='usuario.php' method='post'>";
                                                 echo "<input type='hidden' name='id_producto' value='$product_id'>";
                                                 echo "<button class='btn btn-danger' name='remove_from_cart' type='submit'>Eliminar</button>";
@@ -302,7 +305,8 @@ require_once '../lib/modulos.php';
                             actions.order.capture().then(function (detalles) {
                                 var xhr = new XMLHttpRequest();
                                 var importe = '<?php echo $importe; ?>'; // Obtener el valor de $importe en JavaScript
-                                xhr.open('GET', 'usuario.php?actualizarPedido&importe=' + importe, true);
+                                var ubicacion = document.getElementById('ubicacion-input').value;
+                                xhr.open('GET', 'usuario.php?actualizarPedido&importe=' + importe + '&ubicacion=' + encodeURIComponent(ubicacion), true);
                                 xhr.onreadystatechange = function () {
                                     if (xhr.readyState === 4 && xhr.status === 200) {
                                         console.log('El pedido se actualizó correctamente.');

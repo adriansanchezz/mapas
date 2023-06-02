@@ -211,6 +211,8 @@ function menu_general()
                                 echo "<div class='notification'>Hoy es el último día de su publicidad alquilada: ". $row['ubicacion'] . " " . $row['codigo_postal'] . "</div>";
                             } else {
                                 echo "<div class='notification'>La fecha ya no es válida.</div>";
+                                $sql = "UPDATE publicidades SET ocupado = 0, comprador = NULL, revision = NULL, caducidad_compra = NULL";
+                                sqlUPDATE($sql);
                             }
                         } else {
                             echo "<div class='notification'>No se encontró la fecha en la base de datos.</div>";
