@@ -143,7 +143,7 @@ require_once '../lib/modulos.php';
                         $fecha_fin = "NULL"; // Asignar NULL a la columna fecha_fin
                         $id_usuario = $_SESSION['usuario']['id_usuario'];
 
-                        $sqlPedido = "INSERT INTO `pedidos`(, `importe`, `fecha_fin`, `id_usuario`) VALUES ($importe, $fecha_fin, $id_usuario)";
+                        $sqlPedido = "INSERT INTO `pedidos`(`importe`, `fecha_fin`, `id_usuario`) VALUES ($importe, $fecha_fin, $id_usuario)";
                         sqlINSERT($sqlPedido);
 
 
@@ -211,11 +211,11 @@ require_once '../lib/modulos.php';
 
                                         // Consultar los productos desde la base de datos
                                         $sql = "SELECT lp.id_producto, lp.cantidad, prod.nombre, prod.descripcion, prod.precio
-                                FROM lineas_pedidos AS lp
-                                INNER JOIN productos AS prod ON lp.id_producto = prod.id_producto
-                                INNER JOIN pedidos AS pedido ON lp.id_pedido = pedido.id_pedido
-                                WHERE lp.id_pedido = " . $id_pedido . " AND lp.cantidad > 0 AND pedido.fecha_fin IS NULL
-                                GROUP BY lp.id_producto";
+                                                FROM lineas_pedidos AS lp
+                                                INNER JOIN productos AS prod ON lp.id_producto = prod.id_producto
+                                                INNER JOIN pedidos AS pedido ON lp.id_pedido = pedido.id_pedido
+                                                WHERE lp.id_pedido = " . $id_pedido . " AND lp.cantidad > 0 AND pedido.fecha_fin IS NULL
+                                                GROUP BY lp.id_producto";
 
                                         $result = $conn->query($sql);
 
