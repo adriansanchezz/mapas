@@ -25,12 +25,11 @@ require_once '../lib/modulos.php';
 </head>
 
 <body>
-    <div class="separar">
-        <?php
-        if (isset($_SESSION['usuario'])) {
-            // Menu general
-            menu_general(); ?>
-        </div>
+    <?php
+    if (isset($_SESSION['usuario']) && validarEmpresa($_SESSION['usuario']['id_usuario'])) {
+        // Menu general
+        menu_general(); ?>
+
         <!-- Menu horizontal -->
         <div class="d-flex vh-100">
             <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 200px;">
@@ -140,7 +139,7 @@ require_once '../lib/modulos.php';
                         $sqlLinea = "INSERT INTO `lineas_pedidos`(`precio`, `cantidad`, `id_producto`, `id_publicidad`, `id_pedido`) VALUES ($precio, 1, NULL, $product_id, $id_pedido)";
                         sqlINSERT($sqlLinea);
                     } else {
-                        
+
                         $importe = 0;
                         $fecha_fin = "NULL"; // Asignar NULL a la columna fecha_fin
                         $id_usuario = $_SESSION['usuario']['id_usuario'];
@@ -391,13 +390,12 @@ require_once '../lib/modulos.php';
                 </script>
                 <?php
             }
-            if(isset($_REQUEST['empresaInfo']))
-            {
+            if (isset($_REQUEST['empresaInfo'])) {
                 $sql = "SELECT p.ubicacion, p.codigo_postal, f.foto, u.email, p.caducidad_compra FROM publicidades as p, usuarios as u, fotos as f WHERE p.id_usuario = u.id_usuario AND f.id_publicidad = p.id_publicidad AND p.comprador = " . $_SESSION['usuario']['id_usuario'] . " AND p.ocupado = 1 AND p.caducidad_compra IS NOT NULL";
                 $result = sqlSELECT($sql);
 
                 if ($result->num_rows > 0) {
-                    
+
                     echo "<table class='table table-striped table-bordered'>";
                     echo "<thead class='thead-dark'>";
                     echo "<tr>";
@@ -410,27 +408,27 @@ require_once '../lib/modulos.php';
                     echo "</thead>";
                     echo "<tbody>";
                     while ($row = $result->fetch_assoc()) {
-                      echo "<tr>";
-                      echo "<td>". $row['ubicacion'] ."</td>";
-                      echo "<td>". $row['codigo_postal'] ."</td>";
-                      echo "<td><img src='data:image/jpeg;base64,". base64_encode($row['foto']) ."' alt='Imagen del producto' class='img-thumbnail'></td>";
-                      echo "<td>". $row['email'] ."</td>";
-                      echo "<td>". $row['caducidad_compra'] ."</td>";
-                      echo "</tr>";
+                        echo "<tr>";
+                        echo "<td>" . $row['ubicacion'] . "</td>";
+                        echo "<td>" . $row['codigo_postal'] . "</td>";
+                        echo "<td><img src='data:image/jpeg;base64," . base64_encode($row['foto']) . "' alt='Imagen del producto' class='img-thumbnail'></td>";
+                        echo "<td>" . $row['email'] . "</td>";
+                        echo "<td>" . $row['caducidad_compra'] . "</td>";
+                        echo "</tr>";
                     }
                     echo "</tbody>";
                     echo "</table>";
-                  }
+                }
             }
             ?>
         </div>
         <?php
-        } else {
-            echo ('Acceso denegado');
-            print '<a href ="../index.php"><button>Volver</button></a>';
-            session_destroy();
-        }
-        ?>
+    } else {
+        echo ('Acceso denegado');
+        print '<a href ="../index.php"><button>Volver</button></a>';
+        session_destroy();
+    }
+    ?>
 
 </body>
 

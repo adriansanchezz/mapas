@@ -77,14 +77,11 @@ require_once '../lib/modulos.php';
             background-color: #0056b3;
         }
     </style>
-    <div class="separar">
         <?php
         if (isset($_SESSION['usuario'])) {
             // Menu general
             menu_general();
             ?>
-        </div>
-
         <?php
 
         if (isset($_POST['opcion'])) {

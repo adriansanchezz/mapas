@@ -50,12 +50,11 @@ require_once '../lib/modulos.php';
             color: #333;
         }
     </style>
-    <div class="separar">
         <?php
-        if (isset($_SESSION['usuario'])) {
+        if (isset($_SESSION['usuario']) && validarAdmin($_SESSION['usuario']['id_usuario'])) {
             // Menu general
             menu_general(); ?>
-        </div>
+
         <!-- Menu lateral -->
         <div class="d-flex vh-100">
             <div class="menu-lateral d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 200px;">
@@ -231,10 +230,11 @@ require_once '../lib/modulos.php';
                                     <td>" . $row3['ubicacion'] . "</td>
                                     <td>" . $row3['fecha_fin'] . "</td>";
                                 echo "<td>";
-                                if ($row3['administrado'] != NULL) {
+                                if ($row3['revision'] != NULL) {
+                                    
                                     echo "<p>Enviado</p>";
                                 }
-                                if ($row3['administrado'] == NULL) {
+                                if ($row3['revision'] == NULL) {
                                     echo "<form action='administrador.php' method='POST'>
                                             <input type='hidden' name='id_pedido' value='" . $row3['id_pedido'] . "'>
                                             <input type='submit' name='revisarCompraProducto' value='Revisado'>
@@ -263,8 +263,6 @@ require_once '../lib/modulos.php';
                             while ($row5 = $result->fetch_assoc()) {
                                 
                                 echo "<tr>";
-                                  
-
                                 
                                 echo "<td>" . $row5['email'] . "</td>";
                                 echo "<td>" . $row5['email'] . "</td>";
@@ -315,7 +313,7 @@ require_once '../lib/modulos.php';
                     }
                     if (isset($_POST['revisarCompraProducto'])) {
                         $id_pedido = $_POST['id_pedido'];
-                        $sql = "UPDATE pedidos SET administrado = 1 WHERE id_pedido = " . $id_pedido;
+                        $sql = "UPDATE pedidos SET revision = 1 WHERE id_pedido = " . $id_pedido;
 
                         if (sqlUPDATE($sql)) {
                             echo "<script>window.location.href = 'administrador.php?administradorPanel';</script>";

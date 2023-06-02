@@ -36,206 +36,208 @@ function menu_index()
 function menu_general()
 {
     ?>
-    <header>
-        <div class="cuerpo-menu">
-            <nav class="menu">
-                <ul>
-                    <li><a href="principal.php" id="selected"></a></li>
-                    <?php
-                    if (validarUsuario($_SESSION['usuario']['id_usuario'])) {
-                        ?>
-                        <li><a href="usuario.php">Usuario</a>
-                            <ul>
-                                <li><a href="usuario.php?usuarioMapa">Mapa</a></li>
-                                <li><a href="usuario.php?usuarioTienda">Tienda</a></li>
-                            </ul>
-                        </li>
+    <div class="separar">
+        <header>
+            <div class="cuerpo-menu">
+                <nav class="menu">
+                    <ul>
+                        <li><a href="principal.php" id="selected"></a></li>
                         <?php
-                    }
-                    ?>
-
-                    <?php
-                    if (validarVigilante($_SESSION['usuario']['id_usuario'])) {
-                        ?>
-                        <li><a href="vigilante.php?vigilantePrincipal">Vigilante</a>
-                            <ul>
-                                <li><a href="vigilante.php?misiones">Misiones</a></li>
-                                <li><a href="vigilante.php?recompesas">Recompensas</a></li>
-                            </ul>
-                        </li>
-                        <?php
-                    }
-                    ?>
-
-                    <?php
-                    if (validarEmpresa($_SESSION['usuario']['id_usuario'])) {
-                        ?>
-                        <li><a href="empresa.php?empresaPrincipal">Empresa</a>
-                            <ul>
-                                <li><a href="empresa.php?empresaMapa">Publicitarse</a></li>
-                                <li><a href="empresa.php?">Informacion</a></li>
-                            </ul>
-                        </li>
-                        <?php
-                    } else {
-                        ?>
-                        <li><a href="soporte.php?solicitarEmpresa">Empresa</a></li>
-                        <?php
-                    }
-                    ?>
-
-                    <?php
-                    if (validarAdmin($_SESSION['usuario']['id_usuario'])) {
-                        ?>
-                        <li><a href="administrador.php?administradorPanel">Administrador</a>
-                            <ul>
-                                <li><a href="administrador.php?administradorUsuarios">Usuario</a></li>
-                                <li><a href="administrador.php?administradorProductos">Productos</a></li>
-                                <!-- <li><a href="administrador.php?administradorNoticias">Noticias</a></li> -->
-                                <li><a href="administrador.php?administradorMisiones">Misiones</a></li>
-                            </ul>
-                        </li>
-                        <?php
-                    }
-                    ?>
-                    <li><a href="cuenta.php">Cuenta</a></li>
-                    <li><a href="soporte.php">Soporte</a></li>
-
-                    <li>
-                        <div class="nav-link">
-                            <i class="fa-sharp fa-solid fa-bell bell" style="color: #ffffff;"></i>
-                        </div>
-                    </li>
-
-
-                    <li>
-                        <form class="form-inline my-2 my-lg-0" action="../index.php" method="post">
-                            <button class="btn nav-link" name="cerrarSesion" type="submit">
-                                <i class="fa-solid fa-right-from-bracket" style="color: #ffffff;"></i>
-                            </button>
-                        </form>
-                    </li>
-                    <style>
-                        .notification-bar{
-                            margin-right: 20vh;
+                        if (validarUsuario($_SESSION['usuario']['id_usuario'])) {
+                            ?>
+                            <li><a href="usuario.php">Usuario</a>
+                                <ul>
+                                    <li><a href="usuario.php?usuarioMapa">Mapa</a></li>
+                                    <li><a href="usuario.php?usuarioTienda">Tienda</a></li>
+                                </ul>
+                            </li>
+                            <?php
                         }
-                    </style>
-                    <div class="notification-bar shadow-sm p-3 mb-5 bg-white rounded border border-primary float-left">
-                    <h4>Notificaciones</h4>
-                    <?php
-                    $sql = "SELECT * FROM publicidades WHERE comprador IS NOT NULL AND id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND id_usuario <> comprador";
-                    $result = sqlSELECT($sql);
+                        ?>
 
-                    $notificaciones = array(); // Array para almacenar las notificaciones
+                        <?php
+                        if (validarVigilante($_SESSION['usuario']['id_usuario'])) {
+                            ?>
+                            <li><a href="vigilante.php?vigilantePrincipal">Vigilante</a>
+                                <ul>
+                                    <li><a href="vigilante.php?misiones">Misiones</a></li>
+                                    <li><a href="vigilante.php?recompesas">Recompensas</a></li>
+                                </ul>
+                            </li>
+                            <?php
+                        }
+                        ?>
 
-                    if ($result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                            $sql2 = "SELECT * FROM empresas WHERE id_empresa = " . $row['comprador'];
-                            $result2 = sqlSELECT($sql2);
-                            if ($result2->num_rows > 0) {
-                                if ($row['ocupado'] == 0) {
-                                    while ($row2 = $result2->fetch_assoc()) {
-                                        $notificacion = "<div class='notification'>Una empresa: " . $row2['nombre'] . " quiere publicitarse en tu ubicacion: " . $row['ubicacion'] . "<form action='usuario.php' method='POST'><input type='hidden' name='id_publicidad' value='" . $row['id_publicidad'] . "'><input type='submit' name='aceptarEmpresa' value='aceptar'></form><form action='usuario.php' method='POST'><input type='hidden' name='id_publicidad' value='" . $row['id_publicidad'] . "'><input type='submit' name='rechazarEmpresa' value='rechazar'></form></div>";
-                                        array_push($notificaciones, $notificacion);
-                                    }
-                                } else {
-                                    while ($row2 = $result2->fetch_assoc()) {
-                                        $notificacion = "<div class='notification'>Una empresa: " . $row2['nombre'] . " quiere publicitarse en tu ubicacion: " . $row['ubicacion'] . " <span style='color: red;'>Aceptada.</span></div>";
-                                        array_push($notificaciones, $notificacion);
+                        <?php
+                        if (validarEmpresa($_SESSION['usuario']['id_usuario'])) {
+                            ?>
+                            <li><a href="empresa.php?empresaPrincipal">Empresa</a>
+                                <ul>
+                                    <li><a href="empresa.php?empresaMapa">Publicitarse</a></li>
+                                    <li><a href="empresa.php?">Informacion</a></li>
+                                </ul>
+                            </li>
+                            <?php
+                        } else {
+                            ?>
+                            <li><a href="soporte.php?solicitarEmpresa">Empresa</a></li>
+                            <?php
+                        }
+                        ?>
+
+                        <?php
+                        if (validarAdmin($_SESSION['usuario']['id_usuario'])) {
+                            ?>
+                            <li><a href="administrador.php?administradorPanel">Administrador</a>
+                                <ul>
+                                    <li><a href="administrador.php?administradorUsuarios">Usuario</a></li>
+                                    <li><a href="administrador.php?administradorProductos">Productos</a></li>
+                                    <!-- <li><a href="administrador.php?administradorNoticias">Noticias</a></li> -->
+                                    <li><a href="administrador.php?administradorMisiones">Misiones</a></li>
+                                </ul>
+                            </li>
+                            <?php
+                        }
+                        ?>
+                        <li><a href="cuenta.php?cuentaPrincipal">Cuenta</a></li>
+                        <li><a href="soporte.php">Soporte</a></li>
+
+                        <li>
+                            <div class="nav-link">
+                                <i class="fa-sharp fa-solid fa-bell bell" style="color: #ffffff;"></i>
+                            </div>
+                        </li>
+
+
+                        <li>
+                            <form class="form-inline my-2 my-lg-0" action="../index.php" method="post">
+                                <button class="btn nav-link" name="cerrarSesion" type="submit">
+                                    <i class="fa-solid fa-right-from-bracket" style="color: #ffffff;"></i>
+                                </button>
+                            </form>
+                        </li>
+                        <style>
+                            .notification-bar {
+                                margin-right: 20vh;
+                            }
+                        </style>
+                        <div class="notification-bar shadow-sm p-3 mb-5 bg-white rounded border border-primary float-left">
+                            <h4>Notificaciones</h4>
+                            <?php
+                            $sql = "SELECT * FROM publicidades WHERE comprador IS NOT NULL AND id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND id_usuario <> comprador";
+                            $result = sqlSELECT($sql);
+
+                            $notificaciones = array(); // Array para almacenar las notificaciones
+                        
+                            if ($result->num_rows > 0) {
+                                while ($row = $result->fetch_assoc()) {
+                                    $sql2 = "SELECT * FROM empresas WHERE id_empresa = " . $row['comprador'];
+                                    $result2 = sqlSELECT($sql2);
+                                    if ($result2->num_rows > 0) {
+                                        if ($row['ocupado'] == 0) {
+                                            while ($row2 = $result2->fetch_assoc()) {
+                                                $notificacion = "<div class='notification'>Una empresa: " . $row2['nombre'] . " quiere publicitarse en tu ubicacion: " . $row['ubicacion'] . "<form action='usuario.php' method='POST'><input type='hidden' name='id_publicidad' value='" . $row['id_publicidad'] . "'><input type='submit' name='aceptarEmpresa' value='aceptar'></form><form action='usuario.php' method='POST'><input type='hidden' name='id_publicidad' value='" . $row['id_publicidad'] . "'><input type='submit' name='rechazarEmpresa' value='rechazar'></form></div>";
+                                                array_push($notificaciones, $notificacion);
+                                            }
+                                        } else {
+                                            while ($row2 = $result2->fetch_assoc()) {
+                                                $notificacion = "<div class='notification'>Una empresa: " . $row2['nombre'] . " quiere publicitarse en tu ubicacion: " . $row['ubicacion'] . " <span style='color: red;'>Aceptada.</span></div>";
+                                                array_push($notificaciones, $notificacion);
+                                            }
+                                        }
                                     }
                                 }
                             }
-                        }
-                    }
 
-                    $sql = "SELECT * FROM publicidades WHERE comprador IS NULL AND id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND ocupado = 1";
-                    $result = sqlSELECT($sql);
+                            $sql = "SELECT * FROM publicidades WHERE comprador IS NULL AND id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND ocupado = 1";
+                            $result = sqlSELECT($sql);
 
-                    if ($result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                            $notificacion = "<div class='notification'>La empresa compradora de la ubicacion: " . $row['ubicacion'] . " ha decidido rechazar la publicidad. <form action='usuario.php' method='POST'><input type='hidden' name='id_publicidad' value='" . $row['id_publicidad'] . "'><input type='submit' name='rechazarEmpresa' value='Visto'></form></div>";
-                            array_push($notificaciones, $notificacion);
-                        }
-                    }
-
-                    $sql = "SELECT * FROM publicidades WHERE comprador = " . $_SESSION['usuario']['id_usuario'] . " AND ocupado = 1 AND estado = 1 AND caducidad_compra IS NULL";
-                    $result = sqlSELECT($sql);
-
-                    if ($result->num_rows > 0) {
-                        $notificacion = "<div class='notification'>Un usuario ha aceptado la solicitud de compra. Revisa el carrito de la sección empresa para poder ver la ubicación y confirmar la compra.</div>";
-                        array_push($notificaciones, $notificacion);
-                    }
-
-                    if (isset($_POST['aceptarEmpresa'])) {
-                        $id_publicidad = $_POST['id_publicidad'];
-                        $sql = "UPDATE publicidades SET ocupado = 1 WHERE id_publicidad = " . $id_publicidad;
-                        if (sqlUPDATE($sql)) {
-                            echo "<script>window.location.href = 'usuario.php?usuarioMapa';</script>";
-                            exit();
-                        }
-                    }
-                    if (isset($_POST['rechazarEmpresa'])) {
-                        $id_publicidad = $_POST['id_publicidad'];
-                        $sql = "UPDATE publicidades SET ocupado = 0, comprador = NULL WHERE id_publicidad = " . $id_publicidad;
-                        if (sqlUPDATE($sql)) {
-                            echo "<script>window.location.href = 'usuario.php?usuarioMapa';</script>";
-                            exit();
-                        }
-                    }
-
-                    // Imprimir las notificaciones en orden inverso
-                    for ($i = count($notificaciones) - 1; $i >= 0; $i--) {
-                        echo $notificaciones[$i];
-                    }
-
-
-
-                    
-                    $sql = "SELECT * FROM publicidades WHERE comprador = " . $_SESSION['usuario']['id_usuario'] . " AND ocupado = 1 AND estado = 1";
-                    $result = sqlSELECT($sql);
-                    $fechaBD = null;
-
-                    if ($result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                            // Obtener la fecha de la base de datos
-                            $fechaBD = $row['caducidad_compra'];
-                            
-
-                        // Obtener la fecha actual
-                        $fechaActual = date("Y-m-d");
-                        // Verificar si la fecha es anterior a hoy
-                        if ($fechaBD !== null) {
-                            if ($fechaActual < $fechaBD) {
-                                
-                            } elseif ($fechaBD == $fechaActual) {
-                                echo "<div class='notification'>Hoy es el último día de su publicidad alquilada: ". $row['ubicacion'] . " " . $row['codigo_postal'] . "</div>";
-                            } else {
-                                echo "<div class='notification'>La fecha ya no es válida.</div>";
-                                $sql = "UPDATE publicidades SET ocupado = 0, comprador = NULL, revision = NULL, caducidad_compra = NULL";
-                                sqlUPDATE($sql);
+                            if ($result->num_rows > 0) {
+                                while ($row = $result->fetch_assoc()) {
+                                    $notificacion = "<div class='notification'>La empresa compradora de la ubicacion: " . $row['ubicacion'] . " ha decidido rechazar la publicidad. <form action='usuario.php' method='POST'><input type='hidden' name='id_publicidad' value='" . $row['id_publicidad'] . "'><input type='submit' name='rechazarEmpresa' value='Visto'></form></div>";
+                                    array_push($notificaciones, $notificacion);
+                                }
                             }
-                        } else {
-                            echo "<div class='notification'>No se encontró la fecha en la base de datos.</div>";
-                        }
-                    }
-                    } else {
-                        echo "<div class='notification'>No se encontraron resultados.</div>";
-                    }
 
-                    ?>
-                    <div class="notification">¡Bienvenido a DisplayAds</div>
-                    </div>
+                            $sql = "SELECT * FROM publicidades WHERE comprador = " . $_SESSION['usuario']['id_usuario'] . " AND ocupado = 1 AND estado = 1 AND caducidad_compra IS NULL";
+                            $result = sqlSELECT($sql);
+
+                            if ($result->num_rows > 0) {
+                                $notificacion = "<div class='notification'>Un usuario ha aceptado la solicitud de compra. Revisa el carrito de la sección empresa para poder ver la ubicación y confirmar la compra.</div>";
+                                array_push($notificaciones, $notificacion);
+                            }
+
+                            if (isset($_POST['aceptarEmpresa'])) {
+                                $id_publicidad = $_POST['id_publicidad'];
+                                $sql = "UPDATE publicidades SET ocupado = 1 WHERE id_publicidad = " . $id_publicidad;
+                                if (sqlUPDATE($sql)) {
+                                    echo "<script>window.location.href = 'usuario.php?usuarioMapa';</script>";
+                                    exit();
+                                }
+                            }
+                            if (isset($_POST['rechazarEmpresa'])) {
+                                $id_publicidad = $_POST['id_publicidad'];
+                                $sql = "UPDATE publicidades SET ocupado = 0, comprador = NULL WHERE id_publicidad = " . $id_publicidad;
+                                if (sqlUPDATE($sql)) {
+                                    echo "<script>window.location.href = 'usuario.php?usuarioMapa';</script>";
+                                    exit();
+                                }
+                            }
+
+                            // Imprimir las notificaciones en orden inverso
+                            for ($i = count($notificaciones) - 1; $i >= 0; $i--) {
+                                echo $notificaciones[$i];
+                            }
 
 
-                    <script>
-                        const bell = document.querySelector('.bell'); const notificationBar = document.querySelector('.notification-bar');
-                        bell.addEventListener('click', () => { notificationBar.style.display = notificationBar.style.display === 'none' ? 'block' : 'none'; });
-                    </script>
 
-                </ul>
-            </nav>
-        </div>
-    </header>
+
+                            $sql = "SELECT * FROM publicidades WHERE comprador = " . $_SESSION['usuario']['id_usuario'] . " AND ocupado = 1 AND estado = 1";
+                            $result = sqlSELECT($sql);
+                            $fechaBD = null;
+
+                            if ($result->num_rows > 0) {
+                                while ($row = $result->fetch_assoc()) {
+                                    // Obtener la fecha de la base de datos
+                                    $fechaBD = $row['caducidad_compra'];
+
+
+                                    // Obtener la fecha actual
+                                    $fechaActual = date("Y-m-d");
+                                    // Verificar si la fecha es anterior a hoy
+                                    if ($fechaBD !== null) {
+                                        if ($fechaActual < $fechaBD) {
+
+                                        } elseif ($fechaBD == $fechaActual) {
+                                            echo "<div class='notification'>Hoy es el último día de su publicidad alquilada: " . $row['ubicacion'] . " " . $row['codigo_postal'] . "</div>";
+                                        } else {
+                                            echo "<div class='notification'>La fecha ya no es válida.</div>";
+                                            $sql = "UPDATE publicidades SET ocupado = 0, comprador = NULL, revision = NULL, caducidad_compra = NULL";
+                                            sqlUPDATE($sql);
+                                        }
+                                    } else {
+                                        echo "<div class='notification'>No se encontró la fecha en la base de datos.</div>";
+                                    }
+                                }
+                            } else {
+                                echo "<div class='notification'>No se encontraron resultados.</div>";
+                            }
+
+                            ?>
+                            <div class="notification">¡Bienvenido a DisplayAds</div>
+                        </div>
+
+
+                        <script>
+                            const bell = document.querySelector('.bell'); const notificationBar = document.querySelector('.notification-bar');
+                            bell.addEventListener('click', () => { notificationBar.style.display = notificationBar.style.display === 'none' ? 'block' : 'none'; });
+                        </script>
+
+                    </ul>
+                </nav>
+            </div>
+        </header>
+    </div>
     <?php
 }
 ?>
@@ -351,27 +353,27 @@ function mapa($valor)
                     var marker = L.marker([<?php echo $latitud; ?>, <?php echo $longitud; ?>]).addTo(map);
                     // Se añade un popUp para que salga una ventana al clickar un marcador existente en el mapa.
                     marker.bindPopup(`
-                            <div class='popup-content'>
-                            <h3><?php echo $nombre_tipo . " " . $ubicacion . " " . $precio . "€"; ?></h3>
-                            <p><?php echo $descripcion; ?></p>
-                            <img src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación'>
-                            </div>
-                            <form action='empresa.php' method='POST'>
-                            <input type='hidden' name='product_id' value='<?php echo $row['id_publicidad'] ?>'>
-                            <input type='hidden' name='lat' value='<?php echo $latitud; ?>'>
-                            <input type='hidden' name='lng' value='<?php echo $longitud; ?>'>
-                            <input type='hidden' name='ubicacion' value='<?php echo $ubicacion; ?>'>
-                            <input type='hidden' name='descripcion' value='<?php echo $descripcion; ?>'>
-                            <input type='hidden' name='precio' value='<?php echo $precio; ?>'>
-                            <?php
-                            $sql = "SELECT * FROM pedidos as p, lineas_pedidos as lp WHERE p.id_pedido = lp.id_pedido AND p.fecha_fin IS NULL AND p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND lp.id_publicidad = " . $row['id_publicidad'] . " AND lp.cantidad > 0;";
-                            if (sqlSELECT($sql)->num_rows > 0) {
-                                echo "<p style='color: red;'>YA SELECCIONADA</p>";
-                            }
-                            ?>
-                            <button type='submit' name='add_to_cart' value='1'>Seleccionar</button>
-                            </form>
-                            `);
+                                            <div class='popup-content'>
+                                            <h3><?php echo $nombre_tipo . " " . $ubicacion . " " . $precio . "€"; ?></h3>
+                                            <p><?php echo $descripcion; ?></p>
+                                            <img src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación'>
+                                            </div>
+                                            <form action='empresa.php' method='POST'>
+                                            <input type='hidden' name='product_id' value='<?php echo $row['id_publicidad'] ?>'>
+                                            <input type='hidden' name='lat' value='<?php echo $latitud; ?>'>
+                                            <input type='hidden' name='lng' value='<?php echo $longitud; ?>'>
+                                            <input type='hidden' name='ubicacion' value='<?php echo $ubicacion; ?>'>
+                                            <input type='hidden' name='descripcion' value='<?php echo $descripcion; ?>'>
+                                            <input type='hidden' name='precio' value='<?php echo $precio; ?>'>
+                                            <?php
+                                            $sql = "SELECT * FROM pedidos as p, lineas_pedidos as lp WHERE p.id_pedido = lp.id_pedido AND p.fecha_fin IS NULL AND p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND lp.id_publicidad = " . $row['id_publicidad'] . " AND lp.cantidad > 0;";
+                                            if (sqlSELECT($sql)->num_rows > 0) {
+                                                echo "<p style='color: red;'>YA SELECCIONADA</p>";
+                                            }
+                                            ?>
+                                            <button type='submit' name='add_to_cart' value='1'>Seleccionar</button>
+                                            </form>
+                                            `);
                 </script>
                 <?php
             }
@@ -507,31 +509,31 @@ function mapa($valor)
                         var marker = L.marker([<?php echo $latitud; ?>, <?php echo $longitud; ?>]).addTo(map);
                         // Se añade un popUp para que salga una ventana al clickar un marcador existente en el mapa.
                         marker.bindPopup(`<style>img{height: 200px;}</style><div class='popup-content'>
-                        <h3 class='popup-title'><?php echo $nombre_tipo; ?></h3>
-                        <h4 class='popup-location'><?php echo $ubicacion; ?></h4>
-                        <h4 class='popup-price'><?php echo $precio . '€'; ?></h4>
-                        <p class='popup-description'><?php echo $descripcion; ?></p>
-                        Imagen Google: <img class='popup-image' src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación'>
-                        Imagen usuario <?php echo $mostrarImagen; ?></div>
-                        <form action='usuario.php' method='POST'>
-                        <input type='hidden' name='id_publicidad' value='<?php echo $row['id_publicidad']; ?>'>
-                        <?php
-                        $conn = conectar();
-                        $sql = "SELECT * FROM publicidades as p, empresas as em WHERE p.ocupado = 1 AND p.estado = 1 AND p.comprador IS NOT NULL AND p.comprador = em.id_empresa AND p.id_publicidad = " . $row['id_publicidad'];
+                                            <h3 class='popup-title'><?php echo $nombre_tipo; ?></h3>
+                                            <h4 class='popup-location'><?php echo $ubicacion; ?></h4>
+                                            <h4 class='popup-price'><?php echo $precio . '€'; ?></h4>
+                                            <p class='popup-description'><?php echo $descripcion; ?></p>
+                                            Imagen Google: <img class='popup-image' src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación'>
+                                            Imagen usuario <?php echo $mostrarImagen; ?></div>
+                                            <form action='usuario.php' method='POST'>
+                                            <input type='hidden' name='id_publicidad' value='<?php echo $row['id_publicidad']; ?>'>
+                                            <?php
+                                            $conn = conectar();
+                                            $sql = "SELECT * FROM publicidades as p, empresas as em WHERE p.ocupado = 1 AND p.estado = 1 AND p.comprador IS NOT NULL AND p.comprador = em.id_empresa AND p.id_publicidad = " . $row['id_publicidad'];
 
-                        $resultado = $conn->query($sql);
+                                            $resultado = $conn->query($sql);
 
-                        if ($resultado->num_rows > 0) {
-                            // Si se obtienen resultados, se recorren las filas
-                            $row4 = $resultado->fetch_assoc();
+                                            if ($resultado->num_rows > 0) {
+                                                // Si se obtienen resultados, se recorren las filas
+                                                $row4 = $resultado->fetch_assoc();
 
-                            // Mostrar el mensaje de publicidad vendida
-                            echo "<p style='color: red;'>YA VENDIDA A " . $row4['nombre'] . "</p>";
-                        }
-                        ?>
+                                                // Mostrar el mensaje de publicidad vendida
+                                                echo "<p style='color: red;'>YA VENDIDA A " . $row4['nombre'] . "</p>";
+                                            }
+                                            ?>
 
-                        <button class='popup-delete-button' type='submit' name='borrarMarcador'>Borrar</button>
-                    </form>`);
+                                            <button class='popup-delete-button' type='submit' name='borrarMarcador'>Borrar</button>
+                                        </form>`);
                     </script>
                     <?php
                 }
@@ -734,7 +736,8 @@ function mapa($valor)
                     <div class="card-body">
                         <div class="form-group">
                             <label for="descripcion">Descripción:</label>
-                            <textarea class="form-control" name="descripcion" id="descripcion" placeholder="Ej: N13, 3ºIZQ" required></textarea>
+                            <textarea class="form-control" name="descripcion" id="descripcion" placeholder="Ej: N13, 3ºIZQ"
+                                required></textarea>
                         </div>
                         <div class="form-group">
                             <label for="provincia">Provincia:</label>
@@ -781,7 +784,8 @@ function mapa($valor)
                         </div>
                         <div class="form-group">
                             <label for="imagen" id="imagensubir">Sube una foto:</label>
-                            <span id="mensajePiso" style="display: none; color: red;">(*) Recuerda subir un papel certificado de la comunidad de vecinos.</span>
+                            <span id="mensajePiso" style="display: none; color: red;">(*) Recuerda subir un papel certificado de
+                                la comunidad de vecinos.</span>
                             <input type="file" name="imagen[]" multiple>
                         </div>
                         <span>Esta es la foto que Google ha tomado:</span>
@@ -793,7 +797,7 @@ function mapa($valor)
             </form>
         </div>
         <script>
-            document.getElementById("tipoPublicidad").addEventListener("change", function() {
+            document.getElementById("tipoPublicidad").addEventListener("change", function () {
                 var seleccionado = this.options[this.selectedIndex].text;
                 var mensajePiso = document.getElementById("mensajePiso");
                 if (seleccionado === "Piso") {

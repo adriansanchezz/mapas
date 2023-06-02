@@ -18,12 +18,11 @@ require_once '../lib/modulos.php';
             z-index: 0;
         }
     </style>
-    <div class="separar">
         <?php
-        if (isset($_SESSION['usuario'])) {
+        if (isset($_SESSION['usuario']) && validarVigilante($_SESSION['usuario']['id_usuario'])) {
             // Menu general
-            menu_general(); ?>
-        </div>
+            menu_general();
+            ?>
         <!-- Crear submenu con sus opciones -->
         <div class="d-flex vh-100">
             <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 200px;">
