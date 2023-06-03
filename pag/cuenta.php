@@ -107,10 +107,16 @@ require_once '../lib/modulos.php';
                             <form action="cuenta.php" method="post">
                                 <div class="form-group">
                                     <label for="correo">Nuevo correo</label>
-                                    <input type="email" class="form-control" name="nuevoCorreo"
-                                        placeholder="Introducir el correo" required>
+                                    <div class="input-group mb-3">
+                                        <input type="email" class="form-control" name="nuevoCorreo"
+                                            placeholder="Introducir el correo" required>
+                                        <div class="input-group-append">
+                                            <input type="submit" class="btn btn-outline-primary" name="confirmarCorreo"
+                                                value="Confirmar">
+                                        </div>
+                                    </div>
+
                                 </div>
-                                <input type="submit" class="btn btn-primary" name="confirmarCorreo" value="Confirmar">
                             </form>
                         </div><br><br>
 
@@ -121,10 +127,15 @@ require_once '../lib/modulos.php';
                             <form action="cuenta.php" method="post">
                                 <div class="form-group">
                                     <label for="nombre">Nombre nuevo</label>
-                                    <input type="text" class="form-control" name="nuevoNombre" placeholder="Introduce el nombre"
-                                        required>
+                                    <div class="input-group mb-3">
+                                        <input type="text" class="form-control" name="nuevoNombre"
+                                            placeholder="Introduce el nombre" required>
+                                        <div class="input-group-append">
+                                            <input type="submit" class="btn btn-outline-primary" name="guardarNombre"
+                                                value="Confirmar">
+                                        </div>
+                                    </div>
                                 </div>
-                                <input type="submit" class="btn btn-primary" name="guardarNombre" value="Confirmar">
                             </form>
                         </div><br><br>
 
@@ -144,10 +155,15 @@ require_once '../lib/modulos.php';
                                 </div>
                                 <div class="form-group">
                                     <label for="contraseña">Confirmar contraseña</label>
-                                    <input type="password" class="form-control" name="nuevoPass2"
-                                        placeholder="Confirmar la contraseña" required>
+                                    <div class="input-group mb-3">
+                                        <input type="password" class="form-control" name="nuevoPass2"
+                                            placeholder="Confirmar la contraseña" required>
+                                        <div class="input-group-append">
+                                            <input type="submit" class="btn btn-outline-primary" name="cambioContra"
+                                                value="Cambiar">
+                                        </div>
+                                    </div>
                                 </div>
-                                <input type="submit" class="btn btn-primary" name="cambioContra" value="Confirmar">
                             </form>
                         </div><br><br>
                     </div>

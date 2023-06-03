@@ -50,10 +50,10 @@ require_once '../lib/modulos.php';
             color: #333;
         }
     </style>
-        <?php
-        if (isset($_SESSION['usuario']) && validarAdmin($_SESSION['usuario']['id_usuario'])) {
-            // Menu general
-            menu_general(); ?>
+    <?php
+    if (isset($_SESSION['usuario']) && validarAdmin($_SESSION['usuario']['id_usuario'])) {
+        // Menu general
+        menu_general(); ?>
 
         <!-- Menu lateral -->
         <div class="d-flex vh-100">
@@ -174,7 +174,7 @@ require_once '../lib/modulos.php';
                                                 echo "<td>" . $row3['importe'] . "</td>";
                                             }
                                         }
-                                        
+
 
                                         echo "<td>";
                                         $sql4 = "SELECT * FROM publicidades WHERE id_publicidad = " . $row['id_publicidad'] . " AND revision IS NULL";
@@ -231,7 +231,7 @@ require_once '../lib/modulos.php';
                                     <td>" . $row3['fecha_fin'] . "</td>";
                                 echo "<td>";
                                 if ($row3['revision'] != NULL) {
-                                    
+
                                     echo "<p>Enviado</p>";
                                 }
                                 if ($row3['revision'] == NULL) {
@@ -259,26 +259,26 @@ require_once '../lib/modulos.php';
                                     <th>Fecha</th>
                                     <th>Aceptación</th>
                                     </tr>";
-                                
+
                             while ($row5 = $result->fetch_assoc()) {
-                                
+
                                 echo "<tr>";
-                                
+
                                 echo "<td>" . $row5['email'] . "</td>";
                                 echo "<td>" . $row5['email'] . "</td>";
                                 echo "<td>" . $row5['email'] . "</td>";
-                                $sql6 = "SELECT * FROM fotos WHERE id_publicidad = ". $row5['id_publicidad'];
+                                $sql6 = "SELECT * FROM fotos WHERE id_publicidad = " . $row5['id_publicidad'];
                                 $result = $conn->query($sql6);
-                                if ($result->num_rows > 0) { 
+                                if ($result->num_rows > 0) {
                                     echo "<td>";
                                     while ($row6 = $result->fetch_assoc()) {
                                         $imagen = $row6["foto"];
                                         // Mostrar la imagen en la página
-                                        $mostrarImagen = "<img src='data:image/jpeg;base64," . base64_encode($imagen) . "' alt='Imagen del producto'>"; 
+                                        $mostrarImagen = "<img src='data:image/jpeg;base64," . base64_encode($imagen) . "' alt='Imagen del producto'>";
                                         echo $mostrarImagen;
                                     }
                                     echo "</td>";
-                                } 
+                                }
                                 echo "<td><form action='administrador.php' method='POST'>
                                             <input type='hidden' name='id_publicidad' value='" . $row5['id_publicidad'] . "'>
                                             <input type='submit' name='aceptarCertificado' value='Aceptar'>
@@ -635,12 +635,12 @@ require_once '../lib/modulos.php';
                         </div>
 
                         <?php
-        } else {
-            echo ('Acceso denegado');
-            print '<a href ="../index.php"><button>Volver</button></a>';
-            session_destroy();
-        }
-        ?>
+    } else {
+        echo ('Acceso denegado');
+        print '<a href ="../index.php"><button>Volver</button></a>';
+        session_destroy();
+    }
+    ?>
 
                     <script>
                         administradorUsuarios();
