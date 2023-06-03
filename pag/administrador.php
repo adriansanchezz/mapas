@@ -40,6 +40,7 @@ require_once '../lib/modulos.php';
             color: white;
         }
 
+        
         td:nth-child(even) {
             background-color: #f2f2f2;
             color: #333;
