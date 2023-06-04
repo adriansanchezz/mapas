@@ -593,9 +593,7 @@ function mapa($valor)
                     document.getElementById('lat').value = e.latlng.lat;
                     document.getElementById('lng').value = e.latlng.lng;
                     var apiKey = 'AIzaSyADr5gpzLPePzkWwz8C94wBQ21DzQ4GGVU'; // Reemplaza con tu propia API Key de Google Maps Static
-                    var img = document.getElementById('imagenMuestra');
-                    img.src = 'https://maps.googleapis.com/maps/api/streetview?size=400x300&location=' + e.latlng.lat + ',' + e.latlng.lng + '&key=' + apiKey;
-
+                    
 
                     // Realizar la solicitud de geocodificación a Nominatim.
                     var url = 'https://nominatim.openstreetmap.org/reverse?lat=' + e.latlng.lat + '&lon=' + e.latlng.lng + '&format=json';
@@ -786,9 +784,7 @@ function mapa($valor)
                                 la comunidad de vecinos.</span>
                             <input type="file" name="imagen[]" multiple>
                         </div>
-                        <span>Esta es la foto que Google ha tomado:</span>
-
-                        <img id="imagenMuestra"></img>
+                        
                         <button type="submit" class="btn btn-primary" name="guardarMarcador">Guardar</button>
                     </div>
                 </div>
