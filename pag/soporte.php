@@ -77,25 +77,85 @@ require_once '../lib/modulos.php';
             background-color: #0056b3;
         }
     </style>
+    <?php
+    if (isset($_SESSION['usuario'])) {
+        // Menu general
+        menu_general();
+        ?>
         <?php
-        if (isset($_SESSION['usuario'])) {
-            // Menu general
-            menu_general();
-            ?>
-        <?php
+
+        if (isset($_POST['enviarSoporte'])) {
+            try {
+                $id_usuario = $_SESSION['usuario']['id_usuario'];
+                $soporte = $_POST['opcion'];
+                $asunto = $_POST['asunto'];
+                $mensaje = $_POST['mensaje'];
+
+                $conn = conectar();
+
+                if (isset($_POST['reportar'])) {
+                    $reportar = $_POST['reportar'];
+
+                    $sql = "INSERT INTO soportes (asunto, reportar, mensaje, id_tipo_soporte, id_usuario) 
+                    SELECT ?, ?, ?, id_tipo_soporte, ? FROM tipossoportes WHERE nombre = ?";
+
+                    $stmt = $conn->prepare($sql);
+                    $stmt->bind_param('sssds', $asunto, $reportar, $mensaje, $id_usuario, $soporte);
+                } else {
+                    $sql = "INSERT INTO soportes (asunto, mensaje, id_tipo_soporte, id_usuario) 
+                    SELECT ?, ?, id_tipo_soporte, ? FROM tipossoportes WHERE nombre = ?";
+                    $stmt = $conn->prepare($sql);
+                    $stmt->bind_param('ssds', $asunto, $mensaje, $id_usuario, $soporte);
+                }
+
+                if (!$stmt->execute()) {
+                    throw new Exception("Error al insertar soporte: " . $stmt->error);
+                }
+
+
+                if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
+                    $imagen = $_FILES['imagen']['tmp_name'];
+                    $contenidoImagen = file_get_contents($imagen);
+
+                    $ultimoIdSoporte = $stmt->insert_id;
+
+                    $sql = "INSERT INTO `fotos`(`foto`, `id_soporte`) VALUES (?, ?)";
+                    $stmt2 = $conn->prepare($sql);
+                    $stmt2->bind_param("si", $contenidoImagen, $ultimoIdSoporte);
+
+                    if (!$stmt2->execute()) {
+                        throw new Exception("Error al subir la imagen: " . $stmt2->error);
+                    }
+
+                }
+            } catch (Exception $e) {
+                echo "<h1>ERROR: " . $e->getMessage() . "</h1>";
+            } finally {
+                if (isset($stmt)) {
+                    $stmt->close();
+                }
+
+                if (isset($stmt2)) {
+                    $stmt2->close();
+                }
+
+                $conn->close();
+            }
+        }
 
         if (isset($_POST['opcion'])) {
             ?>
-            <form action="procesar_ticket.php" method="POST">
+            <form action="soporte.php" method="POST" enctype="multipart/form-data">
                 <div class="container">
                     <h2>Redacta tu mensaje</h2>
                     <?php
                     $soporte = $_POST['opcion'];
                     if ($soporte == "Preguntas" || $soporte == "Reportar" || $soporte == "Error" || $soporte == "Sugerencia") {
+                        echo "<input type='hidden' name='opcion' value='$soporte'>";
                         ?>
                         <div class="form-group">
                             <label for="asunto">Asunto:</label>
-                            <input type="text" id="asunto" name="asunto" required>
+                            <input type="text" name="asunto" required>
                         </div>
 
                         <?php
@@ -103,7 +163,7 @@ require_once '../lib/modulos.php';
                             ?>
                             <div class="form-group">
                                 <label for="usuario">Usuario:</label>
-                                <input type="text" id="usuario" name="usuario" required>
+                                <input type="text" name="reportar" required>
                             </div>
                             <?php
                         }
@@ -128,7 +188,7 @@ require_once '../lib/modulos.php';
                     }
                     ?>
                     <div class="form-group">
-                        <input type="submit" value="Enviar">
+                        <input type="submit" name='enviarSoporte' value="Enviar">
                     </div>
                 </div>
             </form>
@@ -145,6 +205,7 @@ require_once '../lib/modulos.php';
 
                     <br>
                     <div class="description">Tipo de soporte y envíe su mensaje:</div>
+
                     <form action="soporte.php" method="POST">
                         <div class="input-group">
                         <?php listarTiposSoportes(); ?>
@@ -160,7 +221,7 @@ require_once '../lib/modulos.php';
         if (isset($_REQUEST['solicitarEmpresa'])) {
             ?>
             <div class="container">
-            <h4>Solicitud para ser empresa</h4><br>
+                <h4>Solicitud para ser empresa</h4><br>
                 <form>
                     <div class="form-group">
                         <label for="cif">CIF</label>
@@ -202,55 +263,13 @@ require_once '../lib/modulos.php';
             <?php
         }
 
-        if (isset($_POST['enviarSoporte'])) {
-            $nombreProducto = $_POST['nombre'];
-            $descripcionProducto = $_POST['descripcion'];
-            $precioProducto = $_POST['precio'];
 
-            $conn = conectar();
-            $sql = "INSERT INTO `productos`(`nombre`, `descripcion`, `precio`) VALUES (?, ?, ?)";
-            $stmt = $conn->prepare($sql);
-            // Y mediante un bind_param se establecen los valores.
-            $stmt->bind_param('ssd', $nombreProducto, $descripcionProducto, $precioProducto);
-            // Se ejecuta la consulta.
-            $stmt->execute();
-
-            // Verificar si la inserción fue exitosa.
-            if ($stmt->affected_rows > 0) {
-
-                if (isset($_FILES['imagen'])) {
-                    if ($_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
-                        $imagen = $_FILES['imagen']['tmp_name'];
-                        $contenidoImagen = file_get_contents($imagen);
-                        $ultimoIdProducto = $stmt->insert_id;
-                        $sql = "INSERT INTO `fotos`(`foto`, `id_producto`) VALUES (?, ?)";
-                        $stmt2 = $conn->prepare($sql);
-                        $stmt2->bind_param("si", $contenidoImagen, $ultimoIdProducto);
-                        // Ejecutar la consulta
-                        if ($stmt2->execute()) {
-                            echo "<script>window.location.href = 'administrador.php?administradorProductos=';</script>";
-                            exit();
-                        } else {
-                            echo "Error al subir la imagen: " . $stmt->error;
-                        }
-                    }
-                } else {
-                    echo "<h1>ERROR</h1>";
-                }
-            } else {
-                // Si no lo fue, se indica un error.
-                echo "Error al guardar el marcador.";
-            }
-        }
-
-
-
-        } else {
-            echo ('Acceso denegado');
-            print '<a href ="../index.php"><button>Volver</button></a>';
-            session_destroy();
-        }
-        ?>
+    } else {
+        echo ('Acceso denegado');
+        print '<a href ="../index.php"><button>Volver</button></a>';
+        session_destroy();
+    }
+    ?>
 
 </body>
 

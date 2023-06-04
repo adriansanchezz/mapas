@@ -762,16 +762,14 @@ function mapa($valor)
                             <label for="tipoPublicidad">Tipo de Publicidad:</label>
                             <select class="form-control" name="tipoPublicidad" id="tipoPublicidad" required>
                                 <?php
-                                $conn = conectar();
                                 $sql = "SELECT id_tipo_publicidad, nombre FROM tipospublicidades";
-                                $resultado = mysqli_query($conn, $sql);
+                                $resultado = sqlSELECT($sql);
                                 if (mysqli_num_rows($resultado) > 0) {
                                     while ($fila = mysqli_fetch_assoc($resultado)) {
                                         $id = $fila['id_tipo_publicidad'];
                                         $nombre = $fila['nombre'];
                                         echo "<option value='$id'>$nombre</option>";
                                     }
-                                    mysqli_close($conn);
                                 } else {
                                     echo "<option value=''>No hay tipos de publicidades disponibles</option>";
                                 }

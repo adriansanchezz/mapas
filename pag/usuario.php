@@ -233,6 +233,9 @@ require_once '../lib/modulos.php';
 
                                                 // Calcular el subtotal por producto
                                                 $subtotal = $product_price * $product_quantity;
+                                                if(validarVIP($_SESSION['usuario']['id_usuario'])){
+                                                    $subtotal = $subtotal * 0.95;
+                                                }
                                                 $importe += $subtotal;
 
                                                 // Mostrar los detalles del producto en el carrito
@@ -243,7 +246,7 @@ require_once '../lib/modulos.php';
                                                 echo "<h5 class='card-title'>$product_description</h5>";
                                                 echo "<p class='card-text'>Precio: $product_price</p>";
                                                 echo "<p class='card-text'>Cantidad: $product_quantity</p>";
-                                                echo "<p class='card-text'>Subtotal: $subtotal</p>";
+                                                echo "<p class='card-text'>Subtotal: $subtotal €</p>";
                                                 echo "<input type='text' id='ubicacion-input' name='ubicacion' placeholder='Indica la ubicación a la que enviar el producto'>";
                                                 echo "<form action='usuario.php' method='post'>";
                                                 echo "<input type='hidden' name='id_producto' value='$product_id'>";
@@ -259,7 +262,11 @@ require_once '../lib/modulos.php';
                                             echo "<div class='card'>";
                                             echo "<div class='card-body'>";
                                             echo "<h5 class='card-title'>Total a pagar:</h5>";
-                                            echo "<p class='card-text'>$importe €</p>";
+                                            echo "<p class='card-text'>$importe € ";
+                                            if(validarVIP($_SESSION['usuario']['id_usuario'])){
+                                                echo "<small><i>*Se ha aplicado un descuento de 5% para usuario VIP</i></small>";
+                                            }
+                                            echo "</p>";
                                             echo "</div>";
                                             echo "</div>";
                                             echo "</div>";

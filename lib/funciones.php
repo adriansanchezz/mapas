@@ -116,7 +116,8 @@ function autenticarUser($email, $password)
             if (password_verify($password, $password_hash)) {
                 $_SESSION['usuario'] = $row;
                 $_SESSION['validarEstado'] = true;
-                header("location:pag/principal.php");
+                // echo "<script>window.location.href = 'pag/principal.php';</script>";
+                echo "<script> location.replace('pag/principal.php'); </script>";
                 exit; // Es importante poner exit después del header para asegurarnos de que el script no siga ejecutándose
             } else {
                 echo "Password Incorrecto!";
@@ -912,5 +913,13 @@ function recuperarCuenta($pass, $email)
         echo "Error al modificar la contraseña de usuario!";
     }
 }
+
+
+function insertarSoporte()
+{
+    
+}
+
+
 
 ?>
