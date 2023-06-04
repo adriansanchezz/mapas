@@ -144,7 +144,7 @@ require_once '../lib/modulos.php';
                         $fecha_fin = "NULL"; // Asignar NULL a la columna fecha_fin
                         $id_usuario = $_SESSION['usuario']['id_usuario'];
 
-                        $sqlPedido = "INSERT INTO `pedidos`(`importe`, `fecha_fin`, `id_usuario`) VALUES ($importe, $fecha_fin, $id_usuario)";
+                        $sqlPedido = "INSERT INTO `pedidos`(`importe`, `fecha_inicio`, `fecha_fin`, `id_usuario`) VALUES ($importe, NOW(), $fecha_fin, $id_usuario)";
                         sqlINSERT($sqlPedido);
 
 

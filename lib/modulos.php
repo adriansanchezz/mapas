@@ -184,13 +184,6 @@ function menu_general()
                                 }
                             }
 
-                            // Imprimir las notificaciones en orden inverso
-                            for ($i = count($notificaciones) - 1; $i >= 0; $i--) {
-                                echo $notificaciones[$i];
-                            }
-
-
-
 
                             $sql = "SELECT * FROM publicidades WHERE comprador = " . $_SESSION['usuario']['id_usuario'] . " AND ocupado = 1 AND estado = 1";
                             $result = sqlSELECT($sql);
@@ -209,19 +202,39 @@ function menu_general()
                                         if ($fechaActual < $fechaBD) {
 
                                         } elseif ($fechaBD == $fechaActual) {
-                                            echo "<div class='notification'>Hoy es el último día de su publicidad alquilada: " . $row['ubicacion'] . " " . $row['codigo_postal'] . "</div>";
+                                            $notificacion = "<div class='notification'>Hoy es el último día de su publicidad alquilada: " . $row['ubicacion'] . " " . $row['codigo_postal'] . "</div>";
+                                            array_push($notificaciones, $notificacion);
                                         } else {
-                                            echo "<div class='notification'>La fecha ya no es válida.</div>";
+                                            $notificacion = "<div class='notification'>La fecha ya no es válida.</div>";
+                                            array_push($notificaciones, $notificacion);
                                             $sql = "UPDATE publicidades SET ocupado = 0, comprador = NULL, revision = NULL, caducidad_compra = NULL";
                                             sqlUPDATE($sql);
                                         }
                                     } else {
-                                        echo "<div class='notification'>No se encontró la fecha en la base de datos.</div>";
+                                        
                                     }
                                 }
-                            } else {
-                                echo "<div class='notification'>No se encontraron resultados.</div>";
+                            } 
+
+                            $sql = "SELECT * FROM alertas WHERE usuario = " . $_SESSION['usuario']['id_usuario'] . " AND estado = 0";
+                            $result = sqlSELECT($sql);
+                            if ($result->num_rows > 0) {
+                                while ($row = $result->fetch_assoc()) {
+                                    $notificacion = "<h5 style='color: red;'>Notificación del administrador: " . $row['titulo'] . "</h5><p>". $row['descripcion'] ."</p>";
+                                    array_push($notificaciones, $notificacion);
+                                }
                             }
+
+                            // Imprimir las notificaciones en orden inverso
+                            for ($i = count($notificaciones) - 1; $i >= 0; $i--) {
+                                echo $notificaciones[$i];
+                            }
+
+
+
+
+                            
+
 
                             ?>
                             <div class="notification">¡Bienvenido a DisplayAds</div>
@@ -782,8 +795,9 @@ function mapa($valor)
                         </div>
                         <div class="form-group">
                             <label for="imagen" id="imagensubir">Sube una foto:</label>
+                            <span id="mensajePubli" style="display: block; color: red;">(*) Recuerda subir la foto del lugar en el que publicitarás.</span>
                             <span id="mensajePiso" style="display: none; color: red;">(*) Recuerda subir un papel certificado de
-                                la comunidad de vecinos.</span>
+                                la comunidad de vecinos y la foto del lugar en el que publicitarás.</span>
                             <input type="file" name="imagen[]" multiple>
                         </div>
                         
@@ -796,10 +810,14 @@ function mapa($valor)
             document.getElementById("tipoPublicidad").addEventListener("change", function () {
                 var seleccionado = this.options[this.selectedIndex].text;
                 var mensajePiso = document.getElementById("mensajePiso");
+                var mensajePubli = document.getElementById("mensajePubli");
                 if (seleccionado === "Piso") {
                     mensajePiso.style.display = "block";
+                    mensajePubli.style.display = "none";
                 } else {
                     mensajePiso.style.display = "none";
+                    
+                    mensajePubli.style.display = "block";
                 }
             });
         </script>
