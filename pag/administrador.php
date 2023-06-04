@@ -310,6 +310,37 @@ require_once '../lib/modulos.php';
 
                         }
 
+                        echo "<br><br><h1>Lanzar alerta.</h1><br>";
+                        echo "<form action='administrador.php' method='POST'>";
+                        echo "Selecciona un usuario: <select name='usuarioSeleccionado'>";
+                        $sql6 = "SELECT * FROM usuarios";
+                        $result = $conn->query($sql6);
+                        if ($result->num_rows > 0) {
+                            while ($row6 = $result->fetch_assoc()) {
+                                echo "<option value='" . $row6['id_usuario'] . "'>" . $row6['email'] . "</option>";
+                            }
+                        }
+                        echo "</select>";
+                        echo "<input type='text' name='titulo'>";
+                        echo "<textarea name='texto'></textarea>";
+                        echo "<input type='submit' name='usuarioAlerta'>";
+                        echo "</form>";
+
+                    }
+                    if(isset($_POST['usuarioAlerta']))
+                    {
+                        
+                        $usuario = $_POST['usuarioSeleccionado'];
+                        $titulo = $_POST['titulo'];
+                        $texto = $_POST['texto'];
+                        $id_admin = $_SESSION['usuario']['id_usuario'];
+                        $fechaHora = date('Y-m-d H:i:s'); // Obtiene la fecha y hora actual en el formato deseado
+
+                        $sql = "INSERT INTO `alertas`(`titulo`, `descripcion`, `usuario`, `estado`, `fecha_hora`, `id_usuario`) VALUES ('$titulo', '$texto', '$usuario', 0, '$fechaHora', '$id_admin')";
+                        sqlINSERT($sql);
+                        echo "<script>window.location.href = 'administrador.php?administradorPanel';</script>";
+                            exit();
+                        
                     }
                     if (isset($_POST['aceptarCertificado'])) {
 
