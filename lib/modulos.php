@@ -61,7 +61,7 @@ function menu_general()
                             <li><a href="vigilante.php?vigilantePrincipal">Vigilante</a>
                                 <ul>
                                     <li><a href="vigilante.php?misiones">Misiones</a></li>
-                                    <li><a href="vigilante.php?recompesas">Recompensas</a></li>
+                                    <li><a href="vigilante.php?recompensas">Recompensas</a></li>
                                 </ul>
                             </li>
                             <?php

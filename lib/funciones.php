@@ -751,6 +751,33 @@ function borrarPublicidad($id_publicidad)
     sqlDELETE($sql);
 }
 
+function activarProducto($id_producto)
+{
+    // Consulta
+    $sql = "UPDATE productos SET estado='1' WHERE id_producto = $id_producto";
+
+    // Actualizar los datos
+    sqlUPDATE($sql);
+}
+
+function desactivarProducto($id_producto)
+{
+    // Consulta
+    $sql = "UPDATE productos SET estado='0' WHERE id_producto = $id_producto";
+
+    // Actualizar los datos
+    sqlUPDATE($sql);
+}
+
+function borrarProducto($id_producto)
+{
+    // Consulta
+    $sql = "DELETE FROM productos WHERE id_producto = $id_producto";
+
+    // Actualizar los datos
+    sqlDELETE($sql);
+}
+
 function bloquearUsuario($id_usuario)
 {
     // 'Y': Representa el año con cuatro dígitos (ejemplo: 2023).
@@ -917,7 +944,7 @@ function recuperarCuenta($pass, $email)
 
 function insertarSoporte()
 {
-    
+
 }
 
 

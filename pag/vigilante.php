@@ -18,11 +18,11 @@ require_once '../lib/modulos.php';
             z-index: 0;
         }
     </style>
-        <?php
-        if (isset($_SESSION['usuario']) && validarVigilante($_SESSION['usuario']['id_usuario'])) {
-            // Menu general
-            menu_general();
-            ?>
+    <?php
+    if (isset($_SESSION['usuario']) && validarVigilante($_SESSION['usuario']['id_usuario'])) {
+        // Menu general
+        menu_general();
+        ?>
         <!-- Crear submenu con sus opciones -->
         <div class="d-flex vh-100">
             <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 200px;">
@@ -127,13 +127,13 @@ require_once '../lib/modulos.php';
                         <h1>RECOMPENSAS</h1>
                         <div class="products">
                             <?php
-                            // Establecer la conexión con la base de datos utilizando una función de conexión existente
-                            $conn = conectar();
-
                             // Consultar los productos desde la base de datos
-                            $sql = "SELECT * FROM productos as p, fotos as f WHERE f.id_producto = p.id_producto";
-                            $result = $conn->query($sql);
+                            $sql = "SELECT * FROM productos as p, fotos as f 
+                            WHERE f.id_producto = p.id_producto
+                            AND p.recompensa = 1
+                            AND p.estado = 1";
 
+                            $result = sqlSELECT($sql);
                             // Verificar si se encontraron productos
                             if ($result->num_rows > 0) {
                                 // Iterar sobre los productos y mostrarlos en la página
@@ -154,8 +154,6 @@ require_once '../lib/modulos.php';
                             } else {
                                 echo "No se encontraron productos";
                             }
-
-                            mysqli_close($conn);
                             ?>
                         </div>
                     </div>
@@ -235,12 +233,12 @@ require_once '../lib/modulos.php';
 
         </div>
         <?php
-        } else {
-            echo ('Acceso denegado');
-            print '<a href ="../index.php"><button>Volver</button></a>';
-            session_destroy();
-        }
-        ?>
+    } else {
+        echo ('Acceso denegado');
+        print '<a href ="../index.php"><button>Volver</button></a>';
+        session_destroy();
+    }
+    ?>
 
 </body>
 

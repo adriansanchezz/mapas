@@ -40,7 +40,7 @@ require_once '../lib/modulos.php';
             color: white;
         }
 
-        
+
         td:nth-child(even) {
             background-color: #f2f2f2;
             color: #333;
@@ -125,6 +125,26 @@ require_once '../lib/modulos.php';
                     }
                     ?>
 
+                    <?php
+                    if (isset($_POST['borrarProducto'])) {
+                        $id = $_POST['idProducto'];
+                        borrarProducto($id);
+                    }
+                    ?>
+
+                    <?php
+                    if (isset($_POST['desactivarProducto'])) {
+                        $id = $_POST['idProducto'];
+                        desactivarProducto($id);
+                    }
+                    ?>
+
+                    <?php
+                    if (isset($_POST['activarProducto'])) {
+                        $id = $_POST['idProducto'];
+                        activarProducto($id);
+                    }
+                    ?>
 
                     <?php
                     if (isset($_REQUEST['administradorPanel'])) {
@@ -332,102 +352,130 @@ require_once '../lib/modulos.php';
 
 
                     if (isset($_REQUEST['administradorProductos'])) {
-                        echo "<div>";
-                        echo "<div class='container'>";
-                        echo "<h2 class='mt-5'>Crear nuevo producto</h2>";
-                        echo "<form action='administrador.php' method='POST' enctype='multipart/form-data'>";
-                        echo "<div class='form-group'>";
-                        echo "<label for='nombre'>Nombre del producto:</label>";
-                        echo "<input type='text' name='nombre' id='nombre' class='form-control' required>";
-                        echo "</div>";
-                        echo "<div class='form-group'>";
-                        echo "<label for='descripcion'>Descripción del producto:</label>";
-                        echo "<textarea name='descripcion' id='descripcion' class='form-control' required></textarea>";
-                        echo "</div>";
-                        echo "<div class='form-group'>";
-                        echo "<label for='precio'>Precio del producto:</label>";
-                        echo "<input type='text' name='precio' id='precio' class='form-control' required>";
-                        echo "</div>";
-                        echo "<div class='form-group'>";
-                        echo "<input type='file' name='imagen' accept='image/*' required>";
-                        echo "</div>";
-                        echo "<input type='submit' name='nuevoProducto' class='btn btn-danger' value='Crear producto'>";
-                        echo "</form>";
-                        echo "</div>";
-                        echo "<div class='container'>";
-                        echo "<h1 class='mt-5'>Lista de Productos</h1>";
-                        $conn = conectar();
-                        $sql = "SELECT * FROM productos";
-                        $result = $conn->query($sql);
+                        ?>
+                        <div>
+                            <div class='container'>
+                                <h2 class='mt-5'>Crear nuevo producto</h2>
+                                <form action='administrador.php' method='POST' enctype='multipart/form-data'>
+                                    <div class='form-group'>
+                                        <label for='nombre'>Nombre:</label>
+                                        <input type='text' name='nombre' id='nombre' class='form-control' required>
+                                    </div>
+                                    <div class='form-group'>
+                                        <label for='descripcion'>Descripción:</label>
+                                        <textarea name='descripcion' id='descripcion' class='form-control' required></textarea>
+                                    </div>
+                                    <div class='form-group'>
+                                        <label for='precio'>Precio:</label>
+                                        <input type='text' name='precio' id='precio' class='form-control' required>
+                                    </div>
+                                    <div class='form-group'>
+                                        <label for='puntos'>Puntos:</label>
+                                        <input type='text' name='puntos' id='puntos' class='form-control' required>
+                                    </div>
+                                    <div class='form-group'>
+                                        <input type='file' name='imagen' accept='image/*' required>
+                                    </div>
+                                    <div class='form-group'>
+                                        <label for='recompensa_titulo'>Mostrar en:</label>
+                                        <select name='recompensa' class='custom-select'>
+                                            <option selected disabled>Selecciona una opcion</option>
+                                            <option value='0'>Tienda</option>
+                                            <option value='1'>Recompensas</option>
+                                        </select>
+                                    </div>
+                                    <input type='submit' name='nuevoProducto' class='btn btn-danger' value='Crear producto'>
+                                </form>
+                            </div>
 
-                        // Verificar si se encontraron productos
-                        if ($result->num_rows > 0) {
-                            // Recorrer los resultados y crear las opciones del select
-                            echo "<table class='table'>";
-                            echo "<thead>";
-                            echo "<tr>";
-                            echo "<th>Nombre</th>";
-                            echo "<th>Descripcion</th>";
-                            echo "<th>Precio</th>";
-                            echo "<th>Foto</th>";
-                            echo "<th>Acciones</th>";
+                            <div class='container'>
+                                <h1 class='mt-5'>Lista de Productos</h1>
+                                <?php
+                                $sql = "SELECT * FROM productos";
+                                $result = sqlSELECT($sql);
 
-                            echo "</tr>";
-                            echo "</thead>";
-                            echo "<tbody>";
-                            while ($row = mysqli_fetch_assoc($result)) {
+                                // Verificar si se encontraron productos
+                                if ($result->num_rows > 0) {
+                                    // Recorrer los resultados y crear las opciones del select
+                                    echo "<table class='table'>";
+                                    echo "<thead>";
+                                    echo "<tr>";
+                                    echo "<th>Nombre</th>";
+                                    echo "<th>Descripcion</th>";
+                                    echo "<th>Precio</th>";
+                                    echo "<th>Puntos</th>";
+                                    echo "<th>Foto</th>";
+                                    echo "<th>Mostrar</th>";
+                                    echo "<th>Estado</th>";
+                                    echo "<th>Acciones</th>";
 
-                                echo "<tr>";
-                                echo "<td><span class='editableProducto' id='nombre' data-producto-id='" . $row["id_producto"] . "'>" . $row["nombre"] . "</span></td>";
-                                echo "<td><span class='editableProducto' id='descripcion' data-producto-id='" . $row["id_producto"] . "'>" . $row["descripcion"] . "</span></td>";
-                                echo "<td><span class='editableProducto' id='precio' data-producto-id='" . $row["id_producto"] . "'>" . $row["precio"] . "</span></td>";
+                                    echo "</tr>";
+                                    echo "</thead>";
+                                    echo "<tbody>";
+                                    while ($row = mysqli_fetch_assoc($result)) {
 
-                                $sql2 = "SELECT * FROM `fotos` where id_producto =" . $row['id_producto'];
-                                $result2 = $conn->query($sql2);
+                                        echo "<tr>";
+                                        echo "<td><span class='editableProducto' id='nombre' data-producto-id='" . $row["id_producto"] . "'>" . $row["nombre"] . "</span></td>";
+                                        echo "<td><span class='editableProducto' id='descripcion' data-producto-id='" . $row["id_producto"] . "'>" . $row["descripcion"] . "</span></td>";
+                                        echo "<td><span class='editableProducto' id='precio' data-producto-id='" . $row["id_producto"] . "'>" . $row["precio"] . "</span></td>";
+                                        echo "<td><span class='editableProducto' id='puntos' data-producto-id='" . $row["id_producto"] . "'>" . $row["puntos"] . "</span></td>";
 
-                                echo "<td>";
-                                if ($result2->num_rows > 0) {
-                                    // Recuperar la información de la imagen
-                                    $row2 = $result2->fetch_assoc();
-                                    $imagen = $row2["foto"];
+                                        $sql2 = "SELECT * FROM `fotos` where id_producto =" . $row['id_producto'];
+                                        $result2 = $conn->query($sql2);
 
-                                    // Mostrar la imagen en la página
-                                    echo "<img src='data:image/jpeg;base64," . base64_encode($imagen) . "' alt='Imagen del producto'>";
+                                        echo "<td>";
+                                        if ($result2->num_rows > 0) {
+                                            // Recuperar la información de la imagen
+                                            $row2 = $result2->fetch_assoc();
+                                            $imagen = $row2["foto"];
+
+                                            // Mostrar la imagen en la página
+                                            echo "<img src='data:image/jpeg;base64," . base64_encode($imagen) . "' alt='Imagen del producto'>";
+                                        } else {
+                                            echo "No se encontró la imagen asociada.";
+                                        }
+                                        echo "</td>";
+
+                                        $recompensa = ($row["recompensa"] == 1) ? "Recompensa" : "Tienda";
+
+                                        echo "<td><span id='recompensa'>" . $recompensa . "</span></td>";
+
+                                        $estado = ($row["estado"] == 1) ? "Activado" : "Desactivado";
+
+                                        echo "<td><span id='estado'>" . $estado . "</span></td>";
+                                        echo "<td>";
+                                        echo "<form action='administrador.php?administradorProductos' method='POST'>";
+                                        echo "<input type='hidden' name='idProducto' value='" . $row["id_producto"] . "'>";
+                                        echo "<input type='submit' name='activarProducto' value='Activar' class='btn btn-success'>";
+                                        echo "<input type='submit' name='desactivarProducto' value='Desactivar' class='btn btn-secondary'>";
+                                        echo "<input type='submit' name='borrarProducto' value='Borrar' class='btn btn-danger'>";
+                                        echo "</form>";
+                                        echo "</td>";
+                                        echo "</tr>";
+
+                                    }
+                                    echo "</tbody>";
+                                    echo "</table>";
                                 } else {
-                                    echo "No se encontró la imagen asociada.";
+                                    echo "<option value=''>No hay tipos de publicidades disponibles</option>";
                                 }
-                                echo "</td>";
-                                echo "<td>";
-                                echo "<form action='administrador.php' method='POST'>";
-                                echo "<input type='hidden' name='idProducto' value='" . $row["id_producto"] . "' />";
-                                echo "<input type='submit' name='borrarProducto' value='Borrar producto' class='btn btn-danger' />";
-                                echo "</form>";
-                                echo "</td>";
-                                echo "</tr>";
-
-                            }
-                            echo "</tbody>";
-                            echo "</table>";
-                            mysqli_close($conn);
-                        } else {
-                            echo "<option value=''>No hay tipos de publicidades disponibles</option>";
-                        }
-                        echo "</div>";
-                        echo "</div>";
-
+                                ?>
+                            </div>
+                        </div>
+                        <?php
                     }
-
                     if (isset($_POST['nuevoProducto'])) {
                         $nombreProducto = $_POST['nombre'];
                         $descripcionProducto = $_POST['descripcion'];
                         $precioProducto = $_POST['precio'];
-
+                        $puntosProducto = $_POST['puntos'];
+                        $recompensaProducto = $_POST['recompensa'];
 
                         $conn = conectar();
-                        $sql = "INSERT INTO `productos`(`nombre`, `descripcion`, `precio`) VALUES (?, ?, ?)";
+                        $sql = "INSERT INTO `productos`(`nombre`, `descripcion`, `puntos`, `precio`, `recompensa`) VALUES (?, ?, ?, ?, ?)";
                         $stmt = $conn->prepare($sql);
                         // Y mediante un bind_param se establecen los valores.
-                        $stmt->bind_param('ssd', $nombreProducto, $descripcionProducto, $precioProducto);
+                        $stmt->bind_param('ssddd', $nombreProducto, $descripcionProducto, $puntosProducto, $precioProducto, $recompensaProducto);
                         // Se ejecuta la consulta.
                         $stmt->execute();
 
@@ -458,20 +506,6 @@ require_once '../lib/modulos.php';
                         } else {
                             // Si no lo fue, se indica un error.
                             echo "Error al guardar el marcador.";
-                        }
-                    }
-
-                    if (isset($_POST['borrarProducto'])) {
-                        $id = $_POST['idProducto'];
-                        $conn = conectar();
-                        $sql = "DELETE FROM `productos` WHERE id_producto =" . $id . ";";
-                        $resultado = mysqli_query($conn, $sql);
-
-                        if ($resultado) {
-                            echo "<script>window.location.href = 'administrador.php?administradorProductos=';</script>";
-                            exit();
-                        } else {
-                            echo "Error al ejecutar la consulta de eliminación: " . mysqli_error($conn);
                         }
                     }
                     ?>
@@ -630,7 +664,6 @@ require_once '../lib/modulos.php';
                         exit();
                     }
                     ?>
-
                                 </div>
                             </div>
                         </div>
