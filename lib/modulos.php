@@ -814,7 +814,6 @@ function mapa($valor)
                     mensajePubli.style.display = "none";
                 } else {
                     mensajePiso.style.display = "none";
-                    
                     mensajePubli.style.display = "block";
                 }
             });
