@@ -71,12 +71,13 @@ require_once '../lib/modulos.php';
                         <div class="container">
                             <div class="row">
                                 <?php
-                                // Establecer la conexión con la base de datos utilizando una función de conexión existente
-                                $conn = conectar();
-
                                 // Consultar los productos desde la base de datos
-                                $sql = "SELECT * FROM productos as p, fotos as f WHERE f.id_producto = p.id_producto";
-                                $result = $conn->query($sql);
+                                $sql = "SELECT * FROM productos as p, fotos as f 
+                                WHERE f.id_producto = p.id_producto
+                                AND p.recompensa = 0
+                                AND p.estado = 1";
+
+                                $result = sqlSELECT($sql);
 
                                 // Verificar si se encontraron productos
                                 if ($result->num_rows > 0) {
@@ -104,8 +105,6 @@ require_once '../lib/modulos.php';
                                 } else {
                                     echo "No se encontraron productos";
                                 }
-
-                                mysqli_close($conn);
                                 ?>
                             </div>
                         </div>
