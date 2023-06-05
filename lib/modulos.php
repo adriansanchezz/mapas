@@ -78,10 +78,6 @@ function menu_general()
                                 </ul>
                             </li>
                             <?php
-                        } else {
-                            ?>
-                            <li><a href="soporte.php?solicitarEmpresa">Empresa</a></li>
-                            <?php
                         }
                         ?>
 

@@ -130,10 +130,8 @@ require_once '../lib/modulos.php';
                     <!-- Contenedor de la derecha -->
                     <h2>¿Eres una entidad empresarial y quieres formar parte de nuestra aplicación?</h2>
                     <div>
-                        <form>
-                            <input type="button" value="CLICK AQUÍ"
-                                style="font-size: 20px; background-color: blue; border: none; color: white; padding: 10px 20px; border-radius: 5px;">
-                        </form>
+
+                        <a href="soporte.php?solicitarEmpresa" class="btn btn-primary">Registrarse</a>
                     </div>
 
                 </div>

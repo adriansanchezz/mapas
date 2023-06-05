@@ -147,10 +147,9 @@ require_once '../lib/modulos.php';
                         <br>
                     </div>
                 </div>
-
                 <?php
-
             }
+
             if (isset($_REQUEST['guiaEmpresa'])) {
 
                 ?>

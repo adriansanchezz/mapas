@@ -525,6 +525,32 @@ function listarTiposSoportes()
     ';
 }
 
+function listarTiposEmpresas()
+{
+    // Consulta
+    $sql = 'SELECT * FROM tiposempresas';
+
+    // Guardar el resulatdo devulto
+    $result = sqlSELECT($sql);
+
+    // Comprobar si existe el compo de la consulta, y listar los datos
+    echo '
+        <select class="form-control" id="tipoEmpresa" name="tipoEmpresa">
+            <option selected disabled>Selecciona un tipo de empresa</option>
+    ';
+    while ($row = $result->fetch_assoc()) {
+        $tipo_empresa = $row['nombre'];
+        $id_empresa = $row['id_tipo_empresa'];
+
+        echo "
+            <option value='$id_empresa'>$tipo_empresa</option>
+        ";
+    }
+    echo '
+        </select>
+    ';
+}
+
 // Agregar rol de Usuario
 function agregarRoles($id_user, $nombre_rol)
 {

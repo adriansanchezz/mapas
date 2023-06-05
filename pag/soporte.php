@@ -143,6 +143,66 @@ require_once '../lib/modulos.php';
             }
         }
 
+        // Pendiente
+        if (isset($_POST['solicitarEmpresa'])) {
+            try {
+                $id_usuario = $_SESSION['usuario']['id_usuario'];
+                $soporte = $_POST['opcion'];
+                $asunto = $_POST['asunto'];
+                $mensaje = $_POST['mensaje'];
+
+                $conn = conectar();
+
+                if (isset($_POST['reportar'])) {
+                    $reportar = $_POST['reportar'];
+
+                    $sql = "INSERT INTO soportes (asunto, reportar, mensaje, id_tipo_soporte, id_usuario) 
+                    SELECT ?, ?, ?, id_tipo_soporte, ? FROM tipossoportes WHERE nombre = ?";
+
+                    $stmt = $conn->prepare($sql);
+                    $stmt->bind_param('sssds', $asunto, $reportar, $mensaje, $id_usuario, $soporte);
+                } else {
+                    $sql = "INSERT INTO soportes (asunto, mensaje, id_tipo_soporte, id_usuario) 
+                    SELECT ?, ?, id_tipo_soporte, ? FROM tipossoportes WHERE nombre = ?";
+                    $stmt = $conn->prepare($sql);
+                    $stmt->bind_param('ssds', $asunto, $mensaje, $id_usuario, $soporte);
+                }
+
+                if (!$stmt->execute()) {
+                    throw new Exception("Error al insertar soporte: " . $stmt->error);
+                }
+
+
+                if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
+                    $imagen = $_FILES['imagen']['tmp_name'];
+                    $contenidoImagen = file_get_contents($imagen);
+
+                    $ultimoIdSoporte = $stmt->insert_id;
+
+                    $sql = "INSERT INTO `fotos`(`foto`, `id_soporte`) VALUES (?, ?)";
+                    $stmt2 = $conn->prepare($sql);
+                    $stmt2->bind_param("si", $contenidoImagen, $ultimoIdSoporte);
+
+                    if (!$stmt2->execute()) {
+                        throw new Exception("Error al subir la imagen: " . $stmt2->error);
+                    }
+
+                }
+            } catch (Exception $e) {
+                echo "<h1>ERROR: " . $e->getMessage() . "</h1>";
+            } finally {
+                if (isset($stmt)) {
+                    $stmt->close();
+                }
+
+                if (isset($stmt2)) {
+                    $stmt2->close();
+                }
+
+                $conn->close();
+            }
+        }
+
         if (isset($_POST['opcion'])) {
             ?>
             <form action="soporte.php" method="POST" enctype="multipart/form-data">
@@ -222,7 +282,7 @@ require_once '../lib/modulos.php';
             ?>
             <div class="container">
                 <h4>Solicitud para ser empresa</h4><br>
-                <form>
+                <form action="soporte.php" method="POST" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="cif">CIF</label>
                         <input type="text" class="form-control" id="cif" name="cif">
@@ -248,16 +308,9 @@ require_once '../lib/modulos.php';
                         <input type="file" class="form-control-file" id="logo" name="logo">
                     </div>
                     <div class="form-group">
-                        <label for="tipoEmpresa">Tipo de Empresa</label>
-                        <select class="form-control" id="tipoEmpresa" name="tipoEmpresa">
-                            <option selected>Selecciona...</option>
-                            <option value="tipo1">Tipo 1</option>
-                            <option value="tipo2">Tipo 2</option>
-                            <option value="tipo3">Tipo 3</option>
-                            <!-- Añade más opciones según necesites -->
-                        </select>
+                        <?php listarTiposEmpresas(); ?>
                     </div>
-                    <button type="submit" class="btn btn-primary">Enviar</button>
+                    <button type="submit" name='solicitarEmpresa' class="btn btn-primary">Enviar</button>
                 </form>
             </div>
             <?php
