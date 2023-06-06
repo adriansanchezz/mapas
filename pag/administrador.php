@@ -97,6 +97,13 @@ require_once '../lib/modulos.php';
                             </button>
                         </form>
                     </li>
+                    <li class="nav-item">
+                        <form action="administrador.php" method="get">
+                            <button type="submit" name="administradorSoportes" class="btn btn-link nav-link text-white">
+                                Soportes
+                            </button>
+                        </form>
+                    </li>
                 </ul>
             </div>
             <div class="flex-grow-1">
@@ -362,20 +369,19 @@ require_once '../lib/modulos.php';
 
 
                     }
-                    if(isset($_POST['usuarioAlerta']))
-                    {
-                        
+                    if (isset($_POST['usuarioAlerta'])) {
+
                         $usuario = $_POST['usuarioSeleccionado'];
                         $titulo = $_POST['titulo'];
                         $texto = $_POST['texto'];
                         $id_admin = $_SESSION['usuario']['id_usuario'];
                         $fechaHora = date('Y-m-d H:i:s'); // Obtiene la fecha y hora actual en el formato deseado
-
+                
                         $sql = "INSERT INTO `alertas`(`titulo`, `descripcion`, `usuario`, `estado`, `fecha_hora`, `id_usuario`) VALUES ('$titulo', '$texto', '$usuario', 0, '$fechaHora', '$id_admin')";
                         sqlINSERT($sql);
                         echo "<script>window.location.href = 'administrador.php?administradorPanel';</script>";
-                            exit();
-                        
+                        exit();
+
                     }
                     if (isset($_POST['aceptarCertificado'])) {
 
@@ -415,7 +421,15 @@ require_once '../lib/modulos.php';
                         listarUsuarios($_SESSION['usuario']['id_usuario']);
                     }
 
+                    if (isset($_REQUEST['administradorSoportes'])) {
+                        ?>
+                        <h3>Soportes</h3>
+                        <?php listarSoporte(); ?> <br><br>
 
+                        <h3>Solucitud de empresa</h3>
+                        <?php listarSoporteEmpresa(); ?> <br><br>
+                        <?php
+                    }
 
                     if (isset($_REQUEST['administradorProductos'])) {
                         ?>
@@ -487,7 +501,7 @@ require_once '../lib/modulos.php';
                                         echo "<td><span class='editableProducto' id='puntos' data-producto-id='" . $row["id_producto"] . "'>" . $row["puntos"] . "</span></td>";
 
                                         $sql2 = "SELECT * FROM `fotos` where id_producto =" . $row['id_producto'];
-                                        $result2 = $conn->query($sql2);
+                                        $result2 = sqlSELECT($sql2);
 
                                         echo "<td>";
                                         if ($result2->num_rows > 0) {
