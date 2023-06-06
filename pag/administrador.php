@@ -261,10 +261,12 @@ require_once '../lib/modulos.php';
 
             
                                 if ($result4->num_rows > 0) {
+                                    echo "<td>";
                                     while ($row5 = $result4->fetch_assoc()) {
 
-                                        echo "<td>" . $row5['nombre'] . "</td>";
+                                        echo $row5['nombre'] . "<br>";
                                     }
+                                    echo "</td>";
                                 }
                                 
 
