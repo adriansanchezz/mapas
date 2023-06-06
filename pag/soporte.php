@@ -144,49 +144,34 @@ require_once '../lib/modulos.php';
         }
 
         // Pendiente
-        if (isset($_POST['solicitarEmpresa'])) {
+        if (isset($_POST['enviarEmpresa'])) {
             try {
+                // Obtener los datos del formulario
                 $id_usuario = $_SESSION['usuario']['id_usuario'];
-                $soporte = $_POST['opcion'];
-                $asunto = $_POST['asunto'];
-                $mensaje = $_POST['mensaje'];
+                $cif = $_POST['cif'];
+                $nombre = $_POST['nombre'];
+                $telefono = $_POST['telefono'];
+                $email = $_POST['email'];
+                $direccion = $_POST['direccion'];
+                $tipoEmpresa = $_POST['tipoEmpresa'];
 
                 $conn = conectar();
 
-                if (isset($_POST['reportar'])) {
-                    $reportar = $_POST['reportar'];
+                if (isset($_FILES['logo']) && $_FILES['logo']['error'] === UPLOAD_ERR_OK) {
 
-                    $sql = "INSERT INTO soportes (asunto, reportar, mensaje, id_tipo_soporte, id_usuario) 
-                    SELECT ?, ?, ?, id_tipo_soporte, ? FROM tipossoportes WHERE nombre = ?";
-
-                    $stmt = $conn->prepare($sql);
-                    $stmt->bind_param('sssds', $asunto, $reportar, $mensaje, $id_usuario, $soporte);
-                } else {
-                    $sql = "INSERT INTO soportes (asunto, mensaje, id_tipo_soporte, id_usuario) 
-                    SELECT ?, ?, id_tipo_soporte, ? FROM tipossoportes WHERE nombre = ?";
-                    $stmt = $conn->prepare($sql);
-                    $stmt->bind_param('ssds', $asunto, $mensaje, $id_usuario, $soporte);
-                }
-
-                if (!$stmt->execute()) {
-                    throw new Exception("Error al insertar soporte: " . $stmt->error);
-                }
-
-
-                if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
-                    $imagen = $_FILES['imagen']['tmp_name'];
+                    $imagen = $_FILES['logo']['tmp_name'];
                     $contenidoImagen = file_get_contents($imagen);
 
-                    $ultimoIdSoporte = $stmt->insert_id;
 
-                    $sql = "INSERT INTO `fotos`(`foto`, `id_soporte`) VALUES (?, ?)";
+                    $sql = "INSERT INTO empresas (id_empresa, cif, nombre, telefono, email, direccion, logo, id_tipo_empresa) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
                     $stmt2 = $conn->prepare($sql);
-                    $stmt2->bind_param("si", $contenidoImagen, $ultimoIdSoporte);
+                    $stmt2->bind_param("issssssi", $id_usuario, $cif, $nombre, $telefono, $email, $direccion, $contenidoImagen, $tipoEmpresa);
 
                     if (!$stmt2->execute()) {
                         throw new Exception("Error al subir la imagen: " . $stmt2->error);
                     }
-
                 }
             } catch (Exception $e) {
                 echo "<h1>ERROR: " . $e->getMessage() . "</h1>";
@@ -285,32 +270,32 @@ require_once '../lib/modulos.php';
                 <form action="soporte.php" method="POST" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="cif">CIF</label>
-                        <input type="text" class="form-control" id="cif" name="cif">
+                        <input type="text" class="form-control" id="cif" name="cif" required>
                     </div>
                     <div class="form-group">
                         <label for="nombre">Nombre</label>
-                        <input type="text" class="form-control" id="nombre" name="nombre">
+                        <input type="text" class="form-control" id="nombre" name="nombre" required>
                     </div>
                     <div class="form-group">
                         <label for="telefono">Teléfono</label>
-                        <input type="tel" class="form-control" id="telefono" name="telefono">
+                        <input type="tel" class="form-control" id="telefono" name="telefono" required>
                     </div>
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" class="form-control" id="email" name="email">
+                        <input type="email" class="form-control" id="email" name="email" required>
                     </div>
                     <div class="form-group">
                         <label for="direccion">Dirección</label>
-                        <input type="text" class="form-control" id="direccion" name="direccion">
+                        <input type="text" class="form-control" id="direccion" name="direccion" required>
                     </div>
                     <div class="form-group">
                         <label for="logo">Subir Logo</label>
-                        <input type="file" class="form-control-file" id="logo" name="logo">
+                        <input type="file" class="form-control-file" id="logo" name="logo" required>
                     </div>
                     <div class="form-group">
                         <?php listarTiposEmpresas(); ?>
                     </div>
-                    <button type="submit" name='solicitarEmpresa' class="btn btn-primary">Enviar</button>
+                    <button type="submit" name='enviarEmpresa' class="btn btn-primary">Enviar</button>
                 </form>
             </div>
             <?php

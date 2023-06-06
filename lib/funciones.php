@@ -535,8 +535,8 @@ function listarTiposEmpresas()
 
     // Comprobar si existe el compo de la consulta, y listar los datos
     echo '
-        <select class="form-control" id="tipoEmpresa" name="tipoEmpresa">
-            <option selected disabled>Selecciona un tipo de empresa</option>
+        <select class="form-control" id="tipoEmpresa" name="tipoEmpresa" required>
+            <option selected value="" disabled>Selecciona un tipo de empresa</option>
     ';
     while ($row = $result->fetch_assoc()) {
         $tipo_empresa = $row['nombre'];
