@@ -364,7 +364,7 @@ function listarUsuarios($id_user)
 
     // Comprobar si existe el compo de la consulta, y listar los datos
     echo "
-        <table border='1'  style='border-collapse: collapse;'>
+        <table border='1' style='border-collapse: collapse;'>
             <thead>
                 <tr>
                     <th>ID</th>
@@ -427,8 +427,187 @@ function listarUsuarios($id_user)
             </tbody>
         </table>
         ";
-
 }
+
+// Listar usuario y sus datos con rol, para todo los usuraio que existe
+function listarSoporte()
+{
+    // Consulta
+    $sql = "SELECT * FROM soportes";
+
+    // Guardar el resulatdo devulto
+    $result = sqlSELECT($sql);
+
+    // Comprobar si existe el compo de la consulta, y listar los datos
+    echo "
+        <table border='1' style='border-collapse: collapse;'>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tipo</th>
+                    <th>Usuario</th>
+                    <th>Asunto</th>
+                    <th>Reportar</th>
+                    <th>Mensaje</th>
+                    <th>Prueba</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+        ";
+
+    while ($row = $result->fetch_assoc()) {
+        $id_soporte = $row['id_soporte'];
+        $id_tipo_soporte = $row['id_tipo_soporte'];
+
+        $sql = "SELECT nombre FROM tipossoportes
+                WHERE id_tipo_soporte = $id_tipo_soporte";
+        $resultado2 = sqlSELECT($sql)->fetch_assoc();
+        $tipo_soporte = $resultado2["nombre"];
+
+        $sql = "SELECT * FROM soportes";
+        $asunto = $row['asunto'];
+        $reportar = $row['reportar'];
+        $mensaje = $row['mensaje'];
+
+        $sql = "SELECT foto FROM fotos
+                WHERE id_soporte = $id_soporte";
+        $result3 = sqlSELECT($sql)->fetch_assoc();
+        $image = $result3["foto"];
+
+        $id_usuario = $row['id_usuario'];
+        $sql = "SELECT nombre FROM usuarios
+                WHERE id_usuario = $id_usuario";
+        $result4 = sqlSELECT($sql)->fetch_assoc();
+        $usuario = $result4["nombre"];
+
+        echo "
+            <tr>
+                <td>$id_soporte</td>
+                <td>$tipo_soporte</td>
+                <td>$usuario</td>
+                <td>$asunto</td>
+                <td>$reportar</td>
+                <td>$mensaje</td>
+                <td><img src='data:image/jpeg;base64," . base64_encode($image) . "' alt='Imagen del soporte' style='max-width: 100px; max-height: 100px;'></td>
+                <td>
+                    <form action='administrador.php?administradorUsuarios' method='POST'>
+                        <input type='hidden' name='id_usuario' value='$id_usuario'>
+                        <p>Responder: </p>
+                        <textarea name='responderSoporte' rows='3' cols='30'></textarea><br><br>
+                        <button type='submit' name='bloquearUsuario' class='btn btn-primary'>Revisado</button>
+                    </form>
+                </td>
+            </tr>
+            ";
+    }
+    echo "
+            </tbody>
+        </table>
+        ";
+}
+
+
+function listarSoporteEmpresa()
+{
+    // Consulta
+    $sql = "SELECT * FROM empresas";
+
+    // Guardar el resulatdo devulto
+    $result = sqlSELECT($sql);
+
+    // Comprobar si existe el compo de la consulta, y listar los datos
+    echo "
+        <table border='1' style='border-collapse: collapse;'>
+            <thead>
+                <tr>
+                    <th>Usuario</th>
+                    <th>CIF</th>
+                    <th>Nombre</th>
+                    <th>Telefono</th>
+                    <th>Correo</th>
+                    <th>Direcicion</th>
+                    <th>Logo</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+        ";
+
+    while ($row = $result->fetch_assoc()) {
+        $id_soporte = $row['id_soporte'];
+        $id_tipo_soporte = $row['id_tipo_soporte'];
+
+        $sql = "SELECT nombre FROM tipossoportes
+                WHERE id_tipo_soporte = $id_tipo_soporte";
+        $resultado2 = sqlSELECT($sql)->fetch_assoc();
+        $tipo_soporte = $resultado2["nombre"];
+
+        $sql = "SELECT * FROM soportes";
+        $asunto = $row['asunto'];
+        $reportar = $row['reportar'];
+        $mensaje = $row['mensaje'];
+
+        $sql = "SELECT foto FROM fotos
+                WHERE id_soporte = $id_soporte";
+        $result3 = sqlSELECT($sql)->fetch_assoc();
+        $image = $result3["foto"];
+
+        $id_usuario = $row['id_usuario'];
+        $sql = "SELECT nombre FROM usuarios
+                WHERE id_usuario = $id_usuario";
+        $result4 = sqlSELECT($sql)->fetch_assoc();
+        $usuario = $result4["nombre"];
+
+        echo "
+            <tr>
+                <td>$id_soporte</td>
+                <td>$tipo_soporte</td>
+                <td>$usuario</td>
+                <td>$asunto</td>
+                <td>$reportar</td>
+                <td>$mensaje</td>
+                <td><img src='data:image/jpeg;base64," . base64_encode($image) . "' alt='Imagen del soporte' style='max-width: 100px; max-height: 100px;'></td>
+                <td>
+                    <form action='administrador.php?administradorUsuarios' method='POST'>
+                        <input type='hidden' name='id_usuario' value='$id_usuario'>
+                        <p>Responder: </p>
+                        <textarea name='responderSoporte' rows='3' cols='30'></textarea><br><br>
+                        <button type='submit' name='bloquearUsuario' class='btn btn-primary'>Revisado</button>
+                    </form>
+                </td>
+            </tr>
+            ";
+    }
+    echo "
+            </tbody>
+        </table>
+        ";
+}
+
+
+// echo "
+// <tr>
+
+//     <td>$id_soporte</td>
+//     <td>$tipo_soporte</span></td>
+//     <td>$asunto</td>
+//     <td>$reportar</td>
+//     <td>$mensaje</td>
+//     <td><img src='data:image/jpeg;base64," . base64_encode($image). "' alt='Imagen del producto'></td>
+//     <td>
+//         <form action='administrador.php?administradorUsuarios' method='POST'>
+//             <input type='hidden' name='id_usuario' value='$id_usuario'>
+//             <button type='submit' name='bloquearUsuario' class='btn btn-warning'>Aprovar</button>
+//             <button type='submit' name='eliminarRolUsuario' class='btn btn-danger'>Rechazar</button>
+//             <p>Responder: </p>
+//             <input type='text' name='responderSoporte'>
+//         </form>
+//     </td>
+// </tr>
+// ";
+// }
+
 
 // Listar Propiedad y sus datos, para todo los usuraio que existe
 function listarPublicidades($id_user)

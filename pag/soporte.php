@@ -143,7 +143,6 @@ require_once '../lib/modulos.php';
             }
         }
 
-        // Pendiente
         if (isset($_POST['enviarEmpresa'])) {
             try {
                 // Obtener los datos del formulario
@@ -196,7 +195,9 @@ require_once '../lib/modulos.php';
                     <?php
                     $soporte = $_POST['opcion'];
                     if ($soporte == "Preguntas" || $soporte == "Reportar" || $soporte == "Error" || $soporte == "Sugerencia") {
-                        echo "<input type='hidden' name='opcion' value='$soporte'>";
+                        echo "<input type='hidden' name='opcion' value='$soporte'>
+                            <h5>$soporte</h5>
+                        ";
                         ?>
                         <div class="form-group">
                             <label for="asunto">Asunto:</label>
@@ -220,7 +221,7 @@ require_once '../lib/modulos.php';
                         </div>
 
                         <?php
-                        if ($soporte == "Reportar" || $soporte == "Error") {
+                        if ($soporte == "Reportar" || $soporte == "Error" || $soporte == "Sugerencia") {
                             ?>
                             <div class='form-group'>
                                 <label for="foto">Imagen:</label>
@@ -228,8 +229,6 @@ require_once '../lib/modulos.php';
                             </div>
                             <?php
                         }
-                        ?>
-                        <?php
                     }
                     ?>
                     <div class="form-group">
