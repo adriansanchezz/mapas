@@ -227,6 +227,7 @@ require_once '../lib/modulos.php';
                             echo "<table>";
                             echo "<tr>
                                     <th>Usuario</th>
+                                    <th>Productos</th>
                                     <th>Importe</th>
                                     <th>Tipo</th>
                                     <th>Ubicación</th>
@@ -247,6 +248,20 @@ require_once '../lib/modulos.php';
                                         echo "<td>" . $row4['email'] . "</td>";
                                     }
                                 }
+
+                                $sql6 = "SELECT * FROM lineas_pedidos as lp, productos as p WHERE lp.id_producto = p.id_producto AND lp.id_pedido = " . $row3['id_pedido'];
+                                $result4 = sqlSELECT($sql6);
+
+            
+                                if ($result4->num_rows > 0) {
+                                    while ($row5 = $result4->fetch_assoc()) {
+
+                                        echo "<td>" . $row5['nombre'] . "</td>";
+                                    }
+                                }
+                                
+
+
                                 if($row3['importe']>0)
                                 {
                                     echo "<td>" . $row3['importe'] . "</td>";
