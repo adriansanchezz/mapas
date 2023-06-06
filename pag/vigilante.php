@@ -130,8 +130,7 @@ require_once '../lib/modulos.php';
                             // Consultar los productos desde la base de datos
                             $sql = "SELECT * FROM productos as p, fotos as f 
                             WHERE f.id_producto = p.id_producto
-                            AND p.recompensa = 1
-                            AND p.estado = 1";
+                            AND p.estado = 1 AND p.puntos > 0";
 
                             $result = sqlSELECT($sql);
                             // Verificar si se encontraron productos
@@ -143,9 +142,11 @@ require_once '../lib/modulos.php';
                                     echo "<h3 class='card-title'>" . $row['nombre'] . "</h3>";
                                     echo "<p class='card-text'>" . $row['descripcion'] . "</p>";
                                     echo "<td><img src='data:image/jpeg;base64," . base64_encode($row['foto']) . "' alt='Imagen del producto' class='img-thumbnail'></td>";
-                                    echo "<p class='card-text'>Puntos: " . (int) $row['precio'] * 10 . "</p>";
+                                    echo "<p class='card-text'>Puntos: " . $row['puntos'] . "</p>";
+                                    
                                     echo "<form action='vigilante.php' method='post'>";
                                     echo "<input type='hidden' name='product_id' value='" . $row['id_producto'] . "'>";
+                                    echo "<input type='text' id='ubicacion-input' name='ubicacion' placeholder='Indica la ubicación a la que enviar el producto'>";
                                     echo "<input class='btn btn-primary' type='submit'  name='reclamarRecompensa' value='Reclamar'>";
                                     echo "</form>";
                                     echo "</div>";
@@ -153,6 +154,10 @@ require_once '../lib/modulos.php';
                                 }
                             } else {
                                 echo "No se encontraron productos";
+                            }
+                            if (isset($_GET['mensaje'])) {
+                                $mensaje = $_GET['mensaje'];
+                                echo "<p>$mensaje</p>";
                             }
                             ?>
                         </div>
@@ -163,31 +168,46 @@ require_once '../lib/modulos.php';
             <?php
             }
             if (isset($_POST['reclamarRecompensa'])) {
-
                 $id_usuario = $_SESSION['usuario']['id_usuario'];
                 $product_id = $_POST['product_id'];
+                $ubicacion = $_POST['ubicacion'];
                 $sql = "SELECT * FROM productos WHERE id_producto = " . $product_id;
                 $result = sqlSELECT($sql);
-
+            
                 // Si da resultados entonces entra en el if.
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
-                        $precio = $row['precio'];
-                        $sqlPedido = "INSERT INTO `pedidos`(`importe`, `fecha_fin`, `id_usuario`) VALUES ($precio, NOW(), $id_usuario)";
-                        sqlINSERT($sqlPedido);
-
-
-                        $id_pedido = obtenerUltimoIdPedido(); // Obtener el último ID de pedido insertado
-                        $sqlLinea = "INSERT INTO `lineas_pedidos`(`precio`, `cantidad`, `id_producto`, `id_publicidad`, `id_pedido`) VALUES ($precio, 1, $product_id, NULL, $id_pedido)";
-                        sqlINSERT($sqlLinea);
-
-                        $sql2 = "UPDATE usuarios SET puntos = puntos - " . (int) $row['precio'] * 10 . " WHERE id_usuario = " . $_SESSION['usuario']['id_usuario'];
-                        sqlUPDATE($sql2);
+                        $sql2 = "SELECT * FROM usuarios WHERE id_usuario = " . $id_usuario;
+                        $result2 = sqlSELECT($sql2);
+                        if ($result2->num_rows > 0) {
+                            while ($row2 = $result2->fetch_assoc()) {
+                                $puntos_vale = $row['puntos'];
+                                $puntos_tiene = $row2['puntos'];
+                                if (($puntos_tiene - $puntos_vale) >= 0) {
+                                    $precio = $row['puntos'];
+                                    $sqlPedido = "INSERT INTO `pedidos` (`puntos`, `fecha_inicio`, `fecha_fin`, `id_usuario`, `ubicacion`) VALUES ($precio, NOW(), NOW(), $id_usuario, '$ubicacion')";
+                                    sqlINSERT($sqlPedido);
+            
+                                    $id_pedido = obtenerUltimoIdPedido(); // Obtener el último ID de pedido insertado
+                                    $sqlLinea = "INSERT INTO `lineas_pedidos`(`precio`, `cantidad`, `id_producto`, `id_publicidad`, `id_pedido`) VALUES ($precio, 1, $product_id, NULL, $id_pedido)";
+                                    sqlINSERT($sqlLinea);
+            
+                                    $sql2 = "UPDATE usuarios SET puntos = puntos - " . (int) $row['puntos'] . " WHERE id_usuario = " . $_SESSION['usuario']['id_usuario'];
+                                    sqlUPDATE($sql2);
+                                } else {
+                                    $mensaje = "No tienes suficientes puntos para reclamar esta recompensa.";
+                                }
+                            }
+                        }
                     }
-
                 }
-
-                echo "<script>window.location.href = 'vigilante.php?recompensas';</script>";
+            
+                $url = "vigilante.php?recompensas";
+                if (isset($mensaje)) {
+                    $url .= "&mensaje=" . urlencode($mensaje);
+                }
+            
+                echo "<script>window.location.href = '$url';</script>";
                 exit();
             }
             if (isset($_POST['imagenMision'])) {
@@ -229,6 +249,7 @@ require_once '../lib/modulos.php';
                 }
             }
 
+            
             ?>
 
         </div>

@@ -228,6 +228,7 @@ require_once '../lib/modulos.php';
                             echo "<tr>
                                     <th>Usuario</th>
                                     <th>Importe</th>
+                                    <th>Tipo</th>
                                     <th>Ubicación</th>
                                     <th>Fecha</th>
                                     <th>Estado</th>
@@ -246,9 +247,18 @@ require_once '../lib/modulos.php';
                                         echo "<td>" . $row4['email'] . "</td>";
                                     }
                                 }
-
-                                echo "<td>" . $row3['importe'] . "</td>
-                                    <td>" . $row3['ubicacion'] . "</td>
+                                if($row3['importe']>0)
+                                {
+                                    echo "<td>" . $row3['importe'] . "</td>";
+                                    echo "<td>Dinero</td>";
+                                }
+                                else
+                                {
+                                    echo "<td>" . $row3['puntos'] . "</td>";
+                                    echo "<td>Puntos</td>";
+                                }
+                                
+                                   echo "<td>" . $row3['ubicacion'] . "</td>
                                     <td>" . $row3['fecha_fin'] . "</td>";
                                 echo "<td>";
                                 if ($row3['revision'] != NULL) {
@@ -312,7 +322,9 @@ require_once '../lib/modulos.php';
 
                         echo "<br><br><h1>Lanzar alerta.</h1><br>";
                         echo "<form action='administrador.php' method='POST'>";
-                        echo "Selecciona un usuario: <select name='usuarioSeleccionado'>";
+                        echo "<div class='form-group'>";
+                        echo "<label for='usuarioSeleccionado'>Selecciona un usuario:</label>";
+                        echo "<select class='form-control' name='usuarioSeleccionado'>";
                         $sql6 = "SELECT * FROM usuarios";
                         $result = $conn->query($sql6);
                         if ($result->num_rows > 0) {
@@ -321,10 +333,18 @@ require_once '../lib/modulos.php';
                             }
                         }
                         echo "</select>";
-                        echo "<input type='text' name='titulo'>";
-                        echo "<textarea name='texto'></textarea>";
-                        echo "<input type='submit' name='usuarioAlerta'>";
+                        echo "</div>";
+                        echo "<div class='form-group'>";
+                        echo "<label for='titulo'>Título:</label>";
+                        echo "<input type='text' class='form-control' name='titulo'>";
+                        echo "</div>";
+                        echo "<div class='form-group'>";
+                        echo "<label for='texto'>Texto:</label>";
+                        echo "<textarea class='form-control' name='texto'></textarea>";
+                        echo "</div>";
+                        echo "<button type='submit' class='btn btn-primary' name='usuarioAlerta'>Enviar</button>";
                         echo "</form>";
+
 
                     }
                     if(isset($_POST['usuarioAlerta']))
