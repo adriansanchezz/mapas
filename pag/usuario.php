@@ -125,7 +125,7 @@ require_once '../lib/modulos.php';
 
                 if (sqlSELECT($sql)->num_rows > 0) {
                     $id_pedido = obtenerUltimoIdPedido(); // Obtener el último ID de pedido insertado
-                    $sqlPedido = "UPDATE lineas_pedidos SET cantidad = cantidad + 1 WHERE id_pedido = " . $id_pedido;
+                    $sqlPedido = "UPDATE lineas_pedidos SET cantidad = cantidad + 1 WHERE id_pedido = " . $id_pedido . " AND id_producto = " . $product_id;
                     sqlUPDATE($sqlPedido);
 
                 } else {
