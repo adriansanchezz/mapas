@@ -278,7 +278,13 @@ require_once '../lib/modulos.php';
                                         mysqli_close($conn);
                                         ?>
                                     </div>
-                                    <script
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <script
                     src="https://www.paypal.com/sdk/js?client-id=Ae-QOggCqT3W10C1Q7U1lTDaYwmgEsmPuPxDuQEOD4uHZK0DMvJb2brCahcG-HMPPBti9IsX8pCsB-Db&currency=EUR"></script>
                 <!-- Set up a container element for the button -->
                 <div id="paypal-button-container"></div>
@@ -324,13 +330,6 @@ require_once '../lib/modulos.php';
                         }
                     }).render('#paypal-button-container');
                 </script>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                
 
                 <?php
             }
