@@ -43,7 +43,9 @@ require_once 'lib/modulos.php';
                 <input type="password" name="password2" required>
                 <label>Repite la contraseña</label>
             </div>
-            <div>Al registrarte, aceptas nuestras Condiciones de uso y Políticas de privacidad.</div><br>
+
+            <div class="redirigir">Al registrarte, aceptas nuestras Condiciones de uso y <a
+                    href="nosotros.php?politicasPrivacidad">Políticas de privacidad</a>.</div>
 
             <input type="submit" name="registrar" value="Registrarse">
 
@@ -51,10 +53,10 @@ require_once 'lib/modulos.php';
                 ¿Ya tienes una cuenta? <a href="login.php">Iniciar Sesion</a>
             </div>
             <?php
-    if (isset($_POST['registrar'])) {
-        registrarUser($_POST['username'], $_POST['correo'], $_POST['telefono'], $_POST['password'], $_POST['password2']);
-    }
-    ?>
+            if (isset($_POST['registrar'])) {
+                registrarUser($_POST['username'], $_POST['correo'], $_POST['telefono'], $_POST['password'], $_POST['password2']);
+            }
+            ?>
         </form>
 
 
