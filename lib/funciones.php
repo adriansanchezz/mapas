@@ -433,7 +433,8 @@ function listarUsuarios($id_user)
 function listarSoporte()
 {
     // Consulta
-    $sql = "SELECT * FROM soportes";
+    $sql = "SELECT * FROM soportes
+            WHERE fecha_fin IS NULL";
 
     // Guardar el resulatdo devulto
     $result = sqlSELECT($sql);
@@ -473,13 +474,13 @@ function listarSoporte()
         $sql = "SELECT foto FROM fotos
                 WHERE id_soporte = $id_soporte";
         $result3 = sqlSELECT($sql)->fetch_assoc();
-        $image = $result3["foto"];
 
         $id_usuario = $row['id_usuario'];
         $sql = "SELECT nombre FROM usuarios
                 WHERE id_usuario = $id_usuario";
         $result4 = sqlSELECT($sql)->fetch_assoc();
         $usuario = $result4["nombre"];
+
 
         echo "
             <tr>
@@ -489,13 +490,21 @@ function listarSoporte()
                 <td>$asunto</td>
                 <td>$reportar</td>
                 <td>$mensaje</td>
-                <td><img src='data:image/jpeg;base64," . base64_encode($image) . "' alt='Imagen del soporte' style='max-width: 100px; max-height: 100px;'></td>
+                <td>";
+        if ($result3 == null) {
+            echo "No hay foto";
+        } else {
+            $image = $result3["foto"];
+            echo "<img src='data:image/jpeg;base64," . base64_encode($image) . "' alt='Imagen del soporte' style='max-width: 100px; max-height: 100px;'>";
+        }
+        echo "
+                </td>
                 <td>
-                    <form action='administrador.php?administradorUsuarios' method='POST'>
-                        <input type='hidden' name='id_usuario' value='$id_usuario'>
+                    <form action='administrador.php?administradorSoportes' method='POST'>
+                        <input type='hidden' name='id_soporte' value='$id_soporte'>
                         <p>Responder: </p>
                         <textarea name='responderSoporte' rows='3' cols='30'></textarea><br><br>
-                        <button type='submit' name='bloquearUsuario' class='btn btn-primary'>Revisado</button>
+                        <button type='submit' name='revisarSoporte' class='btn btn-primary'>Revisado</button>
                     </form>
                 </td>
             </tr>
@@ -521,6 +530,7 @@ function listarSoporteEmpresa()
         <table border='1' style='border-collapse: collapse;'>
             <thead>
                 <tr>
+                    <th>Tipo</th>
                     <th>Usuario</th>
                     <th>CIF</th>
                     <th>Nombre</th>
@@ -528,6 +538,7 @@ function listarSoporteEmpresa()
                     <th>Correo</th>
                     <th>Direcicion</th>
                     <th>Logo</th>
+                    <th>Solicitud</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -535,45 +546,60 @@ function listarSoporteEmpresa()
         ";
 
     while ($row = $result->fetch_assoc()) {
-        $id_soporte = $row['id_soporte'];
-        $id_tipo_soporte = $row['id_tipo_soporte'];
 
+        $id_tipo_empresa = $row['id_tipo_empresa'];
         $sql = "SELECT nombre FROM tipossoportes
-                WHERE id_tipo_soporte = $id_tipo_soporte";
+                WHERE id_tipo_soporte = $id_tipo_empresa";
         $resultado2 = sqlSELECT($sql)->fetch_assoc();
-        $tipo_soporte = $resultado2["nombre"];
+        $tipo_empresa = $resultado2["nombre"];
 
-        $sql = "SELECT * FROM soportes";
-        $asunto = $row['asunto'];
-        $reportar = $row['reportar'];
-        $mensaje = $row['mensaje'];
-
-        $sql = "SELECT foto FROM fotos
-                WHERE id_soporte = $id_soporte";
-        $result3 = sqlSELECT($sql)->fetch_assoc();
-        $image = $result3["foto"];
-
-        $id_usuario = $row['id_usuario'];
+        $id_empresa = $row['id_empresa'];
         $sql = "SELECT nombre FROM usuarios
-                WHERE id_usuario = $id_usuario";
-        $result4 = sqlSELECT($sql)->fetch_assoc();
-        $usuario = $result4["nombre"];
+                WHERE id_usuario = $id_empresa";
+        $resultado = sqlSELECT($sql)->fetch_assoc();
+        $usuario = $resultado['nombre'];
+
+        $cif = $row["cif"];
+        $nombre = $row['nombre'];
+        $telefono = $row['telefono'];
+        $email = $row['email'];
+        $direccion = $row['direccion'];
+        
+
+        if ($row['solicitud'] == null) {
+            $solicitud = "Pediente";
+        } else if ($row['solicitud'] == 1) {
+            $solicitud = "Aprovado";
+        } else if ($row['solicitud'] == 0) {
+            $solicitud = "Rechazado";
+        }
+
 
         echo "
             <tr>
-                <td>$id_soporte</td>
-                <td>$tipo_soporte</td>
+                <td>$tipo_empresa</td>
                 <td>$usuario</td>
-                <td>$asunto</td>
-                <td>$reportar</td>
-                <td>$mensaje</td>
-                <td><img src='data:image/jpeg;base64," . base64_encode($image) . "' alt='Imagen del soporte' style='max-width: 100px; max-height: 100px;'></td>
+                <td>$cif</td>
+                <td>$nombre</td>
+                <td>$telefono</td>
+                <td>$email</td>
+                <td>$direccion</td>
+                <td>";
+        if ($row['logo'] == null) {
+            echo "No hay foto";
+        } else {
+            $logo = $row['logo'];
+            echo "<img src='data:image/jpeg;base64," . base64_encode($logo) . "' alt='Imagen del soporte' style='max-width: 100px; max-height: 100px;'>";
+        }
+        echo "                
+                <td>$solicitud</td>
                 <td>
-                    <form action='administrador.php?administradorUsuarios' method='POST'>
-                        <input type='hidden' name='id_usuario' value='$id_usuario'>
+                    <form action='administrador.php?administradorSoportes' method='POST'>
+                        <input type='hidden' name='id_empresa' value='$id_empresa'>
                         <p>Responder: </p>
                         <textarea name='responderSoporte' rows='3' cols='30'></textarea><br><br>
-                        <button type='submit' name='bloquearUsuario' class='btn btn-primary'>Revisado</button>
+                        <button type='submit' name='aprovarEmpresa' class='btn btn-success'>Aprovar</button>
+                        <button type='submit' name='rechazarEmpresa' class='btn btn-danger'>Rechazar</button>
                     </form>
                 </td>
             </tr>
@@ -584,30 +610,6 @@ function listarSoporteEmpresa()
         </table>
         ";
 }
-
-
-// echo "
-// <tr>
-
-//     <td>$id_soporte</td>
-//     <td>$tipo_soporte</span></td>
-//     <td>$asunto</td>
-//     <td>$reportar</td>
-//     <td>$mensaje</td>
-//     <td><img src='data:image/jpeg;base64," . base64_encode($image). "' alt='Imagen del producto'></td>
-//     <td>
-//         <form action='administrador.php?administradorUsuarios' method='POST'>
-//             <input type='hidden' name='id_usuario' value='$id_usuario'>
-//             <button type='submit' name='bloquearUsuario' class='btn btn-warning'>Aprovar</button>
-//             <button type='submit' name='eliminarRolUsuario' class='btn btn-danger'>Rechazar</button>
-//             <p>Responder: </p>
-//             <input type='text' name='responderSoporte'>
-//         </form>
-//     </td>
-// </tr>
-// ";
-// }
-
 
 // Listar Propiedad y sus datos, para todo los usuraio que existe
 function listarPublicidades($id_user)
@@ -647,11 +649,7 @@ function listarPublicidades($id_user)
         $descripcion = $row['descripcion'];
         $precio = $row['precio'];
 
-        if ($row['estado'] == 1) {
-            $estado = "Activado";
-        } else {
-            $estado = "Desactivado";
-        }
+        $estado = ($row['estado'] == 1) ? "Activado" : "Desactivado";
 
         echo "
         <tr>
@@ -662,7 +660,7 @@ function listarPublicidades($id_user)
             <td><span class='editablePublicidad' id='precio' data-publicidad-id='$id_publicidad'>$precio</span></td>
             <td>$estado</td>
             <td>
-                <form action='cuenta.php?publicidades' method='POST'>
+                <form action='cuenta.php?administradorSoportes' method='POST'>
                     <input type='hidden' name='id_publicidad' value='$id_publicidad'>
                     <button type='submit' name='activarPublicidad' class='btn btn-success'>Activar</button>
                     <button type='submit' name='desactivarPublicidad' class='btn btn-secondary'>Desacticar</button>
@@ -990,6 +988,18 @@ function bloquearUsuario($id_usuario)
     $fecha_actual = date('Y-m-d');
     // Consulta
     $sql = "UPDATE usuarios SET fecha_bloqueo = '$fecha_actual' WHERE id_usuario  = $id_usuario";
+
+    // Actualizar los datos
+    sqlUPDATE($sql);
+}
+
+function finalizarSoporte($id, $cometario)
+{
+    // 'Y': Representa el año con cuatro dígitos (ejemplo: 2023).
+    // 'y': Representa el año con dos dígitos (ejemplo: 23).
+    $fecha_actual = date('Y-m-d');
+    // Consulta
+    $sql = "UPDATE soportes SET fecha_fin = '$fecha_actual', respuesta = '$cometario' WHERE id_soporte  = $id";
 
     // Actualizar los datos
     sqlUPDATE($sql);
