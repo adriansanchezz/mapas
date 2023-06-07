@@ -433,10 +433,11 @@ function mapa($valor)
     }
     if ($valor == "vigilar") {
         ?>
+        
         <h1>MISIONES</h1>
         <div id="map"></div><br>
         <style>
-            input{
+            #solicitarMision{
                 margin-left: 10vh;
                 width: 150vh;
             }

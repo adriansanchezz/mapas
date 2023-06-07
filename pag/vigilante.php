@@ -248,7 +248,7 @@ require_once '../lib/mapa.php';
                 border-radius: 5px;
                 float: right;
                 margin-right: 20px;
-                margin-top: 20px;
+                margin-top: 6vh;
             }
         </style>
         <div class="puntos-container">

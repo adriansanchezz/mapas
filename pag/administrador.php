@@ -253,7 +253,7 @@ require_once '../lib/mapa.php';
 
 
                         echo "<br><br><h1>Productos comprados</h1><br>";
-                        $sql4 = "SELECT * FROM pedidos WHERE fecha_fin IS NOT NULL";
+                        $sql4 = "SELECT * FROM pedidos WHERE fecha_fin IS NOT NULL AND ubicacion IS NOT NULL";
                         $result = $conn->query($sql4);
                         if ($result->num_rows > 0) {
                             echo "<table>";

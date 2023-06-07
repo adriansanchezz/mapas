@@ -231,11 +231,11 @@ require_once '../lib/mapa.php';
 
                                         // Consultar los productos desde la base de datos
                                         $sql = "SELECT lp.id_producto, lp.cantidad, prod.nombre, prod.descripcion, prod.precio
-        FROM lineas_pedidos AS lp
-        INNER JOIN productos AS prod ON lp.id_producto = prod.id_producto
-        INNER JOIN pedidos AS pedido ON lp.id_pedido = pedido.id_pedido
-        WHERE lp.id_pedido = " . intval($id_pedido) . " AND lp.cantidad > 0 AND pedido.fecha_fin IS NULL
-        GROUP BY lp.id_producto";
+                                                FROM lineas_pedidos AS lp
+                                                INNER JOIN productos AS prod ON lp.id_producto = prod.id_producto
+                                                INNER JOIN pedidos AS pedido ON lp.id_pedido = pedido.id_pedido
+                                                WHERE lp.id_pedido = " . intval($id_pedido) . " AND lp.cantidad > 0 AND pedido.fecha_fin IS NULL
+                                                GROUP BY lp.id_producto";
 
                                         $result = $conn->query($sql);
 
@@ -266,7 +266,7 @@ require_once '../lib/mapa.php';
                                                 echo "<p class='card-text'>Precio: $product_price</p>";
                                                 echo "<p class='card-text'>Cantidad: $product_quantity</p>";
                                                 echo "<p class='card-text'>Subtotal: $subtotal €</p>";
-                                                echo "<input type='text' id='ubicacion-input' name='ubicacion' placeholder='Indica la ubicación a la que enviar el producto'>";
+                                                
                                                 echo "<form action='usuario.php' method='post'>";
                                                 echo "<input type='hidden' name='id_producto' value='$product_id'>";
                                                 echo "<button class='btn btn-danger' name='remove_from_cart' type='submit'>Eliminar</button>";
@@ -275,7 +275,7 @@ require_once '../lib/mapa.php';
                                                 echo "</div>";
                                                 echo "</div>";
                                             }
-
+                                            echo "<input type='text' id='ubicacion-input' name='ubicacion' placeholder='Indica la ubicación a la que enviar el producto'>";
                                             // Mostrar el total de dinero en el carrito
                                             echo "<div class='col-lg-12 mt-3'>";
                                             echo "<div class='card'>";
