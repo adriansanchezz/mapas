@@ -1332,7 +1332,23 @@ function obtenerUltimoIdPedido()
 {
     $conn = conectar();
     // Realiza la consulta para obtener el último ID de pedido insertado
-    $sql = "SELECT MAX(id_pedido) AS ultimo_id FROM pedidos WHERE id_usuario = " . $_SESSION['usuario']['id_usuario'];
+    $sql = "SELECT MAX(p.id_pedido) AS ultimo_id FROM pedidos as p, lineas_pedidos as lp WHERE p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND p.id_pedido = lp.id_pedido AND id_publicidad IS NULL";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            return $row['ultimo_id'];
+        }
+    }
+    // Si no se pudo obtener el último ID de pedido, retorna un valor predeterminado
+    return 0;
+}
+
+function obtenerUltimoIdPedidoPublicidad()
+{
+    $conn = conectar();
+    // Realiza la consulta para obtener el último ID de pedido insertado
+    $sql = "SELECT MAX(p.id_pedido) AS ultimo_id FROM pedidos as p, lineas_pedidos as lp WHERE p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND p.id_pedido = lp.id_pedido AND id_producto IS NULL";
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {

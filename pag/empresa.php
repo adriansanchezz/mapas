@@ -137,7 +137,7 @@ require_once '../lib/mapa.php';
                     $sql = "SELECT * FROM pedidos as p, lineas_pedidos as lp WHERE p.id_pedido = lp.id_pedido AND p.fecha_fin IS NULL AND p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND lp.id_publicidad IS NOT NULL;";
 
                     if (sqlSELECT($sql)->num_rows > 0) {
-                        $id_pedido = obtenerUltimoIdPedido(); // Obtener el último ID de pedido insertado
+                        $id_pedido = obtenerUltimoIdPedidoPublicidad(); // Obtener el último ID de pedido insertado
                         $sqlLinea = "INSERT INTO `lineas_pedidos`(`precio`, `cantidad`, `id_producto`, `id_publicidad`, `id_pedido`) VALUES ($precio, 1, NULL, $product_id, $id_pedido)";
                         sqlINSERT($sqlLinea);
                     } else {
@@ -146,13 +146,30 @@ require_once '../lib/mapa.php';
                         $fecha_fin = "NULL"; // Asignar NULL a la columna fecha_fin
                         $id_usuario = $_SESSION['usuario']['id_usuario'];
 
-                        $sqlPedido = "INSERT INTO `pedidos`(`importe`, `fecha_inicio`, `fecha_fin`, `id_usuario`) VALUES ($importe, NOW(), $fecha_fin, $id_usuario)";
-                        sqlINSERT($sqlPedido);
+                        $conn = conectar();
+                        mysqli_begin_transaction($conn); // Reemplaza $conn con tu conexión a la base de datos
+        
+                        try {
+                            // Insertar el pedido
+                            $sqlPedido = "INSERT INTO `pedidos`(`importe`, `fecha_inicio`, `fecha_fin`, `id_usuario`) VALUES ($importe, NOW(), NULL, $id_usuario)";
+                            $resultPedido = $conn->query($sqlPedido);
 
+                            // Obtener el último ID de pedido insertado
+                            $id_pedido = mysqli_insert_id($conn);
 
-                        $id_pedido = obtenerUltimoIdPedido(); // Obtener el último ID de pedido insertado
-                        $sqlLinea = "INSERT INTO `lineas_pedidos`(`precio`, `cantidad`, `id_producto`, `id_publicidad`, `id_pedido`) VALUES ($precio, 1, NULL, $product_id, $id_pedido)";
-                        sqlINSERT($sqlLinea);
+                            // Insertar la línea de pedido
+                            $sqlLinea = "INSERT INTO `lineas_pedidos`(`precio`, `cantidad`, `id_producto`, `id_publicidad`, `id_pedido`) VALUES ($precio, 1, NULL, $product_id, $id_pedido)";
+                            $resultLinea = $conn->query($sqlLinea);
+
+                            // Confirmar la transacción
+                            mysqli_commit($conn);
+                        } catch (Exception $e) {
+                            // Ocurrió un error, revertir la transacción
+                            mysqli_rollback($conn);
+                            // Manejar el error adecuadamente
+                            echo "Error: " . $e->getMessage();
+                        }
+
                     }
                 }
                 echo "<script>window.location.href = 'empresa.php?empresaMapa=1';</script>";
@@ -178,7 +195,7 @@ require_once '../lib/mapa.php';
 
                 if (sqlSELECT($sql)->num_rows > 0) {
 
-                    $id_pedido = obtenerUltimoIdPedido(); // Obtener el último ID de pedido insertado
+                    $id_pedido = obtenerUltimoIdPedidoPublicidad(); // Obtener el último ID de pedido insertado
                     $sqlPedido = "DELETE FROM `lineas_pedidos` WHERE id_pedido = " . $id_pedido . " AND id_publicidad = " . $product_id;
                     sqlDELETE($sqlPedido);
 
@@ -193,7 +210,7 @@ require_once '../lib/mapa.php';
                 $importe = $_REQUEST['importe']; // Obtener el valor de importe desde los parámetros de la solicitud
         
                 // Actualizar el pedido en la base de datos utilizando el valor de importe
-                $id_pedido = obtenerUltimoIdPedido();
+                $id_pedido = obtenerUltimoIdPedidoPublicidad();
                 $sqlPedido = "UPDATE pedidos SET fecha_fin = NOW(), importe = " . $importe . " WHERE id_pedido = " . $id_pedido;
                 sqlUPDATE($sqlPedido);
                 foreach ($_REQUEST as $key => $value) {
@@ -223,7 +240,7 @@ require_once '../lib/mapa.php';
                 <div class="products">
                     <?php
                     // Verificar si el carrito de compras está almacenado en la sesión
-                    $id_pedido = obtenerUltimoIdPedido();
+                    $id_pedido = obtenerUltimoIdPedidoPublicidad();
                     $conn = conectar();
 
                     // Consultar los productos desde la base de datos
@@ -231,7 +248,7 @@ require_once '../lib/mapa.php';
                             FROM lineas_pedidos AS lp
                             INNER JOIN publicidades AS publi ON lp.id_publicidad = publi.id_publicidad
                             INNER JOIN pedidos AS pedido ON lp.id_pedido = pedido.id_pedido
-                            WHERE lp.id_pedido = " . $id_pedido . " AND lp.cantidad > 0 AND pedido.fecha_fin IS NULL AND publi.ocupado = 1
+                            WHERE lp.id_pedido = " . intval($id_pedido) . " AND lp.cantidad > 0 AND pedido.fecha_fin IS NULL AND publi.ocupado = 1
                             GROUP BY lp.id_publicidad";
 
                     $result = $conn->query($sql);
