@@ -16,11 +16,11 @@ require_once '../lib/mapa.php';
 </head>
 
 <body>
-        <?php
-        if (isset($_SESSION['usuario']) && validarUsuario($_SESSION['usuario']['id_usuario'])) {
-            // Menu general
-            menu_general();
-            ?>
+    <?php
+    if (isset($_SESSION['usuario']) && validarUsuario($_SESSION['usuario']['id_usuario'])) {
+        // Menu general
+        menu_general();
+        ?>
 
         <!-- Crear submenu con sus opciones -->
         <div class="d-flex vh-100">
@@ -138,22 +138,39 @@ require_once '../lib/mapa.php';
                         $sqlLinea = "INSERT INTO `lineas_pedidos`(`precio`, `cantidad`, `id_producto`, `id_publicidad`, `id_pedido`) VALUES ($precio, 1, $product_id, NULL, $id_pedido)";
                         sqlINSERT($sqlLinea);
                     } else {
-                        
+
                         $importe = 0;
                         $fecha_fin = "NULL"; // Asignar NULL a la columna fecha_fin
                         $id_usuario = $_SESSION['usuario']['id_usuario'];
 
-                        $sqlPedido = "INSERT INTO `pedidos`(`importe`, `fecha_fin`, `id_usuario`) VALUES ($importe, $fecha_fin, $id_usuario)";
-                        sqlINSERT($sqlPedido);
+                        // Iniciar una transacción
+                        $conn = conectar();
+                        mysqli_begin_transaction($conn); // Reemplaza $conn con tu conexión a la base de datos
+        
+                        try {
+                            // Insertar el pedido
+                            $sqlPedido = "INSERT INTO `pedidos`(`importe`, `fecha_inicio`, `fecha_fin`, `id_usuario`) VALUES ($importe, NOW(), $fecha_fin, $id_usuario)";
+                            $resultPedido = $conn->query($sqlPedido);
 
+                            // Obtener el último ID de pedido insertado
+                            $id_pedido = mysqli_insert_id($conn);
 
-                        $id_pedido = obtenerUltimoIdPedido(); // Obtener el último ID de pedido insertado
-                        $sqlLinea = "INSERT INTO `lineas_pedidos`(`precio`, `cantidad`, `id_producto`, `id_publicidad`, `id_pedido`) VALUES ($precio, 1, $product_id, NULL, $id_pedido)";
-                        sqlINSERT($sqlLinea);
+                            // Insertar la línea de pedido
+                            $sqlLinea = "INSERT INTO `lineas_pedidos`(`precio`, `cantidad`, `id_producto`, `id_publicidad`, `id_pedido`) VALUES ($precio, 1, $product_id, NULL, $id_pedido)";
+                            $resultLinea = $conn->query($sqlLinea);
+
+                            // Confirmar la transacción
+                            mysqli_commit($conn);
+                        } catch (Exception $e) {
+                            // Ocurrió un error, revertir la transacción
+                            mysqli_rollback($conn);
+                            // Manejar el error adecuadamente
+                            echo "Error: " . $e->getMessage();
+                        }
                     }
                 }
 
-                echo "<script>window.location.href = 'usuario.php?usuarioTienda=1';</script>";
+                echo "<script>window.location.href = 'usuario.php?usuarioTienda';</script>";
                 exit();
             }
 
@@ -184,13 +201,13 @@ require_once '../lib/mapa.php';
             if (isset($_REQUEST['actualizarPedido'])) {
                 $importe = $_GET['importe'];
                 $ubicacion = $_GET['ubicacion'];
-                
+
                 // Actualizar el pedido en la base de datos utilizando el valor de importe y ubicacion
                 $id_pedido = obtenerUltimoIdPedido();
-                $sqlPedido = "UPDATE pedidos SET fecha_fin = NOW(), importe = '" . $importe . "', ubicacion = '". $ubicacion ."' WHERE id_pedido = " . $id_pedido;
+                $sqlPedido = "UPDATE pedidos SET fecha_fin = NOW(), importe = '" . $importe . "', ubicacion = '" . $ubicacion . "' WHERE id_pedido = " . $id_pedido;
                 sqlUPDATE($sqlPedido);
             }
-            
+
             ?>
 
 
@@ -234,7 +251,7 @@ require_once '../lib/mapa.php';
 
                                                 // Calcular el subtotal por producto
                                                 $subtotal = $product_price * $product_quantity;
-                                                if(validarVIP($_SESSION['usuario']['id_usuario'])){
+                                                if (validarVIP($_SESSION['usuario']['id_usuario'])) {
                                                     $subtotal = $subtotal * 0.95;
                                                 }
                                                 $importe += $subtotal;
@@ -264,7 +281,7 @@ require_once '../lib/mapa.php';
                                             echo "<div class='card-body'>";
                                             echo "<h5 class='card-title'>Total a pagar:</h5>";
                                             echo "<p class='card-text'>$importe € ";
-                                            if(validarVIP($_SESSION['usuario']['id_usuario'])){
+                                            if (validarVIP($_SESSION['usuario']['id_usuario'])) {
                                                 echo "<small><i>*Se ha aplicado un descuento de 5% para usuario VIP</i></small>";
                                             }
                                             echo "</p>";
@@ -425,12 +442,12 @@ require_once '../lib/mapa.php';
             ?>
         </div>
         <?php
-        } else {
-            echo ('Acceso denegado');
-            print '<a href ="../index.php"><button>Volver</button></a>';
-            session_destroy();
-        }
-        ?>
+    } else {
+        echo ('Acceso denegado');
+        print '<a href ="../index.php"><button>Volver</button></a>';
+        session_destroy();
+    }
+    ?>
 
 
 </body>

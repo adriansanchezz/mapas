@@ -191,14 +191,101 @@ require_once '../lib/modulos.php';
                 ?>
                 <div class="flex-grow-1">
                     <div class="p-3" style="display: block;">
-
-
-
+                        <form>
+                            <button type="button" id="btnMensual" class="btn btn-primary btn-lg"
+                                data-suscripcion="mensual">Suscripción Mensual</button>
+                        </form>
+                        <form>
+                            <button type="button" id="btnAnual" class="btn btn-primary btn-lg"
+                                data-suscripcion="anual">Suscripción Anual</button>
+                        </form>
+                        <div id="paypal-button-container"></div>
                     </div>
                 </div>
+                <script
+                    src="https://www.paypal.com/sdk/js?client-id=Ae-QOggCqT3W10C1Q7U1lTDaYwmgEsmPuPxDuQEOD4uHZK0DMvJb2brCahcG-HMPPBti9IsX8pCsB-Db&currency=EUR"></script>
+                <script>
+                    var selectedSuscripcion = ""; // Variable para almacenar la suscripción seleccionada
+
+                    // Evento click del botón de suscripción mensual
+                    document.getElementById("btnMensual").addEventListener("click", function () {
+                        selectedSuscripcion = "mensual";
+                        updateButtonStyle(this);
+                    });
+
+                    // Evento click del botón de suscripción anual
+                    document.getElementById("btnAnual").addEventListener("click", function () {
+                        selectedSuscripcion = "anual";
+                        updateButtonStyle(this);
+                    });
+
+                    function updateButtonStyle(button) {
+                        // Remover la clase 'active' de todos los botones
+                        var buttons = document.getElementsByClassName("btn btn-primary btn-lg");
+                        for (var i = 0; i < buttons.length; i++) {
+                            buttons[i].classList.remove("active");
+                        }
+                        // Agregar la clase 'active' al botón seleccionado
+                        button.classList.add("active");
+                    }
+
+                    paypal.Buttons({
+                        style: {
+                            color: 'blue',
+                            shape: 'pill',
+                            label: 'pay'
+                        },
+                        createOrder: function (data, actions) {
+                            return actions.order.create({
+                                purchase_units: [{
+                                    amount: {
+                                        value: 100
+                                    }
+                                }]
+                            });
+                        },
+                        onApprove: function (data, actions) {
+                            return actions.order.capture().then(function (details) {
+                                // Redirigir a la página 'cuenta.php' con el parámetro 'suscrito'
+                                if (selectedSuscripcion === "mensual") {
+                                    window.location.href = "cuenta.php?suscrito=mensual";
+                                } else if (selectedSuscripcion === "anual") {
+                                    window.location.href = "cuenta.php?suscrito=anual";
+                                }
+                            });
+                        },
+                        onCancel: function (data) {
+                            alert("Pago cancelado");
+                        }
+                    }).render('#paypal-button-container');
+                </script>
+
                 <?php
             }
+            if (isset($_GET['suscrito'])) {
+                $suscrito = $_GET['suscrito'];
+                $id_usuario = $_SESSION['usuario']['id_usuario'];
+                // Obtener la fecha actual
+                $fechaActual = date('Y-m-d');
+
+                // Obtener la fecha actual más un mes o un año según la suscripción
+                if ($suscrito === 'mensual') {
+                    $fechaVencimiento = date('Y-m-d', strtotime('+1 month'));
+                } elseif ($suscrito === 'anual') {
+                    $fechaVencimiento = date('Y-m-d', strtotime('+1 year'));
+                }
+
+                // Construir la consulta SQL
+                $sql = "UPDATE usuarios SET VIP = '$fechaVencimiento' WHERE id_usuario = '$id_usuario'";
+                sqlUPDATE($sql);
+
+                // Puedes realizar cualquier acción adicional que necesites aquí
+        
+                // Enviar una respuesta de éxito
+                echo "Suscripción actualizada correctamente";
+            }
             ?>
+
 
             <?php
             // Verificar si se recibió un pedido para editar un usuario

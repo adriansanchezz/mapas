@@ -1127,7 +1127,7 @@ function obtenerUltimoIdPedido()
 {
     $conn = conectar();
     // Realiza la consulta para obtener el último ID de pedido insertado
-    $sql = "SELECT MAX(id_pedido) AS ultimo_id FROM pedidos WHERE id_usuario = " . $_SESSION['usuario']['id_usuario'];
+    $sql = "SELECT MAX(p.id_pedido) AS ultimo_id FROM pedidos as p, lineas_pedidos as lp WHERE p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND p.id_pedido = lp.id_pedido";
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
