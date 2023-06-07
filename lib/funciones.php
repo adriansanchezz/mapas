@@ -1361,12 +1361,10 @@ function recuperarCuenta($pass, $email)
     }
 }
 
-
-function insertarSoporte()
-{
-
+function procesarPagos(){
+    // ...
+    // Tu código para procesar los pagos aquí
+    // ...
 }
-
-
 
 ?>
