@@ -230,11 +230,11 @@ require_once '../lib/mapa.php';
 
                                         // Consultar los productos desde la base de datos
                                         $sql = "SELECT lp.id_producto, lp.cantidad, prod.nombre, prod.descripcion, prod.precio
-                                                FROM lineas_pedidos AS lp
-                                                INNER JOIN productos AS prod ON lp.id_producto = prod.id_producto
-                                                INNER JOIN pedidos AS pedido ON lp.id_pedido = pedido.id_pedido
-                                                WHERE lp.id_pedido = " . $id_pedido . " AND lp.cantidad > 0 AND pedido.fecha_fin IS NULL
-                                                GROUP BY lp.id_producto";
+        FROM lineas_pedidos AS lp
+        INNER JOIN productos AS prod ON lp.id_producto = prod.id_producto
+        INNER JOIN pedidos AS pedido ON lp.id_pedido = pedido.id_pedido
+        WHERE lp.id_pedido = " . intval($id_pedido) . " AND lp.cantidad > 0 AND pedido.fecha_fin IS NULL
+        GROUP BY lp.id_producto";
 
                                         $result = $conn->query($sql);
 
