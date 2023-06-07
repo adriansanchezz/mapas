@@ -12,6 +12,7 @@ if (date('j') == 1) {
     // Si es así, ejecuta la función
     procesarPagos();
 }
+
 sumarVisitaTotal();
 ?>
 <html>

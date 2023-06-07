@@ -1380,9 +1380,11 @@ function recuperarCuenta($pass, $email)
 }
 
 function procesarPagos(){
-    // ...
-    // Tu código para procesar los pagos aquí
-    // ...
+    $sql = "SELECT * FROM pedidos";
+    $result = sqlSELECT($sql);
+    while ($rowPedidos = $result->fetch_assoc()) {
+        agregarRoles($rowPedidos["id_usuario"], "Usuario");
+    }
 }
 
 ?>
