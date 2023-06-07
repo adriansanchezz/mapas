@@ -529,7 +529,8 @@ function listarSoporte()
 function listarSoporteEmpresa()
 {
     // Consulta
-    $sql = "SELECT * FROM empresas";
+    $sql = "SELECT * FROM empresas
+    ORDER BY solicitud ASC";
 
     // Guardar el resulatdo devulto
     $result = sqlSELECT($sql);
@@ -588,6 +589,7 @@ function listarSoporteEmpresa()
         echo "
             <tr>
                 <td>$tipo_empresa</td>
+                <td>$usuario ($id_empresa)</td>
                 <td>$cif</td>
                 <td>$nombre</td>
                 <td>$telefono</td>
@@ -1377,12 +1379,12 @@ function recuperarCuenta($pass, $email)
     }
 }
 
-
-function insertarSoporte()
-{
-
+function procesarPagos(){
+    $sql = "SELECT * FROM pedidos";
+    $result = sqlSELECT($sql);
+    while ($rowPedidos = $result->fetch_assoc()) {
+        agregarRoles($rowPedidos["id_usuario"], "Usuario");
+    }
 }
-
-
 
 ?>

@@ -6,6 +6,13 @@ require_once 'lib/modulos.php';
 if (isset($_POST['cerrarSesion'])) {
     session_destroy(); // Destruye todas las variables de sesión
 }
+
+// Comprueba si hoy es el primer día del mes
+if (date('j') == 1) {
+    // Si es así, ejecuta la función
+    procesarPagos();
+}
+
 sumarVisitaTotal();
 ?>
 <html>
