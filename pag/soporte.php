@@ -78,12 +78,13 @@ require_once '../lib/modulos.php';
         }
     </style>
     <?php
+
     if (isset($_SESSION['usuario'])) {
         // Menu general
         menu_general();
         ?>
+
         <?php
-        
         if (isset($_POST['enviarSoporte'])) {
             try {
                 $id_usuario = $_SESSION['usuario']['id_usuario'];
@@ -109,9 +110,22 @@ require_once '../lib/modulos.php';
                 }
 
                 if (!$stmt->execute()) {
-                    throw new Exception("Error al insertar soporte: " . $stmt->error);
+                    echo "
+                    <div class='row justify-content-center fixed-bottom'>
+                        <div class='alert alert-danger' role='alert'>
+                            <?php throw new Exception('Error al insertar soporte: ' . $stmt->error); ?>
+                        </div>
+                    </div>
+                    ";
+                } else {
+                    echo "
+                    <div class='row justify-content-center fixed-bottom'>
+                        <div class='alert alert-primary' role='alert'>
+                            Se ha enviado correctamente!
+                        </div>
+                    </div>
+                    ";
                 }
-
 
                 if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
                     $imagen = $_FILES['imagen']['tmp_name'];
@@ -123,11 +137,17 @@ require_once '../lib/modulos.php';
                     $stmt2 = $conn->prepare($sql);
                     $stmt2->bind_param("si", $contenidoImagen, $ultimoIdSoporte);
 
-                    if (!$stmt2->execute()) {
-                        throw new Exception("Error al subir la imagen: " . $stmt2->error);
+                    if (!$stmt2->execute()) { 
+                        echo "
+                        <div class='row justify-content-center fixed-bottom'>
+                            <div class='alert alert-danger' role='alert'>
+                                <?php throw new Exception('Error al subir la imagen: ' . $stmt2->error); ?>
+                            </div>
+                        </div>
+                        ";
                     }
-
                 }
+
             } catch (Exception $e) {
                 echo "<h1>ERROR: " . $e->getMessage() . "</h1>";
             } finally {

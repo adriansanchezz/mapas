@@ -164,16 +164,16 @@ require_once '../lib/modulos.php';
                     <?php
                     if (isset($_POST['aprovarEmpresa'])) {
                         $id = $_POST['id_empresa'];
-                        $responder = isset($_POST['responderSoporte']) ? $_POST['responderSoporte'] : null;
-                        finalizarSoporte($id, $responder);
+                        $responder = isset($_POST['responderSoporteEmpresa']) ? $_POST['responderSoporteEmpresa'] : null;
+                        aprovarSolicitudEmpresa($id, $responder);
                     }
                     ?>
 
                     <?php
                     if (isset($_POST['rechazarEmpresa'])) {
                         $id = $_POST['id_empresa'];
-                        $responder = isset($_POST['responderSoporte']) ? $_POST['responderSoporte'] : null;
-                        finalizarSoporte($id, $responder);
+                        $responder = isset($_POST['responderSoporteEmpresa']) ? $_POST['responderSoporteEmpresa'] : null;
+                        rechazarSolicitudEmpresa($id, $responder);
                     }
                     ?>
 
