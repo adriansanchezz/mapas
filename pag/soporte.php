@@ -113,7 +113,7 @@ require_once '../lib/modulos.php';
                     echo "
                     <div class='row justify-content-center fixed-bottom'>
                         <div class='alert alert-danger' role='alert'>
-                            <?php throw new Exception('Error al insertar soporte: ' . $stmt->error); ?>
+                            <?php throw new Exception('Error a la hora de envio: ' . $stmt->error); ?>
                         </div>
                     </div>
                     ";
@@ -189,7 +189,21 @@ require_once '../lib/modulos.php';
                     $stmt2->bind_param("issssssi", $id_usuario, $cif, $nombre, $telefono, $email, $direccion, $contenidoImagen, $tipoEmpresa);
 
                     if (!$stmt2->execute()) {
-                        throw new Exception("Error al subir la imagen: " . $stmt2->error);
+                        echo "
+                        <div class='row justify-content-center fixed-bottom'>
+                            <div class='alert alert-danger' role='alert'>
+                                <?php throw new Exception('Error a la hora de envio: ' . $stmt2->error); ?>
+                            </div>
+                        </div>
+                        ";
+                    } else {
+                        echo "
+                        <div class='row justify-content-center fixed-bottom'>
+                            <div class='alert alert-primary' role='alert'>
+                                Se ha enviado correctamente!
+                            </div>
+                        </div>
+                        ";
                     }
                 }
             } catch (Exception $e) {
