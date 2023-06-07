@@ -66,6 +66,12 @@ require_once '../lib/modulos.php';
                     </li>
                     <li>
                         <form action="cuenta.php" method="post">
+                            <button type="submit" name="usuarioSoportes"
+                                class="btn btn-link nav-link text-white">Soportes</button>
+                        </form>
+                    </li>
+                    <li>
+                        <form action="cuenta.php" method="post">
                             <button type="submit" name="suscripcion"
                                 class="btn btn-link nav-link text-white">Suscripción</button>
                         </form>
@@ -316,7 +322,22 @@ require_once '../lib/modulos.php';
                 </div>
                 <?php
             }
+
+            if (isset($_REQUEST['usuarioSoportes'])) {
+                ?>
+                <div class="flex-grow-1">
+                    <div id="seccion1" class="p-3" style="display: block;">
+                        <h3>Soportes</h3>
+                        <?php verSoporte($_SESSION['usuario']['id_usuario']); ?> <br><br>
+
+                        <h3>Solucitud de empresa</h3>
+                        <?php verSolicitudEmpresa($_SESSION['usuario']['id_usuario']); ?> <br><br>
+                    </div>
+                </div> 
+                <?php
+            }
             ?>
+
 
             <?php
             // Verificar si se recibió un pedido para editar un usuario

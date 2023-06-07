@@ -451,6 +451,7 @@ function listarSoporte()
                     <th>Reportar</th>
                     <th>Mensaje</th>
                     <th>Prueba</th>
+                    <th>Respuesta</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -490,15 +491,23 @@ function listarSoporte()
                 <td>$asunto</td>
                 <td>$reportar</td>
                 <td>$mensaje</td>
-                <td>";
+                ";
+
         if ($result3 == null) {
-            echo "No hay foto";
+            echo "<td>No hay foto</td>";
         } else {
             $image = $result3["foto"];
-            echo "<img src='data:image/jpeg;base64," . base64_encode($image) . "' alt='Imagen del soporte' style='max-width: 100px; max-height: 100px;'>";
+            echo "<td><img src='data:image/jpeg;base64," . base64_encode($image) . "' alt='Imagen del soporte' style='max-width: 100px; max-height: 100px;'></td>";
         }
+
+        if ($row['respuesta'] == null) {
+            echo "<td>No hay respuesta</td>";
+        } else {
+            $respuesta = $row['respuesta'];
+            echo "<td>$respuesta</td>";
+        }
+
         echo "
-                </td>
                 <td>
                     <form action='administrador.php?administradorSoportes' method='POST'>
                         <input type='hidden' name='id_soporte' value='$id_soporte'>
@@ -538,6 +547,7 @@ function listarSoporteEmpresa()
                     <th>Correo</th>
                     <th>Direcicion</th>
                     <th>Logo</th>
+                    <th>Respuesta</th>
                     <th>Solicitud</th>
                     <th>Acciones</th>
                 </tr>
@@ -548,8 +558,8 @@ function listarSoporteEmpresa()
     while ($row = $result->fetch_assoc()) {
 
         $id_tipo_empresa = $row['id_tipo_empresa'];
-        $sql = "SELECT nombre FROM tipossoportes
-                WHERE id_tipo_soporte = $id_tipo_empresa";
+        $sql = "SELECT nombre FROM tiposempresas
+                WHERE id_tipo_empresa = $id_tipo_empresa";
         $resultado2 = sqlSELECT($sql)->fetch_assoc();
         $tipo_empresa = $resultado2["nombre"];
 
@@ -564,7 +574,7 @@ function listarSoporteEmpresa()
         $telefono = $row['telefono'];
         $email = $row['email'];
         $direccion = $row['direccion'];
-        
+
 
         if ($row['solicitud'] == null) {
             $solicitud = "Pediente";
@@ -578,30 +588,207 @@ function listarSoporteEmpresa()
         echo "
             <tr>
                 <td>$tipo_empresa</td>
-                <td>$usuario</td>
                 <td>$cif</td>
                 <td>$nombre</td>
                 <td>$telefono</td>
                 <td>$email</td>
                 <td>$direccion</td>
-                <td>";
+                ";
         if ($row['logo'] == null) {
-            echo "No hay foto";
+            echo "<td>No hay foto</td>";
         } else {
             $logo = $row['logo'];
-            echo "<img src='data:image/jpeg;base64," . base64_encode($logo) . "' alt='Imagen del soporte' style='max-width: 100px; max-height: 100px;'>";
+            echo "<td><img src='data:image/jpeg;base64," . base64_encode($logo) . "' alt='Imagen del soporte' style='max-width: 100px; max-height: 100px;'></td>";
         }
+
+        if ($row['respuesta'] == null) {
+            echo "<td>No hay respuesta</td>";
+        } else {
+            $respuesta = $row['respuesta'];
+            echo "<td>$respuesta</td>";
+        }
+
         echo "                
                 <td>$solicitud</td>
                 <td>
                     <form action='administrador.php?administradorSoportes' method='POST'>
                         <input type='hidden' name='id_empresa' value='$id_empresa'>
                         <p>Responder: </p>
-                        <textarea name='responderSoporte' rows='3' cols='30'></textarea><br><br>
+                        <textarea name='responderSoporteEmpresa' rows='3' cols='30'></textarea><br><br>
                         <button type='submit' name='aprovarEmpresa' class='btn btn-success'>Aprovar</button>
                         <button type='submit' name='rechazarEmpresa' class='btn btn-danger'>Rechazar</button>
                     </form>
                 </td>
+            </tr>
+            ";
+    }
+    echo "
+            </tbody>
+        </table>
+        ";
+}
+
+function verSolicitudEmpresa($id)
+{
+    // Consulta
+    $sql = "SELECT * FROM empresas WHERE id_empresa = $id";
+
+    // Guardar el resulatdo devulto
+    $result = sqlSELECT($sql);
+
+    // Comprobar si existe el compo de la consulta, y listar los datos
+    echo "
+        <table border='1' style='border-collapse: collapse;'>
+            <thead>
+                <tr>
+                    <th>Tipo</th>
+                    <th>CIF</th>
+                    <th>Nombre</th>
+                    <th>Telefono</th>
+                    <th>Correo</th>
+                    <th>Direcicion</th>
+                    <th>Logo</th>
+                    <th>Respuesta</th>
+                    <th>Solicitud</th>
+                </tr>
+            </thead>
+            <tbody>
+        ";
+
+    while ($row = $result->fetch_assoc()) {
+
+        $id_tipo_empresa = $row['id_tipo_empresa'];
+        $sql = "SELECT nombre FROM tipossoportes
+                WHERE id_tipo_soporte = $id_tipo_empresa";
+        $resultado2 = sqlSELECT($sql)->fetch_assoc();
+        $tipo_empresa = $resultado2["nombre"];
+
+        $cif = $row["cif"];
+        $nombre = $row['nombre'];
+        $telefono = $row['telefono'];
+        $email = $row['email'];
+        $direccion = $row['direccion'];
+
+
+        if ($row['solicitud'] == null) {
+            $solicitud = "Pediente";
+        } else if ($row['solicitud'] == 1) {
+            $solicitud = "Aprovado";
+        } else if ($row['solicitud'] == 0) {
+            $solicitud = "Rechazado";
+        }
+
+
+        echo "
+            <tr>
+                <td>$tipo_empresa</td>
+                <td>$cif</td>
+                <td>$nombre</td>
+                <td>$telefono</td>
+                <td>$email</td>
+                <td>$direccion</td>
+                ";
+        if ($row['logo'] == null) {
+            echo "<td>No hay foto</td>";
+        } else {
+            $logo = $row['logo'];
+            echo "<td><img src='data:image/jpeg;base64," . base64_encode($logo) . "' alt='Imagen del soporte' style='max-width: 100px; max-height: 100px;'></td>";
+        }
+
+        if ($row['respuesta'] == null) {
+            echo "<td>No hay respuesta</td>";
+        } else {
+            $respuesta = $row['respuesta'];
+            echo "<td>$respuesta</td>";
+        }
+
+        echo "<td><b>$solicitud</b></td></tr>";
+    }
+    echo "
+            </tbody>
+        </table>
+        ";
+}
+
+// Listar usuario y sus datos con rol, para todo los usuraio que existe
+function verSoporte($id)
+{
+    // Consulta
+    $sql = "SELECT * FROM soportes
+            WHERE id_usuario = $id
+            ORDER BY id_soporte DESC";
+
+    // Guardar el resulatdo devulto
+    $result = sqlSELECT($sql);
+
+    // Comprobar si existe el compo de la consulta, y listar los datos
+    echo "
+        <table border='1' style='border-collapse: collapse;'>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tipo</th>
+                    <th>Asunto</th>
+                    <th>Reportar</th>
+                    <th>Mensaje</th>
+                    <th>Prueba</th>
+                    <th>Respuesta</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+        ";
+
+    while ($row = $result->fetch_assoc()) {
+        $id_soporte = $row['id_soporte'];
+        $id_tipo_soporte = $row['id_tipo_soporte'];
+
+        $sql = "SELECT nombre FROM tipossoportes
+                WHERE id_tipo_soporte = $id_tipo_soporte";
+        $resultado2 = sqlSELECT($sql)->fetch_assoc();
+        $tipo_soporte = $resultado2["nombre"];
+
+        $sql = "SELECT * FROM soportes";
+        $asunto = $row['asunto'];
+        $reportar = $row['reportar'];
+        $mensaje = $row['mensaje'];
+
+        $sql = "SELECT foto FROM fotos
+                WHERE id_soporte = $id_soporte";
+        $result3 = sqlSELECT($sql)->fetch_assoc();
+
+
+        echo "
+            <tr>
+                <td>$id_soporte</td>
+                <td>$tipo_soporte</td>
+                <td>$asunto</td>
+                <td>$reportar</td>
+                <td>$mensaje</td>
+                ";
+
+        if ($result3 == null) {
+            echo "<td>No hay foto</td>";
+        } else {
+            $image = $result3["foto"];
+            echo "<td><img src='data:image/jpeg;base64," . base64_encode($image) . "' alt='Imagen del soporte' style='max-width: 100px; max-height: 100px;'></td>";
+        }
+
+        if ($row['respuesta'] == null) {
+            echo "<td>No hay respuesta</td>";
+        } else {
+            $respuesta = $row['respuesta'];
+            echo "<td>$respuesta</td>";
+        }
+
+        if ($row['fecha_fin'] == null) {
+            $estado = "Pediente";
+        } else {
+            $estado = "Cerrado";
+        }
+
+        echo "
+                <td>$estado</td>
             </tr>
             ";
     }
@@ -1001,6 +1188,24 @@ function finalizarSoporte($id, $cometario)
     // Consulta
     $sql = "UPDATE soportes SET fecha_fin = '$fecha_actual', respuesta = '$cometario' WHERE id_soporte  = $id";
 
+    // Actualizar los datos
+    sqlUPDATE($sql);
+}
+
+function aprovarSolicitudEmpresa($id, $cometario)
+{
+    // Consulta
+    $sql = "UPDATE empresas SET solicitud = '1', respuesta = '$cometario' WHERE id_empresa  = $id";
+    agregarRoles($id, "Empresa");
+    // Actualizar los datos
+    sqlUPDATE($sql);
+}
+
+function rechazarSolicitudEmpresa($id, $cometario)
+{
+    // Consulta
+    $sql = "UPDATE empresas SET solicitud = '0', respuesta = '$cometario' WHERE id_empresa  = $id";
+    eliminarRoles($id, "Empresa");
     // Actualizar los datos
     sqlUPDATE($sql);
 }
