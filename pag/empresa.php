@@ -393,8 +393,8 @@ require_once '../lib/mapa.php';
                                 xhr.open('GET', 'empresa.php?' + parametros, true);
                                 xhr.onreadystatechange = function () {
                                     if (xhr.readyState === 4 && xhr.status === 200) {
-                                        console.log('El pedido se actualizó correctamente.');
-                                        window.location.href = 'usuario.php?usuarioCarrito=1';
+                                        
+                                        window.location.href = 'empresa.php?empresaCarrito=1';
                                         exit();
                                     }
                                 };
