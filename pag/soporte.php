@@ -83,7 +83,7 @@ require_once '../lib/modulos.php';
         menu_general();
         ?>
         <?php
-
+        
         if (isset($_POST['enviarSoporte'])) {
             try {
                 $id_usuario = $_SESSION['usuario']['id_usuario'];

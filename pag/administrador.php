@@ -155,6 +155,30 @@ require_once '../lib/mapa.php';
                     ?>
 
                     <?php
+                    if (isset($_POST['revisarSoporte'])) {
+                        $id = $_POST['id_soporte'];
+                        $responder = isset($_POST['responderSoporte']) ? $_POST['responderSoporte'] : null;
+                        finalizarSoporte($id, $responder);
+                    }
+                    ?>
+
+                    <?php
+                    if (isset($_POST['aprovarEmpresa'])) {
+                        $id = $_POST['id_empresa'];
+                        $responder = isset($_POST['responderSoporte']) ? $_POST['responderSoporte'] : null;
+                        finalizarSoporte($id, $responder);
+                    }
+                    ?>
+
+                    <?php
+                    if (isset($_POST['rechazarEmpresa'])) {
+                        $id = $_POST['id_empresa'];
+                        $responder = isset($_POST['responderSoporte']) ? $_POST['responderSoporte'] : null;
+                        finalizarSoporte($id, $responder);
+                    }
+                    ?>
+
+                    <?php
                     if (isset($_REQUEST['administradorPanel'])) {
                         ?>
                         <h2>Panel de control</h2><br>
@@ -260,7 +284,7 @@ require_once '../lib/mapa.php';
                                 $sql6 = "SELECT * FROM lineas_pedidos as lp, productos as p WHERE lp.id_producto = p.id_producto AND lp.id_pedido = " . $row3['id_pedido'];
                                 $result4 = sqlSELECT($sql6);
 
-            
+
                                 if ($result4->num_rows > 0) {
                                     echo "<td>";
                                     while ($row5 = $result4->fetch_assoc()) {
@@ -269,21 +293,18 @@ require_once '../lib/mapa.php';
                                     }
                                     echo "</td>";
                                 }
-                                
 
 
-                                if($row3['importe']>0)
-                                {
+
+                                if ($row3['importe'] > 0) {
                                     echo "<td>" . $row3['importe'] . "</td>";
                                     echo "<td>Dinero</td>";
-                                }
-                                else
-                                {
+                                } else {
                                     echo "<td>" . $row3['puntos'] . "</td>";
                                     echo "<td>Puntos</td>";
                                 }
-                                
-                                   echo "<td>" . $row3['ubicacion'] . "</td>
+
+                                echo "<td>" . $row3['ubicacion'] . "</td>
                                     <td>" . $row3['fecha_fin'] . "</td>";
                                 echo "<td>";
                                 if ($row3['revision'] != NULL) {
@@ -319,7 +340,6 @@ require_once '../lib/mapa.php';
                             while ($row5 = $result->fetch_assoc()) {
 
                                 echo "<tr>";
-
                                 echo "<td>" . $row5['email'] . "</td>";
                                 echo "<td>" . $row5['email'] . "</td>";
                                 echo "<td>" . $row5['email'] . "</td>";
@@ -426,11 +446,13 @@ require_once '../lib/mapa.php';
 
                     if (isset($_REQUEST['administradorSoportes'])) {
                         ?>
+
                         <h3>Soportes</h3>
                         <?php listarSoporte(); ?> <br><br>
 
                         <h3>Solucitud de empresa</h3>
                         <?php listarSoporteEmpresa(); ?> <br><br>
+
                         <?php
                     }
 
