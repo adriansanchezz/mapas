@@ -137,7 +137,7 @@ require_once '../lib/mapa.php';
                     $sql = "SELECT * FROM pedidos as p, lineas_pedidos as lp WHERE p.id_pedido = lp.id_pedido AND p.fecha_fin IS NULL AND p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND lp.id_publicidad IS NOT NULL;";
 
                     if (sqlSELECT($sql)->num_rows > 0) {
-                        $id_pedido = obtenerUltimoIdPedido(); // Obtener el último ID de pedido insertado
+                        $id_pedido = obtenerUltimoIdPedidoPublicidad(); // Obtener el último ID de pedido insertado
                         $sqlLinea = "INSERT INTO `lineas_pedidos`(`precio`, `cantidad`, `id_producto`, `id_publicidad`, `id_pedido`) VALUES ($precio, 1, NULL, $product_id, $id_pedido)";
                         sqlINSERT($sqlLinea);
                     } else {
@@ -195,7 +195,7 @@ require_once '../lib/mapa.php';
 
                 if (sqlSELECT($sql)->num_rows > 0) {
 
-                    $id_pedido = obtenerUltimoIdPedido(); // Obtener el último ID de pedido insertado
+                    $id_pedido = obtenerUltimoIdPedidoPublicidad(); // Obtener el último ID de pedido insertado
                     $sqlPedido = "DELETE FROM `lineas_pedidos` WHERE id_pedido = " . $id_pedido . " AND id_publicidad = " . $product_id;
                     sqlDELETE($sqlPedido);
 
@@ -210,7 +210,7 @@ require_once '../lib/mapa.php';
                 $importe = $_REQUEST['importe']; // Obtener el valor de importe desde los parámetros de la solicitud
         
                 // Actualizar el pedido en la base de datos utilizando el valor de importe
-                $id_pedido = obtenerUltimoIdPedido();
+                $id_pedido = obtenerUltimoIdPedidoPublicidad();
                 $sqlPedido = "UPDATE pedidos SET fecha_fin = NOW(), importe = " . $importe . " WHERE id_pedido = " . $id_pedido;
                 sqlUPDATE($sqlPedido);
                 foreach ($_REQUEST as $key => $value) {
@@ -240,7 +240,7 @@ require_once '../lib/mapa.php';
                 <div class="products">
                     <?php
                     // Verificar si el carrito de compras está almacenado en la sesión
-                    $id_pedido = obtenerUltimoIdPedido();
+                    $id_pedido = obtenerUltimoIdPedidoPublicidad();
                     $conn = conectar();
 
                     // Consultar los productos desde la base de datos
