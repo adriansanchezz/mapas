@@ -214,3 +214,41 @@ function administradorPublicidades() {
         });
     }
 }
+
+
+// Función para buscar una dirección mediante una barra de búsqueda.
+function buscarDireccion() {
+    var direccion = document.getElementById('direccion').value;
+
+    // Realizar la petición de geocodificación mediante un fetch.then.then.catch para asegurarse de que funciona.
+    fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + direccion)
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            if (data.length > 0) {
+                var latitud = parseFloat(data[0].lat);
+                var longitud = parseFloat(data[0].lon);
+
+                // Centrar el mapa en la ubicación encontrada.
+                map.setView([latitud, longitud], 13);
+
+                if (marker) {
+                    map.removeLayer(marker);
+                }
+
+                marker = L.marker([latitud, longitud]).addTo(map);
+                marker.bindPopup("Ubicación encontrada").openPopup();
+
+                // Actualizar campos ocultos en el formulario con las coordenadas.
+                document.getElementById('lat').value = latitud;
+                document.getElementById('lng').value = longitud;
+            } else {
+                alert("No se encontró la dirección especificada.");
+            }
+        })
+        .catch(function (error) {
+            // Por consola se señala el error.
+            console.log('Error:', error);
+        });
+}

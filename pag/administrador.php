@@ -3,6 +3,7 @@
 //Importar y abrir session que esta dentro de funciones.php
 require_once '../lib/funciones.php';
 require_once '../lib/modulos.php';
+require_once '../lib/mapa.php';
 ?>
 <html>
 

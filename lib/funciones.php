@@ -1284,12 +1284,12 @@ function guardarMarcador()
 
                     // Ejecutar la consulta para cada imagen
                     if ($stmt->execute()) {
-                        echo "La imagen " . $_FILES['imagen']['name'][$i] . " se ha subido correctamente.<br>";
+                        
                     } else {
-                        echo "Error al subir la imagen " . $_FILES['imagen']['name'][$i] . ": " . $stmt->error . "<br>";
+                        
                     }
                 } else {
-                    echo "Error al subir la imagen " . $_FILES['imagen']['name'][$i] . ": " . $_FILES['imagen']['error'][$i] . "<br>";
+                   
                 }
             }
 

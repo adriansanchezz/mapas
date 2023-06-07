@@ -3,13 +3,16 @@
 //Importar y abrir session que esta dentro de funciones.php
 require_once '../lib/funciones.php';
 require_once '../lib/modulos.php';
+require_once '../lib/mapa.php';
 ?>
 <html>
 
 <head>
     <!-- Meter informacion general de head -->
     <?php head_info(); ?>
+    <script src="../js/funciones.js"></script>
     <title>DisplayAds</title>
+    
 </head>
 
 <body>
