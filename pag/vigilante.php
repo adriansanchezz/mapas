@@ -12,7 +12,18 @@ require_once '../lib/mapa.php';
     <?php head_info(); ?>
     <script src="../js/funciones.js"></script>
     <title>DisplayAds</title>
-    
+    <style>
+        #map {
+            height: 70vh;
+            width: 150vh;
+            margin-left: 10vh;
+            border: 8px solid #2c3e50;
+            /* Color del borde */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            /* Sombra */
+        }
+    </style>
+
 </head>
 
 <body>
@@ -68,32 +79,6 @@ require_once '../lib/mapa.php';
             }
 
             ?>
-            <style>
-                .puntos-container {
-                    background-color: #e9f2fe;
-                    border: 1px solid #007bff;
-                    padding: 10px;
-                    height: 100px;
-                    border-radius: 5px;
-                    float: right;
-                    margin-right: 20px;
-                    margin-top: 20px;
-                }
-
-                #map {
-                    height: 70vh;
-                    border: 8px solid #2c3e50;
-                    /* Color del borde */
-                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-                    /* Sombra */
-                }
-            </style>
-            <div class="puntos-container">
-                <h5>Tus puntos:</h5>
-                <p>
-                    <?php echo $puntos; ?>
-                </p>
-            </div>
 
 
             <?php
@@ -116,7 +101,7 @@ require_once '../lib/mapa.php';
                 </div>
 
                 <?php
-                echo '<input type="submit" class="btn btn-primary" id="solicitarMision" value="Solicitar mision">';
+
 
             }
 
@@ -146,7 +131,7 @@ require_once '../lib/mapa.php';
                                     echo "<p class='card-text'>" . $row['descripcion'] . "</p>";
                                     echo "<td><img src='data:image/jpeg;base64," . base64_encode($row['foto']) . "' alt='Imagen del producto' class='img-thumbnail'></td>";
                                     echo "<p class='card-text'>Puntos: " . $row['puntos'] . "</p>";
-                                    
+
                                     echo "<form action='vigilante.php' method='post'>";
                                     echo "<input type='hidden' name='product_id' value='" . $row['id_producto'] . "'>";
                                     echo "<input type='text' id='ubicacion-input' name='ubicacion' placeholder='Indica la ubicación a la que enviar el producto'>";
@@ -167,7 +152,7 @@ require_once '../lib/mapa.php';
                     </div>
                 </div>
 
-            </div>
+            
             <?php
             }
             if (isset($_POST['reclamarRecompensa'])) {
@@ -176,7 +161,7 @@ require_once '../lib/mapa.php';
                 $ubicacion = $_POST['ubicacion'];
                 $sql = "SELECT * FROM productos WHERE id_producto = " . $product_id;
                 $result = sqlSELECT($sql);
-            
+
                 // Si da resultados entonces entra en el if.
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
@@ -190,11 +175,11 @@ require_once '../lib/mapa.php';
                                     $precio = $row['puntos'];
                                     $sqlPedido = "INSERT INTO `pedidos` (`puntos`, `fecha_inicio`, `fecha_fin`, `id_usuario`, `ubicacion`) VALUES ($precio, NOW(), NOW(), $id_usuario, '$ubicacion')";
                                     sqlINSERT($sqlPedido);
-            
+
                                     $id_pedido = obtenerUltimoIdPedido(); // Obtener el último ID de pedido insertado
                                     $sqlLinea = "INSERT INTO `lineas_pedidos`(`precio`, `cantidad`, `id_producto`, `id_publicidad`, `id_pedido`) VALUES ($precio, 1, $product_id, NULL, $id_pedido)";
                                     sqlINSERT($sqlLinea);
-            
+
                                     $sql2 = "UPDATE usuarios SET puntos = puntos - " . (int) $row['puntos'] . " WHERE id_usuario = " . $_SESSION['usuario']['id_usuario'];
                                     sqlUPDATE($sql2);
                                 } else {
@@ -204,12 +189,12 @@ require_once '../lib/mapa.php';
                         }
                     }
                 }
-            
+
                 $url = "vigilante.php?recompensas";
                 if (isset($mensaje)) {
                     $url .= "&mensaje=" . urlencode($mensaje);
                 }
-            
+
                 echo "<script>window.location.href = '$url';</script>";
                 exit();
             }
@@ -252,11 +237,31 @@ require_once '../lib/mapa.php';
                 }
             }
 
-            
+
             ?>
+        <style>
+            .puntos-container {
+                background-color: #e9f2fe;
+                border: 1px solid #007bff;
+                padding: 10px;
+                height: 100px;
+                border-radius: 5px;
+                float: right;
+                margin-right: 20px;
+                margin-top: 20px;
+            }
+        </style>
+        <div class="puntos-container">
+            <h5>Tus puntos:</h5>
+            <p>
+                <?php echo $puntos; ?>
+            </p>
+        </div>
 
         </div>
+
         <?php
+
     } else {
         echo ('Acceso denegado');
         print '<a href ="../index.php"><button>Volver</button></a>';

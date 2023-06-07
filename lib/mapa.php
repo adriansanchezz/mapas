@@ -434,7 +434,14 @@ function mapa($valor)
     if ($valor == "vigilar") {
         ?>
         <h1>MISIONES</h1>
-        <div id="map"></div>
+        <div id="map"></div><br>
+        <style>
+            input{
+                margin-left: 10vh;
+                width: 150vh;
+            }
+        </style>
+        <input type="submit" class="btn btn-primary" id="solicitarMision" value="Solicitar misión">
         <div class="container mt-4">
             <div class="table-responsive mb-4">
                 Misiones en proceso:
