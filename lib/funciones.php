@@ -32,13 +32,13 @@ function registrarUser($username, $email, $telefono, $password, $password2)
     }
 
     // Verificar el usuario tenga al menos 4 caracteres.
-    if (strlen($username) < 4) {
-        $errors[] = "El nombre debe tener al menos 4 caracteres.";
+    if (strlen($username) < 3) {
+        $errors[] = "El nombre debe tener al menos 3 caracteres.";
     }
 
     // Verificar que la contraseña tenga al menos 8 caracteres.
-    if (strlen($password) < 8) {
-        $errors[] = "La contraseña debe tener al menos 8 caracteres.";
+    if (strlen($password) < 6) {
+        $errors[] = "La contraseña debe tener al menos 6 caracteres.";
     }
 
     // Convertir el dominio a minúsculas
