@@ -10,7 +10,7 @@ if (isset($_GET['subirMision'])) {
         $id_tipo = 1;
         $conn = conectar();
         $sql = "SELECT * FROM misiones WHERE id_publicidad='$id_publicidad' AND aceptacion = 0 AND id_usuario=". $_SESSION['usuario']['id_usuario'] .";";
-        $result = $conn->query($sql);
+        $result = sqlSELECT($sql);
         if ($result->num_rows > 0) {
             echo "true";
         } else {
@@ -24,10 +24,7 @@ if (isset($_GET['subirMision'])) {
             } else {
                 // Ocurrió un error al insertar los datos en la base de datos
                 echo "Error al guardar los datos en la base de datos: " . $stmt2->error;
-            }
-            $stmt2->close();
-            $conn->close();
-            
+            } 
         }
     } else {
         echo "El usuario no ha iniciado sesión.";

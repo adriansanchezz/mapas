@@ -187,114 +187,151 @@ require_once '../lib/mapa.php';
                         <?php
                         verVisitaTotal();
 
-
                         $conn = conectar();
 
-                        // Consultar los productos desde la base de datos
-                
                         $sql = "SELECT * FROM publicidades as p, usuarios as u WHERE p.comprador IS NOT NULL AND p.id_usuario <> p.comprador AND p.ocupado = 1 AND p.id_usuario = u.id_usuario AND caducidad_compra IS NOT NULL";
-                        $result = $conn->query($sql);
+                        $result = sqlSELECT($sql);
                         echo "<br><br><h1>Ubicaciones compradas</h1><br>";
                         if ($result->num_rows > 0) {
                             echo "<table>";
                             echo "<tr>
-                                    <th>Usuario/Dueño</th>
-                                    <th>Ubicación Envío</th>
-                                    <th>Código Postal</th>
-                                    <th>Empresa Compradora</th>
-                                    <th>Precio</th>
-                                    <th>Fecha final</th>
-                                    <th>Precio total</th>
-                                    <th>Estado</th>
-                                    </tr>";
+                                <th>Usuario/Dueño</th>
+                                <th>Ubicación Envío</th>
+                                <th>Código Postal</th>
+                                <th>Empresa Compradora</th>
+                                <th>Precio</th>
+                                <th>Fecha final</th>
+                                <th>Precio total</th>
+                                <th>Estado</th>
+                                </tr>";
                             while ($row = $result->fetch_assoc()) {
-                                $sql2 = "SELECT * FROM empresas WHERE id_empresa = " . $row['comprador'];
-                                $result2 = $conn->query($sql2);
-                                if ($result2->num_rows > 0) {
-                                    while ($row2 = $result2->fetch_assoc()) {
-                                        echo "<tr>
-                                        <td>" . $row['email'] . "</td>
-                                        <td>" . $row['ubicacion'] . "</td>
-                                        <td>" . $row['codigo_postal'] . "</td>
-                                        <td>" . $row2['nombre'] . "</td>
-                                        <td>" . $row['precio'] . "</td>
-                                        <td>" . $row['caducidad_compra'] . "</td>";
+                                $sql2 = "SELECT * FROM empresas WHERE id_empresa = ?";
+                                try {
+                                    $stmt2 = $conn->prepare($sql2);
+                                    $stmt2->bind_param("i", $row['comprador']);
+                                    $stmt2->execute();
+                                    $result2 = $stmt2->get_result();
 
-                                        $sql3 = "SELECT * FROM pedidos as p, lineas_pedidos as lp WHERE p.id_pedido = lp.id_pedido AND lp.id_publicidad = " . $row['id_publicidad'];
-                                        $result3 = $conn->query($sql3);
-                                        if ($result3->num_rows > 0) {
-                                            while ($row3 = $result3->fetch_assoc()) {
-                                                echo "<td>" . $row3['precio'] . "</td>";
+                                    if ($result2->num_rows > 0) {
+                                        while ($row2 = $result2->fetch_assoc()) {
+                                            echo "<tr>
+                                                <td>" . $row['email'] . "</td>
+                                                <td>" . $row['ubicacion'] . "</td>
+                                                <td>" . $row['codigo_postal'] . "</td>
+                                                <td>" . $row2['nombre'] . "</td>
+                                                <td>" . $row['precio'] . "</td>
+                                                <td>" . $row['caducidad_compra'] . "</td>";
+
+                                            $sql3 = "SELECT * FROM pedidos as p, lineas_pedidos as lp WHERE p.id_pedido = lp.id_pedido AND lp.id_publicidad = ?";
+                                            try {
+                                                $stmt3 = $conn->prepare($sql3);
+                                                $stmt3->bind_param("i", $row['id_publicidad']);
+                                                $stmt3->execute();
+                                                $result3 = $stmt3->get_result();
+
+                                                if ($result3->num_rows > 0) {
+                                                    while ($row3 = $result3->fetch_assoc()) {
+                                                        echo "<td>" . $row3['precio'] . "</td>";
+                                                    }
+                                                }
+                                                $stmt3->close();
+                                            } catch (Exception $e) {
+                                                echo "Error al ejecutar la consulta de pedidos: " . $e->getMessage();
                                             }
+
+                                            echo "<td>";
+                                            $sql4 = "SELECT * FROM publicidades WHERE id_publicidad = ? AND revision IS NULL";
+                                            try {
+                                                $stmt4 = $conn->prepare($sql4);
+                                                $stmt4->bind_param("i", $row['id_publicidad']);
+                                                $stmt4->execute();
+                                                $result4 = $stmt4->get_result();
+
+                                                // Si da resultados entonces entra en el if.
+                                                if ($result4->num_rows > 0) {
+                                                    echo "<form action='administrador.php' method='POST'>
+                                                        <input type='hidden' name='id_publicidad' value='" . $row['id_publicidad'] . "'>
+                                                        <input type='submit' name='revisarCompraUbicacion' value='Revisado'>
+                                                        </form>";
+                                                } else {
+                                                    echo "<p>REVISADO</p>";
+                                                }
+                                                $stmt4->close();
+                                            } catch (Exception $e) {
+                                                echo "Error al ejecutar la consulta de publicidades: " . $e->getMessage();
+                                            }
+
+                                            echo "</td>
+                                                </tr>";
                                         }
-
-
-                                        echo "<td>";
-                                        $sql4 = "SELECT * FROM publicidades WHERE id_publicidad = " . $row['id_publicidad'] . " AND revision IS NULL";
-                                        $result4 = sqlSELECT($sql4);
-
-                                        // Si da resultados entonces entra en el if.
-                                        if ($result4->num_rows > 0) {
-                                            echo "<form action='administrador.php' method='POST'>
-                                            <input type='hidden' name='id_publicidad' value='" . $row['id_publicidad'] . "'>
-                                            <input type='submit' name='revisarCompraUbicacion' value='Revisado'>
-                                            </form>";
-                                        } else {
-                                            echo "<p>REVISADO</p>";
-                                        }
-
-                                        echo "</td>
-                                        </tr>";
                                     }
+                                    $stmt2->close();
+                                } catch (Exception $e) {
+                                    echo "Error al ejecutar la consulta de empresas: " . $e->getMessage();
                                 }
                             }
                             echo "</table>";
                         }
 
 
+
+
+
                         echo "<br><br><h1>Productos comprados</h1><br>";
                         $sql4 = "SELECT * FROM pedidos WHERE fecha_fin IS NOT NULL AND ubicacion IS NOT NULL";
-                        $result = $conn->query($sql4);
+
+
+                        $result = sqlSELECT($sql4);
+
                         if ($result->num_rows > 0) {
                             echo "<table>";
                             echo "<tr>
-                                    <th>Usuario</th>
-                                    <th>Productos</th>
-                                    <th>Importe</th>
-                                    <th>Tipo</th>
-                                    <th>Ubicación</th>
-                                    <th>Fecha</th>
-                                    <th>Estado</th>
-                                    </tr>";
+                                <th>Usuario</th>
+                                <th>Productos</th>
+                                <th>Importe</th>
+                                <th>Tipo</th>
+                                <th>Ubicación</th>
+                                <th>Fecha</th>
+                                <th>Estado</th>
+                                </tr>";
+
                             while ($row3 = $result->fetch_assoc()) {
-
                                 echo "<tr>";
+                                $sql5 = "SELECT * FROM usuarios WHERE id_usuario = ?";
+                                try {
+                                    $stmt2 = $conn->prepare($sql5);
+                                    $stmt2->bind_param("i", $row3['id_usuario']);
+                                    $stmt2->execute();
+                                    $result3 = $stmt2->get_result();
 
-                                $sql5 = "SELECT * FROM usuarios WHERE id_usuario = " . $row3['id_usuario'];
-                                $result3 = sqlSELECT($sql5);
-
-                                // Si da resultados entonces entra en el if.
-                                if ($result3->num_rows > 0) {
-                                    while ($row4 = $result3->fetch_assoc()) {
-
-                                        echo "<td>" . $row4['email'] . "</td>";
+                                    if ($result3->num_rows > 0) {
+                                        while ($row4 = $result3->fetch_assoc()) {
+                                            echo "<td>" . $row4['email'] . "</td>";
+                                        }
                                     }
+                                    $stmt2->close();
+                                } catch (Exception $e) {
+                                    echo "Error al ejecutar la consulta de usuarios: " . $e->getMessage();
                                 }
 
-                                $sql6 = "SELECT * FROM lineas_pedidos as lp, productos as p WHERE lp.id_producto = p.id_producto AND lp.id_pedido = " . $row3['id_pedido'];
-                                $result4 = sqlSELECT($sql6);
+                                $sql6 = "SELECT * FROM lineas_pedidos as lp, productos as p WHERE lp.id_producto = p.id_producto AND lp.id_pedido = ?";
+                                try {
+                                    $stmt3 = $conn->prepare($sql6);
+                                    $stmt3->bind_param("i", $row3['id_pedido']);
+                                    $stmt3->execute();
+                                    $result4 = $stmt3->get_result();
 
-
-                                if ($result4->num_rows > 0) {
-                                    echo "<td>";
-                                    while ($row5 = $result4->fetch_assoc()) {
-
-                                        echo $row5['nombre'] . "<br>";
+                                    if ($result4->num_rows > 0) {
+                                        echo "<td>";
+                                        while ($row5 = $result4->fetch_assoc()) {
+                                            echo $row5['nombre'] . "<br>";
+                                        }
+                                        echo "</td>";
                                     }
-                                    echo "</td>";
+                                    $stmt3->close();
+                                } catch (Exception $e) {
+                                    echo "Error al ejecutar la consulta de lineas_pedidos: " . $e->getMessage();
                                 }
-
-
 
                                 if ($row3['importe'] > 0) {
                                     echo "<td>" . $row3['importe'] . "</td>";
@@ -308,62 +345,76 @@ require_once '../lib/mapa.php';
                                     <td>" . $row3['fecha_fin'] . "</td>";
                                 echo "<td>";
                                 if ($row3['revision'] != NULL) {
-
                                     echo "<p>Enviado</p>";
                                 }
                                 if ($row3['revision'] == NULL) {
                                     echo "<form action='administrador.php' method='POST'>
-                                            <input type='hidden' name='id_pedido' value='" . $row3['id_pedido'] . "'>
-                                            <input type='submit' name='revisarCompraProducto' value='Revisado'>
-                                            </form>";
+                                        <input type='hidden' name='id_pedido' value='" . $row3['id_pedido'] . "'>
+                                        <input type='submit' name='revisarCompraProducto' value='Revisado'>
+                                        </form>";
                                 }
                                 echo "</td>";
                                 echo "</tr>";
-
                             }
                             echo "</table>";
                         }
 
+
+
+
                         echo "<br><br><h1>Solicitudes de Pisos</h1><br>";
                         $sql5 = "SELECT * FROM publicidades as p, usuarios as u WHERE p.revision = 0 AND p.id_usuario = u.id_usuario";
-                        $result = $conn->query($sql5);
+
+
+                        $result = sqlSELECT($sql5);
                         if ($result->num_rows > 0) {
                             echo "<table>";
                             echo "<tr>
-                                    <th>Usuario</th>
-                                    <th>Importe</th>
-                                    <th>Ubicación</th>
-                                    <th>Fecha</th>
-                                    <th>Aceptación</th>
-                                    </tr>";
+                                <th>Usuario</th>
+                                <th>Importe</th>
+                                <th>Ubicación</th>
+                                <th>Fecha</th>
+                                <th>Aceptación</th>
+                                </tr>";
 
                             while ($row5 = $result->fetch_assoc()) {
-
                                 echo "<tr>";
                                 echo "<td>" . $row5['email'] . "</td>";
                                 echo "<td>" . $row5['email'] . "</td>";
                                 echo "<td>" . $row5['email'] . "</td>";
-                                $sql6 = "SELECT * FROM fotos WHERE id_publicidad = " . $row5['id_publicidad'];
-                                $result = $conn->query($sql6);
-                                if ($result->num_rows > 0) {
-                                    echo "<td>";
-                                    while ($row6 = $result->fetch_assoc()) {
-                                        $imagen = $row6["foto"];
-                                        // Mostrar la imagen en la página
-                                        $mostrarImagen = "<img src='data:image/jpeg;base64," . base64_encode($imagen) . "' alt='Imagen del producto'>";
-                                        echo $mostrarImagen;
+
+                                $sql6 = "SELECT * FROM fotos WHERE id_publicidad = ?";
+                                try {
+                                    $stmt2 = $conn->prepare($sql6);
+                                    $stmt2->bind_param("i", $row5['id_publicidad']);
+                                    $stmt2->execute();
+                                    $result2 = $stmt2->get_result();
+                                    if ($result2->num_rows > 0) {
+                                        echo "<td>";
+                                        while ($row6 = $result2->fetch_assoc()) {
+                                            $imagen = $row6["foto"];
+                                            // Mostrar la imagen en la página
+                                            $mostrarImagen = "<img src='data:image/jpeg;base64," . base64_encode($imagen) . "' alt='Imagen del producto'>";
+                                            echo $mostrarImagen;
+                                        }
+                                        echo "</td>";
                                     }
-                                    echo "</td>";
+                                    $stmt2->close();
+                                } catch (Exception $e) {
+                                    // Manejar la excepción en caso de un error en la consulta
+                                    echo "Error al ejecutar la consulta de fotos: " . $e->getMessage();
                                 }
+
                                 echo "<td><form action='administrador.php' method='POST'>
-                                            <input type='hidden' name='id_publicidad' value='" . $row5['id_publicidad'] . "'>
-                                            <input type='submit' name='aceptarCertificado' value='Aceptar'>
-                                            </form></td>";
+                                    <input type='hidden' name='id_publicidad' value='" . $row5['id_publicidad'] . "'>
+                                    <input type='submit' name='aceptarCertificado' value='Aceptar'>
+                                    </form></td>";
                                 echo "</tr>";
-
                             }
-
+                            echo "</table>";
                         }
+
+
 
                         echo "<br><br><h1>Lanzar alerta.</h1><br>";
                         echo "<form action='administrador.php' method='POST'>";
@@ -371,12 +422,15 @@ require_once '../lib/mapa.php';
                         echo "<label for='usuarioSeleccionado'>Selecciona un usuario:</label>";
                         echo "<select class='form-control' name='usuarioSeleccionado'>";
                         $sql6 = "SELECT * FROM usuarios";
-                        $result = $conn->query($sql6);
+
+                        $result = sqlSELECT($sql6);
+
                         if ($result->num_rows > 0) {
                             while ($row6 = $result->fetch_assoc()) {
                                 echo "<option value='" . $row6['id_usuario'] . "'>" . $row6['email'] . "</option>";
                             }
                         }
+
                         echo "</select>";
                         echo "</div>";
                         echo "<div class='form-group'>";
@@ -389,6 +443,7 @@ require_once '../lib/mapa.php';
                         echo "</div>";
                         echo "<button type='submit' class='btn btn-primary' name='usuarioAlerta'>Enviar</button>";
                         echo "</form>";
+
 
 
                     }
