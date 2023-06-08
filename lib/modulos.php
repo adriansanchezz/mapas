@@ -225,13 +225,6 @@ function menu_general()
                             for ($i = count($notificaciones) - 1; $i >= 0; $i--) {
                                 echo $notificaciones[$i];
                             }
-
-
-
-
-                            
-
-
                             ?>
                             <div class="notification">¡Bienvenido a DisplayAds</div>
                         </div>

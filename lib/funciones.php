@@ -49,7 +49,7 @@ function registrarUser($username, $email, $telefono, $password, $password2)
 
     // Comprobar si el correo electrónico cumple con el patrón
     if (!preg_match($pattern, $email)) {
-        $errors[] = "El dominio del correo electrónico no es válido.";
+        $errors[] = "El dominio del correo no es válido.";
     }
 
     // Verificar si la contraseña y la repeticon es igual o no
@@ -71,11 +71,9 @@ function registrarUser($username, $email, $telefono, $password, $password2)
 
     //Lanza alerta si hay erro en el array de $errors
     if (!empty($errors)) {
-        echo "<ul name='l2'>";
         foreach ($errors as $error) {
-            echo '<li>' . $error . '</li>';
+            echo '<div class="alert alert-warning" role="alert">' . $error . '</div>';
         }
-        echo '</ul>';
         return false;
     } else {
         // Si no hay errores, los datos del formulario son válidos.

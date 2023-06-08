@@ -68,7 +68,7 @@ li {
 }
 
 li:hover {
-    background-color: #008849;
+    background-color: transparent;
     transform: scale(1.1);
 }
 
@@ -87,7 +87,7 @@ li:hover {
 }
 
 .ul-second > a > li:hover {
-    background-color: #008849;
+    background-color: rgba(40, 39, 39, 0.3);
 }
 
 .nosotros:hover > .ul-second {
@@ -106,18 +106,26 @@ li:hover {
     }
 
     ul {
-        position: absolute;
         top: 60px;
-        background-color: #008849;
+        background: linear-gradient(10deg, rgb(226, 249, 255), rgb(0, 102, 131));
         width: 100%;
         flex-direction: column;
         align-items: center;
     }
 
+    .ul-second{
+        background: transparent;
+    }
+
     ul li {
-        width: 100%;
+        width: 80%;
         text-align: center;
-        padding: 10px 0;
+    }
+
+    ul li a {
+        background: white;
+        width: 80%;
+        text-align: center;
     }
 
     .nosotros {
@@ -129,5 +137,9 @@ li:hover {
         left: 20px;
         width: 100%;
         top: 25px;
+    }
+
+    .ul-second > a > li {
+        transform: translateX(0px);
     }
 }
