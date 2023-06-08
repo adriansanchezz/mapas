@@ -5,28 +5,32 @@ ini_set('display_errors', '1');
 function menu_index()
 {
     ?>
-    <header>
-        <a class="logo" href="index.php">DisplayAds</a>
-        <ul class="cont-ul">
-            <a href="index.php">
-                <li>Inicio</li>
-            </a>
-            <li class="nosotros">
-                Nosotros
-                <ul class="ul-second">
-                    <a href="nosotros.php">
-                        <li>Contacto</li>
-                    </a>
-                    <a href="nosotros.php">
-                        <li>Ayuda</li>
-                    </a>
-                </ul>
-            </li>
-            <a href="login.php">
-                <li><i class="fa-solid fa-right-to-bracket"></i></li>
-            </a>
-        </ul>
-    </header>
+    <div class="separar">
+
+        <header>
+            <a class="logo" href="index.php"><img src="img/icono/logo.png" class="logo" alt="Logo"
+                    style="width: 70px; height: 70px;"></a>
+            <ul class="cont-ul">
+                <a href="index.php">
+                    <li>Inicio</li>
+                </a>
+                <li class="nosotros">
+                    Nosotros
+                    <ul class="ul-second">
+                        <a href="nosotros.php?informacion">
+                            <li>Informacion</li>
+                        </a>
+                        <a href="nosotros.php?politicasPrivacidad">
+                            <li>Política de Privacidad</li>
+                        </a>
+                    </ul>
+                </li>
+                <a href="login.php">
+                    <li><i class="fa-solid fa-right-to-bracket"></i></li>
+                </a>
+            </ul>
+        </header>
+    </div>
     <?php
 }
 ?>
@@ -45,7 +49,7 @@ function menu_general()
                         <?php
                         if (validarUsuario($_SESSION['usuario']['id_usuario'])) {
                             ?>
-                            <li><a href="usuario.php">Usuario</a>
+                            <li><a href="usuario.php?usuarioMapa">Usuario</a>
                                 <ul>
                                     <li><a href="usuario.php?usuarioMapa">Mapa</a></li>
                                     <li><a href="usuario.php?usuarioTienda">Tienda</a></li>
@@ -58,7 +62,7 @@ function menu_general()
                         <?php
                         if (validarVigilante($_SESSION['usuario']['id_usuario'])) {
                             ?>
-                            <li><a href="vigilante.php?vigilantePrincipal">Vigilante</a>
+                            <li><a href="vigilante.php?misiones">Vigilante</a>
                                 <ul>
                                     <li><a href="vigilante.php?misiones">Misiones</a></li>
                                     <li><a href="vigilante.php?recompensas">Recompensas</a></li>
@@ -71,7 +75,7 @@ function menu_general()
                         <?php
                         if (validarEmpresa($_SESSION['usuario']['id_usuario'])) {
                             ?>
-                            <li><a href="empresa.php?empresaPrincipal">Empresa</a>
+                            <li><a href="empresa.php?empresaMapa">Empresa</a>
                                 <ul>
                                     <li><a href="empresa.php?empresaMapa">Publicitarse</a></li>
                                     <li><a href="empresa.php?">Informacion</a></li>
@@ -90,12 +94,22 @@ function menu_general()
                                     <li><a href="administrador.php?administradorProductos">Productos</a></li>
                                     <!-- <li><a href="administrador.php?administradorNoticias">Noticias</a></li> -->
                                     <li><a href="administrador.php?administradorMisiones">Misiones</a></li>
+                                    <li><a href="administrador.php?administradorSoportes">Soportes</a></li>
+
                                 </ul>
                             </li>
                             <?php
                         }
                         ?>
-                        <li><a href="cuenta.php?cuentaPrincipal">Cuenta</a></li>
+                        <li><a href="cuenta.php?cuentaInformacion">Cuenta</a>
+                            <ul>
+                                <li><a href="cuenta.php?cuentaInformacion">Informacion</a></li>
+                                <li><a href="cuenta.php?publicidades">Publicidades</a></li>
+                                <li><a href="cuenta.php?usuarioSoportes">Soportes</a></li>
+                                <li><a href="cuenta.php?suscripcion">Suscripción</a></li>
+
+                            </ul>
+                        </li>
                         <li><a href="soporte.php">Soporte</a></li>
 
                         <li>

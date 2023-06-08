@@ -54,7 +54,7 @@ require_once '../lib/modulos.php';
                 <ul class="nav nav-pills flex-column mb-auto">
                     <li>
                         <form action="cuenta.php" method="post">
-                            <button type="submit" name="cuentaPrincipal" class="btn btn-link nav-link text-white">Principal
+                            <button type="submit" name="cuentaInformacion" class="btn btn-link nav-link text-white">Informacion
                             </button>
                         </form>
                     </li>
@@ -101,7 +101,7 @@ require_once '../lib/modulos.php';
             ?>
 
             <?php
-            if (isset($_REQUEST['cuentaPrincipal'])) {
+            if (isset($_REQUEST['cuentaInformacion'])) {
                 ?>
                 <div class="flex-grow-1">
                     <div id="seccion1" class="p-3" style="display: block;">

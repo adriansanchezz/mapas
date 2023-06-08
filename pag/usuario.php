@@ -11,6 +11,7 @@ require_once '../lib/mapa.php';
     <!-- Meter informacion general de head -->
     <?php head_info(); ?>
     <script src="../js/funciones.js"></script>
+    <link href="../css/usuario.css" rel="stylesheet" type="text/css">
     <title>DisplayAds</title>
 
 </head>
@@ -28,12 +29,12 @@ require_once '../lib/mapa.php';
                 <br><br>
 
                 <ul class="nav nav-pills flex-column mb-auto">
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <form action="usuario.php" method="post">
                             <button type="submit" name="usuarioPrincipal"
                                 class="btn btn-link nav-link text-white">Principal</button>
                         </form>
-                    </li>
+                    </li> -->
                     <li>
                         <form action="usuario.php" method="post">
                             <button type="submit" name="usuarioMapa" class="btn btn-link nav-link text-white">Mapa</button>
