@@ -127,7 +127,7 @@ require_once '../lib/mapa.php';
 
                 if (sqlSELECT($sql)->num_rows > 0) {
                     $id_pedido = obtenerUltimoIdPedido(); // Obtener el último ID de pedido insertado
-
+        
                     $sqlPedido = "UPDATE lineas_pedidos SET cantidad = cantidad + 1 WHERE id_pedido = " . $id_pedido . " AND id_producto = " . $product_id;
                     sqlUPDATE($sqlPedido);
 
@@ -266,7 +266,7 @@ require_once '../lib/mapa.php';
                                                 echo "<p class='card-text'>Precio: $product_price</p>";
                                                 echo "<p class='card-text'>Cantidad: $product_quantity</p>";
                                                 echo "<p class='card-text'>Subtotal: $subtotal €</p>";
-                                                
+
                                                 echo "<form action='usuario.php' method='post'>";
                                                 echo "<input type='hidden' name='id_producto' value='$product_id'>";
                                                 echo "<button class='btn btn-danger' name='remove_from_cart' type='submit'>Eliminar</button>";
@@ -275,7 +275,20 @@ require_once '../lib/mapa.php';
                                                 echo "</div>";
                                                 echo "</div>";
                                             }
-                                            echo "<input type='text' id='ubicacion-input' name='ubicacion' placeholder='Indica la ubicación a la que enviar el producto'>";
+                                            
+                                            $sql2 = "SELECT ubicacion, fecha_inicio FROM pedidos WHERE id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND ubicacion IS NOT NULL ORDER BY fecha_inicio DESC LIMIT 1";
+                                            $result2 = sqlSELECT($sql2);
+                                            
+                                            if ($result2->num_rows > 0) {
+                                                $row2 = $result2->fetch_assoc();
+                                                $ubicacionReciente = $row2['ubicacion'];
+                                                $fechaInicio = $row2['fecha_inicio'];
+                                                echo "<input type='text' id='ubicacion-input' name='ubicacion' placeholder='Indica la ubicación a la que enviar el producto' value='" . htmlspecialchars($ubicacionReciente) . "' required>";
+                                                
+                                            } else {
+                                                echo "<input type='text' id='ubicacion-input' name='ubicacion' placeholder='Indica la ubicación a la que enviar el producto' required>";
+                                            }
+                                            echo "<div id='mensajeUbicacion'></div>";
                                             // Mostrar el total de dinero en el carrito
                                             echo "<div class='col-lg-12 mt-3'>";
                                             echo "<div class='card'>";
@@ -322,15 +335,24 @@ require_once '../lib/mapa.php';
                                         value: '<?php echo $importe; ?>'
                                     }
                                 }]
-                            })
+                            });
                         },
-
                         onApprove: function (data, actions) {
+                            var ubicacionInput = document.getElementById('ubicacion-input');
+                            var ubicacion = ubicacionInput.value;
 
+                            // Validar que el campo de ubicación no esté vacío
+                            if (ubicacion.trim() === '') {
+                                
+                                document.getElementById('mensajeUbicacion').innerHTML = 'Debes indicar la ubicación antes de continuar';
+                                document.getElementById('mensajeUbicacion').style.color = 'red';
+                                return;
+                            }
+
+                            // Realizar la captura del pago y actualizar el pedido
                             actions.order.capture().then(function (detalles) {
                                 var xhr = new XMLHttpRequest();
                                 var importe = '<?php echo $importe; ?>'; // Obtener el valor de $importe en JavaScript
-                                var ubicacion = document.getElementById('ubicacion-input').value;
                                 xhr.open('GET', 'usuario.php?actualizarPedido&importe=' + importe + '&ubicacion=' + encodeURIComponent(ubicacion), true);
                                 xhr.onreadystatechange = function () {
                                     if (xhr.readyState === 4 && xhr.status === 200) {
@@ -340,13 +362,10 @@ require_once '../lib/mapa.php';
                                     }
                                 };
                                 xhr.send();
-
                             });
-
                         },
-
                         onCancel: function (data) {
-                            alert("pago cancelado")
+                            alert("Pago cancelado");
                         }
                     }).render('#paypal-button-container');
                 </script>

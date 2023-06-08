@@ -132,9 +132,20 @@ require_once '../lib/mapa.php';
                                     echo "<td><img src='data:image/jpeg;base64," . base64_encode($row['foto']) . "' alt='Imagen del producto' class='img-thumbnail'></td>";
                                     echo "<p class='card-text'>Puntos: " . $row['puntos'] . "</p>";
 
+
                                     echo "<form action='vigilante.php' method='post'>";
                                     echo "<input type='hidden' name='product_id' value='" . $row['id_producto'] . "'>";
-                                    echo "<input type='text' id='ubicacion-input' name='ubicacion' placeholder='Indica la ubicación a la que enviar el producto'>";
+                                    $sql2 = "SELECT ubicacion, fecha_inicio FROM pedidos WHERE id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND ubicacion IS NOT NULL ORDER BY fecha_inicio DESC LIMIT 1";
+                                    $result2 = sqlSELECT($sql2);
+                                    
+                                    if ($result2->num_rows > 0) {
+                                        $row2 = $result2->fetch_assoc();
+                                        $ubicacionReciente = $row2['ubicacion'];
+                                        $fechaInicio = $row2['fecha_inicio'];
+                                        echo "<input type='text' id='ubicacion-input' name='ubicacion' placeholder='Indica la ubicación a la que enviar el producto' value='" . htmlspecialchars($ubicacionReciente) . "' required>";
+                                    } else {
+                                        echo "<input type='text' id='ubicacion-input' name='ubicacion' placeholder='Indica la ubicación a la que enviar el producto' required>";
+                                    }
                                     echo "<input class='btn btn-primary' type='submit'  name='reclamarRecompensa' value='Reclamar'>";
                                     echo "</form>";
                                     echo "</div>";
@@ -152,8 +163,8 @@ require_once '../lib/mapa.php';
                     </div>
                 </div>
 
-            
-            <?php
+
+                <?php
             }
             if (isset($_POST['reclamarRecompensa'])) {
                 $id_usuario = $_SESSION['usuario']['id_usuario'];
@@ -239,24 +250,24 @@ require_once '../lib/mapa.php';
 
 
             ?>
-        <style>
-            .puntos-container {
-                background-color: #e9f2fe;
-                border: 1px solid #007bff;
-                padding: 10px;
-                height: 100px;
-                border-radius: 5px;
-                float: right;
-                margin-right: 20px;
-                margin-top: 6vh;
-            }
-        </style>
-        <div class="puntos-container">
-            <h5>Tus puntos:</h5>
-            <p>
-                <?php echo $puntos; ?>
-            </p>
-        </div>
+            <style>
+                .puntos-container {
+                    background-color: #e9f2fe;
+                    border: 1px solid #007bff;
+                    padding: 10px;
+                    height: 100px;
+                    border-radius: 5px;
+                    float: right;
+                    margin-right: 20px;
+                    margin-top: 6vh;
+                }
+            </style>
+            <div class="puntos-container">
+                <h5>Tus puntos:</h5>
+                <p>
+                    <?php echo $puntos; ?>
+                </p>
+            </div>
 
         </div>
 
