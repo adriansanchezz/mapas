@@ -81,13 +81,13 @@ li:hover {
 .ul-second > a > li {
     border-bottom: solid 1px #fff;
     text-align: center;
-    background-color: rgba(40, 39, 39, 0.5);
+    background: linear-gradient(90deg, rgb(155, 233, 255), rgb(0, 102, 131));
     padding: 20px;
     transform: translateX(-52px);
 }
 
 .ul-second > a > li:hover {
-    background-color: rgba(40, 39, 39, 0.3);
+    background: linear-gradient(180deg, rgb(155, 233, 255), rgb(0, 149, 190));
 }
 
 .nosotros:hover > .ul-second {

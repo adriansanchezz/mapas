@@ -1,3 +1,4 @@
+
 /*Dar forma al header general*/
 header{
     width: 100%;
@@ -97,8 +98,10 @@ nav > ul > li > a:hover{
     text-decoration: none;
 }
 
+ol, ul {
+    padding-left: 0 !important;
+}
 
-/*Configuracin de sub menu*/
 
 /*Configurar el submenu tanto el tamaño, color, animacion*/
 nav ul li ul{
@@ -170,14 +173,15 @@ nav ul li ul li a:hover{
 
 /*Configurar la pagina cuando la pagina reduce de tamaño*/
 @media screen and (max-width: 720px) {
+    
     /*hace que el menu este uno encima de otro, y configurar su tamaño, color, vibilidad, posicion del menu*/
     nav > ul{
         flex-direction: column;
-        background-color: black;
+        background: linear-gradient(270deg, rgb(226, 249, 255), rgb(0, 102, 131));
         position: fixed;
         left: 0;
         width: 100%;
-        height: 300px;
+        height: 370px;
         transition: all 300ms ease;
         z-index: 100;
     }
@@ -199,6 +203,14 @@ nav ul li ul li a:hover{
     
     main{
         margin-top: 400px;
+    }
+
+    .separar{
+        margin-top: 370px;
+    }
+
+    nav > ul{
+        margin-top: 315px;
     }
 }
 
