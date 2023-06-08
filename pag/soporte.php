@@ -84,6 +84,7 @@ require_once '../lib/modulos.php';
         menu_general();
         ?>
 
+
         <?php
         if (isset($_POST['enviarSoporte'])) {
             try {
