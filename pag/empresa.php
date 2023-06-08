@@ -60,7 +60,7 @@ require_once '../lib/mapa.php';
 
                 </ul>
             </div>
-
+            
             <!-- <?php
             if (isset($_REQUEST['empresaPrincipal'])) {
                 ?>
@@ -111,9 +111,7 @@ require_once '../lib/mapa.php';
                 </div>
                 <?php
             }
-
             ?>
-
 
             <?php
             if (isset($_POST['add_to_cart'])) {
