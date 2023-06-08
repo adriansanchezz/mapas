@@ -303,7 +303,7 @@ function validarFormulario() {
     // Valida el número de teléfono (debe tener 10 dígitos)
     var telefonoRegex = /^\d{9}$/;
     if (!telefonoRegex.test(telefono)) {
-        document.getElementById('errorTelefono').textContent = 'El número de teléfono debe tener 10 dígitos';
+        document.getElementById('errorTelefono').textContent = 'El número de teléfono debe tener 9 dígitos';
         hayErrores = true;
     }
 

@@ -347,7 +347,7 @@ function mapa($valor)
 
                 var textoRegex = /^[A-Za-zÁáÉéÍíÓóÚúÑñ\s]+$/;
 
-                if (!textoRegex.test(provincia) || !textoRegex.test(ciudad) || !textoRegex.test(ubicacion)) {
+                if (!textoRegex.test(provincia)) {
                     alert('Los campos de descripción, provincia, ciudad y ubicación deben contener solo letras.');
                     return false;
                 }
@@ -472,7 +472,7 @@ function mapa($valor)
                                         FROM misiones AS m, publicidades AS p
                                         WHERE m.id_usuario='$id_usuario' AND m.estado=0 AND m.aceptacion=0 AND m.id_publicidad = p.id_publicidad";
                         $result = sqlSELECT($sql);
-
+                        
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
                                 echo '<tr>';

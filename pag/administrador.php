@@ -371,17 +371,14 @@ require_once '../lib/mapa.php';
                             echo "<table>";
                             echo "<tr>
                                 <th>Usuario</th>
-                                <th>Importe</th>
-                                <th>Ubicación</th>
-                                <th>Fecha</th>
+                                <th>Certificado</th>
                                 <th>Aceptación</th>
                                 </tr>";
 
                             while ($row5 = $result->fetch_assoc()) {
                                 echo "<tr>";
                                 echo "<td>" . $row5['email'] . "</td>";
-                                echo "<td>" . $row5['email'] . "</td>";
-                                echo "<td>" . $row5['email'] . "</td>";
+                               
 
                                 $sql6 = "SELECT * FROM fotos WHERE id_publicidad = ?";
                                 try {
