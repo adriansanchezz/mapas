@@ -308,7 +308,9 @@ require_once '../lib/mapa.php';
                         // Mostrar el total de dinero en el carrito
                         echo "<p id='total_importe'>Total a pagar: $importe €</p>";
                     } else {
-                        echo "El carrito de compras está vacío.";
+                        echo "<div class='col-lg-12'>";
+                                            echo "<div class='alert alert-info'>El carrito de compras está vacío.</div>";
+                                            echo "</div>";
                     }
 
 
