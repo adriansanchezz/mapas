@@ -161,6 +161,33 @@ function menu_general()
                                 }
                             }
 
+                            $sql = "SELECT * FROM publicidades WHERE id_usuario = " . $_SESSION['usuario']['id_usuario'];
+                            $result = sqlSELECT($sql);
+                            if ($result->num_rows > 0) {
+                                while ($row = $result->fetch_assoc()) {
+                                    if (is_null($row['revision'])) {
+                                    }
+                                    elseif ($row['revision'] == 0) {
+                                        
+                                        $notificacion = "<div class='notification'>Tu solicitud de publicar la ubicación del piso ha sido rechazada: ". $row['ubicacion'] . "<form action='usuario.php' method='POST'><input type='hidden' name='id_publicidad' value='" . $row['id_publicidad'] . "'><input type='submit' name='vistoPiso' value='Visto'></form></div>";
+                                        array_push($notificaciones, $notificacion);
+                                        
+                                    } elseif ($row['revision'] == 1) {
+                                        
+                                        
+                                        
+                                        $notificacion = "<div class='notification'>Tu solicitud de publicar la ubicación del piso ha sido aceptada: ". $row['ubicacion'] . "<form action='usuario.php' method='POST'><input type='hidden' name='id_publicidad' value='" . $row['id_publicidad'] . "'><input type='submit' name='vistoPisoAceptado' value='Visto'></form></div>";
+                                        array_push($notificaciones, $notificacion);
+                                    } elseif ($row['revision'] == 2) {
+                                        
+                                        
+                                        $notificacion = "<div class='notification'>Tu solicitud de publicar la ubicación del piso está a la espera: ". $row['ubicacion'];
+                                        array_push($notificaciones, $notificacion);
+                                    }
+                                    
+                                }
+                            }
+
                             $sql = "SELECT * FROM publicidades WHERE comprador IS NULL AND id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND ocupado = 1";
                             $result = sqlSELECT($sql);
 
@@ -178,7 +205,22 @@ function menu_general()
                                 $notificacion = "<div class='notification'>Un usuario ha aceptado la solicitud de compra. Revisa el carrito de la sección empresa para poder ver la ubicación y confirmar la compra.</div>";
                                 array_push($notificaciones, $notificacion);
                             }
+                            if (isset($_REQUEST['vistoPiso'])) {
+                                $id_publicidad = $_POST['id_publicidad'];
+                                $sql = "DELETE FROM publicidades WHERE id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND id_publicidad = " . $id_publicidad;
 
+                                sqlDELETE($sql);
+                                echo "<script>window.location.href = 'principal.php';</script>";
+                                exit();
+                            }
+                            if (isset($_REQUEST['vistoPisoAceptado'])) {
+                                $id_publicidad = $_POST['id_publicidad'];
+                                $sql = "UPDATE publicidades SET revision = 3 WHERE id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND id_publicidad = " . $id_publicidad;
+
+                                sqlDELETE($sql);
+                                echo "<script>window.location.href = 'principal.php';</script>";
+                                exit();
+                            }
                             if (isset($_REQUEST['vistoVIP'])) {
                                 $sql = "UPDATE usuarios SET VIP = NULL WHERE id_usuario = " . $_SESSION['usuario']['id_usuario'];
                                 sqlUPDATE($sql);
@@ -232,6 +274,37 @@ function menu_general()
                                     }
                                 }
                             }
+
+                            $sql = "SELECT * FROM publicidades as p, empresas as e WHERE p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND p.ocupado = 1 AND p.estado = 1 AND p.comprador = e.id_empresa";
+                            $result = sqlSELECT($sql);
+                            $fechaBD = null;
+
+                            if ($result->num_rows > 0) {
+                                while ($row = $result->fetch_assoc()) {
+                                    // Obtener la fecha de la base de datos
+                                    $fechaBD = $row['caducidad_compra'];
+
+
+                                    // Obtener la fecha actual
+                                    $fechaActual = date("Y-m-d");
+                                    // Verificar si la fecha es anterior a hoy
+                                    if ($fechaBD !== null) {
+                                        if ($fechaActual < $fechaBD) {
+
+                                        } elseif ($fechaBD == $fechaActual) {
+                                            $notificacion = "<div class='notification'>Hoy es el último día de en el que tendrás que tener puesto el cartel en la ubicacion: " . $row['ubicacion'] . " " . $row['codigo_postal'] . " para la empresa ". $row['nombre'] ."</div>";
+                                            array_push($notificaciones, $notificacion);
+                                        } else {
+                                            $notificacion = "<div class='notification'>Hoy deberás quitar el cartel en la ubicacion: " . $row['ubicacion'] . " " . $row['codigo_postal'] . " para la empresa ". $row['nombre'] . "</div>";
+                                            array_push($notificaciones, $notificacion);
+                                            $sql = "UPDATE publicidades SET ocupado = 0, comprador = NULL, revision = NULL, caducidad_compra = NULL";
+                                            sqlUPDATE($sql);
+                                        }
+                                    }
+                                }
+                            }
+
+
 
                             $sql = "SELECT * FROM alertas WHERE usuario = " . $_SESSION['usuario']['id_usuario'] . " AND estado = 0";
                             $result = sqlSELECT($sql);

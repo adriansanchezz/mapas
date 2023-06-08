@@ -24,6 +24,7 @@ require_once '../lib/mapa.php';
         }
     </style>
     <script src="../js/funciones.js"></script>
+    <script src="../js/mapa.js"></script>
 </head>
 
 <body>

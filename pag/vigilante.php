@@ -12,6 +12,7 @@ require_once '../lib/mapa.php';
     <?php head_info(); ?>
     <script src="../js/funciones.js"></script>
     <link href="../css/vigilante.css" rel="stylesheet" type="text/css">
+    <script src="../js/mapa.js"></script>
     <title>DisplayAds</title>
     <style>
 
