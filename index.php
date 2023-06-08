@@ -8,10 +8,9 @@ if (isset($_POST['cerrarSesion'])) {
 }
 
 // Comprueba si hoy es el primer día del mes
-if (date('j') == 1) {
     // Si es así, ejecuta la función
     procesarPagos();
-}
+
 
 sumarVisitaTotal();
 ?>

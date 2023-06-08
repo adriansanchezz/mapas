@@ -41,6 +41,17 @@ function registrarUser($username, $email, $telefono, $password, $password2)
         $errors[] = "La contraseña debe tener al menos 8 caracteres.";
     }
 
+    // Convertir el dominio a minúsculas
+    $email = strtolower($email);
+
+    // Patrón de expresión regular para verificar el dominio
+    $pattern = '/@(gmail\.com|outlook\.com)$/';
+
+    // Comprobar si el correo electrónico cumple con el patrón
+    if (!preg_match($pattern, $email)) {
+        $errors[] = "El dominio del correo electrónico no es válido.";
+    }
+
     // Verificar si la contraseña y la repeticon es igual o no
     if ($password != $password2) {
         $errors[] = "Las contraseñas no son iguales.";
@@ -1286,12 +1297,12 @@ function guardarMarcador()
 
                     // Ejecutar la consulta para cada imagen
                     if ($stmt->execute()) {
-                        
+
                     } else {
-                        
+
                     }
                 } else {
-                   
+
                 }
             }
 
@@ -1379,11 +1390,50 @@ function recuperarCuenta($pass, $email)
     }
 }
 
-function procesarPagos(){
-    $sql = "SELECT * FROM pedidos";
-    $result = sqlSELECT($sql);
-    while ($rowPedidos = $result->fetch_assoc()) {
-        agregarRoles($rowPedidos["id_usuario"], "Usuario");
+function procesarPagos()
+{
+    // Selecciona todos los pedidos que no tienen fecha de finalización
+    $sql = "SELECT * FROM pedidos WHERE fecha_fin IS NULL";
+    $resultadoResultado = sqlSELECT($sql);
+
+    // Itera a través de los pedidos sin finalizar
+    while ($rowPedidos = $resultadoResultado->fetch_assoc()) {
+        $id_pedido = $rowPedidos["id_pedido"];
+
+        // Obtiene información de las líneas de pedido y las publicidades asociadas
+        $sql = "SELECT p.id_usuario, lp.id_publicidad, lp.precio, p.caducidad_compra FROM lineas_pedidos lp
+    INNER JOIN publicidades p ON lp.id_publicidad = p.id_publicidad
+    WHERE lp.id_publicidad IS NOT NULL 
+    AND p.caducidad_compra IS NOT NULL
+    AND p.caducidad_compra > CURDATE()
+    AND lp.id_pedido = $id_pedido";
+        $resultadoLinea = sqlSELECT($sql);
+
+        // Itera a través de las líneas de pedido
+        while ($rowLinea = $resultadoLinea->fetch_assoc()) {
+            $id_usuario = $rowLinea["id_usuario"];
+            $precio = $rowLinea["precio"];
+
+            // Resta un mes a la fecha de caducidad de la compra
+            $caducidad_compra = strtotime($rowLinea['caducidad_compra']);
+            $nueva_fecha = date("Y-m-d", strtotime("-1 month", $caducidad_compra));
+
+            // Actualiza la base de datos con la nueva fecha de caducidad
+            $sql = "UPDATE publicidades SET caducidad_compra='$nueva_fecha' 
+            WHERE id_publicidad=" . $rowLinea['id_publicidad'];
+            sqlUPDATE($sql);
+
+            // Obtiene el saldo actual del usuario
+            $sql = "SELECT saldo FROM usuarios 
+            WHERE id_usuario = $id_usuario";
+            $datos = sqlSELECT($sql)->fetch_assoc();
+            $saldoFinal = $datos["saldo"] + $precio;
+
+            // Actualiza la base de datos con el nuevo saldo del usuario
+            $sql = "UPDATE usuarios SET saldo='$saldoFinal' 
+        WHERE id_usuario=" . $id_usuario;
+            sqlUPDATE($sql);
+        }
     }
 }
 
