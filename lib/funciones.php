@@ -33,7 +33,7 @@ function registrarUser($username, $email, $telefono, $password, $password2)
 
     // Verificar el usuario tenga al menos 4 caracteres.
     if (strlen($username) < 4) {
-        $errors[] = "El nombre de usuario debe tener al menos 4 caracteres.";
+        $errors[] = "El nombre debe tener al menos 4 caracteres.";
     }
 
     // Verificar que la contraseña tenga al menos 8 caracteres.

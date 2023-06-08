@@ -10,12 +10,11 @@ require_once 'lib/modulos.php';
     <!-- Meter informacion general de head -->
     <?php head_info(); ?>
     <link href="css/login_registro.css" rel="stylesheet" type="text/css">
-    <title>DisplayAds</title>
 </head>
 
 <body>
     <!-- Imprimir menu del index, de forma modular sin introducir los codigos -->
-    <?php head_index(); ?>
+    <?php menu_index(); ?>
     <div class="formulario">
         <h1>Registrate</h1>
         <form action="registro.php" method="post">
