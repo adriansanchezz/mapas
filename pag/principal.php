@@ -22,40 +22,9 @@ require_once '../lib/modulos.php';
         // Menu general
         menu_general();
 
-        if (validarUsuario($_SESSION['usuario']['id_usuario'])) {
-            echo "Usuario SI";
-        } else {
-            echo "Usuario NO";
-        }
-        echo "<br>";
-
-        if (validarAdmin($_SESSION['usuario']['id_usuario'])) {
-            echo "Admin SI";
-        } else {
-            echo "Admin NO";
-        }
-        echo "<br>";
-
-        if (validarEmpresa($_SESSION['usuario']['id_usuario'])) {
-            echo "Empresa SI";
-        } else {
-            echo "Empresa NO";
-        }
-        echo "<br>";
-
-        if (validarVIP($_SESSION['usuario']['id_usuario'])) {
-            echo "VIP SI";
-        } else {
-            echo "VIP NO";
-        }
-        echo "<br>";
-
-        if (validarVigilante($_SESSION['usuario']['id_usuario'])) {
-            echo "Vigilante SI";
-        } else {
-            echo "Vigilante NO";
-        }
+        
         ?>
+        <br><br>
         <div class="container">
             <div class="row">
                 <div class="col-md-9">
@@ -89,32 +58,31 @@ require_once '../lib/modulos.php';
 
                 <div class="col-md-3">
                     <!-- Contenedor de la derecha -->
-                    <h2>CARROUSEL DE IMAGENES SOBRE NUESTRA APLICACION</h2>
-                    <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
-                        <div class="carousel-inner">
-                            <div class="carousel-item active">
-                                <img src="https://www.ama-assn.org/sites/ama-assn.org/files/styles/related_article_stub_image_1200x800_3_2/public/2023-04/a23-imgs-section-meeting-rev.png?itok=oK99w0um"
-                                    class="d-block w-100" alt="...">
+                    <h2>La publicidad es el futuro</h2>
+                    <div class="col-12">
+                        <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <img src="../img/imagen/mapaempresa.png" class="d-block w-100" alt="...">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="../img/imagen/mapausuario.png" class="d-block w-100" alt="...">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="../img/imagen/mapavigilante.png" class="d-block w-100" alt="...">
+                                </div>
                             </div>
-                            <div class="carousel-item">
-                                <img src="https://media.licdn.com/dms/image/C4D0BAQGDceq5L-hdZg/company-logo_200_200/0/1655377951808?e=2147483647&v=beta&t=Mgd2eGPJSPpttMOpZ5Ptp8vECvMXUjrmigUxH9lPrh0"
-                                    class="d-block w-100" alt="...">
-                            </div>
-                            <div class="carousel-item">
-                                <img src="https://www.ama-assn.org/sites/ama-assn.org/files/styles/related_article_stub_image_1200x800_3_2/public/2023-04/a23-imgs-section-meeting-rev.png?itok=oK99w0um"
-                                    class="d-block w-100" alt="...">
-                            </div>
+                            <button class="carousel-control-prev" type="button"
+                                data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button"
+                                data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
                         </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
-                            data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Previous</span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"
-                            data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Next</span>
-                        </button>
                     </div>
                     <br><br><br>
                     <!-- Contenedor de la derecha -->

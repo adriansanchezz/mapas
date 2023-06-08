@@ -106,7 +106,9 @@ require_once '../lib/mapa.php';
                                     /* Sombra */
                                 }
                             </style>
-                            <?php mapa("ver"); ?>
+                            <?php 
+                            
+                            mapa("ver"); ?>
                         </div>
                     </div>
                 </div>

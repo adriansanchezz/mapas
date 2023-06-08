@@ -185,6 +185,7 @@ function sqlSELECT($sql)
         return $result;
 
     } catch (Exception $e) {
+        
         echo "Hay un fallo en la consulta: " . $e->getMessage();
     } finally {
         // Cerrar la conexión y liberar recursos
@@ -1334,14 +1335,7 @@ function generarCode()
 }
 
 
-function debug_to_console($data)
-{
-    $output = $data;
-    if (is_array($output))
-        $output = implode(',', $output);
 
-    echo "<script>console.log('Debug Objects: " . $output . "' );</script>";
-}
 
 
 function obtenerUltimoIdPedido()

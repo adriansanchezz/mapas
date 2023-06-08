@@ -113,7 +113,7 @@ function vigilante()
                         // Crear un marcador para cada registro de la base de datos dentro del límite
                         var marker = L.marker([lat, lng]).addTo(map);
                     });
-                    console.log("MARCADORE: " + markers.length);
+                    
                     obtenerMision(markers);
                 })
                 .catch(function (error) {
@@ -128,7 +128,7 @@ function vigilante()
     }
 
     function obtenerMision(markers) {
-        console.log(markers);
+
         var botonSolicitarMision = document.getElementById('solicitarMision');
         botonSolicitarMision.addEventListener('click', seleccionarPunto);
 
@@ -142,7 +142,7 @@ function vigilante()
 
             // Obtener el objeto JSON correspondiente al índice aleatorio
             var marcadorJSON = markers[indiceAleatorio];
-            console.log("MARCADOR:" + marcadorJSON.id_publicidad);
+            
 
             // Obtener la ubicación (latitud y longitud) del marcador
             var latitud = marcadorJSON.latitud;
@@ -157,16 +157,15 @@ function vigilante()
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {
                     if (xhr.status === 200) {
-                        console.log("correcto");
+                        
                         var resultado = xhr.responseText.trim();
-                        console.log(resultado);
                         if (resultado === "true") {
-                            console.log("La condición es verdadera. Realizando acción A.");
+                            
                             // Realiza la acción A
                         }
 
                         if (resultado === "false") {
-                            console.log("La condición es falsa. Realizando acción B.");
+                            
 
                             // Crear una tabla con las características de la misión:
                             // Obtener la tabla existente
@@ -218,7 +217,6 @@ function vigilante()
 
         // Función para resaltar un marcador en el mapa
         function resaltarMarcadorEnMapa(marcador) {
-            console.log(marcador);
             if (marcador) {
                 // Código para resaltar el marcador
                 marcador.setIcon(L.icon({

@@ -252,3 +252,77 @@ function buscarDireccion() {
             console.log('Error:', error);
         });
 }
+
+
+function enviarDatosRegistro() {
+    var xhr = new XMLHttpRequest();
+    var url = "registro.php?registrar";
+    var formData = new FormData(document.getElementById("formularioRegistro"));
+
+    xhr.open("POST", url, true);
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            // Aquí puedes hacer algo con la respuesta del servidor
+            console.log(xhr.responseText);
+        }
+    };
+
+    xhr.send(formData);
+}
+function validarFormulario() {
+    var username = document.getElementById('username').value;
+    var correo = document.getElementById('correo').value;
+    var telefono = document.getElementById('telefono').value;
+    var password = document.getElementById('password').value;
+    var password2 = document.getElementById('password2').value;
+
+    // Limpia los mensajes de error
+    document.getElementById('errorUsername').textContent = '';
+    document.getElementById('errorCorreo').textContent = '';
+    document.getElementById('errorTelefono').textContent = '';
+    document.getElementById('errorPassword').textContent = '';
+    document.getElementById('errorPassword2').textContent = '';
+
+    // Variables para verificar si hay errores
+    var hayErrores = false;
+
+    // Valida el nombre de usuario (debe tener al menos 3 caracteres)
+    if (username.length < 3) {
+        document.getElementById('errorUsername').textContent = 'El nombre de usuario debe tener al menos 3 caracteres';
+        hayErrores = true;
+    }
+
+    // Valida el correo electrónico
+    var correoRegex = /^\S+@\S+\.\S+$/;
+    if (!correoRegex.test(correo)) {
+        document.getElementById('errorCorreo').textContent = 'El correo electrónico no es válido';
+        hayErrores = true;
+    }
+
+    // Valida el número de teléfono (debe tener 10 dígitos)
+    var telefonoRegex = /^\d{9}$/;
+    if (!telefonoRegex.test(telefono)) {
+        document.getElementById('errorTelefono').textContent = 'El número de teléfono debe tener 10 dígitos';
+        hayErrores = true;
+    }
+
+    // Valida la contraseña (debe tener al menos 6 caracteres)
+    if (password.length < 6) {
+        document.getElementById('errorPassword').textContent = 'La contraseña debe tener al menos 6 caracteres';
+        hayErrores = true;
+    }
+
+    // Valida que las contraseñas coincidan
+    if (password !== password2) {
+        document.getElementById('errorPassword2').textContent = 'Las contraseñas no coinciden';
+        hayErrores = true;
+    }
+
+    if (hayErrores) {
+        return false;
+    } else {
+        enviarDatosRegistro();
+        return true; // También puedes cambiar esto a true si deseas que el formulario se envíe de forma tradicional
+    }
+}

@@ -98,7 +98,9 @@ require_once '../lib/mapa.php';
             if (isset($_REQUEST['misiones'])) {
                 ?>
                 <div class="flex-grow-1">
-                    <?php mapa("vigilar"); ?>
+                    <?php 
+
+                    mapa("vigilar"); ?>
                 </div>
 
                 <?php

@@ -276,16 +276,16 @@ require_once '../lib/mapa.php';
                                                 echo "</div>";
                                                 echo "</div>";
                                             }
-                                            
+
                                             $sql2 = "SELECT ubicacion, fecha_inicio FROM pedidos WHERE id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND ubicacion IS NOT NULL ORDER BY fecha_inicio DESC LIMIT 1";
                                             $result2 = sqlSELECT($sql2);
-                                            
+
                                             if ($result2->num_rows > 0) {
                                                 $row2 = $result2->fetch_assoc();
                                                 $ubicacionReciente = $row2['ubicacion'];
                                                 $fechaInicio = $row2['fecha_inicio'];
                                                 echo "<input type='text' id='ubicacion-input' name='ubicacion' placeholder='Indica la ubicación a la que enviar el producto' value='" . htmlspecialchars($ubicacionReciente) . "' required>";
-                                                
+
                                             } else {
                                                 echo "<input type='text' id='ubicacion-input' name='ubicacion' placeholder='Indica la ubicación a la que enviar el producto' required>";
                                             }
@@ -344,7 +344,7 @@ require_once '../lib/mapa.php';
 
                             // Validar que el campo de ubicación no esté vacío
                             if (ubicacion.trim() === '') {
-                                
+
                                 document.getElementById('mensajeUbicacion').innerHTML = 'Debes indicar la ubicación antes de continuar';
                                 document.getElementById('mensajeUbicacion').style.color = 'red';
                                 return;
@@ -385,6 +385,9 @@ require_once '../lib/mapa.php';
                             <div class="p-3">
                                 <h1 class="text-primary">MAPA</h1>
                                 <p>¿Quieres buscar una ubicación?</p>
+                                <div>
+                                    <span id='errorUsuario' style='color: red;'></span>
+                                </div>
                                 <div class="input-group mb-3">
                                     <input type="text" class="form-control" id="direccion" placeholder="Buscar dirección">
                                     <div class="input-group-append">
@@ -408,10 +411,12 @@ require_once '../lib/mapa.php';
                                 width: 30vh;
                             }
                         </style>
-                        <?php mapa("guardar"); ?>
-                    </div>
-                </div>
+                        <?php
 
+                        mapa("guardar"); ?>
+                    </div>
+
+                </div>
 
                 <?php
             }

@@ -8,8 +8,8 @@ if (isset($_POST['cerrarSesion'])) {
 }
 
 // Comprueba si hoy es el primer día del mes
-    // Si es así, ejecuta la función
-    procesarPagos();
+// Si es así, ejecuta la función
+procesarPagos();
 
 
 sumarVisitaTotal();
@@ -142,16 +142,13 @@ sumarVisitaTotal();
                         <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
                             <div class="carousel-inner">
                                 <div class="carousel-item active">
-                                    <img src="https://www.ama-assn.org/sites/ama-assn.org/files/styles/related_article_stub_image_1200x800_3_2/public/2023-04/a23-imgs-section-meeting-rev.png?itok=oK99w0um"
-                                        class="d-block w-100" alt="...">
+                                    <img src="./img/imagen/mapaempresa.png" class="d-block w-100" alt="...">
                                 </div>
                                 <div class="carousel-item">
-                                    <img src="https://media.licdn.com/dms/image/C4D0BAQGDceq5L-hdZg/company-logo_200_200/0/1655377951808?e=2147483647&v=beta&t=Mgd2eGPJSPpttMOpZ5Ptp8vECvMXUjrmigUxH9lPrh0"
-                                        class="d-block w-100" alt="...">
+                                    <img src="./img/imagen/mapausuario.png" class="d-block w-100" alt="...">
                                 </div>
                                 <div class="carousel-item">
-                                    <img src="https://www.ama-assn.org/sites/ama-assn.org/files/styles/related_article_stub_image_1200x800_3_2/public/2023-04/a23-imgs-section-meeting-rev.png?itok=oK99w0um"
-                                        class="d-block w-100" alt="...">
+                                    <img src="./img/imagen/mapavigilante.png" class="d-block w-100" alt="...">
                                 </div>
                             </div>
                             <button class="carousel-control-prev" type="button"
