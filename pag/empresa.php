@@ -88,10 +88,12 @@ require_once '../lib/mapa.php';
                             <h1>Bienvenido a nuestro mapa</h1>
                             <h4>Selecciona alguna ubicación para ver información:</h4>
                             <h6>O busca la ubicación que desees.</h6>
-                            <div>
-                                ¿Quieres buscar una ubicación?
-                                <input type="text" id="direccion" placeholder="Buscar ubicación...">
-                                <button type="button" onclick="buscarDireccion()">Buscar</button>
+                            <p>¿Quieres buscar una ubicación?</p>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" id="direccion" placeholder="Buscar dirección">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" onclick="buscarDireccion()">Buscar</button>
+                                </div>
                             </div>
                             <div id="map"></div>
                             <!-- Se le da estilos al mapa para que quede más estético. -->
