@@ -376,7 +376,24 @@ require_once '../lib/mapa.php';
                         onApprove: function (data, actions) {
                             actions.order.capture().then(function (detalles) {
                                 var xhr = new XMLHttpRequest();
-                                var importe = '<?php echo $importe; ?>'; // Obtener el valor de $importe en JavaScript
+                                var productPrices = <?php echo json_encode($product_prices); ?>;
+                                var products = document.getElementsByClassName('product');
+                                var totalImporte = 0;
+
+                                for (var i = 0; i < products.length; i++) {
+                                    var product = products[i];
+                                    var productIdElement = product.querySelector('input[name="product_id"]');
+                                    var monthsSelector = product.querySelector('input[name^="months_"]');
+
+                                    var currentProductId = parseInt(productIdElement.value);
+                                    var currentProductPrice = parseFloat(productPrices[currentProductId]);
+                                    var currentSelectedMonths = parseInt(monthsSelector.value);
+                                    var currentTotalPrice = currentProductPrice * currentSelectedMonths;
+
+                                    // Agregar el precio del producto al importe total
+                                    totalImporte += currentTotalPrice;
+                                }
+                                var importe = totalImporte; // Obtener el valor de $importe en JavaScript
 
                                 // Obtener los meses y las IDs de productos seleccionados
                                 var mesesSeleccionados = document.querySelectorAll('input[type="number"]');
@@ -425,7 +442,7 @@ require_once '../lib/mapa.php';
                     echo "<p><strong>Direccion:</strong> " . $row['direccion'] . "</p>";
                 }
                 echo "</div>";
-            
+
                 $sql = "SELECT p.ubicacion, p.codigo_postal, f.foto, u.email, p.caducidad_compra
                         FROM publicidades as p, usuarios as u, fotos as f
                         WHERE p.id_usuario = u.id_usuario
@@ -434,7 +451,7 @@ require_once '../lib/mapa.php';
                             AND p.ocupado = 1
                             AND p.caducidad_compra IS NOT NULL";
                 $result = sqlSELECT($sql);
-            
+
                 echo "<div class='col-md-6'>";
                 echo "<h2>Ubicaciones alquiladas</h2>";
                 if ($result->num_rows > 0) {
@@ -449,7 +466,7 @@ require_once '../lib/mapa.php';
                     echo "</tr>";
                     echo "</thead>";
                     echo "<tbody>";
-            
+
                     while ($row = $result->fetch_assoc()) {
                         echo "<tr>";
                         echo "<td>" . $row['ubicacion'] . "</td>";
@@ -459,7 +476,7 @@ require_once '../lib/mapa.php';
                         echo "<td>" . $row['caducidad_compra'] . "</td>";
                         echo "</tr>";
                     }
-            
+
                     echo "</tbody>";
                     echo "</table>";
                 } else {

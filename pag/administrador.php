@@ -192,7 +192,7 @@ require_once '../lib/mapa.php';
 
                         // Consultar los productos desde la base de datos
                 
-                        $sql = "SELECT * FROM publicidades as p, usuarios as u WHERE p.comprador IS NOT NULL AND p.id_usuario <> p.comprador AND p.ocupado = 1 AND p.id_usuario = u.id_usuario";
+                        $sql = "SELECT * FROM publicidades as p, usuarios as u WHERE p.comprador IS NOT NULL AND p.id_usuario <> p.comprador AND p.ocupado = 1 AND p.id_usuario = u.id_usuario AND caducidad_compra IS NOT NULL";
                         $result = $conn->query($sql);
                         echo "<br><br><h1>Ubicaciones compradas</h1><br>";
                         if ($result->num_rows > 0) {
