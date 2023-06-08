@@ -103,16 +103,13 @@ sumarVisitaTotal();
                 <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
                     <div class="carousel-inner">
                         <div class="carousel-item active">
-                            <img src="./img/imagen/mapaempresa.png"
-                                class="d-block w-100" alt="...">
+                            <img src="./img/imagen/mapaempresa.png" class="d-block w-100" alt="...">
                         </div>
                         <div class="carousel-item">
-                            <img src="./img/imagen/mapausuario.png"
-                                class="d-block w-100" alt="...">
+                            <img src="./img/imagen/mapausuario.png" class="d-block w-100" alt="...">
                         </div>
                         <div class="carousel-item">
-                            <img src="./img/imagen/mapavigilante.png"
-                                class="d-block w-100" alt="...">
+                            <img src="./img/imagen/mapavigilante.png" class="d-block w-100" alt="...">
                         </div>
                     </div>
                     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
@@ -135,7 +132,7 @@ sumarVisitaTotal();
             &copy;Display Ads
         </div>
     </footer>
-</body>
+
 
 
 
@@ -196,14 +193,5 @@ if ($result->num_rows > 0) {
 }
 ?>
 
-</div>
-<br>
-
-</div>
-</div>
-</div>
-</div>
-</div>
-</body>
 
 </html>

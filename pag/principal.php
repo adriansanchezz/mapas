@@ -26,22 +26,6 @@ require_once '../lib/modulos.php';
         <div class="container">
             <div class="row">
 
-<<<<<<< HEAD
-                <div class="col-md-3">
-                    <!-- Contenedor de la derecha -->
-                    <h2>La publicidad es el futuro</h2>
-                    <div class="col-12">
-                        <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
-                            <div class="carousel-inner">
-                                <div class="carousel-item active">
-                                    <img src="../img/imagen/mapaempresa.png" class="d-block w-100" alt="...">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="../img/imagen/mapausuario.png" class="d-block w-100" alt="...">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="../img/imagen/mapavigilante.png" class="d-block w-100" alt="...">
-=======
                 <!-- Banner -->
                 <section class="banner">
                     <div class="container pt-5">
@@ -72,15 +56,15 @@ require_once '../lib/modulos.php';
                                     <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
                                         <div class="carousel-inner">
                                             <div class="carousel-item active">
-                                                <img src="https://www.ama-assn.org/sites/ama-assn.org/files/styles/related_article_stub_image_1200x800_3_2/public/2023-04/a23-imgs-section-meeting-rev.png?itok=oK99w0um"
+                                                <img src="../img/imagen/mapaempresa.png"
                                                     class="d-block w-100" alt="...">
                                             </div>
                                             <div class="carousel-item">
-                                                <img src="https://www.ama-assn.org/sites/ama-assn.org/files/styles/related_article_stub_image_1200x800_3_2/public/2023-04/a23-imgs-section-meeting-rev.png?itok=oK99w0um"
+                                                <img src="../img/imagen/mapausuario.png"
                                                     class="d-block w-100" alt="...">
                                             </div>
                                             <div class="carousel-item">
-                                                <img src="https://www.ama-assn.org/sites/ama-assn.org/files/styles/related_article_stub_image_1200x800_3_2/public/2023-04/a23-imgs-section-meeting-rev.png?itok=oK99w0um"
+                                                <img src="../img/imagen/mapavigilante.png"
                                                     class="d-block w-100" alt="...">
                                             </div>
                                         </div>
@@ -95,7 +79,6 @@ require_once '../lib/modulos.php';
                                             <span class="visually-hidden">Next</span>
                                         </button>
                                     </div>
->>>>>>> 2135352b81ac7f5bf672a7f9767665bfcdbdf828
                                 </div>
                             </div>
                         </div>
