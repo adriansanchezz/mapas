@@ -146,18 +146,7 @@ require_once '../lib/modulos.php';
                     </div>
                 </div>
             </section>
-
-
         </div>
-
-
-
-
-
-
-
-
-
 
         <?php
 

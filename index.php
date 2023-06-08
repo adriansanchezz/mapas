@@ -8,10 +8,10 @@ if (isset($_POST['cerrarSesion'])) {
 }
 
 // Comprueba si hoy es el primer día del mes
-// Si es así, ejecuta la función
-procesarPagos();
-
-
+if (date('j') == 1) {
+    // Si es así, ejecuta la función
+    procesarPagos();
+}
 sumarVisitaTotal();
 ?>
 <html>
@@ -136,6 +136,9 @@ sumarVisitaTotal();
         </div>
     </footer>
 </body>
+
+
+
 <script>
     // Creación del mapa.
     var map = L.map('map').setView([43.3828500, -3.2204300], 13);

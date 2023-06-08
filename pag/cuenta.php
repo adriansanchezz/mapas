@@ -48,7 +48,7 @@ require_once '../lib/modulos.php';
 
         <!-- Menu horizontal -->
         <div class="d-flex vh-100">
-            <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 240px;">
+            <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 200px;">
                 <br><br>
                 <!-- Crear submenu con sus opciones -->
                 <ul class="nav nav-pills flex-column mb-auto">
