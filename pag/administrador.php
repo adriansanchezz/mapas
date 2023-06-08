@@ -224,7 +224,7 @@ require_once '../lib/mapa.php';
                                         $result3 = $conn->query($sql3);
                                         if ($result3->num_rows > 0) {
                                             while ($row3 = $result3->fetch_assoc()) {
-                                                echo "<td>" . $row3['importe'] . "</td>";
+                                                echo "<td>" . $row3['precio'] . "</td>";
                                             }
                                         }
 

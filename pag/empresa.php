@@ -221,6 +221,16 @@ require_once '../lib/mapa.php';
                         // Obtener el valor de los meses seleccionados
                         $selected_months = intval($value);
 
+
+                        $query = "UPDATE lineas_pedidos 
+                        SET precio = (SELECT precio FROM publicidades WHERE id_publicidad = $product_id) * $selected_months 
+                        WHERE id_publicidad = $product_id";
+
+                            // Ejecutar la consulta en tu base de datos
+                            // ...
+                            sqlUPDATE($query);
+
+
                         // Realizar la consulta de actualización
                         $fecha_según_mes = date('Y-m-d', strtotime("+$selected_months months"));
                         $query = "UPDATE publicidades SET caducidad_compra = '$fecha_según_mes' WHERE id_publicidad = $product_id";
