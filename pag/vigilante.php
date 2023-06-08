@@ -11,6 +11,7 @@ require_once '../lib/mapa.php';
     <!-- Meter informacion general de head -->
     <?php head_info(); ?>
     <script src="../js/funciones.js"></script>
+    <script src="../js/mapa.js"></script>
     <title>DisplayAds</title>
     <style>
         #map {

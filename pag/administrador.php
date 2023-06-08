@@ -408,7 +408,12 @@ require_once '../lib/mapa.php';
                                 echo "<td><form action='administrador.php' method='POST'>
                                     <input type='hidden' name='id_publicidad' value='" . $row5['id_publicidad'] . "'>
                                     <input type='submit' name='aceptarCertificado' value='Aceptar'>
-                                    </form></td>";
+                                    </form>
+                                    <form action='administrador.php' method='POST'>
+                                    <input type='hidden' name='id_publicidad' value='" . $row5['id_publicidad'] . "'>
+                                    <input type='submit' name='rechazarCertificado' value='Rechazar'>
+                                    </form>
+                                    </td>";
                                 echo "</tr>";
                             }
                             echo "</table>";
@@ -464,7 +469,19 @@ require_once '../lib/mapa.php';
                     if (isset($_POST['aceptarCertificado'])) {
 
                         $id_publicidad = $_POST['id_publicidad'];
-                        $sql = "UPDATE publicidades SET revision = NULL WHERE id_publicidad = " . $id_publicidad;
+                        $sql = "UPDATE publicidades SET revision = 1 WHERE id_publicidad = " . $id_publicidad;
+
+                        if (sqlUPDATE($sql)) {
+                            echo "<script>window.location.href = 'administrador.php?administradorPanel';</script>";
+                            exit();
+                        }
+
+
+                    }
+                    if (isset($_POST['rechazarCertificado'])) {
+
+                        $id_publicidad = $_POST['id_publicidad'];
+                        $sql = "UPDATE publicidades SET revision = 0 WHERE id_publicidad = " . $id_publicidad;
 
                         if (sqlUPDATE($sql)) {
                             echo "<script>window.location.href = 'administrador.php?administradorPanel';</script>";
