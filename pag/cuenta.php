@@ -242,10 +242,11 @@ require_once '../lib/modulos.php';
                             label: 'pay'
                         },
                         createOrder: function (data, actions) {
+                            var value = (selectedSuscripcion === "mensual") ? 5 : 20;
                             return actions.order.create({
                                 purchase_units: [{
                                     amount: {
-                                        value: 100
+                                        value: value
                                     }
                                 }]
                             });
@@ -253,11 +254,8 @@ require_once '../lib/modulos.php';
                         onApprove: function (data, actions) {
                             return actions.order.capture().then(function (details) {
                                 // Redirigir a la página 'cuenta.php' con el parámetro 'suscrito'
-                                if (selectedSuscripcion === "mensual") {
-                                    window.location.href = "cuenta.php?suscrito=mensual";
-                                } else if (selectedSuscripcion === "anual") {
-                                    window.location.href = "cuenta.php?suscrito=anual";
-                                }
+                                var suscrito = (selectedSuscripcion === "mensual") ? "mensual" : "anual";
+                                window.location.href = "cuenta.php?suscrito=" + suscrito;
                             });
                         },
                         onCancel: function (data) {
@@ -284,6 +282,7 @@ require_once '../lib/modulos.php';
                 // Construir la consulta SQL
                 $sql = "UPDATE usuarios SET VIP = '$fechaVencimiento' WHERE id_usuario = '$id_usuario'";
                 sqlUPDATE($sql);
+                agregarRoles($_SESSION['usuario']['id_usuario'], 4);
 
                 // Puedes realizar cualquier acción adicional que necesites aquí
         
@@ -333,7 +332,7 @@ require_once '../lib/modulos.php';
                         <h3>Solucitud de empresa</h3>
                         <?php verSolicitudEmpresa($_SESSION['usuario']['id_usuario']); ?> <br><br>
                     </div>
-                </div> 
+                </div>
                 <?php
             }
             ?>

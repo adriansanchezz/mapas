@@ -119,7 +119,9 @@ function menu_general()
                         </style>
                         <div class="notification-bar shadow-sm p-3 mb-5 bg-white rounded border border-primary float-left">
                             <h4>Notificaciones</h4>
+
                             <?php
+
                             $sql = "SELECT * FROM publicidades WHERE comprador IS NOT NULL AND id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND id_usuario <> comprador";
                             $result = sqlSELECT($sql);
 
@@ -163,6 +165,13 @@ function menu_general()
                                 array_push($notificaciones, $notificacion);
                             }
 
+                            if (isset($_REQUEST['vistoVIP'])) {
+                                $sql = "UPDATE usuarios SET VIP = NULL WHERE id_usuario = " . $_SESSION['usuario']['id_usuario'];
+                                sqlUPDATE($sql);
+                                echo "<script>window.location.href = 'usuario.php?usuarioMapa';</script>";
+                                exit();
+                            }
+
                             if (isset($_POST['aceptarEmpresa'])) {
                                 $id_publicidad = $_POST['id_publicidad'];
                                 $sql = "UPDATE publicidades SET ocupado = 1 WHERE id_publicidad = " . $id_publicidad;
@@ -201,35 +210,65 @@ function menu_general()
                                             $notificacion = "<div class='notification'>Hoy es el último día de su publicidad alquilada: " . $row['ubicacion'] . " " . $row['codigo_postal'] . "</div>";
                                             array_push($notificaciones, $notificacion);
                                         } else {
-                                            $notificacion = "<div class='notification'>La fecha ya no es válida.</div>";
+                                            $notificacion = "<div class='notification'>La fecha de su publicidad alquilada ha terminado: " . $row['ubicacion'] . " " . $row['codigo_postal'] . "</div>";
                                             array_push($notificaciones, $notificacion);
                                             $sql = "UPDATE publicidades SET ocupado = 0, comprador = NULL, revision = NULL, caducidad_compra = NULL";
                                             sqlUPDATE($sql);
                                         }
-                                    } else {
-                                        
                                     }
                                 }
-                            } 
+                            }
 
                             $sql = "SELECT * FROM alertas WHERE usuario = " . $_SESSION['usuario']['id_usuario'] . " AND estado = 0";
                             $result = sqlSELECT($sql);
                             if ($result->num_rows > 0) {
                                 while ($row = $result->fetch_assoc()) {
-                                    $notificacion = "<h5 style='color: red;'>Notificación del administrador: " . $row['titulo'] . "</h5><p>". $row['descripcion'] ."</p>";
+                                    $notificacion = "<h5 style='color: red;'>Notificación del administrador: " . $row['titulo'] . "</h5><p>" . $row['descripcion'] . "</p>";
                                     array_push($notificaciones, $notificacion);
                                 }
                             }
+
+
+
+                            // COMPROBAR VIP.
+                            $sql = "SELECT * FROM usuarios WHERE id_usuario = " . $_SESSION['usuario']['id_usuario'];
+                            $result = sqlSELECT($sql);
+                            $fechaBD = null;
+
+                            if ($result->num_rows > 0) {
+
+                                while ($row = $result->fetch_assoc()) {
+                                    // Obtener la fecha de la base de datos
+                                    $fechaBD = $row['VIP'];
+
+
+                                    // Obtener la fecha actual
+                                    $fechaActual = date("Y-m-d");
+                                    // Verificar si la fecha es anterior a hoy
+                                    if ($fechaBD !== null) {
+                                        if ($fechaActual < $fechaBD) {
+
+                                        } elseif ($fechaBD == $fechaActual) {
+                                            $notificacion = "<div class='notification'>Hoy es el último día de su suscripción VIP.</div>";
+                                            array_push($notificaciones, $notificacion);
+                                        } else {
+                                            $notificacion = "<div class='notification'>Su suscripción VIP ha caducado.</div><form action='usuario.php'><input type='submit' value='Visto' name='vistoVIP'></form>";
+                                            array_push($notificaciones, $notificacion);
+
+
+                                            $sqlRol = "DELETE FROM usuarios_roles WHERE id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND id_rol = 4";
+                                            sqlDELETE($sqlRol);
+                                        }
+                                    }
+                                }
+                            }
+
+
 
                             // Imprimir las notificaciones en orden inverso
                             for ($i = count($notificaciones) - 1; $i >= 0; $i--) {
                                 echo $notificaciones[$i];
                             }
-
-
-
-
-                            
 
 
                             ?>
