@@ -172,7 +172,7 @@ require_once '../lib/mapa.php';
                 $ubicacion = $_POST['ubicacion'];
                 $sql = "SELECT * FROM productos WHERE id_producto = " . $product_id;
                 $result = sqlSELECT($sql);
-
+                $conn = conectar();
                 // Si da resultados entonces entra en el if.
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
@@ -184,12 +184,17 @@ require_once '../lib/mapa.php';
                                 $puntos_tiene = $row2['puntos'];
                                 if (($puntos_tiene - $puntos_vale) >= 0) {
                                     $precio = $row['puntos'];
-                                    $sqlPedido = "INSERT INTO `pedidos` (`puntos`, `fecha_inicio`, `fecha_fin`, `id_usuario`, `ubicacion`) VALUES ($precio, NOW(), NOW(), $id_usuario, '$ubicacion')";
-                                    sqlINSERT($sqlPedido);
 
-                                    $id_pedido = obtenerUltimoIdPedido(); // Obtener el último ID de pedido insertado
+
+
+
+                                    $sqlPedido = "INSERT INTO `pedidos` (`puntos`, `fecha_inicio`, `fecha_fin`, `id_usuario`, `ubicacion`) VALUES ($precio, NOW(), NOW(), $id_usuario, '$ubicacion')";
+                                    $resultPedido = $conn->query($sqlPedido);
+
+                                    // Obtener el último ID de pedido insertado
+                                    $id_pedido = mysqli_insert_id($conn);
                                     $sqlLinea = "INSERT INTO `lineas_pedidos`(`precio`, `cantidad`, `id_producto`, `id_publicidad`, `id_pedido`) VALUES ($precio, 1, $product_id, NULL, $id_pedido)";
-                                    sqlINSERT($sqlLinea);
+                                    $resultLinea = $conn->query($sqlLinea);
 
                                     $sql2 = "UPDATE usuarios SET puntos = puntos - " . (int) $row['puntos'] . " WHERE id_usuario = " . $_SESSION['usuario']['id_usuario'];
                                     sqlUPDATE($sql2);

@@ -393,7 +393,7 @@ require_once '../lib/mapa.php';
                                 xhr.open('GET', 'empresa.php?' + parametros, true);
                                 xhr.onreadystatechange = function () {
                                     if (xhr.readyState === 4 && xhr.status === 200) {
-                                        
+
                                         window.location.href = 'empresa.php?empresaCarrito=1';
                                         exit();
                                     }
@@ -410,11 +410,34 @@ require_once '../lib/mapa.php';
                 <?php
             }
             if (isset($_REQUEST['empresaInfo'])) {
-                $sql = "SELECT p.ubicacion, p.codigo_postal, f.foto, u.email, p.caducidad_compra FROM publicidades as p, usuarios as u, fotos as f WHERE p.id_usuario = u.id_usuario AND f.id_publicidad = p.id_publicidad AND p.comprador = " . $_SESSION['usuario']['id_usuario'] . " AND p.ocupado = 1 AND p.caducidad_compra IS NOT NULL";
+                echo "<div class='container'>";
+                echo "<div class='row'>";
+                echo "<div class='col-md-6'>";
+                echo "<h2>Información general</h2>";
+                $sql = "SELECT * FROM empresas WHERE id_empresa = " . $_SESSION['usuario']['id_usuario'];
                 $result = sqlSELECT($sql);
-
                 if ($result->num_rows > 0) {
-
+                    $row = $result->fetch_assoc();
+                    echo "<p><strong>CIF:</strong> " . $row['cif'] . "</p>";
+                    echo "<p><strong>Nombre:</strong> " . $row['nombre'] . "</p>";
+                    echo "<p><strong>Telefono:</strong> " . $row['telefono'] . "</p>";
+                    echo "<p><strong>Email:</strong> " . $row['email'] . "</p>";
+                    echo "<p><strong>Direccion:</strong> " . $row['direccion'] . "</p>";
+                }
+                echo "</div>";
+            
+                $sql = "SELECT p.ubicacion, p.codigo_postal, f.foto, u.email, p.caducidad_compra
+                        FROM publicidades as p, usuarios as u, fotos as f
+                        WHERE p.id_usuario = u.id_usuario
+                            AND f.id_publicidad = p.id_publicidad
+                            AND p.comprador = " . $_SESSION['usuario']['id_usuario'] . "
+                            AND p.ocupado = 1
+                            AND p.caducidad_compra IS NOT NULL";
+                $result = sqlSELECT($sql);
+            
+                echo "<div class='col-md-6'>";
+                echo "<h2>Ubicaciones alquiladas</h2>";
+                if ($result->num_rows > 0) {
                     echo "<table class='table table-striped table-bordered'>";
                     echo "<thead class='thead-dark'>";
                     echo "<tr>";
@@ -426,6 +449,7 @@ require_once '../lib/mapa.php';
                     echo "</tr>";
                     echo "</thead>";
                     echo "<tbody>";
+            
                     while ($row = $result->fetch_assoc()) {
                         echo "<tr>";
                         echo "<td>" . $row['ubicacion'] . "</td>";
@@ -435,9 +459,15 @@ require_once '../lib/mapa.php';
                         echo "<td>" . $row['caducidad_compra'] . "</td>";
                         echo "</tr>";
                     }
+            
                     echo "</tbody>";
                     echo "</table>";
+                } else {
+                    echo "<p>No se encontraron ubicaciones alquiladas.</p>";
                 }
+                echo "</div>";
+                echo "</div>";
+                echo "</div>";
             }
             ?>
         </div>
