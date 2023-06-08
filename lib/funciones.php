@@ -1241,7 +1241,7 @@ function guardarMarcador()
             $precio = $_POST['precio'];
             $idUser = $_SESSION['usuario']['id_usuario'];
             $estado = 1;
-            $revisionPiso = 0;
+            $revisionPiso = 2;
             // Establecer la conexión con la base de datos.
             $conn = conectar();
 

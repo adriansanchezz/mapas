@@ -363,7 +363,7 @@ require_once '../lib/mapa.php';
 
 
                         echo "<br><br><h1>Solicitudes de Pisos</h1><br>";
-                        $sql5 = "SELECT * FROM publicidades as p, usuarios as u WHERE p.revision = 0 AND p.id_usuario = u.id_usuario";
+                        $sql5 = "SELECT * FROM publicidades as p, usuarios as u WHERE p.revision = 2 AND p.id_usuario = u.id_usuario";
 
 
                         $result = sqlSELECT($sql5);

@@ -152,18 +152,22 @@ function menu_general()
                             if ($result->num_rows > 0) {
                                 while ($row = $result->fetch_assoc()) {
                                     if (is_null($row['revision'])) {
-                                        
-                                        $notificacion = "<div class='notification'>Tu solicitud de publicar la ubicación del piso está a la espera: ". $row['ubicacion'];
-                                        array_push($notificaciones, $notificacion);
-                                        
-                                    } elseif ($row['revision'] == 0) {
-                                        
+                                    }
+                                    elseif ($row['revision'] == 0) {
                                         
                                         $notificacion = "<div class='notification'>Tu solicitud de publicar la ubicación del piso ha sido rechazada: ". $row['ubicacion'] . "<form action='usuario.php' method='POST'><input type='hidden' name='id_publicidad' value='" . $row['id_publicidad'] . "'><input type='submit' name='vistoPiso' value='Visto'></form></div>";
                                         array_push($notificaciones, $notificacion);
+                                        
                                     } elseif ($row['revision'] == 1) {
                                         
+                                        
+                                        
                                         $notificacion = "<div class='notification'>Tu solicitud de publicar la ubicación del piso ha sido aceptada: ". $row['ubicacion'] . "<form action='usuario.php' method='POST'><input type='hidden' name='id_publicidad' value='" . $row['id_publicidad'] . "'><input type='submit' name='vistoPisoAceptado' value='Visto'></form></div>";
+                                        array_push($notificaciones, $notificacion);
+                                    } elseif ($row['revision'] == 2) {
+                                        
+                                        
+                                        $notificacion = "<div class='notification'>Tu solicitud de publicar la ubicación del piso está a la espera: ". $row['ubicacion'];
                                         array_push($notificaciones, $notificacion);
                                     }
                                     
