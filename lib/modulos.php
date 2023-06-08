@@ -261,6 +261,37 @@ function menu_general()
                                 }
                             }
 
+                            $sql = "SELECT * FROM publicidades as p, empresas as e WHERE p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND p.ocupado = 1 AND p.estado = 1 AND p.comprador = e.id_empresa";
+                            $result = sqlSELECT($sql);
+                            $fechaBD = null;
+
+                            if ($result->num_rows > 0) {
+                                while ($row = $result->fetch_assoc()) {
+                                    // Obtener la fecha de la base de datos
+                                    $fechaBD = $row['caducidad_compra'];
+
+
+                                    // Obtener la fecha actual
+                                    $fechaActual = date("Y-m-d");
+                                    // Verificar si la fecha es anterior a hoy
+                                    if ($fechaBD !== null) {
+                                        if ($fechaActual < $fechaBD) {
+
+                                        } elseif ($fechaBD == $fechaActual) {
+                                            $notificacion = "<div class='notification'>Hoy es el último día de en el que tendrás que tener puesto el cartel en la ubicacion: " . $row['ubicacion'] . " " . $row['codigo_postal'] . " para la empresa ". $row['nombre'] ."</div>";
+                                            array_push($notificaciones, $notificacion);
+                                        } else {
+                                            $notificacion = "<div class='notification'>Hoy deberás quitar el cartel en la ubicacion: " . $row['ubicacion'] . " " . $row['codigo_postal'] . " para la empresa ". $row['nombre'] . "</div>";
+                                            array_push($notificaciones, $notificacion);
+                                            $sql = "UPDATE publicidades SET ocupado = 0, comprador = NULL, revision = NULL, caducidad_compra = NULL";
+                                            sqlUPDATE($sql);
+                                        }
+                                    }
+                                }
+                            }
+
+
+
                             $sql = "SELECT * FROM alertas WHERE usuario = " . $_SESSION['usuario']['id_usuario'] . " AND estado = 0";
                             $result = sqlSELECT($sql);
                             if ($result->num_rows > 0) {
