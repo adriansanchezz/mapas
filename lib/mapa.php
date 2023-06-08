@@ -580,8 +580,6 @@ function mapa($valor)
         ?>
         <script>
             vigilante();
-            var error = document.getElementById('errorUsuario');
-            error.textContent = "prueba";
         </script>
         <?php
     }
