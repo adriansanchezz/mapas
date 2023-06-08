@@ -282,7 +282,7 @@ require_once '../lib/modulos.php';
                 // Construir la consulta SQL
                 $sql = "UPDATE usuarios SET VIP = '$fechaVencimiento' WHERE id_usuario = '$id_usuario'";
                 sqlUPDATE($sql);
-                agregarRoles($_SESSION['usuario']['id_usuario'], 4);
+                agregarRoles($_SESSION['usuario']['id_usuario'], "VIP");
 
                 // Puedes realizar cualquier acción adicional que necesites aquí
         
