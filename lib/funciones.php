@@ -105,11 +105,9 @@ function autenticarUser($email, $password)
 
     //Lanza alerta si hay erro en el array de $errors
     if (!empty($errors)) {
-        echo "<ul name='l2'>";
         foreach ($errors as $error) {
-            echo '<li>' . $error . '</li>';
+            echo '<div class="alert alert-warning" role="alert">' . $error . '</div>';
         }
-        echo '</ul>';
         return false;
     } else {
         // Si no hay errores, los datos del formulario son válidos.
@@ -129,10 +127,10 @@ function autenticarUser($email, $password)
                 echo "<script> location.replace('pag/principal.php'); </script>";
                 exit; // Es importante poner exit después del header para asegurarnos de que el script no siga ejecutándose
             } else {
-                echo "Password Incorrecto!";
+                echo '<div class="alert alert-warning" role="alert">Password Incorrecto!</div>';
             }
         } else {
-            echo "El usuario no existe!";
+            echo '<div class="alert alert-warning" role="alert">El usuario no existe!</div>';
         }
     }
 }

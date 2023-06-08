@@ -8,7 +8,7 @@ require_once 'lib/modulos.php';
 
 <head>
     <!-- Meter informacion general de head -->
-    <?php head_info(); ?>
+    <?php head_index(); ?>
     <link href="css/login_registro.css" rel="stylesheet" type="text/css">
     <script src="./js/funciones.js"></script>
     <style>

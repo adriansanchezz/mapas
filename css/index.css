@@ -7,3 +7,19 @@ body{
     background-image: url(../img/imagen/fondo-mapa.jpg);
     z-index: 0;
 }
+
+#map {
+    z-index: 0;
+    height: 300px;
+    width: 430px;
+    margin: auto;
+    margin-bottom: 50px;
+}
+
+.linea {
+    height: 4px;
+    background-color: black;
+    border: none;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}

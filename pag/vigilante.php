@@ -11,28 +11,16 @@ require_once '../lib/mapa.php';
     <!-- Meter informacion general de head -->
     <?php head_info(); ?>
     <script src="../js/funciones.js"></script>
+    <link href="../css/vigilante.css" rel="stylesheet" type="text/css">
     <script src="../js/mapa.js"></script>
     <title>DisplayAds</title>
     <style>
-        #map {
-            height: 70vh;
-            width: 150vh;
-            margin-left: 10vh;
-            border: 8px solid #2c3e50;
-            /* Color del borde */
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            /* Sombra */
-        }
+
     </style>
 
 </head>
 
 <body>
-    <style>
-        #map {
-            z-index: 0;
-        }
-    </style>
     <?php
     if (isset($_SESSION['usuario']) && validarVigilante($_SESSION['usuario']['id_usuario'])) {
         // Menu general
@@ -43,13 +31,13 @@ require_once '../lib/mapa.php';
             <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 200px;">
                 <br><br>
                 <ul class="nav nav-pills flex-column mb-auto">
-                    <li>
+                    <!-- <li>
                         <form action="vigilante.php" method="post">
                             <button type="submit" name="vigilantePrincipal"
                                 class="btn btn-link nav-link text-white">Principal
                             </button>
                         </form>
-                    </li>
+                    </li> -->
                     <li>
                         <form action="vigilante.php" method="post">
                             <button type="submit" name="misiones" class="btn btn-link nav-link text-white">Misiones
@@ -82,7 +70,7 @@ require_once '../lib/mapa.php';
             ?>
 
 
-            <?php
+            <!-- <?php
             if (isset($_REQUEST['vigilantePrincipal'])) {
                 ?>
                 <div class="flex-grow-1">
@@ -92,7 +80,7 @@ require_once '../lib/mapa.php';
                 </div>
                 <?php
             }
-            ?>
+            ?> -->
 
             <?php
             if (isset($_REQUEST['misiones'])) {

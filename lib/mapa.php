@@ -106,11 +106,11 @@ function mapa($valor)
                     }
 
                 </script>
-                <?php
+        <?php
             }
         }
         ?>
-
+        
 
         <?php
     }
@@ -205,41 +205,35 @@ function mapa($valor)
                     $imageUrl = 'https://maps.googleapis.com/maps/api/streetview?size=400x300&location=' . $latitud . ',' . $longitud . '&key=' . $apiKey;
                     ?>
                     <script>
-                        try {
-                            // Crear un marcador para cada registro de la base de datos.
-                            var marker = L.marker([<?php echo $latitud; ?>, <?php echo $longitud; ?>]).addTo(map);
-                            // Se añade un popUp para que salga una ventana al clickar un marcador existente en el mapa.
-                            marker.bindPopup(`<style>img{height: 200px;}</style><div class='popup-content'>
-                                                                    <h3 class='popup-title'><?php echo $nombre_tipo; ?></h3>
-                                                                    <h4 class='popup-location'><?php echo $ubicacion; ?></h4>
-                                                                    <h4 class='popup-price'><?php echo $precio . '€'; ?></h4>
-                                                                    <p class='popup-description'><?php echo $descripcion; ?></p>
-                                                                    Imagen Google: <img class='popup-image' src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación'>
-                                                                    Imagen usuario <?php echo $mostrarImagen; ?></div>
-                                                                    <form action='usuario.php' method='POST'>
-                                                                    <input type='hidden' name='id_publicidad' value='<?php echo $row['id_publicidad']; ?>'>
-                                                                    <?php
-                                                                    $conn = conectar();
-                                                                    $sql = "SELECT * FROM publicidades as p, empresas as em WHERE p.ocupado = 1 AND p.estado = 1 AND p.comprador IS NOT NULL AND p.comprador = em.id_empresa AND p.id_publicidad = " . $row['id_publicidad'];
+                        // Crear un marcador para cada registro de la base de datos.
+                        var marker = L.marker([<?php echo $latitud; ?>, <?php echo $longitud; ?>]).addTo(map);
+                        // Se añade un popUp para que salga una ventana al clickar un marcador existente en el mapa.
+                        marker.bindPopup(`<style>img{height: 200px;}</style><div class='popup-content'>
+                                            <h3 class='popup-title'><?php echo $nombre_tipo; ?></h3>
+                                            <h4 class='popup-location'><?php echo $ubicacion; ?></h4>
+                                            <h4 class='popup-price'><?php echo $precio . '€'; ?></h4>
+                                            <p class='popup-description'><?php echo $descripcion; ?></p>
+                                            Imagen Google: <img class='popup-image' src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación'>
+                                            Imagen usuario <?php echo $mostrarImagen; ?></div>
+                                            <form action='usuario.php' method='POST'>
+                                            <input type='hidden' name='id_publicidad' value='<?php echo $row['id_publicidad']; ?>'>
+                                            <?php
+                                            $conn = conectar();
+                                            $sql = "SELECT * FROM publicidades as p, empresas as em WHERE p.ocupado = 1 AND p.estado = 1 AND p.comprador IS NOT NULL AND p.comprador = em.id_empresa AND p.id_publicidad = " . $row['id_publicidad'];
 
-                                                                    $resultado = $conn->query($sql);
+                                            $resultado = $conn->query($sql);
 
-                                                                    if ($resultado->num_rows > 0) {
-                                                                        // Si se obtienen resultados, se recorren las filas
-                                                                        $row4 = $resultado->fetch_assoc();
+                                            if ($resultado->num_rows > 0) {
+                                                // Si se obtienen resultados, se recorren las filas
+                                                $row4 = $resultado->fetch_assoc();
 
-                                                                        // Mostrar el mensaje de publicidad vendida
-                                                                        echo "<p style='color: red;'>YA VENDIDA A " . $row4['nombre'] . "</p>";
-                                                                    }
-                                                                    ?>
+                                                // Mostrar el mensaje de publicidad vendida
+                                                echo "<p style='color: red;'>YA VENDIDA A " . $row4['nombre'] . "</p>";
+                                            }
+                                            ?>
 
-                                                                    <button class='popup-delete-button' type='submit' name='borrarMarcador'>Borrar</button>
-                                                                </form>`);
-
-                        } catch (error) {
-                            var error = document.getElementById('errorUsuario');
-                            error.textContent = error;
-                        }
+                                            <button class='popup-delete-button' type='submit' name='borrarMarcador'>Borrar</button>
+                                        </form>`);
                     </script>
                     <?php
                 }
@@ -299,7 +293,7 @@ function mapa($valor)
                     document.getElementById('lat').value = e.latlng.lat;
                     document.getElementById('lng').value = e.latlng.lng;
                     var apiKey = 'AIzaSyADr5gpzLPePzkWwz8C94wBQ21DzQ4GGVU'; // Reemplaza con tu propia API Key de Google Maps Static
-
+                    
 
                     // Realizar la solicitud de geocodificación a Nominatim.
                     var url = 'https://nominatim.openstreetmap.org/reverse?lat=' + e.latlng.lat + '&lon=' + e.latlng.lng + '&format=json';
@@ -325,6 +319,50 @@ function mapa($valor)
                     error.textContent = error;
                 }
             });
+
+
+
+            function validarFormulario() {
+                var descripcion = document.getElementById('descripcion').value;
+                var precio = document.getElementById('precio').value;
+                var provincia = document.getElementById('provincia').value;
+                var ciudad = document.getElementById('ciudad').value;
+                var ubicacion = document.getElementById('ubicacion').value;
+                var codigoPostal = document.getElementById('codigo_postal').value;
+
+                if (descripcion.trim() === '' || precio.trim() === '' || provincia.trim() === '' || ciudad.trim() === '' || ubicacion.trim() === '') {
+                    alert('Los campos de título, texto, provincia, ciudad y ubicación no pueden estar vacíos.');
+                    return false;
+                }
+
+                if (isNaN(parseFloat(precio))) {
+                    alert('El precio debe ser un número.');
+                    return false;
+                }
+
+                if (isNaN(parseInt(codigoPostal))) {
+                    alert('El código postal debe ser un número.');
+                    return false;
+                }
+
+                var textoRegex = /^[A-Za-zÁáÉéÍíÓóÚúÑñ\s]+$/;
+
+                if (!textoRegex.test(provincia) || !textoRegex.test(ciudad) || !textoRegex.test(ubicacion)) {
+                    alert('Los campos de descripción, provincia, ciudad y ubicación deben contener solo letras.');
+                    return false;
+                }
+
+                var latitud = parseFloat(document.getElementById('lat').value);
+                var longitud = parseFloat(document.getElementById('lng').value);
+
+                if (isNaN(latitud) || isNaN(longitud)) {
+                    alert('Debe seleccionar una ubicación en el mapa.');
+                    return false;
+                }
+
+                return true;
+            }
+
         </script>
 
 
@@ -383,12 +421,12 @@ function mapa($valor)
                         </div>
                         <div class="form-group">
                             <label for="imagen" id="imagensubir">Sube una foto:</label>
-                            <span id="mensajePubli" style="display: block; color: red;">(*) Recuerda subir la foto del lugar en
-                                el que publicitarás.</span>
+                            <span id="mensajePubli" style="display: block; color: red;">(*) Recuerda subir la foto del lugar en el que publicitarás.</span>
                             <span id="mensajePiso" style="display: none; color: red;">(*) Recuerda subir un papel certificado de
                                 la comunidad de vecinos y la foto del lugar en el que publicitarás.</span>
                             <input type="file" name="imagen[]" multiple>
                         </div>
+                        
                         <button type="submit" class="btn btn-primary" name="guardarMarcador">Guardar</button>
                     </div>
                 </div>
@@ -402,12 +440,12 @@ function mapa($valor)
     }
     if ($valor == "vigilar") {
         ?>
-
+        
         <h1>MISIONES</h1>
         <span id='errorUsuario' style='color: red;'></span>
         <div id="map"></div><br>
         <style>
-            #solicitarMision {
+            #solicitarMision{
                 margin-left: 10vh;
                 width: 150vh;
             }

@@ -313,7 +313,7 @@ require_once '../lib/mapa.php';
                                 } catch (Exception $e) {
                                     echo "Error al ejecutar la consulta de usuarios: " . $e->getMessage();
                                 }
-
+                                
                                 $sql6 = "SELECT * FROM lineas_pedidos as lp, productos as p WHERE lp.id_producto = p.id_producto AND lp.id_pedido = ?";
                                 try {
                                     $stmt3 = $conn->prepare($sql6);

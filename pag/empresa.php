@@ -39,12 +39,12 @@ require_once '../lib/mapa.php';
                 <br><br>
                 <!-- Crear submenu con sus opciones -->
                 <ul class="nav nav-pills flex-column mb-auto">
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <form action="empresa.php" method="post">
                             <button type="submit" name="empresaPrincipal"
                                 class="btn btn-link nav-link text-white">Principal</button>
                         </form>
-                    </li>
+                    </li> -->
                     <li class="nav-item">
                         <form action="empresa.php" method="post">
                             <button type="submit" name="empresaMapa"
@@ -60,8 +60,8 @@ require_once '../lib/mapa.php';
 
                 </ul>
             </div>
-
-            <?php
+            
+            <!-- <?php
             if (isset($_REQUEST['empresaPrincipal'])) {
                 ?>
                 <div class="flex-grow-1">
@@ -71,7 +71,7 @@ require_once '../lib/mapa.php';
                 </div>
                 <?php
             }
-            ?>
+            ?> -->
 
 
             <?php
@@ -87,14 +87,13 @@ require_once '../lib/mapa.php';
                             </form>
                             <h1>Bienvenido a nuestro mapa</h1>
                             <h4>Selecciona alguna ubicación para ver información:</h4>
-                            <h6>O busca la ubicación que desees.</h6>
                             <p>¿Quieres buscar una ubicación?</p>
                             <div class="input-group mb-3">
-                                <input type="text" class="form-control" id="direccion" placeholder="Buscar dirección">
-                                <div class="input-group-append">
-                                    <button class="btn btn-primary" onclick="buscarDireccion()">Buscar</button>
+                                    <input type="text" class="form-control" id="direccion" placeholder="Buscar dirección">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary" onclick="buscarDireccion()">Buscar</button>
+                                    </div>
                                 </div>
-                            </div>
                             <div id="map"></div>
                             <!-- Se le da estilos al mapa para que quede más estético. -->
                             <style>
@@ -114,9 +113,7 @@ require_once '../lib/mapa.php';
                 </div>
                 <?php
             }
-
             ?>
-
 
             <?php
             if (isset($_POST['add_to_cart'])) {
