@@ -380,8 +380,6 @@ function menu_general()
                                 }
                             }
 
-
-
                             // Imprimir las notificaciones en orden inverso
                             for ($i = count($notificaciones) - 1; $i >= 0; $i--) {
                                 echo $notificaciones[$i];
