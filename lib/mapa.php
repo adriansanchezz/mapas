@@ -8,7 +8,7 @@ function mapa($valor)
     if ($valor == "ver") {
         ?>
         <script>
-            try{
+            try {
                 // Creación del mapa.
                 var map = L.map('map').setView([43.3828500, -3.2204300], 7);
 
@@ -18,8 +18,8 @@ function mapa($valor)
                     maxZoom: 18,
                 }).addTo(map);
             } catch (error) {
-                        var error = document.getElementById('errorUsuario');
-                        error.textContent = error;
+                var error = document.getElementById('errorUsuario');
+                error.textContent = error;
             }
         </script>
         <?php
@@ -77,40 +77,40 @@ function mapa($valor)
                         var marker = L.marker([<?php echo $latitud; ?>, <?php echo $longitud; ?>]).addTo(map);
                         // Se añade un popUp para que salga una ventana al clickar un marcador existente en el mapa.
                         marker.bindPopup(`
-                                                            <div class='popup-content'>
-                                                            <h3><?php echo $nombre_tipo . " " . $ubicacion . " " . $precio . "€"; ?></h3>
-                                                            <p><?php echo $descripcion; ?></p>
-                                                            <img src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación'>
-                                                            </div>
-                                                            <form action='empresa.php' method='POST'>
-                                                            <input type='hidden' name='product_id' value='<?php echo $row['id_publicidad'] ?>'>
-                                                            <input type='hidden' name='lat' value='<?php echo $latitud; ?>'>
-                                                            <input type='hidden' name='lng' value='<?php echo $longitud; ?>'>
-                                                            <input type='hidden' name='ubicacion' value='<?php echo $ubicacion; ?>'>
-                                                            <input type='hidden' name='descripcion' value='<?php echo $descripcion; ?>'>
-                                                            Imagen Google: 
-                                                            Imagen usuario <?php echo $mostrarImagen; ?>
-                                                            <input type='hidden' name='precio' value='<?php echo $precio; ?>'>
-                                                            <?php
-                                                            $sql = "SELECT * FROM pedidos as p, lineas_pedidos as lp WHERE p.id_pedido = lp.id_pedido AND p.fecha_fin IS NULL AND p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND lp.id_publicidad = " . $row['id_publicidad'] . " AND lp.cantidad > 0;";
-                                                            if (sqlSELECT($sql)->num_rows > 0) {
-                                                                echo "<p style='color: red;'>YA SELECCIONADA</p>";
-                                                            }
-                                                            ?>
-                                                            <button type='submit' name='add_to_cart' value='1'>Seleccionar</button>
-                                                            </form>
-                                                            `);
+                                        <div class='popup-content'>
+                                        <h3><?php echo $nombre_tipo . " " . $ubicacion . " " . $precio . "€"; ?></h3>
+                                        <p><?php echo $descripcion; ?></p>
+                                        <img src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación'>
+                                        </div>
+                                        <form action='empresa.php' method='POST'>
+                                        <input type='hidden' name='product_id' value='<?php echo $row['id_publicidad'] ?>'>
+                                        <input type='hidden' name='lat' value='<?php echo $latitud; ?>'>
+                                        <input type='hidden' name='lng' value='<?php echo $longitud; ?>'>
+                                        <input type='hidden' name='ubicacion' value='<?php echo $ubicacion; ?>'>
+                                        <input type='hidden' name='descripcion' value='<?php echo $descripcion; ?>'>
+                                        Imagen Google: 
+                                        Imagen usuario <?php echo $mostrarImagen; ?>
+                                        <input type='hidden' name='precio' value='<?php echo $precio; ?>'>
+                                        <?php
+                                        $sql = "SELECT * FROM pedidos as p, lineas_pedidos as lp WHERE p.id_pedido = lp.id_pedido AND p.fecha_fin IS NULL AND p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND lp.id_publicidad = " . $row['id_publicidad'] . " AND lp.cantidad > 0;";
+                                        if (sqlSELECT($sql)->num_rows > 0) {
+                                            echo "<p style='color: red;'>YA SELECCIONADA</p>";
+                                        }
+                                        ?>
+                                        <button type='submit' name='add_to_cart' value='1'>Seleccionar</button>
+                                        </form>
+                                        `);
                     } catch (error) {
                         var error = document.getElementById('errorUsuario');
                         error.textContent = error;
                     }
 
                 </script>
-        <?php
+                <?php
             }
         }
         ?>
-        
+
 
         <?php
     }
@@ -133,12 +133,12 @@ function mapa($valor)
                     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
                     maxZoom: 18,
                 }).addTo(map);
-            
-            
+
+
             } catch (error) {
-                    var error = document.getElementById('errorUsuario');
-                    error.textContent = error;
-                }
+                var error = document.getElementById('errorUsuario');
+                error.textContent = error;
+            }
         </script>
         <?php
         // Establecer la conexión con la base de datos.
@@ -293,7 +293,7 @@ function mapa($valor)
                     document.getElementById('lat').value = e.latlng.lat;
                     document.getElementById('lng').value = e.latlng.lng;
                     var apiKey = 'AIzaSyADr5gpzLPePzkWwz8C94wBQ21DzQ4GGVU'; // Reemplaza con tu propia API Key de Google Maps Static
-                    
+
 
                     // Realizar la solicitud de geocodificación a Nominatim.
                     var url = 'https://nominatim.openstreetmap.org/reverse?lat=' + e.latlng.lat + '&lon=' + e.latlng.lng + '&format=json';
@@ -421,12 +421,13 @@ function mapa($valor)
                         </div>
                         <div class="form-group">
                             <label for="imagen" id="imagensubir">Sube una foto:</label>
-                            <span id="mensajePubli" style="display: block; color: red;">(*) Recuerda subir la foto del lugar en el que publicitarás.</span>
+                            <span id="mensajePubli" style="display: block; color: red;">(*) Recuerda subir la foto del lugar en
+                                el que publicitarás.</span>
                             <span id="mensajePiso" style="display: none; color: red;">(*) Recuerda subir un papel certificado de
                                 la comunidad de vecinos y la foto del lugar en el que publicitarás.</span>
                             <input type="file" name="imagen[]" multiple>
                         </div>
-                        
+
                         <button type="submit" class="btn btn-primary" name="guardarMarcador">Guardar</button>
                     </div>
                 </div>
@@ -440,12 +441,12 @@ function mapa($valor)
     }
     if ($valor == "vigilar") {
         ?>
-        
+
         <h1>MISIONES</h1>
         <span id='errorUsuario' style='color: red;'></span>
         <div id="map"></div><br>
         <style>
-            #solicitarMision{
+            #solicitarMision {
                 margin-left: 10vh;
                 width: 150vh;
             }
@@ -472,7 +473,7 @@ function mapa($valor)
                                         FROM misiones AS m, publicidades AS p
                                         WHERE m.id_usuario='$id_usuario' AND m.estado=0 AND m.aceptacion=0 AND m.id_publicidad = p.id_publicidad";
                         $result = sqlSELECT($sql);
-                        
+
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
                                 echo '<tr>';

@@ -1,4 +1,16 @@
-
+.puntos-container {
+    color: #505257;
+    background-color: #e9f2fe;
+    border: 1px solid #6c6c6d;
+    margin: auto;
+    padding: 10px;
+    height: 50px;
+    width: 150px;
+    border-radius: 5px;
+    float: right;
+    margin-right: 10px;
+    margin-top: 50px;
+}
 
 #map {
     height: 500px;

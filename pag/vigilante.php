@@ -14,10 +14,6 @@ require_once '../lib/mapa.php';
     <link href="../css/vigilante.css" rel="stylesheet" type="text/css">
     <script src="../js/mapa.js"></script>
     <title>DisplayAds</title>
-    <style>
-
-    </style>
-
 </head>
 
 <body>
@@ -25,6 +21,18 @@ require_once '../lib/mapa.php';
     if (isset($_SESSION['usuario']) && validarVigilante($_SESSION['usuario']['id_usuario'])) {
         // Menu general
         menu_general();
+        $puntos = 0;
+        $id_usuario = $_SESSION['usuario']['id_usuario'];
+        $conn = conectar();
+        $sql = "SELECT * FROM usuarios WHERE id_usuario='$id_usuario'";
+        $result = $conn->query($sql);
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $puntos = $row['puntos'];
+            }
+
+        }
         ?>
         <!-- Crear submenu con sus opciones -->
         <div class="d-flex vh-100">
@@ -51,24 +59,16 @@ require_once '../lib/mapa.php';
                             </button>
                         </form>
                     </li>
+                    <li>
+                        <div class="puntos-container">
+                            <?php echo "<b>Tus puntos:</b> " . $puntos; ?>
+
+                        </div>
+                    </li>
                 </ul>
             </div>
 
-            <?php
-            $puntos = 0;
-            $id_usuario = $_SESSION['usuario']['id_usuario'];
-            $conn = conectar();
-            $sql = "SELECT * FROM usuarios WHERE id_usuario='$id_usuario'";
-            $result = $conn->query($sql);
 
-            if ($result->num_rows > 0) {
-                while ($row = $result->fetch_assoc()) {
-                    $puntos = $row['puntos'];
-                }
-
-            }
-
-            ?>
 
 
             <!-- <?php
@@ -247,24 +247,8 @@ require_once '../lib/mapa.php';
 
 
             ?>
-            <style>
-                .puntos-container {
-                    background-color: #e9f2fe;
-                    border: 1px solid #007bff;
-                    padding: 10px;
-                    height: 100px;
-                    border-radius: 5px;
-                    float: right;
-                    margin-right: 20px;
-                    margin-top: 6vh;
-                }
-            </style>
-            <div class="puntos-container">
-                <h5>Tus puntos:</h5>
-                <p>
-                    <?php echo $puntos; ?>
-                </p>
-            </div>
+
+
 
         </div>
 
