@@ -161,6 +161,17 @@ function menu_general()
                                 }
                             }
 
+                            $sql = "SELECT * FROM productos as p, lineas_pedidos as lp, pedidos as ped WHERE ped.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND ped.revision = 1 AND lp.id_producto = p.id_producto AND lp.id_pedido = ped.id_pedido";
+                            $result = sqlSELECT($sql);
+                            if ($result->num_rows > 0) {
+                                $notificacion = "<div class='notification'>";
+                                while ($row = $result->fetch_assoc()) {
+                                    $notificacion .= "Los productos han sido enviados: " . $row['nombre'] . "<form action='usuario.php' method='POST'><input type='hidden' name='id_pedido' value='" . $row['id_pedido'] . "'>";
+                                }
+                                $notificacion .= "<br><input type='submit' name='vistoPedido' value='Visto'></form></div>";
+                                array_push($notificaciones, $notificacion);
+                            }
+
                             $sql = "SELECT * FROM publicidades WHERE id_usuario = " . $_SESSION['usuario']['id_usuario'];
                             $result = sqlSELECT($sql);
                             if ($result->num_rows > 0) {
@@ -204,6 +215,14 @@ function menu_general()
                             if ($result->num_rows > 0) {
                                 $notificacion = "<div class='notification'>Un usuario ha aceptado la solicitud de compra. Revisa el carrito de la sección empresa para poder ver la ubicación y confirmar la compra.</div>";
                                 array_push($notificaciones, $notificacion);
+                            }
+                            if(isset($_REQUEST['vistoPedido']))
+                            {
+                                $id_pedido = $_POST['id_pedido'];
+                                $sql = "UPDATE pedidos SET revision = 0 WHERE id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND id_pedido = " . $id_pedido;
+                                sqlUPDATE($sql);
+                                echo "<script>window.location.href = 'principal.php';</script>";
+                                exit();
                             }
                             if (isset($_REQUEST['vistoPiso'])) {
                                 $id_publicidad = $_POST['id_publicidad'];
