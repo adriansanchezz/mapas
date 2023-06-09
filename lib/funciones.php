@@ -1124,6 +1124,26 @@ function verVisitaTotal()
     echo $datos["numero"];
 }
 
+function verPedidoTotal()
+{
+    // Consulta
+    $sql = "SELECT COUNT(*) as total_pedidos FROM pedidos";
+
+    // Meter el resultado devulto para un valor;
+    $datos = sqlSELECT($sql)->fetch_assoc();
+    echo $datos["total_pedidos"];
+}
+
+function verImporteTotal()
+{
+    // Consulta
+    $sql = "SELECT SUM(importe) as total_importe FROM pedidos";
+
+    // Meter el resultado devulto para un valor;
+    $datos = sqlSELECT($sql)->fetch_assoc();
+    echo $datos["total_importe"];
+}
+
 function activarPublicidad($id_publicidad)
 {
     // Consulta
