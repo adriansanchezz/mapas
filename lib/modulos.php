@@ -172,7 +172,7 @@ function menu_general()
                                 array_push($notificaciones, $notificacion);
                             }
 
-                            $sql = "SELECT * FROM publicidades as p, lineas_pedidos as lp, pedidos as ped WHERE ped.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND ped.revision = 1 AND lp.id_publicidad = p.id_publicidad AND lp.id_pedido = ped.id_pedido AND lp.id_producto IS NULL";
+                            $sql = "SELECT p.ubicacion as ubicacion, ped.id_pedido as id_pedido FROM publicidades as p, lineas_pedidos as lp, pedidos as ped WHERE ped.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND ped.revision = 1 AND lp.id_publicidad = p.id_publicidad AND lp.id_pedido = ped.id_pedido AND lp.id_producto IS NULL";
                             $result = sqlSELECT($sql);
                             if ($result->num_rows > 0) {
                                 $notificacion = "<div class='notification'>";
