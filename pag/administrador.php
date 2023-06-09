@@ -392,7 +392,7 @@ require_once '../lib/mapa.php';
                                         while ($row6 = $result2->fetch_assoc()) {
                                             $imagen = $row6["foto"];
                                             // Mostrar la imagen en la página
-                                            $mostrarImagen = "<img src='data:image/jpeg;base64," . base64_encode($imagen) . "' alt='Imagen del producto'>";
+                                            $mostrarImagen = "<img src='data:image/jpeg;base64," . base64_encode($imagen) . "' alt='Imagen del producto' class='imagen_tabla'>";
                                             echo $mostrarImagen;
                                         }
                                         echo "</td>";
@@ -559,7 +559,7 @@ require_once '../lib/mapa.php';
                                             <option value='1'>Recompensas</option>
                                         </select>
                                     </div>
-                                    <input type='submit' name='nuevoProducto' class='btn btn-danger' value='Crear producto'>
+                                    <input type='submit' name='nuevoProducto' class='btn btn-success' value='Crear producto'>
                                 </form>
                             </div>
 
@@ -605,7 +605,7 @@ require_once '../lib/mapa.php';
                                             $imagen = $row2["foto"];
 
                                             // Mostrar la imagen en la página
-                                            echo "<img src='data:image/jpeg;base64," . base64_encode($imagen) . "' alt='Imagen del producto'>";
+                                            echo "<img src='data:image/jpeg;base64," . base64_encode($imagen) . "' alt='Imagen del producto' class='imagen_tabla'>";
                                         } else {
                                             echo "No se encontró la imagen asociada.";
                                         }
@@ -617,7 +617,7 @@ require_once '../lib/mapa.php';
 
                                         $estado = ($row["estado"] == 1) ? "Activado" : "Desactivado";
 
-                                        echo "<td><span id='estado'>" . $estado . "</span></td>";
+                                        echo "<td><span id='estado'><b>" . $estado . "</b></span></td>";
                                         echo "<td>";
                                         echo "<form action='administrador.php?administradorProductos' method='POST'>";
                                         echo "<input type='hidden' name='idProducto' value='" . $row["id_producto"] . "'>";

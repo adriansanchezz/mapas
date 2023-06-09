@@ -46,7 +46,7 @@ function mapa($valor)
                     $row3 = $result3->fetch_assoc();
                     $imagen = $row3["foto"];
                     // Mostrar la imagen en la página
-                    $mostrarImagen = "<img src='data:image/jpeg;base64," . base64_encode($imagen) . "' alt='Imagen del producto'>";
+                    $mostrarImagen = "<img src='data:image/jpeg;base64," . base64_encode($imagen) . "' alt='Imagen de la mapa'>";
                 }
                 // Se obtiene la id del tipo de propiedad.
                 $tipo = $row['id_tipo_publicidad'];
@@ -80,7 +80,7 @@ function mapa($valor)
                                         <div class='popup-content'>
                                         <h3><?php echo $nombre_tipo . " " . $ubicacion . " " . $precio . "€"; ?></h3>
                                         <p><?php echo $descripcion; ?></p>
-                                        <img src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación'>
+                                        <img src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación' class='imagen_mapa'>
                                         </div>
                                         <form action='empresa.php' method='POST'>
                                         <input type='hidden' name='product_id' value='<?php echo $row['id_publicidad'] ?>'>
@@ -89,7 +89,7 @@ function mapa($valor)
                                         <input type='hidden' name='ubicacion' value='<?php echo $ubicacion; ?>'>
                                         <input type='hidden' name='descripcion' value='<?php echo $descripcion; ?>'>
                                         Imagen Google: 
-                                        Imagen usuario <?php echo $mostrarImagen; ?>
+                                        Imagen usuario:<br> <?php echo $mostrarImagen; ?>
                                         <input type='hidden' name='precio' value='<?php echo $precio; ?>'>
                                         <?php
                                         $sql = "SELECT * FROM pedidos as p, lineas_pedidos as lp WHERE p.id_pedido = lp.id_pedido AND p.fecha_fin IS NULL AND p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND lp.id_publicidad = " . $row['id_publicidad'] . " AND lp.cantidad > 0;";
@@ -195,7 +195,7 @@ function mapa($valor)
                         $row3 = $result3->fetch_assoc();
                         $imagen = $row3["foto"];
                         // Mostrar la imagen en la página
-                        $mostrarImagen = "<img src='data:image/jpeg;base64," . base64_encode($imagen) . "' alt='Imagen del producto'>";
+                        $mostrarImagen = "<img src='data:image/jpeg;base64," . base64_encode($imagen) . "' alt='Imagen de la mapa usuario' class='imagen_mapa'>";
                     }
 
                     // La api key de google. Para poder usar el google static map.
@@ -208,13 +208,13 @@ function mapa($valor)
                         // Crear un marcador para cada registro de la base de datos.
                         var marker = L.marker([<?php echo $latitud; ?>, <?php echo $longitud; ?>]).addTo(map);
                         // Se añade un popUp para que salga una ventana al clickar un marcador existente en el mapa.
-                        marker.bindPopup(`<style>img{height: 200px;}</style><div class='popup-content'>
+                        marker.bindPopup(`<div class='popup-content vista_mapa'>
                                             <h3 class='popup-title'><?php echo $nombre_tipo; ?></h3>
                                             <h4 class='popup-location'><?php echo $ubicacion; ?></h4>
                                             <h4 class='popup-price'><?php echo $precio . '€'; ?></h4>
                                             <p class='popup-description'><?php echo $descripcion; ?></p>
-                                            Imagen Google: <img class='popup-image' src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación'>
-                                            Imagen usuario <?php echo $mostrarImagen; ?></div>
+                                            Imagen Google:<br> <img class='popup-image imagen_mapa' src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación'><br>
+                                            Imagen usuario:<br> <?php echo $mostrarImagen; ?></div>
                                             <form action='usuario.php' method='POST'>
                                             <input type='hidden' name='id_publicidad' value='<?php echo $row['id_publicidad']; ?>'>
                                             <?php

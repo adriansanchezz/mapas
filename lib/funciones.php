@@ -1332,10 +1332,6 @@ function generarCode()
     $_SESSION['recuperarCode'] = $conjunto;
 }
 
-
-
-
-
 function obtenerUltimoIdPedido()
 {
     $conn = conectar();
