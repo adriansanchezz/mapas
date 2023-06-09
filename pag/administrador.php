@@ -285,8 +285,9 @@ require_once '../lib/mapa.php';
 
                         $sql = "SELECT * FROM publicidades as p, usuarios as u WHERE p.comprador IS NOT NULL AND p.id_usuario <> p.comprador AND p.ocupado = 1 AND p.id_usuario = u.id_usuario AND caducidad_compra IS NOT NULL";
                         $result = sqlSELECT($sql);
-                        echo "<br><br><h1>Ubicaciones compradas</h1><br>";
+                        
                         if ($result->num_rows > 0) {
+                            echo "<br><br><h1>Ubicaciones compradas</h1><br>";
                             echo "<table>";
                             echo "<tr>
                                 <th>Usuario/Dueño</th>
@@ -348,7 +349,7 @@ require_once '../lib/mapa.php';
                                                         <input type='submit' name='revisarCompraUbicacion' value='Revisado'>
                                                         </form>";
                                                 } else {
-                                                    echo "<p>REVISADO</p>";
+                                                    echo "<p>Enviado.</p>";
                                                 }
                                                 $stmt4->close();
                                             } catch (Exception $e) {
@@ -371,13 +372,14 @@ require_once '../lib/mapa.php';
 
 
 
-                        echo "<br><br><h1>Productos comprados</h1><br>";
+                        
                         $sql4 = "SELECT * FROM pedidos WHERE fecha_fin IS NOT NULL AND ubicacion IS NOT NULL";
 
 
                         $result = sqlSELECT($sql4);
 
                         if ($result->num_rows > 0) {
+                            echo "<br><br><h1>Productos comprados</h1><br>";
                             echo "<table>";
                             echo "<tr>
                                 <th>Usuario</th>
@@ -439,7 +441,7 @@ require_once '../lib/mapa.php';
                                     <td>" . $row3['fecha_fin'] . "</td>";
                                 echo "<td>";
                                 if ($row3['revision'] != NULL) {
-                                    echo "<p>Enviado</p>";
+                                    echo "<p>Enviado.</p>";
                                 }
                                 if ($row3['revision'] == NULL) {
                                     echo "<form action='administrador.php' method='POST'>
@@ -456,12 +458,11 @@ require_once '../lib/mapa.php';
 
 
 
-                        echo "<br><br><h1>Solicitudes de Pisos</h1><br>";
+                        
                         $sql5 = "SELECT * FROM publicidades as p, usuarios as u WHERE p.revision = 2 AND p.id_usuario = u.id_usuario";
-
-
                         $result = sqlSELECT($sql5);
                         if ($result->num_rows > 0) {
+                            echo "<br><br><h1>Solicitudes de Pisos</h1><br>";
                             echo "<table>";
                             echo "<tr>
                                 <th>Usuario</th>
@@ -512,7 +513,7 @@ require_once '../lib/mapa.php';
 
 
 
-                        echo "<br><br><h1>Lanzar alerta.</h1><br>";
+                        echo "<br><br><h1>Lanzar alerta</h1><br>";
                         echo "<form action='administrador.php' method='POST'>";
                         echo "<div class='form-group'>";
                         echo "<label for='usuarioSeleccionado'>Selecciona un usuario:</label>";

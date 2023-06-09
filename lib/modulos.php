@@ -172,16 +172,44 @@ function menu_general()
                                 array_push($notificaciones, $notificacion);
                             }
 
-                            $sql = "SELECT p.ubicacion as ubicacion, ped.id_pedido as id_pedido FROM publicidades as p, lineas_pedidos as lp, pedidos as ped WHERE ped.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND ped.revision = 1 AND lp.id_publicidad = p.id_publicidad AND lp.id_pedido = ped.id_pedido AND lp.id_producto IS NULL";
+                            $sql = "SELECT p.ubicacion AS ubicacion, ped.id_pedido AS id_pedido 
+                            FROM publicidades AS p, lineas_pedidos AS lp, pedidos AS ped 
+                            WHERE ped.id_usuario = " . $_SESSION['usuario']['id_usuario'] . "
+                            AND COALESCE(ped.revision, 0) = 0
+                            AND ped.revision IS NOT NULL
+                            AND lp.id_publicidad = p.id_publicidad 
+                            AND lp.id_pedido = ped.id_pedido 
+                            AND lp.id_producto IS NULL";
+
+                            $result = sqlSELECT($sql);
+                            if ($result->num_rows > 0) {
+                                $notificacion = "<div class='notification'>";
+                                while ($row = $result->fetch_assoc()) {
+                                    $notificacion .= "El cartel ha sido enviado a la ubicación " . $row['ubicacion']  ." y recibido.<form action='usuario.php' method='POST'><input type='hidden' name='id_pedido' value='" . $row['id_pedido'] . "'>";
+                                }
+                                $notificacion .= "<br><input type='submit' name='vistoPedidoEmpresa' value='Visto'></form></div>";
+                                array_push($notificaciones, $notificacion);
+                            }
+
+                            
+                            $sql = "SELECT p.ubicacion AS ubicacion, ped.id_pedido AS id_pedido 
+                            FROM publicidades AS p, lineas_pedidos AS lp, pedidos AS ped 
+                            WHERE p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . "
+                            AND ped.revision = 1
+                            AND lp.id_publicidad = p.id_publicidad 
+                            AND lp.id_pedido = ped.id_pedido 
+                            AND lp.id_producto IS NULL";
                             $result = sqlSELECT($sql);
                             if ($result->num_rows > 0) {
                                 $notificacion = "<div class='notification'>";
                                 while ($row = $result->fetch_assoc()) {
                                     $notificacion .= "El cartel ha sido enviado a la ubicación " . $row['ubicacion']  ."<form action='usuario.php' method='POST'><input type='hidden' name='id_pedido' value='" . $row['id_pedido'] . "'>";
                                 }
-                                $notificacion .= "<br><input type='submit' name='vistoPedido' value='Visto'></form></div>";
+                                $notificacion .= "<br><p>advertencia: a que lo recibas antes de darle a visto.</p><input type='submit' name='vistoPedidoUsuario' value='Visto'></form></div>";
                                 array_push($notificaciones, $notificacion);
                             }
+
+
 
                             $sql = "SELECT * FROM publicidades WHERE id_usuario = " . $_SESSION['usuario']['id_usuario'];
                             $result = sqlSELECT($sql);
@@ -231,6 +259,27 @@ function menu_general()
                             {
                                 $id_pedido = $_POST['id_pedido'];
                                 $sql = "UPDATE pedidos SET revision = 0 WHERE id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND id_pedido = " . $id_pedido;
+                                sqlUPDATE($sql);
+                                echo "<script>window.location.href = 'principal.php';</script>";
+                                exit();
+                            }
+                            if(isset($_REQUEST['vistoPedidoUsuario']))
+                            {
+                                $id_pedido = $_POST['id_pedido'];
+                                $sql = "UPDATE pedidos AS p, lineas_pedidos AS lp, publicidades AS pub
+                                SET p.revision = 0
+                                WHERE p.id_pedido = lp.id_pedido
+                                AND lp.id_publicidad = pub.id_publicidad
+                                AND pub.id_usuario = " . $_SESSION['usuario']['id_usuario'];
+
+                                sqlUPDATE($sql);
+                                echo "<script>window.location.href = 'principal.php';</script>";
+                                exit();
+                            }
+                            if(isset($_REQUEST['vistoPedidoEmpresa']))
+                            {
+                                $id_pedido = $_POST['id_pedido'];
+                                $sql = "UPDATE pedidos SET revision = 2 WHERE id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND id_pedido = " . $id_pedido;
                                 sqlUPDATE($sql);
                                 echo "<script>window.location.href = 'principal.php';</script>";
                                 exit();
