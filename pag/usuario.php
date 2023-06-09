@@ -26,7 +26,7 @@ require_once '../lib/mapa.php';
 
         <!-- Crear submenu con sus opciones -->
         <div class="d-flex vh-100">
-            <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 200px;">
+            <div class="d-flex flex-column flex-shrink-0 p-3 text-white" style="width: 200px; background: linear-gradient(10deg, rgb(226, 249, 255), rgb(0, 102, 131));">
                 <br><br>
 
                 <ul class="nav nav-pills flex-column mb-auto">

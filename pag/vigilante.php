@@ -28,7 +28,8 @@ require_once '../lib/mapa.php';
         ?>
         <!-- Crear submenu con sus opciones -->
         <div class="d-flex vh-100">
-            <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 200px;">
+            <div class="d-flex flex-column flex-shrink-0 p-3 text-white"
+                style="width: 200px; background: linear-gradient(10deg, rgb(226, 249, 255), rgb(0, 102, 131));">
                 <br><br>
                 <ul class="nav nav-pills flex-column mb-auto">
                     <!-- <li>
@@ -86,7 +87,7 @@ require_once '../lib/mapa.php';
             if (isset($_REQUEST['misiones'])) {
                 ?>
                 <div class="flex-grow-1">
-                    <?php 
+                    <?php
 
                     mapa("vigilar"); ?>
                 </div>
@@ -128,7 +129,7 @@ require_once '../lib/mapa.php';
                                     echo "<input type='hidden' name='product_id' value='" . $row['id_producto'] . "'>";
                                     $sql2 = "SELECT ubicacion, fecha_inicio FROM pedidos WHERE id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND ubicacion IS NOT NULL ORDER BY fecha_inicio DESC LIMIT 1";
                                     $result2 = sqlSELECT($sql2);
-                                    
+
                                     if ($result2->num_rows > 0) {
                                         $row2 = $result2->fetch_assoc();
                                         $ubicacionReciente = $row2['ubicacion'];

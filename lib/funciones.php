@@ -1378,10 +1378,11 @@ function recuperarCuenta($pass, $email)
     $sql = "UPDATE usuarios SET password='$password_hash' WHERE email = '$email'";
 
     if (sqlUPDATE($sql)) {
-        echo "La contraseña de usuario se ha modificado correctamente.";
+        echo "
+        <div class='alert alert-success' role='alert'>Se ha modificado correctamente.</div>";
     } else {
         // Se produjo un error al actualizar el registro, mostrar un mensaje de error
-        echo "Error al modificar la contraseña de usuario!";
+        echo "<div class='alert alert-danger' role='alert'>Error al modificar la contraseña!</div>";
     }
 }
 

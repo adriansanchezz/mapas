@@ -59,7 +59,8 @@ require_once '../lib/mapa.php';
 
         <!-- Menu lateral -->
         <div class="d-flex vh-100">
-            <div class="menu-lateral d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 200px;">
+            <div class="d-flex flex-column flex-shrink-0 p-3 text-white"
+                style="width: 200px; background: linear-gradient(10deg, rgb(226, 249, 255), rgb(0, 102, 131));">
                 <hr>
                 <!-- Crear submenu con sus opciones -->
                 <ul class="nav nav-pills flex-column mb-auto flex-grow-1">
@@ -313,7 +314,7 @@ require_once '../lib/mapa.php';
                                 } catch (Exception $e) {
                                     echo "Error al ejecutar la consulta de usuarios: " . $e->getMessage();
                                 }
-                                
+
                                 $sql6 = "SELECT * FROM lineas_pedidos as lp, productos as p WHERE lp.id_producto = p.id_producto AND lp.id_pedido = ?";
                                 try {
                                     $stmt3 = $conn->prepare($sql6);
@@ -378,7 +379,7 @@ require_once '../lib/mapa.php';
                             while ($row5 = $result->fetch_assoc()) {
                                 echo "<tr>";
                                 echo "<td>" . $row5['email'] . "</td>";
-                               
+
 
                                 $sql6 = "SELECT * FROM fotos WHERE id_publicidad = ?";
                                 try {

@@ -35,7 +35,8 @@ require_once '../lib/mapa.php';
 
         <!-- Menu horizontal -->
         <div class="d-flex vh-100">
-            <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 200px;">
+            <div class="d-flex flex-column flex-shrink-0 p-3 text-white"
+                style="width: 200px; background: linear-gradient(10deg, rgb(226, 249, 255), rgb(0, 102, 131));">
                 <br><br>
                 <!-- Crear submenu con sus opciones -->
                 <ul class="nav nav-pills flex-column mb-auto">
@@ -60,7 +61,7 @@ require_once '../lib/mapa.php';
 
                 </ul>
             </div>
-            
+
             <!-- <?php
             if (isset($_REQUEST['empresaPrincipal'])) {
                 ?>
@@ -89,11 +90,11 @@ require_once '../lib/mapa.php';
                             <h4>Selecciona alguna ubicación para ver información:</h4>
                             <p>¿Quieres buscar una ubicación?</p>
                             <div class="input-group mb-3">
-                                    <input type="text" class="form-control" id="direccion" placeholder="Buscar dirección">
-                                    <div class="input-group-append">
-                                        <button class="btn btn-primary" onclick="buscarDireccion()">Buscar</button>
-                                    </div>
+                                <input type="text" class="form-control" id="direccion" placeholder="Buscar dirección">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" onclick="buscarDireccion()">Buscar</button>
                                 </div>
+                            </div>
                             <div id="map"></div>
                             <!-- Se le da estilos al mapa para que quede más estético. -->
                             <style>
@@ -105,8 +106,8 @@ require_once '../lib/mapa.php';
                                     /* Sombra */
                                 }
                             </style>
-                            <?php 
-                            
+                            <?php
+
                             mapa("ver"); ?>
                         </div>
                     </div>
@@ -228,9 +229,9 @@ require_once '../lib/mapa.php';
                         SET precio = (SELECT precio FROM publicidades WHERE id_publicidad = $product_id) * $selected_months 
                         WHERE id_publicidad = $product_id";
 
-                            // Ejecutar la consulta en tu base de datos
-                            // ...
-                            sqlUPDATE($query);
+                        // Ejecutar la consulta en tu base de datos
+                        // ...
+                        sqlUPDATE($query);
 
 
                         // Realizar la consulta de actualización
@@ -311,8 +312,8 @@ require_once '../lib/mapa.php';
                         echo "<p id='total_importe'>Total a pagar: $importe €</p>";
                     } else {
                         echo "<div class='col-lg-12'>";
-                                            echo "<div class='alert alert-info'>El carrito de compras está vacío.</div>";
-                                            echo "</div>";
+                        echo "<div class='alert alert-info'>El carrito de compras está vacío.</div>";
+                        echo "</div>";
                     }
 
 
