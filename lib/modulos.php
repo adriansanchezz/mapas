@@ -136,7 +136,7 @@ function menu_general()
 
                             <?php
 
-                            $sql = "SELECT * FROM publicidades WHERE comprador IS NOT NULL AND id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND id_usuario <> comprador";
+                            $sql = "SELECT * FROM publicidades WHERE comprador IS NOT NULL AND id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND id_usuario <> comprador AND caducidad_compra IS NULL";
                             $result = sqlSELECT($sql);
 
                             $notificaciones = array(); // Array para almacenar las notificaciones
@@ -161,12 +161,23 @@ function menu_general()
                                 }
                             }
 
-                            $sql = "SELECT * FROM productos as p, lineas_pedidos as lp, pedidos as ped WHERE ped.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND ped.revision = 1 AND lp.id_producto = p.id_producto AND lp.id_pedido = ped.id_pedido";
+                            $sql = "SELECT * FROM productos as p, lineas_pedidos as lp, pedidos as ped WHERE ped.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND ped.revision = 1 AND lp.id_producto = p.id_producto AND lp.id_pedido = ped.id_pedido AND lp.id_publicidad IS NULL";
                             $result = sqlSELECT($sql);
                             if ($result->num_rows > 0) {
                                 $notificacion = "<div class='notification'>";
                                 while ($row = $result->fetch_assoc()) {
                                     $notificacion .= "Los productos han sido enviados: " . $row['nombre'] . "<form action='usuario.php' method='POST'><input type='hidden' name='id_pedido' value='" . $row['id_pedido'] . "'>";
+                                }
+                                $notificacion .= "<br><input type='submit' name='vistoPedido' value='Visto'></form></div>";
+                                array_push($notificaciones, $notificacion);
+                            }
+
+                            $sql = "SELECT * FROM publicidades as p, lineas_pedidos as lp, pedidos as ped WHERE ped.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND ped.revision = 1 AND lp.id_publicidad = p.id_publicidad AND lp.id_pedido = ped.id_pedido AND lp.id_producto IS NULL";
+                            $result = sqlSELECT($sql);
+                            if ($result->num_rows > 0) {
+                                $notificacion = "<div class='notification'>";
+                                while ($row = $result->fetch_assoc()) {
+                                    $notificacion .= "El cartel ha sido enviado a la ubicación " . $row['ubicacion']  ."<form action='usuario.php' method='POST'><input type='hidden' name='id_pedido' value='" . $row['id_pedido'] . "'>";
                                 }
                                 $notificacion .= "<br><input type='submit' name='vistoPedido' value='Visto'></form></div>";
                                 array_push($notificaciones, $notificacion);

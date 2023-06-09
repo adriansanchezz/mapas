@@ -490,12 +490,16 @@ require_once '../lib/mapa.php';
                     }
                     if (isset($_POST['revisarCompraUbicacion'])) {
                         $id_publicidad = $_POST['id_publicidad'];
-                        $sql = "UPDATE publicidades SET revision = 1 WHERE id_publicidad = " . $id_publicidad;
+                        $sql = "UPDATE publicidades SET revision = 3 WHERE id_publicidad = " . $id_publicidad;
+                        $sql2 = "UPDATE pedidos AS p, lineas_pedidos AS lp SET p.revision = 1 WHERE lp.id_pedido = p.id_pedido AND lp.id_publicidad = " . $id_publicidad;
 
                         if (sqlUPDATE($sql)) {
-                            echo "<script>window.location.href = 'administrador.php?administradorPanel';</script>";
-                            exit();
+                            if (sqlUPDATE($sql2)) {
+                                echo "<script>window.location.href = 'administrador.php?administradorPanel';</script>";
+                                exit();
+                            }
                         }
+
                     }
                     if (isset($_POST['revisarCompraProducto'])) {
                         $id_pedido = $_POST['id_pedido'];
