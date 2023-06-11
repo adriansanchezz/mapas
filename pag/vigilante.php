@@ -88,13 +88,9 @@ require_once '../lib/mapa.php';
                 ?>
                 <div class="flex-grow-1">
                     <?php
-
                     mapa("vigilar"); ?>
                 </div>
-
                 <?php
-
-
             }
 
             ?>
@@ -104,59 +100,84 @@ require_once '../lib/mapa.php';
                 <div class="flex-grow-1">
                     <div class="p-3" style="display: block;">
 
-                        <h1>RECOMPENSAS</h1>
-                        <div class="products">
-                            <?php
-                            // Consultar los productos desde la base de datos
-                            $sql = "SELECT * FROM productos as p, fotos as f 
-                            WHERE f.id_producto = p.id_producto
-                            AND p.estado = 1 AND p.puntos > 0";
+                        <section class="bg-white py-4 my-3">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h2 class="mb-3 text-primary">RECOMPENSAS</h2>
+                                    </div>
 
-                            $result = sqlSELECT($sql);
-                            // Verificar si se encontraron productos
-                            if ($result->num_rows > 0) {
-                                // Iterar sobre los productos y mostrarlos en la página
-                                while ($row = $result->fetch_assoc()) {
-                                    echo "<div class='product card border-primary mb-3' style='max-width: 18rem;'>";
-                                    echo "<div class='card-body'>";
-                                    echo "<h3 class='card-title'>" . $row['nombre'] . "</h3>";
-                                    echo "<p class='card-text'>" . $row['descripcion'] . "</p>";
-                                    echo "<td><img src='data:image/jpeg;base64," . base64_encode($row['foto']) . "' alt='Imagen del producto' class='img-thumbnail'></td>";
-                                    echo "<p class='card-text'>Puntos: " . $row['puntos'] . "</p>";
+                                    <?php
+                                    // Consultar los productos desde la base de datos
+                                    $sql = "SELECT * FROM productos as p, fotos as f 
+                                        WHERE f.id_producto = p.id_producto
+                                        AND p.estado = 1 
+                                        AND p.puntos > 0
+                                        AND p.recompensa = 1";
+
+                                    $result = sqlSELECT($sql);
+                                    // Verificar si se encontraron productos
+                                    if ($result->num_rows > 0) {
+                                        // Iterar sobre los productos y mostrarlos en la página
+                                        while ($row = $result->fetch_assoc()) {
+
+                                            echo "
+                                                <div class='col-md-6 col-lg-4'>
+                                                    <div class='card my-3'>
+                                                        <img src='data:image/jpeg;base64," . base64_encode($row['foto']) . "' alt='Imagen del producto'>
+                                                        <div class='card-body'>
+                                                            <h3 class='card-title'>" . $row['nombre'] . "</h3>
+                                                            <p class='card-text'>" . $row['descripcion'] . "</p>
+                                                            <p class='card-text'>Puntos: " . $row['puntos'] . "</p>
+
+                                                            <form action='vigilante.php' method='post'>
+                                                                <input type='hidden' name='product_id' value='" . $row['id_producto'] . "'>";
+
+                                            $sql2 = "SELECT ubicacion, fecha_inicio FROM pedidos WHERE id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND ubicacion IS NOT NULL ORDER BY fecha_inicio DESC LIMIT 1";
+                                            $result2 = sqlSELECT($sql2);
+
+                                            echo "
+                                            <div class='form-group'>
+                                            <label for='formGroupExampleInput'>Ubicacion: </label>
+                                            ";
+
+                                            if ($result2->num_rows > 0) {
+                                                $row2 = $result2->fetch_assoc();
+                                                $ubicacionReciente = $row2['ubicacion'];
+                                                $fechaInicio = $row2['fecha_inicio'];
+                                                echo "<input class='form-control' type='text' id='ubicacion-input' name='ubicacion' placeholder='Indica la ubicación a la que enviar el producto' value='" . htmlspecialchars($ubicacionReciente) . "' required>";
+                                            } else {
+                                                echo "<input class='form-control' type='text' id='ubicacion-input' name='ubicacion' placeholder='Indica la ubicación a la que enviar el producto' required>";
+                                            }
 
 
-                                    echo "<form action='vigilante.php' method='post'>";
-                                    echo "<input type='hidden' name='product_id' value='" . $row['id_producto'] . "'>";
-                                    $sql2 = "SELECT ubicacion, fecha_inicio FROM pedidos WHERE id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND ubicacion IS NOT NULL ORDER BY fecha_inicio DESC LIMIT 1";
-                                    $result2 = sqlSELECT($sql2);
+                                            echo "
+                                            </div>
+                                            </form>
+                                                                <input class='btn btn-primary' type='submit'  name='reclamarRecompensa' value='Reclamar'>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div> 
+                                                ";
 
-                                    if ($result2->num_rows > 0) {
-                                        $row2 = $result2->fetch_assoc();
-                                        $ubicacionReciente = $row2['ubicacion'];
-                                        $fechaInicio = $row2['fecha_inicio'];
-                                        echo "<input type='text' id='ubicacion-input' name='ubicacion' placeholder='Indica la ubicación a la que enviar el producto' value='" . htmlspecialchars($ubicacionReciente) . "' required>";
+                                        }
                                     } else {
-                                        echo "<input type='text' id='ubicacion-input' name='ubicacion' placeholder='Indica la ubicación a la que enviar el producto' required>";
+                                        echo "<div class='alert alert-info'>No se encontraron productos</div>";
                                     }
-                                    echo "<input class='btn btn-primary' type='submit'  name='reclamarRecompensa' value='Reclamar'>";
-                                    echo "</form>";
-                                    echo "</div>";
-                                    echo "</div>";
-                                }
-                            } else {
-                                echo "No se encontraron productos";
-                            }
-                            if (isset($_GET['mensaje'])) {
-                                $mensaje = $_GET['mensaje'];
-                                echo "<p>$mensaje</p>";
-                            }
-                            ?>
-                        </div>
+                                    if (isset($_GET['mensaje'])) {
+                                        $mensaje = $_GET['mensaje'];
+                                        echo "<p>$mensaje</p>";
+                                    }
+                                    ?>
+                                </div>
+                            </div>
                     </div>
                 </div>
+            </div>
 
 
-                <?php
+            <?php
             }
             if (isset($_POST['reclamarRecompensa'])) {
                 $id_usuario = $_SESSION['usuario']['id_usuario'];

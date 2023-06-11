@@ -27,7 +27,8 @@ require_once '../lib/mapa.php';
 
         <!-- Crear submenu con sus opciones -->
         <div class="d-flex vh-100">
-            <div class="d-flex flex-column flex-shrink-0 p-3 text-white" style="width: 200px; background: linear-gradient(10deg, rgb(226, 249, 255), rgb(0, 102, 131));">
+            <div class="d-flex flex-column flex-shrink-0 p-3 text-white"
+                style="width: 200px; background: linear-gradient(10deg, rgb(226, 249, 255), rgb(0, 102, 131));">
                 <br><br>
 
                 <ul class="nav nav-pills flex-column mb-auto">
@@ -72,154 +73,163 @@ require_once '../lib/mapa.php';
                             <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioCarrito"
                                 type="submit">Carrito</button>
                         </form>
-                        <h1>TIENDA</h1>
-                        <div class="container">
-                            <div class="row">
-                                <?php
-                                // Consultar los productos desde la base de datos
-                                $sql = "SELECT * FROM productos as p, fotos as f 
-                                WHERE f.id_producto = p.id_producto
-                                AND p.recompensa = 0
-                                AND p.estado = 1";
 
-                                $result = sqlSELECT($sql);
+                        <section class="bg-white py-4 my-3">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h2 class="mb-3 text-primary">TIENDA</h2>
+                                    </div>
 
-                                // Verificar si se encontraron productos
-                                if ($result->num_rows > 0) {
-                                    // Iterar sobre los productos y mostrarlos en la página
-                                    while ($row = $result->fetch_assoc()) {
-                                        echo "<div class='col-lg-4 mb-3'>";
-                                        echo "<div class='card border-primary'>";
-                                        echo "<div class='card-body'>";
-                                        echo "<h3 class='card-title'>" . $row['nombre'] . "</h3>";
-                                        echo "<p class='card-text'>" . $row['descripcion'] . "</p>";
-                                        $imagen = $row["foto"];
+                                    <?php
+                                    // Consultar los productos desde la base de datos
+                                    $sql = "SELECT * FROM productos as p, fotos as f 
+                                    WHERE f.id_producto = p.id_producto
+                                    AND p.recompensa = 0
+                                    AND p.estado = 1";
 
-                                        // Mostrar la imagen en la página
-                                        echo "<img src='data:image/jpeg;base64," . base64_encode($imagen) . "' alt='Imagen del producto'>";
-                                        echo "<p class='card-text'>Precio: $" . $row['precio'] . "</p>";
-                                        echo "<form action='usuario.php' method='post'>";
-                                        echo "<input type='hidden' name='id_producto' value='" . $row['id_producto'] . "'>";
-                                        echo "<input type='hidden' name='precio' value='" . $row['precio'] . "'>";
-                                        echo "<input class='btn btn-primary' type='submit' name='add_to_cart' value='Agregar al carrito'>";
-                                        echo "</form>";
-                                        echo "</div>";
-                                        echo "</div>";
-                                        echo "</div>";
+                                    $result = sqlSELECT($sql);
+
+                                    // Verificar si se encontraron productos
+                                    if ($result->num_rows > 0) {
+                                        // Iterar sobre los productos y mostrarlos en la página
+                                        while ($row = $result->fetch_assoc()) {
+                                            $imagen = $row["foto"];
+
+                                            echo "
+                                            <div class='col-md-6 col-lg-4'>
+                                                <div class='card my-3'>
+                                                    <img src='data:image/jpeg;base64," . base64_encode($imagen) . "' alt='Imagen del producto'>
+                                                    <div class='card-body'>
+                                                        <h3 class='card-title'>". $row['nombre'] ."</h3>
+                                                        <p class='card-text'>". $row['descripcion'] ."</p>
+                                                        <p class='card-text'>Precio: $" . $row['precio'] . "</p>
+                                                        <form action='usuario.php' method='post'>
+                                                            <input type='hidden' name='id_producto' value='" . $row['id_producto'] . "'>
+                                                            <input type='hidden' name='precio' value='" . $row['precio'] . "'>
+                                                            <input class='btn btn-primary' type='submit' name='add_to_cart' value='Agregar al carrito'>
+                                                        </form>
+                                                    </div>
+                                            
+                                                </div>
+                                            </div> 
+                                            ";
+
+                                        }
+                                    } else {
+                                        echo "<div class='alert alert-info'>No se encontraron productos</div>";
                                     }
-                                } else {
-                                    echo "No se encontraron productos";
-                                }
-                                ?>
+                                    ?>
+                                </div>
                             </div>
-                        </div>
                     </div>
                 </div>
+            </div>
 
-                <?php
+            <?php
             }
 
 
             ?>
-            <?php
-            if (isset($_POST['add_to_cart'])) {
-                $product_id = $_POST['id_producto'];
-                $precio = $_POST['precio'];
+        <?php
+        if (isset($_POST['add_to_cart'])) {
+            $product_id = $_POST['id_producto'];
+            $precio = $_POST['precio'];
 
-                $sql = "SELECT * FROM pedidos as p, lineas_pedidos as lp WHERE p.id_pedido = lp.id_pedido AND p.fecha_fin IS NULL AND p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND lp.id_producto = " . $product_id . ";";
+            $sql = "SELECT * FROM pedidos as p, lineas_pedidos as lp WHERE p.id_pedido = lp.id_pedido AND p.fecha_fin IS NULL AND p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND lp.id_producto = " . $product_id . ";";
+
+            if (sqlSELECT($sql)->num_rows > 0) {
+                $id_pedido = obtenerUltimoIdPedido(); // Obtener el último ID de pedido insertado
+    
+                $sqlPedido = "UPDATE lineas_pedidos SET cantidad = cantidad + 1 WHERE id_pedido = " . $id_pedido . " AND id_producto = " . $product_id;
+                sqlUPDATE($sqlPedido);
+
+            } else {
+                $sql = "SELECT * FROM pedidos as p, lineas_pedidos as lp WHERE p.id_pedido = lp.id_pedido AND p.fecha_fin IS NULL AND p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND lp.id_producto IS NOT NULL;";
 
                 if (sqlSELECT($sql)->num_rows > 0) {
                     $id_pedido = obtenerUltimoIdPedido(); // Obtener el último ID de pedido insertado
-        
-                    $sqlPedido = "UPDATE lineas_pedidos SET cantidad = cantidad + 1 WHERE id_pedido = " . $id_pedido . " AND id_producto = " . $product_id;
-                    sqlUPDATE($sqlPedido);
-
+                    $sqlLinea = "INSERT INTO `lineas_pedidos`(`precio`, `cantidad`, `id_producto`, `id_publicidad`, `id_pedido`) VALUES ($precio, 1, $product_id, NULL, $id_pedido)";
+                    sqlINSERT($sqlLinea);
                 } else {
-                    $sql = "SELECT * FROM pedidos as p, lineas_pedidos as lp WHERE p.id_pedido = lp.id_pedido AND p.fecha_fin IS NULL AND p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND lp.id_producto IS NOT NULL;";
 
-                    if (sqlSELECT($sql)->num_rows > 0) {
-                        $id_pedido = obtenerUltimoIdPedido(); // Obtener el último ID de pedido insertado
+                    $importe = 0;
+                    $fecha_fin = "NULL"; // Asignar NULL a la columna fecha_fin
+                    $id_usuario = $_SESSION['usuario']['id_usuario'];
+
+                    // Iniciar una transacción
+                    $conn = conectar();
+                    mysqli_begin_transaction($conn); // Reemplaza $conn con tu conexión a la base de datos
+    
+                    try {
+                        // Insertar el pedido
+                        $sqlPedido = "INSERT INTO `pedidos`(`importe`, `fecha_inicio`, `fecha_fin`, `id_usuario`) VALUES ($importe, NOW(), $fecha_fin, $id_usuario)";
+                        $resultPedido = $conn->query($sqlPedido);
+
+                        // Obtener el último ID de pedido insertado
+                        $id_pedido = mysqli_insert_id($conn);
+
+                        // Insertar la línea de pedido
                         $sqlLinea = "INSERT INTO `lineas_pedidos`(`precio`, `cantidad`, `id_producto`, `id_publicidad`, `id_pedido`) VALUES ($precio, 1, $product_id, NULL, $id_pedido)";
-                        sqlINSERT($sqlLinea);
-                    } else {
+                        $resultLinea = $conn->query($sqlLinea);
 
-                        $importe = 0;
-                        $fecha_fin = "NULL"; // Asignar NULL a la columna fecha_fin
-                        $id_usuario = $_SESSION['usuario']['id_usuario'];
-
-                        // Iniciar una transacción
-                        $conn = conectar();
-                        mysqli_begin_transaction($conn); // Reemplaza $conn con tu conexión a la base de datos
-        
-                        try {
-                            // Insertar el pedido
-                            $sqlPedido = "INSERT INTO `pedidos`(`importe`, `fecha_inicio`, `fecha_fin`, `id_usuario`) VALUES ($importe, NOW(), $fecha_fin, $id_usuario)";
-                            $resultPedido = $conn->query($sqlPedido);
-
-                            // Obtener el último ID de pedido insertado
-                            $id_pedido = mysqli_insert_id($conn);
-
-                            // Insertar la línea de pedido
-                            $sqlLinea = "INSERT INTO `lineas_pedidos`(`precio`, `cantidad`, `id_producto`, `id_publicidad`, `id_pedido`) VALUES ($precio, 1, $product_id, NULL, $id_pedido)";
-                            $resultLinea = $conn->query($sqlLinea);
-
-                            // Confirmar la transacción
-                            mysqli_commit($conn);
-                        } catch (Exception $e) {
-                            // Ocurrió un error, revertir la transacción
-                            mysqli_rollback($conn);
-                            // Manejar el error adecuadamente
-                            echo "Error: " . $e->getMessage();
-                        }
+                        // Confirmar la transacción
+                        mysqli_commit($conn);
+                    } catch (Exception $e) {
+                        // Ocurrió un error, revertir la transacción
+                        mysqli_rollback($conn);
+                        // Manejar el error adecuadamente
+                        echo "Error: " . $e->getMessage();
                     }
                 }
-
-                echo "<script>window.location.href = 'usuario.php?usuarioTienda';</script>";
-                exit();
             }
 
-
-            ?>
-
-            <?php
-            if (isset($_POST['remove_from_cart'])) {
-                $product_id = $_POST['id_producto'];
+            echo "<script>window.location.href = 'usuario.php?usuarioTienda';</script>";
+            exit();
+        }
 
 
-                $sql = "SELECT * FROM pedidos AS p JOIN lineas_pedidos AS lp ON p.id_pedido = lp.id_pedido WHERE p.fecha_fin IS NULL AND lp.cantidad > 0 AND p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . ";";
+        ?>
 
-                if (sqlSELECT($sql)->num_rows > 0) {
+        <?php
+        if (isset($_POST['remove_from_cart'])) {
+            $product_id = $_POST['id_producto'];
 
-                    $id_pedido = obtenerUltimoIdPedido(); // Obtener el último ID de pedido insertado
-                    $sqlPedido = "UPDATE lineas_pedidos SET cantidad = cantidad - 1 WHERE id_pedido = " . $id_pedido . " AND id_producto = " . $product_id;
-                    sqlUPDATE($sqlPedido);
 
-                }
+            $sql = "SELECT * FROM pedidos AS p JOIN lineas_pedidos AS lp ON p.id_pedido = lp.id_pedido WHERE p.fecha_fin IS NULL AND lp.cantidad > 0 AND p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . ";";
 
-                // Redirigir nuevamente al carrito
-                echo "<script>window.location.href = 'usuario.php?usuarioCarrito=1';</script>";
-                exit();
+            if (sqlSELECT($sql)->num_rows > 0) {
 
-            }
-
-            if (isset($_REQUEST['actualizarPedido'])) {
-                $importe = $_GET['importe'];
-                $ubicacion = $_GET['ubicacion'];
-
-                // Actualizar el pedido en la base de datos utilizando el valor de importe y ubicacion
-                $id_pedido = obtenerUltimoIdPedido();
-                $sqlPedido = "UPDATE pedidos SET fecha_fin = NOW(), importe = '" . $importe . "', ubicacion = '" . $ubicacion . "' WHERE id_pedido = " . $id_pedido;
+                $id_pedido = obtenerUltimoIdPedido(); // Obtener el último ID de pedido insertado
+                $sqlPedido = "UPDATE lineas_pedidos SET cantidad = cantidad - 1 WHERE id_pedido = " . $id_pedido . " AND id_producto = " . $product_id;
                 sqlUPDATE($sqlPedido);
+
             }
 
+            // Redirigir nuevamente al carrito
+            echo "<script>window.location.href = 'usuario.php?usuarioCarrito=1';</script>";
+            exit();
+
+        }
+
+        if (isset($_REQUEST['actualizarPedido'])) {
+            $importe = $_GET['importe'];
+            $ubicacion = $_GET['ubicacion'];
+
+            // Actualizar el pedido en la base de datos utilizando el valor de importe y ubicacion
+            $id_pedido = obtenerUltimoIdPedido();
+            $sqlPedido = "UPDATE pedidos SET fecha_fin = NOW(), importe = '" . $importe . "', ubicacion = '" . $ubicacion . "' WHERE id_pedido = " . $id_pedido;
+            sqlUPDATE($sqlPedido);
+        }
+
+        ?>
+
+
+
+        <?php
+
+        if (isset($_REQUEST['usuarioCarrito'])) {
             ?>
-
-
-
-            <?php
-
-            if (isset($_REQUEST['usuarioCarrito'])) {
-                ?>
                 <div class="flex-grow-1">
                     <div id="seccion1" class="p-3" style="display: block;">
                         <h1>Carrito</h1>
@@ -282,15 +292,23 @@ require_once '../lib/mapa.php';
                                             $sql2 = "SELECT ubicacion, fecha_inicio FROM pedidos WHERE id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND ubicacion IS NOT NULL ORDER BY fecha_inicio DESC LIMIT 1";
                                             $result2 = sqlSELECT($sql2);
 
+                                            echo " 
+                                                <div class='form-group'>
+                                                    <label for='formGroupExampleInput'>Ubicacion de envio: </label>
+                                            ";
                                             if ($result2->num_rows > 0) {
                                                 $row2 = $result2->fetch_assoc();
                                                 $ubicacionReciente = $row2['ubicacion'];
                                                 $fechaInicio = $row2['fecha_inicio'];
-                                                echo "<input type='text' id='ubicacion-input' name='ubicacion' placeholder='Indica la ubicación a la que enviar el producto' value='" . htmlspecialchars($ubicacionReciente) . "' required>";
+                                                echo "<input class='form-control' type='text' id='ubicacion-input' name='ubicacion' placeholder='Indica la ubicación a la que enviar el producto' value='" . htmlspecialchars($ubicacionReciente) . "' required>";
 
                                             } else {
-                                                echo "<input type='text' id='ubicacion-input' name='ubicacion' placeholder='Indica la ubicación a la que enviar el producto' required>";
+                                                echo "<input class='form-control' type='text' id='ubicacion-input' name='ubicacion' placeholder='Indica la ubicación a la que enviar el producto' required>";
                                             }
+                                            echo "  </div>
+                                            </form>
+                                            ";
+
                                             echo "<div id='mensajeUbicacion'></div>";
                                             // Mostrar el total de dinero en el carrito
                                             echo "<div class='col-lg-12 mt-3'>";
@@ -320,154 +338,154 @@ require_once '../lib/mapa.php';
                     </div>
                 </div>
 
-                <script
-                    src="https://www.paypal.com/sdk/js?client-id=Ae-QOggCqT3W10C1Q7U1lTDaYwmgEsmPuPxDuQEOD4uHZK0DMvJb2brCahcG-HMPPBti9IsX8pCsB-Db&currency=EUR"></script>
-                <!-- Set up a container element for the button -->
-                <div id="paypal-button-container"></div>
-                <script>
-                    paypal.Buttons({
-                        style: {
-                            color: 'blue',
-                            shape: 'pill',
-                            label: 'pay'
-                        },
-                        createOrder: function (data, actions) {
-                            return actions.order.create({
-                                purchase_units: [{
-                                    amount: {
-                                        value: '<?php echo $importe; ?>'
-                                    }
-                                }]
-                            });
-                        },
-                        onApprove: function (data, actions) {
-                            var ubicacionInput = document.getElementById('ubicacion-input');
-                            var ubicacion = ubicacionInput.value;
+            <script
+                src="https://www.paypal.com/sdk/js?client-id=Ae-QOggCqT3W10C1Q7U1lTDaYwmgEsmPuPxDuQEOD4uHZK0DMvJb2brCahcG-HMPPBti9IsX8pCsB-Db&currency=EUR"></script>
+            <!-- Set up a container element for the button -->
+            <div id="paypal-button-container"></div>
+            <script>
+                paypal.Buttons({
+                    style: {
+                        color: 'blue',
+                        shape: 'pill',
+                        label: 'pay'
+                    },
+                    createOrder: function (data, actions) {
+                        return actions.order.create({
+                            purchase_units: [{
+                                amount: {
+                                    value: '<?php echo $importe; ?>'
+                                }
+                            }]
+                        });
+                    },
+                    onApprove: function (data, actions) {
+                        var ubicacionInput = document.getElementById('ubicacion-input');
+                        var ubicacion = ubicacionInput.value;
 
-                            // Validar que el campo de ubicación no esté vacío
-                            if (ubicacion.trim() === '') {
+                        // Validar que el campo de ubicación no esté vacío
+                        if (ubicacion.trim() === '') {
 
-                                document.getElementById('mensajeUbicacion').innerHTML = 'Debes indicar la ubicación antes de continuar';
-                                document.getElementById('mensajeUbicacion').style.color = 'red';
-                                return;
-                            }
-
-                            // Realizar la captura del pago y actualizar el pedido
-                            actions.order.capture().then(function (detalles) {
-                                var xhr = new XMLHttpRequest();
-                                var importe = '<?php echo $importe; ?>'; // Obtener el valor de $importe en JavaScript
-                                xhr.open('GET', 'usuario.php?actualizarPedido&importe=' + importe + '&ubicacion=' + encodeURIComponent(ubicacion), true);
-                                xhr.onreadystatechange = function () {
-                                    if (xhr.readyState === 4 && xhr.status === 200) {
-                                        console.log('El pedido se actualizó correctamente.');
-                                        window.location.href = 'usuario.php?usuarioCarrito=1';
-                                        exit();
-                                    }
-                                };
-                                xhr.send();
-                            });
-                        },
-                        onCancel: function (data) {
-                            alert("Pago cancelado");
+                            document.getElementById('mensajeUbicacion').innerHTML = '<div class="alert alert-warning" role="alert">Debes indicar la ubicación antes de continuar</div>';
+                            document.getElementById('mensajeUbicacion').style.color = 'red';
+                            return;
                         }
-                    }).render('#paypal-button-container');
-                </script>
 
-                <?php
-            }
-
-            ?>
+                        // Realizar la captura del pago y actualizar el pedido
+                        actions.order.capture().then(function (detalles) {
+                            var xhr = new XMLHttpRequest();
+                            var importe = '<?php echo $importe; ?>'; // Obtener el valor de $importe en JavaScript
+                            xhr.open('GET', 'usuario.php?actualizarPedido&importe=' + importe + '&ubicacion=' + encodeURIComponent(ubicacion), true);
+                            xhr.onreadystatechange = function () {
+                                if (xhr.readyState === 4 && xhr.status === 200) {
+                                    console.log('El pedido se actualizó correctamente.');
+                                    window.location.href = 'usuario.php?usuarioCarrito=1';
+                                    exit();
+                                }
+                            };
+                            xhr.send();
+                        });
+                    },
+                    onCancel: function (data) {
+                        alert("Pago cancelado");
+                    }
+                }).render('#paypal-button-container');
+            </script>
 
             <?php
-            if (isset($_REQUEST['usuarioMapa'])) {
-                ?>
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-9">
-                            <div class="p-3">
-                                <h1 class="text-primary">MAPA</h1>
-                                <p>¿Quieres buscar una ubicación?</p>
-                                <div>
-                                    <span id='errorUsuario' style='color: red;'></span>
-                                </div>
-                                <div class="input-group mb-3">
-                                    <input type="text" class="form-control" id="direccion" placeholder="Buscar dirección">
-                                    <div class="input-group-append">
-                                        <button class="btn btn-primary" onclick="buscarDireccion()">Buscar</button>
-                                    </div>
-                                </div>
-                                <div id="map"></div>
+        }
+
+        ?>
+
+        <?php
+        if (isset($_REQUEST['usuarioMapa'])) {
+            ?>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-9">
+                        <div class="p-3">
+                            <h1 class="text-primary">MAPA</h1>
+                            <p>¿Quieres buscar una ubicación?</p>
+                            <div>
+                                <span id='errorUsuario' style='color: red;'></span>
                             </div>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" id="direccion" placeholder="Buscar dirección">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" onclick="buscarDireccion()">Buscar</button>
+                                </div>
+                            </div>
+                            <div id="map"></div>
                         </div>
-                        <style>
-                            #map {
-                                height: 70vh;
-
-                                border: 8px solid #2c3e50;
-                                /* Color del borde */
-                                box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-                                /* Sombra */
-                            }
-
-                            #imagenPopUp {
-                                width: 30vh;
-                            }
-                        </style>
-                        <?php
-
-                        mapa("guardar"); ?>
                     </div>
+                    <style>
+                        #map {
+                            height: 70vh;
 
+                            border: 8px solid #2c3e50;
+                            /* Color del borde */
+                            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+                            /* Sombra */
+                        }
+
+                        #imagenPopUp {
+                            width: 30vh;
+                        }
+                    </style>
+                    <?php
+
+                    mapa("guardar"); ?>
                 </div>
 
-                <?php
-            }
-            ?>
+            </div>
+
             <?php
-            if (isset($_REQUEST['guardarMarcador'])) {
-                guardarMarcador();
-            }
-            if (isset($_POST['borrarMarcador'])) {
-                $id = $_POST['id_publicidad'];
-                $conn = conectar();
-                $sql = "DELETE FROM `misiones` WHERE id_publicidad =" . $id . ";";
-                $resultado = mysqli_query($conn, $sql);
+        }
+        ?>
+        <?php
+        if (isset($_REQUEST['guardarMarcador'])) {
+            guardarMarcador();
+        }
+        if (isset($_POST['borrarMarcador'])) {
+            $id = $_POST['id_publicidad'];
+            $conn = conectar();
+            $sql = "DELETE FROM `misiones` WHERE id_publicidad =" . $id . ";";
+            $resultado = mysqli_query($conn, $sql);
 
-                $sql2 = "DELETE FROM `publicidades` WHERE id_publicidad =" . $id . ";";
-                $resultado2 = mysqli_query($conn, $sql2);
+            $sql2 = "DELETE FROM `publicidades` WHERE id_publicidad =" . $id . ";";
+            $resultado2 = mysqli_query($conn, $sql2);
 
-                if ($resultado2) {
-                    echo "<script>window.location.href = 'usuario.php?usuarioMapa=';</script>";
-                    exit();
-                } else {
-                    echo "Error al ejecutar la consulta de eliminación: " . mysqli_error($conn);
-                }
-            }
-
-            if (isset($_POST['compraUbicacion'])) {
-                // Obtener los datos de la ubicación seleccionada desde la solicitud POST
-                $latitud = $_POST['lat'];
-                $longitud = $_POST['lng'];
-                $ubicacion = $_POST['ubicacion'];
-                $descripcion = $_POST['descripcion'];
-
-                // Agregar los datos de la ubicación al carrito (puedes adaptar esta lógica según tu implementación)
-                // Por ejemplo, puedes almacenar los datos en un array o en la sesión
-                $carrito[] = array(
-                    'latitud' => $latitud,
-                    'longitud' => $longitud,
-                    'ubicacion' => $ubicacion,
-                    'descripcion' => $descripcion
-                );
-
-                // Redirigir nuevamente a la página del carrito
-                header("Location: empresa.php?empresaCarrito=1");
+            if ($resultado2) {
+                echo "<script>window.location.href = 'usuario.php?usuarioMapa=';</script>";
                 exit();
+            } else {
+                echo "Error al ejecutar la consulta de eliminación: " . mysqli_error($conn);
             }
+        }
+
+        if (isset($_POST['compraUbicacion'])) {
+            // Obtener los datos de la ubicación seleccionada desde la solicitud POST
+            $latitud = $_POST['lat'];
+            $longitud = $_POST['lng'];
+            $ubicacion = $_POST['ubicacion'];
+            $descripcion = $_POST['descripcion'];
+
+            // Agregar los datos de la ubicación al carrito (puedes adaptar esta lógica según tu implementación)
+            // Por ejemplo, puedes almacenar los datos en un array o en la sesión
+            $carrito[] = array(
+                'latitud' => $latitud,
+                'longitud' => $longitud,
+                'ubicacion' => $ubicacion,
+                'descripcion' => $descripcion
+            );
+
+            // Redirigir nuevamente a la página del carrito
+            header("Location: empresa.php?empresaCarrito=1");
+            exit();
+        }
 
 
 
-            ?>
+        ?>
         </div>
         <?php
     } else {
