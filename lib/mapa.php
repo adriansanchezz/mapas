@@ -83,7 +83,7 @@ function mapa($valor)
                                         <img src='<?php echo $imageUrl; ?>' alt='Imagen de la ubicación' class='imagen_mapa'>
                                         </div>
                                         <form action='empresa.php' method='POST'>
-                                        <input type='hidden' name='product_id' value='<?php echo $row['id_publicidad'] ?>'>
+                                        <input type='hidden' name='publicidad_id' value='<?php echo $row['id_publicidad'] ?>'>
                                         <input type='hidden' name='lat' value='<?php echo $latitud; ?>'>
                                         <input type='hidden' name='lng' value='<?php echo $longitud; ?>'>
                                         <input type='hidden' name='ubicacion' value='<?php echo $ubicacion; ?>'>
