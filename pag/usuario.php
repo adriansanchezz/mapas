@@ -51,6 +51,30 @@ require_once '../lib/mapa.php';
                 </ul>
             </div>
 
+            <div id="sidebar" style="background: linear-gradient(10deg, rgb(226, 249, 255), rgb(0, 102, 131));">
+                <div class="p-2">
+                    <a href="usuario.php?usuarioMapa" class="navbar-brand text-center text-light w-100 p-4 border-bottom">
+                        Usuario
+                    </a>
+                </div>
+                <div id="sidebar-accordion" class="accordion">
+                    <div class="list-group">
+                        <a href="usuario.php?usuarioMapa" class="list-group-item list-group-item-action text-light" style="background: rgb(0, 102, 131);">
+                            <i class="fa fa-map mr-3" aria-hidden="true"></i>Mapa
+                        </a>
+
+                        <a href="usuario.php?usuarioTienda" class="list-group-item list-group-item-action text-light" style="background: rgb(0, 102, 131);">
+                            <i class="fa fa-shopping-bag mr-3" aria-hidden="true"></i> Tienda
+                            
+                        </a>
+
+                        <a href="usuario.php?usuarioCarrito" class="list-group-item list-group-item-action text-light" style="background: rgb(0, 102, 131);">
+                            <i class="fa fa-shopping-cart mr-3" aria-hidden="true"></i>Carrito
+                        </a>
+                    </div>
+                </div>
+            </div>
+
             <?php
             if (isset($_REQUEST['usuarioPrincipal'])) {
                 ?>
