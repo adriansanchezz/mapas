@@ -98,9 +98,11 @@ function vigilante()
                 })
             })
                 .then(function (response) {
+                    
                     return response.json();
                 })
                 .then(function (markers) {
+                    
                     markers.forEach(function (marker) {
                         var lat = marker.latitud;
                         var lng = marker.longitud;

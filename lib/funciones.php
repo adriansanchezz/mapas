@@ -1243,7 +1243,8 @@ function rechazarSolicitudEmpresa($id, $cometario)
 // Función utilizada para guardar un marcador en el mapa del menú de usuario. 
 function guardarMarcador()
 {
-    try {
+    try{
+    
         // Se verifica que la solicitud sea un método post.
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -1261,27 +1262,29 @@ function guardarMarcador()
             $idUser = $_SESSION['usuario']['id_usuario'];
             $estado = 1;
             $revisionPiso = 2;
+            $ocupado = 0;
             // Establecer la conexión con la base de datos.
             $conn = conectar();
 
             if ($tipoPublicidad == 5) {
                 // Realización de la consulta a la base de datos a través de un bind param.
                 $sql = "INSERT INTO publicidades (latitud, longitud, provincia, ciudad, ubicacion, codigo_postal, descripcion, estado, precio, id_tipo_publicidad, id_usuario, revision) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                 // Se comprueba que la consulta sea adecuada.
                 $stmt = $conn->prepare($sql);
                 // Y mediante un bind_param se establecen los valores.
-                $stmt->bind_param('ddsssssidiii', $lat, $lng, $provincia, $ciudad, $ubicacion, $codigo_postal, $descripcion, $estado, $precio, $tipoPublicidad, $idUser, $revisionPiso);
+                $stmt->bind_param('ddsssssdiiiii', $lat, $lng, $provincia, $ciudad, $ubicacion, $codigo_postal, $descripcion, $precio, $ocupado, $estado, $tipoPublicidad, $idUser, $revisionPiso);
                 // Se ejecuta la consulta.
                 $stmt->execute();
             } else {
                 // Realización de la consulta a la base de datos a través de un bind param.
-                $sql = "INSERT INTO publicidades (latitud, longitud, provincia, ciudad, ubicacion, codigo_postal, descripcion, estado, precio, id_tipo_publicidad, id_usuario) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                $sql = "INSERT INTO publicidades (latitud, longitud, provincia, ciudad, ubicacion, codigo_postal, descripcion, precio, ocupado, estado, id_tipo_publicidad, id_usuario) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                
                 // Se comprueba que la consulta sea adecuada.
                 $stmt = $conn->prepare($sql);
                 // Y mediante un bind_param se establecen los valores.
-                $stmt->bind_param('ddsssssidii', $lat, $lng, $provincia, $ciudad, $ubicacion, $codigo_postal, $descripcion, $estado, $precio, $tipoPublicidad, $idUser);
+                $stmt->bind_param('ddsssssdiiii', $lat, $lng, $provincia, $ciudad, $ubicacion, $codigo_postal, $descripcion, $precio, $ocupado, $estado, $tipoPublicidad, $idUser);
                 // Se ejecuta la consulta.
                 $stmt->execute();
             }
@@ -1292,10 +1295,13 @@ function guardarMarcador()
             if ($stmt->affected_rows > 0) {
 
             } else {
+                
                 throw new Exception("Error al guardar el marcador.");
+                
             }
 
             if (isset($_FILES['imagen'])) {
+                
                 $conn = conectar();
 
                 // Iterar sobre cada imagen enviada
@@ -1307,9 +1313,9 @@ function guardarMarcador()
                     if ($_FILES['imagen']['error'][$i] === UPLOAD_ERR_OK) {
                         $imagen = $_FILES['imagen']['tmp_name'][$i];
                         $contenidoImagen = file_get_contents($imagen);
-
+                        
                         $sql = "INSERT INTO `fotos`(`foto`, `id_publicidad`) VALUES (?, ?)";
-
+                        
                         $stmt = $conn->prepare($sql);
                         $stmt->bind_param("si", $contenidoImagen, $id_publicidad);
 
@@ -1332,10 +1338,11 @@ function guardarMarcador()
             // Se cierra la conexión sql.
             mysqli_close($conn);
         }
-    } catch (Exception $e) {
+    }catch (Exception $e) {
         echo "Error: error inesperado " . $e->getMessage();
         echo "<form action='usuario.php'><input type='submit' value='volver' name='usuarioMapa'></form>";
     }
+    
 }
 
 function generarCode()

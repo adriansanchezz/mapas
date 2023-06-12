@@ -740,12 +740,13 @@ require_once '../lib/mapa.php';
                         $precioProducto = $_POST['precio'];
                         $puntosProducto = $_POST['puntos'];
                         $recompensaProducto = $_POST['recompensa'];
+                        $estado = 1;
 
                         $conn = conectar();
-                        $sql = "INSERT INTO `productos`(`nombre`, `descripcion`, `puntos`, `precio`, `recompensa`) VALUES (?, ?, ?, ?, ?)";
+                        $sql = "INSERT INTO `productos`(`nombre`, `descripcion`, `puntos`, `precio`, `recompensa`, `estado`) VALUES (?, ?, ?, ?, ?, ?)";
                         $stmt = $conn->prepare($sql);
                         // Y mediante un bind_param se establecen los valores.
-                        $stmt->bind_param('ssddd', $nombreProducto, $descripcionProducto, $puntosProducto, $precioProducto, $recompensaProducto);
+                        $stmt->bind_param('ssdddi', $nombreProducto, $descripcionProducto, $puntosProducto, $precioProducto, $recompensaProducto, $estado);
                         // Se ejecuta la consulta.
                         $stmt->execute();
 

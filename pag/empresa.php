@@ -117,7 +117,8 @@ require_once '../lib/mapa.php';
 
             <?php
             if (isset($_POST['add_to_cart'])) {
-                $product_id = $_POST['product_id'];
+                
+                $product_id = $_POST['publicidad_id'];
                 $precio = $_POST['precio'];
                 $id_empresa = $_SESSION['usuario']['id_usuario'];
                 $conn = conectar();
@@ -136,6 +137,7 @@ require_once '../lib/mapa.php';
                     exit();
 
                 } else {
+                    
                     $sql = "SELECT * FROM pedidos as p, lineas_pedidos as lp WHERE p.id_pedido = lp.id_pedido AND p.fecha_fin IS NULL AND p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND lp.id_publicidad IS NOT NULL;";
 
                     if (sqlSELECT($sql)->num_rows > 0) {
@@ -155,14 +157,14 @@ require_once '../lib/mapa.php';
                             // Insertar el pedido
                             $sqlPedido = "INSERT INTO `pedidos`(`importe`, `fecha_inicio`, `fecha_fin`, `id_usuario`) VALUES ($importe, NOW(), NULL, $id_usuario)";
                             $resultPedido = $conn->query($sqlPedido);
-
+                            
                             // Obtener el último ID de pedido insertado
                             $id_pedido = mysqli_insert_id($conn);
-
+                            
                             // Insertar la línea de pedido
-                            $sqlLinea = "INSERT INTO `lineas_pedidos`(`precio`, `cantidad`, `id_producto`, `id_publicidad`, `id_pedido`) VALUES ($precio, 1, NULL, $product_id, $id_pedido)";
+                            $sqlLinea = "INSERT INTO `lineas_pedidos`(`precio`, `cantidad`, `id_publicidad`, `id_pedido`) VALUES ($precio, 1, $product_id, $id_pedido)";
                             $resultLinea = $conn->query($sqlLinea);
-
+                            
                             // Confirmar la transacción
                             mysqli_commit($conn);
                         } catch (Exception $e) {
@@ -174,8 +176,8 @@ require_once '../lib/mapa.php';
 
                     }
                 }
-                echo "<script>window.location.href = 'empresa.php?empresaMapa=1';</script>";
-                exit();
+                
+                
             }
 
             // Calcular el total de dinero en el carrito
@@ -184,7 +186,7 @@ require_once '../lib/mapa.php';
             <?php
 
             if (isset($_POST['remove_from_cart'])) {
-                $product_id = trim($_POST['product_id']);
+                $product_id = trim($_POST['id_publicidad']);
 
                 $conn = conectar();
                 $sql = "UPDATE publicidades SET comprador = NULL WHERE id_publicidad = ?";
@@ -297,7 +299,7 @@ require_once '../lib/mapa.php';
                             echo "<p class='card-text'>Precio por mes: $product_price €</p>";
                             echo "<p class='card-text'>Meses seleccionados: <span id='months_selected_$product_id'>$selected_months</span></p>";
                             echo "<form action='empresa.php' method='post'>";
-                            echo "<input type='hidden' name='product_id' value='$product_id'>";
+                            echo "<input type='hidden' name='id_publicidad' value='$product_id'>";
                             echo "<label for='months_$product_id'>Meses:</label>";
                             echo "<input type='number' name='months_$product_id' id='months_$product_id' min='1' max='12' value='$selected_months' onchange='updateTotalPrice($product_id)'>";
                             echo "<button class='btn btn-danger' name='remove_from_cart' value='$product_id' type='submit'>Eliminar</button>";
@@ -326,7 +328,7 @@ require_once '../lib/mapa.php';
 
                             for (var i = 0; i < products.length; i++) {
                                 var product = products[i];
-                                var productIdElement = product.querySelector('input[name="product_id"]');
+                                var productIdElement = product.querySelector('input[name="id_publicidad"]');
                                 var monthsSelector = product.querySelector('input[name^="months_"]');
                                 var totalPriceElement = product.querySelector('[id^="total_price_"]');
 
@@ -366,7 +368,7 @@ require_once '../lib/mapa.php';
 
                             for (var i = 0; i < products.length; i++) {
                                 var product = products[i];
-                                var productIdElement = product.querySelector('input[name="product_id"]');
+                                var productIdElement = product.querySelector('input[name="id_publicidad"]');
                                 var monthsSelector = product.querySelector('input[name^="months_"]');
 
                                 var currentProductId = parseInt(productIdElement.value);
@@ -396,7 +398,7 @@ require_once '../lib/mapa.php';
 
                                 for (var i = 0; i < products.length; i++) {
                                     var product = products[i];
-                                    var productIdElement = product.querySelector('input[name="product_id"]');
+                                    var productIdElement = product.querySelector('input[name="id_publicidad"]');
                                     var monthsSelector = product.querySelector('input[name^="months_"]');
 
                                     var currentProductId = parseInt(productIdElement.value);
