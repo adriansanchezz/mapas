@@ -117,6 +117,7 @@ require_once '../lib/mapa.php';
 
             <?php
             if (isset($_POST['add_to_cart'])) {
+                
                 $product_id = $_POST['product_id'];
                 $precio = $_POST['precio'];
                 $id_empresa = $_SESSION['usuario']['id_usuario'];
@@ -136,6 +137,7 @@ require_once '../lib/mapa.php';
                     exit();
 
                 } else {
+                    
                     $sql = "SELECT * FROM pedidos as p, lineas_pedidos as lp WHERE p.id_pedido = lp.id_pedido AND p.fecha_fin IS NULL AND p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND lp.id_publicidad IS NOT NULL;";
 
                     if (sqlSELECT($sql)->num_rows > 0) {
@@ -155,14 +157,14 @@ require_once '../lib/mapa.php';
                             // Insertar el pedido
                             $sqlPedido = "INSERT INTO `pedidos`(`importe`, `fecha_inicio`, `fecha_fin`, `id_usuario`) VALUES ($importe, NOW(), NULL, $id_usuario)";
                             $resultPedido = $conn->query($sqlPedido);
-
+                            
                             // Obtener el último ID de pedido insertado
                             $id_pedido = mysqli_insert_id($conn);
-
+                            
                             // Insertar la línea de pedido
-                            $sqlLinea = "INSERT INTO `lineas_pedidos`(`precio`, `cantidad`, `id_producto`, `id_publicidad`, `id_pedido`) VALUES ($precio, 1, NULL, $product_id, $id_pedido)";
+                            $sqlLinea = "INSERT INTO `lineas_pedidos`(`precio`, `cantidad`, `id_publicidad`, `id_pedido`) VALUES ($precio, 1, $product_id, $id_pedido)";
                             $resultLinea = $conn->query($sqlLinea);
-
+                            
                             // Confirmar la transacción
                             mysqli_commit($conn);
                         } catch (Exception $e) {
@@ -174,8 +176,9 @@ require_once '../lib/mapa.php';
 
                     }
                 }
-                echo "<script>window.location.href = 'empresa.php?empresaMapa=1';</script>";
+                echo "<script>window.location.href = 'empresa.php?empresaMapa';</script>";
                 exit();
+                
             }
 
             // Calcular el total de dinero en el carrito

@@ -205,7 +205,7 @@ function menu_general()
                                 while ($row = $result->fetch_assoc()) {
                                     $notificacion .= "El cartel ha sido enviado a la ubicación " . $row['ubicacion']  ."<form action='usuario.php' method='POST'><input type='hidden' name='id_pedido' value='" . $row['id_pedido'] . "'>";
                                 }
-                                $notificacion .= "<br><p>advertencia: a que lo recibas antes de darle a visto.</p><input type='submit' name='vistoPedidoUsuario' value='Visto'></form></div>";
+                                $notificacion .= "<br><p>advertencia: esperar a que lo recibas antes de darle a visto.</p><input type='submit' name='vistoPedidoUsuario' value='Visto'></form></div>";
                                 array_push($notificaciones, $notificacion);
                             }
 

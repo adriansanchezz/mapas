@@ -9,11 +9,6 @@ require_once '../lib/modulos.php';
     <!-- Meter informacion general de head -->
     <?php head_info(); ?>
     <title>DisplayAds</title>
-    <style>
-        img {
-            height: 80vh;
-        }
-    </style>
 </head>
 
 <body>

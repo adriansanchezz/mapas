@@ -1,7 +1,9 @@
 <?php
-
+    ob_start(); // Activar el almacenamiento en búfer
+    //Importar y abrir session que esta dentro de funciones.php
     require_once '../lib/funciones.php';
     require_once '../lib/modulos.php';
+    require_once '../lib/mapa.php';
     // Obtener los valores enviados desde JavaScript
     $data = json_decode(file_get_contents('php://input'), true);
     $latMin = $data['latMin'];
@@ -34,7 +36,7 @@
     // Cerrar la conexión a la base de datos
     $stmt->close();
     $conn->close();
-
+    ob_end_clean();
     // Devolver los marcadores como respuesta en formato JSON
     header('Content-Type: application/json');
     echo json_encode($markers);
