@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <?php
 //Importar y abrir session que esta dentro de funciones.php
 require_once '../lib/funciones.php';
@@ -10,14 +9,7 @@ require_once '../lib/mapa.php';
 <head>
     <!-- Meter informacion general de head -->
     <?php head_info(); ?>
-
     <title>DisplayAds</title>
-    <style>
-        img {
-            width: 500px;
-            height: 500px;
-        }
-    </style>
     <script src="../js/funciones.js"></script>
 </head>
 
@@ -50,6 +42,11 @@ require_once '../lib/mapa.php';
         td:nth-child(odd) {
             background-color: #ddd;
             color: #333;
+        }
+
+        img {
+            width: 500px;
+            height: 500px;
         }
     </style>
     <?php

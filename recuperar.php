@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <?php
 //Importar y abrir session que esta dentro de funciones.php
 use PHPMailer\PHPMailer\PHPMailer;
