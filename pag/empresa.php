@@ -76,48 +76,15 @@ require_once '../lib/mapa.php';
 
             <?php
             if (isset($_REQUEST['empresaMapa'])) {
-                ?>
-                <!-- Se crea toda la maquetación del menú de empresa. -->
-                <div class="flex-grow-1">
-                    <div class="p-3" style="display: block;">
-                        <div class="p-3" style="display: block;">
-                            <form class="form-inline my-2 my-lg-0" action="empresa.php" method="post">
-                                <button class="btn btn-outline-success my-2 my-sm-0" name="empresaCarrito"
-                                    type="submit">Carrito</button>
-                            </form>
-                            <h1>Bienvenido a nuestro mapa</h1>
-                            <h4>Selecciona alguna ubicación para ver información:</h4>
-                            <p>¿Quieres buscar una ubicación?</p>
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control" id="direccion" placeholder="Buscar dirección">
-                                <div class="input-group-append">
-                                    <button class="btn btn-primary" onclick="buscarDireccion()">Buscar</button>
-                                </div>
-                            </div>
-                            <div id="map"></div>
-                            <!-- Se le da estilos al mapa para que quede más estético. -->
-                            <style>
-                                #map {
-                                    height: 70vh;
-                                    border: 8px solid #2c3e50;
-                                    /* Color del borde */
-                                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-                                    /* Sombra */
-                                }
-                            </style>
-                            <?php
 
-                            mapa("ver"); ?>
-                        </div>
-                    </div>
-                </div>
-                <?php
+                mapa("ver");
+
             }
             ?>
 
             <?php
             if (isset($_POST['add_to_cart'])) {
-                
+
                 $product_id = $_POST['publicidad_id'];
                 $precio = $_POST['precio'];
                 $id_empresa = $_SESSION['usuario']['id_usuario'];
@@ -137,7 +104,7 @@ require_once '../lib/mapa.php';
                     exit();
 
                 } else {
-                    
+
                     $sql = "SELECT * FROM pedidos as p, lineas_pedidos as lp WHERE p.id_pedido = lp.id_pedido AND p.fecha_fin IS NULL AND p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND lp.id_publicidad IS NOT NULL;";
 
                     if (sqlSELECT($sql)->num_rows > 0) {
@@ -157,14 +124,14 @@ require_once '../lib/mapa.php';
                             // Insertar el pedido
                             $sqlPedido = "INSERT INTO `pedidos`(`importe`, `fecha_inicio`, `fecha_fin`, `id_usuario`) VALUES ($importe, NOW(), NULL, $id_usuario)";
                             $resultPedido = $conn->query($sqlPedido);
-                            
+
                             // Obtener el último ID de pedido insertado
                             $id_pedido = mysqli_insert_id($conn);
-                            
+
                             // Insertar la línea de pedido
                             $sqlLinea = "INSERT INTO `lineas_pedidos`(`precio`, `cantidad`, `id_publicidad`, `id_pedido`) VALUES ($precio, 1, $product_id, $id_pedido)";
                             $resultLinea = $conn->query($sqlLinea);
-                            
+
                             // Confirmar la transacción
                             mysqli_commit($conn);
                         } catch (Exception $e) {
@@ -176,8 +143,10 @@ require_once '../lib/mapa.php';
 
                     }
                 }
-                
-                
+
+                // Redirigir nuevamente al mapa.
+                echo "<script>window.location.href = 'empresa.php?empresaMapa';</script>";
+                exit();
             }
 
             // Calcular el total de dinero en el carrito
