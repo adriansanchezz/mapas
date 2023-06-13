@@ -22,29 +22,35 @@ require_once '../lib/mapa.php';
 
         <!-- Menu lateral -->
         <div class="d-flex vh-100">
-            <div id="sidebar" style="background: linear-gradient(10deg, rgb(226, 249, 255), rgb(0, 102, 131));">
+            <div id="sidebar">
                 <div class="p-2">
-                    <a href="administrador.php?administradorPanel" class="navbar-brand text-center text-light w-100 p-4 border-bottom">
+                    <a href="administrador.php?administradorPanel"
+                        class="navbar-brand text-center text-light w-100 p-4 border-bottom">
                         Administrador
                     </a>
                 </div>
                 <div id="sidebar-accordion" class="accordion">
                     <div class="list-group">
-                        <a href="administrador.php?administradorPanel" class="list-group-item list-group-item-action text-light" style="background: rgb(0, 102, 131);">
+                        <a href="administrador.php?administradorPanel"
+                            class="list-group-item list-group-item-action text-light" id="sidebar2">
                             <i class="fa fa-tachometer mr-3" aria-hidden="true"></i>Panel de control
                         </a>
 
-                        <a href="administrador.php?administradorUsuarios" class="list-group-item list-group-item-action text-light" style="background: rgb(0, 102, 131);">
+                        <a href="administrador.php?administradorUsuarios"
+                            class="list-group-item list-group-item-action text-light" id="sidebar2">
                             <i class="fa fa-user mr-3" aria-hidden="true"></i>Usuarios
                         </a>
 
-                        <a href="administrador.php?administradorProductos" class="list-group-item list-group-item-action text-light" style="background: rgb(0, 102, 131);">
+                        <a href="administrador.php?administradorProductos"
+                        class="list-group-item list-group-item-action text-light" id="sidebar2">
                             <i class="fa fa-shopping-cart mr-3" aria-hidden="true"></i>Productos
                         </a>
-                        <a href="administrador.php?administradorMisiones" class="list-group-item list-group-item-action text-light" style="background: rgb(0, 102, 131);">
+                        <a href="administrador.php?administradorMisiones"
+                        class="list-group-item list-group-item-action text-light" id="sidebar2">
                             <i class="fa fa-bullseye mr-3" aria-hidden="true"></i>Misiones
                         </a>
-                        <a href="administrador.php?administradorSoportes" class="list-group-item list-group-item-action text-light" style="background: rgb(0, 102, 131);">
+                        <a href="administrador.php?administradorSoportes"
+                        class="list-group-item list-group-item-action text-light" id="sidebar2">
                             <i class="fa fa-cog mr-3" aria-hidden="true"></i>Soportes
                         </a>
                     </div>
@@ -229,7 +235,7 @@ require_once '../lib/mapa.php';
 
                         $sql = "SELECT * FROM publicidades as p, usuarios as u WHERE p.comprador IS NOT NULL AND p.id_usuario <> p.comprador AND p.ocupado = 1 AND p.id_usuario = u.id_usuario AND caducidad_compra IS NOT NULL";
                         $result = sqlSELECT($sql);
-                        
+
                         if ($result->num_rows > 0) {
                             echo "<br><br><h1>Ubicaciones compradas</h1><br>";
                             echo "<table>";
@@ -316,7 +322,7 @@ require_once '../lib/mapa.php';
 
 
 
-                        
+
                         $sql4 = "SELECT * FROM pedidos WHERE fecha_fin IS NOT NULL AND ubicacion IS NOT NULL";
 
 
@@ -402,7 +408,7 @@ require_once '../lib/mapa.php';
 
 
 
-                        
+
                         $sql5 = "SELECT * FROM publicidades as p, usuarios as u WHERE p.revision = 2 AND p.id_usuario = u.id_usuario";
                         $result = sqlSELECT($sql5);
                         if ($result->num_rows > 0) {

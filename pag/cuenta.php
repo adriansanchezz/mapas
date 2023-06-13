@@ -20,7 +20,7 @@ require_once '../lib/modulos.php';
 
         <!-- Menu horizontal -->
         <div class="d-flex vh-100">
-            <div id="sidebar" style="background: linear-gradient(10deg, rgb(226, 249, 255), rgb(0, 102, 131));">
+            <div id="sidebar">
                 <div class="p-2">
                     <a href="cuenta.php?cuentaInformacion"
                         class="navbar-brand text-center text-light w-100 p-4 border-bottom">
@@ -30,22 +30,22 @@ require_once '../lib/modulos.php';
                 <div id="sidebar-accordion" class="accordion">
                     <div class="list-group">
                         <a href="cuenta.php?cuentaInformacion" class="list-group-item list-group-item-action text-light"
-                            style="background: rgb(0, 102, 131);">
+                            id="sidebar2">
                             <i class="fa fa-address-card mr-3" aria-hidden="true"></i>Informacion
                         </a>
 
                         <a href="cuenta.php?publicidades" class="list-group-item list-group-item-action text-light"
-                            style="background: rgb(0, 102, 131);">
+                            id="sidebar2">
                             <i class="fa fa-window-maximize mr-3" aria-hidden="true"></i>Publicidades
                         </a>
 
                         <a href="cuenta.php?usuarioSoportes" class="list-group-item list-group-item-action text-light"
-                            style="background: rgb(0, 102, 131);">
+                            id="sidebar2">
                             <i class="fa fa-ticket mr-3" aria-hidden="true"></i>Soportes
                         </a>
 
                         <a href="cuenta.php?suscripcion" class="list-group-item list-group-item-action text-light"
-                            style="background: rgb(0, 102, 131);">
+                            id="sidebar2">
                             <i class="fa fa-plus mr-3" aria-hidden="true"></i>Suscripción
                         </a>
                     </div>
@@ -176,10 +176,10 @@ require_once '../lib/modulos.php';
                                 <p class='card-text'>Suscripción mesual, cuenta vip en 30 dias, con ventaja de 5% descuento en
                                     las compras</p>
 
-                                    <form>
-                            <button type="button" id="btnMensual" class="btn btn-primary btn-lg"
-                                data-suscripcion="mensual">Suscripción Mensual</button>
-                        </form>
+                                <form>
+                                    <button type="button" id="btnMensual" class="btn btn-primary btn-lg"
+                                        data-suscripcion="mensual">Suscripción Mensual</button>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -191,15 +191,15 @@ require_once '../lib/modulos.php';
                                 <h3 class='card-title'>Suscripción Anual</h3>
                                 <p class='card-text'>Suscripción anual, cuenta vip en 1 año, con ventaja de 5% descuento en
                                     las compras</p>
-                                    <form>
-                            <button type="button" id="btnAnual" class="btn btn-primary btn-lg"
-                                data-suscripcion="anual">Suscripción Anual</button>
-                        </form>
+                                <form>
+                                    <button type="button" id="btnAnual" class="btn btn-primary btn-lg"
+                                        data-suscripcion="anual">Suscripción Anual</button>
+                                </form>
                             </div>
                         </div>
                     </div>
                 </div>
-                    <div id="paypal-button-container"></div>
+                <div id="paypal-button-container"></div>
                 <script
                     src="https://www.paypal.com/sdk/js?client-id=Ae-QOggCqT3W10C1Q7U1lTDaYwmgEsmPuPxDuQEOD4uHZK0DMvJb2brCahcG-HMPPBti9IsX8pCsB-Db&currency=EUR"></script>
                 <script>

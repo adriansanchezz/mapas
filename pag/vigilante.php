@@ -35,7 +35,7 @@ require_once '../lib/mapa.php';
         ?>
         <!-- Crear submenu con sus opciones -->
         <div class="d-flex vh-100">
-            <div id="sidebar" style="background: linear-gradient(10deg, rgb(226, 249, 255), rgb(0, 102, 131));">
+            <div id="sidebar">
                 <div class="p-2">
                     <a href="vigilante.php?misiones" class="navbar-brand text-center text-light w-100 p-4 border-bottom">
                         Vigilante
@@ -43,15 +43,18 @@ require_once '../lib/mapa.php';
                 </div>
                 <div id="sidebar-accordion" class="accordion">
                     <div class="list-group">
-                        <a href="vigilante.php?misiones" class="list-group-item list-group-item-action text-light" style="background: rgb(0, 102, 131);">
+                        <a href="vigilante.php?misiones" class="list-group-item list-group-item-action text-light"
+                            id="sidebar2">
                             <i class="fa fa-bullseye mr-3" aria-hidden="true"></i>Misiones
                         </a>
 
-                        <a href="vigilante.php?recompensas" class="list-group-item list-group-item-action text-light" style="background: rgb(0, 102, 131);">
+                        <a href="vigilante.php?recompensas" class="list-group-item list-group-item-action text-light"
+                            id="sidebar2">
                             <i class="fa fa-shopping-bag mr-3" aria-hidden="true"></i> Recompensas
                         </a>
 
-                        <a href="vigilante.php?recompensas" class="list-group-item list-group-item-action text-light" style="background: rgb(0, 120, 150);">
+                        <a href="vigilante.php?recompensas" class="list-group-item list-group-item-action text-light"
+                            id="sidebar2">
                             <?php echo "<b>Tus puntos:</b> " . $puntos; ?>
                         </a>
                     </div>

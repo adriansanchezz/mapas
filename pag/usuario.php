@@ -26,7 +26,7 @@ require_once '../lib/mapa.php';
 
         <!-- Crear submenu con sus opciones -->
         <div class="d-flex vh-100">
-            <div id="sidebar" style="background: linear-gradient(10deg, rgb(226, 249, 255), rgb(0, 102, 131));">
+            <div id="sidebar">
                 <div class="p-2">
                     <a href="usuario.php?usuarioMapa" class="navbar-brand text-center text-light w-100 p-4 border-bottom">
                         Usuario
@@ -34,15 +34,18 @@ require_once '../lib/mapa.php';
                 </div>
                 <div id="sidebar-accordion" class="accordion">
                     <div class="list-group">
-                        <a href="usuario.php?usuarioMapa" class="list-group-item list-group-item-action text-light" style="background: rgb(0, 102, 131);">
+                        <a href="usuario.php?usuarioMapa" class="list-group-item list-group-item-action text-light"
+                            id="sidebar2">
                             <i class="fa fa-map mr-3" aria-hidden="true"></i>Mapa
                         </a>
 
-                        <a href="usuario.php?usuarioTienda" class="list-group-item list-group-item-action text-light" style="background: rgb(0, 102, 131);">
+                        <a href="usuario.php?usuarioTienda" class="list-group-item list-group-item-action text-light"
+                            id="sidebar2">
                             <i class="fa fa-shopping-bag mr-3" aria-hidden="true"></i> Tienda
                         </a>
 
-                        <a href="usuario.php?usuarioCarrito" class="list-group-item list-group-item-action text-light" style="background: rgb(0, 102, 131);">
+                        <a href="usuario.php?usuarioCarrito" class="list-group-item list-group-item-action text-light"
+                            id="sidebar2">
                             <i class="fa fa-shopping-cart mr-3" aria-hidden="true"></i>Carrito
                         </a>
                     </div>
@@ -94,8 +97,8 @@ require_once '../lib/mapa.php';
                                                 <div class='card my-3'>
                                                     <img src='data:image/jpeg;base64," . base64_encode($imagen) . "' alt='Imagen del producto'>
                                                     <div class='card-body'>
-                                                        <h3 class='card-title'>". $row['nombre'] ."</h3>
-                                                        <p class='card-text'>". $row['descripcion'] ."</p>
+                                                        <h3 class='card-title'>" . $row['nombre'] . "</h3>
+                                                        <p class='card-text'>" . $row['descripcion'] . "</p>
                                                         <p class='card-text'>Precio: $" . $row['precio'] . "</p>
                                                         <form action='usuario.php' method='post'>
                                                             <input type='hidden' name='id_producto' value='" . $row['id_producto'] . "'>
@@ -223,113 +226,113 @@ require_once '../lib/mapa.php';
 
         if (isset($_REQUEST['usuarioCarrito'])) {
             ?>
-                <div class="flex-grow-1">
-                    <div id="seccion1" class="p-3" style="display: block;">
-                        <h1>Carrito</h1>
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-lg-8">
-                                    <div class="products">
-                                        <?php
-                                        // Verificar si el carrito de compras está almacenado en la sesión
-                                        $id_pedido = obtenerUltimoIdPedido();
-                                        $conn = conectar();
+            <div class="flex-grow-1">
+                <div id="seccion1" class="p-3" style="display: block;">
+                    <h1>Carrito</h1>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <div class="products">
+                                    <?php
+                                    // Verificar si el carrito de compras está almacenado en la sesión
+                                    $id_pedido = obtenerUltimoIdPedido();
+                                    $conn = conectar();
 
-                                        // Consultar los productos desde la base de datos
-                                        $sql = "SELECT lp.id_producto, lp.cantidad, prod.nombre, prod.descripcion, prod.precio
+                                    // Consultar los productos desde la base de datos
+                                    $sql = "SELECT lp.id_producto, lp.cantidad, prod.nombre, prod.descripcion, prod.precio
                                                 FROM lineas_pedidos AS lp
                                                 INNER JOIN productos AS prod ON lp.id_producto = prod.id_producto
                                                 INNER JOIN pedidos AS pedido ON lp.id_pedido = pedido.id_pedido
                                                 WHERE lp.id_pedido = " . intval($id_pedido) . " AND lp.cantidad > 0 AND pedido.fecha_fin IS NULL
                                                 GROUP BY lp.id_producto";
 
-                                        $result = $conn->query($sql);
+                                    $result = $conn->query($sql);
 
-                                        if ($result->num_rows > 0) {
-                                            $importe = 0;
+                                    if ($result->num_rows > 0) {
+                                        $importe = 0;
 
-                                            // Iterar sobre los productos en el carrito
-                                            while ($row = $result->fetch_assoc()) {
-                                                $product_id = $row['id_producto'];
-                                                $product_name = $row['nombre'];
-                                                $product_description = $row['descripcion'];
-                                                $product_price = $row['precio'];
-                                                $product_quantity = $row['cantidad'];
+                                        // Iterar sobre los productos en el carrito
+                                        while ($row = $result->fetch_assoc()) {
+                                            $product_id = $row['id_producto'];
+                                            $product_name = $row['nombre'];
+                                            $product_description = $row['descripcion'];
+                                            $product_price = $row['precio'];
+                                            $product_quantity = $row['cantidad'];
 
-                                                // Calcular el subtotal por producto
-                                                $subtotal = $product_price * $product_quantity;
-                                                if (validarVIP($_SESSION['usuario']['id_usuario'])) {
-                                                    $subtotal = $subtotal * 0.95;
-                                                }
-                                                $importe += $subtotal;
-
-                                                // Mostrar los detalles del producto en el carrito
-                                                echo "<div class='col-lg-4 mb-4'>";
-                                                echo "<div class='card'>";
-                                                echo "<div class='card-header bg-primary text-white'>$product_name</div>";
-                                                echo "<div class='card-body'>";
-                                                echo "<h5 class='card-title'>$product_description</h5>";
-                                                echo "<p class='card-text'>Precio: $product_price</p>";
-                                                echo "<p class='card-text'>Cantidad: $product_quantity</p>";
-                                                echo "<p class='card-text'>Subtotal: $subtotal €</p>";
-
-                                                echo "<form action='usuario.php' method='post'>";
-                                                echo "<input type='hidden' name='id_producto' value='$product_id'>";
-                                                echo "<button class='btn btn-danger' name='remove_from_cart' type='submit'>Eliminar</button>";
-                                                echo "</form>";
-                                                echo "</div>";
-                                                echo "</div>";
-                                                echo "</div>";
-                                            }
-
-                                            $sql2 = "SELECT ubicacion, fecha_inicio FROM pedidos WHERE id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND ubicacion IS NOT NULL ORDER BY fecha_inicio DESC LIMIT 1";
-                                            $result2 = sqlSELECT($sql2);
-
-                                            echo " 
-                                                <div class='form-group'>
-                                                    <label for='formGroupExampleInput'>Ubicacion de envio: </label>
-                                            ";
-                                            if ($result2->num_rows > 0) {
-                                                $row2 = $result2->fetch_assoc();
-                                                $ubicacionReciente = $row2['ubicacion'];
-                                                $fechaInicio = $row2['fecha_inicio'];
-                                                echo "<input class='form-control' type='text' id='ubicacion-input' name='ubicacion' placeholder='Indica la ubicación a la que enviar el producto' value='" . htmlspecialchars($ubicacionReciente) . "' required>";
-
-                                            } else {
-                                                echo "<input class='form-control' type='text' id='ubicacion-input' name='ubicacion' placeholder='Indica la ubicación a la que enviar el producto' required>";
-                                            }
-                                            echo "  </div>
-                                            </form>
-                                            ";
-
-                                            echo "<div id='mensajeUbicacion'></div>";
-                                            // Mostrar el total de dinero en el carrito
-                                            echo "<div class='col-lg-12 mt-3'>";
-                                            echo "<div class='card'>";
-                                            echo "<div class='card-body'>";
-                                            echo "<h5 class='card-title'>Total a pagar:</h5>";
-                                            echo "<p class='card-text'>$importe € ";
+                                            // Calcular el subtotal por producto
+                                            $subtotal = $product_price * $product_quantity;
                                             if (validarVIP($_SESSION['usuario']['id_usuario'])) {
-                                                echo "<small><i>*Se ha aplicado un descuento de 5% para usuario VIP</i></small>";
+                                                $subtotal = $subtotal * 0.95;
                                             }
-                                            echo "</p>";
+                                            $importe += $subtotal;
+
+                                            // Mostrar los detalles del producto en el carrito
+                                            echo "<div class='col-lg-4 mb-4'>";
+                                            echo "<div class='card'>";
+                                            echo "<div class='card-header bg-primary text-white'>$product_name</div>";
+                                            echo "<div class='card-body'>";
+                                            echo "<h5 class='card-title'>$product_description</h5>";
+                                            echo "<p class='card-text'>Precio: $product_price</p>";
+                                            echo "<p class='card-text'>Cantidad: $product_quantity</p>";
+                                            echo "<p class='card-text'>Subtotal: $subtotal €</p>";
+
+                                            echo "<form action='usuario.php' method='post'>";
+                                            echo "<input type='hidden' name='id_producto' value='$product_id'>";
+                                            echo "<button class='btn btn-danger' name='remove_from_cart' type='submit'>Eliminar</button>";
+                                            echo "</form>";
                                             echo "</div>";
                                             echo "</div>";
-                                            echo "</div>";
-                                        } else {
-                                            echo "<div class='col-lg-12'>";
-                                            echo "<div class='alert alert-info'>El carrito de compras está vacío.</div>";
                                             echo "</div>";
                                         }
 
-                                        mysqli_close($conn);
-                                        ?>
-                                    </div>
+                                        $sql2 = "SELECT ubicacion, fecha_inicio FROM pedidos WHERE id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND ubicacion IS NOT NULL ORDER BY fecha_inicio DESC LIMIT 1";
+                                        $result2 = sqlSELECT($sql2);
+
+                                        echo " 
+                                                <div class='form-group'>
+                                                    <label for='formGroupExampleInput'>Ubicacion de envio: </label>
+                                            ";
+                                        if ($result2->num_rows > 0) {
+                                            $row2 = $result2->fetch_assoc();
+                                            $ubicacionReciente = $row2['ubicacion'];
+                                            $fechaInicio = $row2['fecha_inicio'];
+                                            echo "<input class='form-control' type='text' id='ubicacion-input' name='ubicacion' placeholder='Indica la ubicación a la que enviar el producto' value='" . htmlspecialchars($ubicacionReciente) . "' required>";
+
+                                        } else {
+                                            echo "<input class='form-control' type='text' id='ubicacion-input' name='ubicacion' placeholder='Indica la ubicación a la que enviar el producto' required>";
+                                        }
+                                        echo "  </div>
+                                            </form>
+                                            ";
+
+                                        echo "<div id='mensajeUbicacion'></div>";
+                                        // Mostrar el total de dinero en el carrito
+                                        echo "<div class='col-lg-12 mt-3'>";
+                                        echo "<div class='card'>";
+                                        echo "<div class='card-body'>";
+                                        echo "<h5 class='card-title'>Total a pagar:</h5>";
+                                        echo "<p class='card-text'>$importe € ";
+                                        if (validarVIP($_SESSION['usuario']['id_usuario'])) {
+                                            echo "<small><i>*Se ha aplicado un descuento de 5% para usuario VIP</i></small>";
+                                        }
+                                        echo "</p>";
+                                        echo "</div>";
+                                        echo "</div>";
+                                        echo "</div>";
+                                    } else {
+                                        echo "<div class='col-lg-12'>";
+                                        echo "<div class='alert alert-info'>El carrito de compras está vacío.</div>";
+                                        echo "</div>";
+                                    }
+
+                                    mysqli_close($conn);
+                                    ?>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
             <script
                 src="https://www.paypal.com/sdk/js?client-id=Ae-QOggCqT3W10C1Q7U1lTDaYwmgEsmPuPxDuQEOD4uHZK0DMvJb2brCahcG-HMPPBti9IsX8pCsB-Db&currency=EUR"></script>

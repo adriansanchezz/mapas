@@ -23,7 +23,7 @@ require_once '../lib/mapa.php';
 
         <!-- Menu horizontal -->
         <div class="d-flex vh-100">
-            <div id="sidebar" style="background: linear-gradient(10deg, rgb(226, 249, 255), rgb(0, 102, 131));">
+            <div id="sidebar">
                 <div class="p-2">
                     <a href="empresa.php?empresaMapa" class="navbar-brand text-center text-light w-100 p-4 border-bottom">
                         Empresa
@@ -32,12 +32,12 @@ require_once '../lib/mapa.php';
                 <div id="sidebar-accordion" class="accordion">
                     <div class="list-group">
                         <a href="empresa.php?empresaMapa" class="list-group-item list-group-item-action text-light"
-                            style="background: rgb(0, 102, 131);">
+                            id="sidebar2">
                             <i class="fa fa-map mr-3" aria-hidden="true"></i>Publicitarse
                         </a>
 
                         <a href="empresa.php?empresaInfo" class="list-group-item list-group-item-action text-light"
-                            style="background: rgb(0, 102, 131);">
+                            id="sidebar2">
                             <i class="fa fa-user mr-3" aria-hidden="true"></i> Informacion
                         </a>
                     </div>
@@ -121,7 +121,7 @@ require_once '../lib/mapa.php';
                     exit();
 
                 } else {
-                    
+
                     $sql = "SELECT * FROM pedidos as p, lineas_pedidos as lp WHERE p.id_pedido = lp.id_pedido AND p.fecha_fin IS NULL AND p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND lp.id_publicidad IS NOT NULL;";
 
                     if (sqlSELECT($sql)->num_rows > 0) {
@@ -141,14 +141,14 @@ require_once '../lib/mapa.php';
                             // Insertar el pedido
                             $sqlPedido = "INSERT INTO `pedidos`(`importe`, `fecha_inicio`, `fecha_fin`, `id_usuario`) VALUES ($importe, NOW(), NULL, $id_usuario)";
                             $resultPedido = $conn->query($sqlPedido);
-                            
+
                             // Obtener el último ID de pedido insertado
                             $id_pedido = mysqli_insert_id($conn);
-                            
+
                             // Insertar la línea de pedido
                             $sqlLinea = "INSERT INTO `lineas_pedidos`(`precio`, `cantidad`, `id_publicidad`, `id_pedido`) VALUES ($precio, 1, $product_id, $id_pedido)";
                             $resultLinea = $conn->query($sqlLinea);
-                            
+
                             // Confirmar la transacción
                             mysqli_commit($conn);
                         } catch (Exception $e) {
