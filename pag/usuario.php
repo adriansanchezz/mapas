@@ -105,7 +105,7 @@ require_once '../lib/mapa.php';
                                                     </div>
                                             
                                                 </div>
-                                            </div> 
+                                            </div>
                                             ";
 
                                         }
