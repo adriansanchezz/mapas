@@ -17,75 +17,32 @@ require_once '../lib/modulos.php';
         // Menu general
         menu_general(); ?>
 
-        <!-- Crear submenu con sus opciones -->
+        <!-- Menu lateral -->
         <div class="d-flex vh-100">
-            <div class="d-flex flex-column flex-shrink-0 p-3 text-white"
-                style="width: 200px; background: linear-gradient(10deg, rgb(226, 249, 255), rgb(0, 102, 131));">
-                <br><br>
-
-                <ul class="nav nav-pills flex-column mb-auto">
-                    <li class="nav-item">
-                        <form action="guias.php" method="post">
-                            <button type="submit" name="guiaUsuario" class="btn btn-link nav-link text-white">Guía de
-                                Usuario</button>
-                        </form>
-                    </li>
-                    <li>
-                        <form action="guias.php" method="post">
-                            <button type="submit" name="guiaVigilante" class="btn btn-link nav-link text-white">Guía de
-                                Vigilante</button>
-                        </form>
-                    </li>
-                    <li>
-                        <form action="guias.php" method="post">
-                            <button type="submit" name="guiaEmpresa" class="btn btn-link nav-link text-white">Guía de
-                                Empresas</button>
-                        </form>
-                    </li>
-                </ul>
-            </div>
-
-
-
-
-
-
             <div id="sidebar" style="background: linear-gradient(10deg, rgb(226, 249, 255), rgb(0, 102, 131));">
                 <div class="p-2">
-                    <a href="#" class="navbar-brand text-center text-light w-100 p-4 border-bottom">
-                        Sidebar
+                    <a href="guias.php" class="navbar-brand text-center text-light w-100 p-4 border-bottom">
+                        Guía
                     </a>
                 </div>
                 <div id="sidebar-accordion" class="accordion">
                     <div class="list-group">
-                        <a href="#" class="list-group-item list-group-item-action text-light" style="background: rgb(0, 102, 131);">
-                            <i class="fa fa-tachometer mr-3" aria-hidden="true"></i>Dashboard
+                        <a href="guias.php?guiaUsuario" class="list-group-item list-group-item-action text-light"
+                            style="background: rgb(0, 102, 131);">
+                            <i class="fa fa-user mr-3" aria-hidden="true"></i>Usuario
                         </a>
 
-                        <a href="#" class="list-group-item list-group-item-action text-light" style="background: rgb(0, 102, 131);">
-                            <i class="fa fa-user mr-3" aria-hidden="true"></i>Profile
+                        <a href="guias.php?guiaVigilante" class="list-group-item list-group-item-action text-light"
+                            style="background: rgb(0, 102, 131);">
+                            <i class="fa fa-eye mr-3" aria-hidden="true"></i>Vigilante
                         </a>
-
-                        <a href="#" class="list-group-item list-group-item-action text-light" style="background: rgb(0, 102, 131);">
-                            <i class="fa fa-shopping-cart mr-3" aria-hidden="true"></i>Buy Now!
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action text-light" style="background: rgb(0, 102, 131);">
-                            <i class="fa fa-cog mr-3" aria-hidden="true"></i>Settings
+                        <a href="guias.php?guiaEmpresa" class="list-group-item list-group-item-action text-light"
+                            style="background: rgb(0, 102, 131);">
+                            <i class="fa fa-building mr-3" aria-hidden="true"></i>Empresas
                         </a>
                     </div>
                 </div>
             </div>
-
-
-
-
-
-
-
-
-
-
-
 
 
             <?php
@@ -139,9 +96,7 @@ require_once '../lib/modulos.php';
                 </div>
 
                 <?php
-
-            }
-            if (isset($_REQUEST['guiaVigilante'])) {
+            } else if (isset($_REQUEST['guiaVigilante'])) {
 
                 ?>
                 <div class="flex-grow-1 text-center">
@@ -186,9 +141,7 @@ require_once '../lib/modulos.php';
                     </div>
                 </div>
                 <?php
-            }
-
-            if (isset($_REQUEST['guiaEmpresa'])) {
+            }else if (isset($_REQUEST['guiaEmpresa'])) {
 
                 ?>
                 <div class="flex-grow-1 text-center">
@@ -235,10 +188,55 @@ require_once '../lib/modulos.php';
 
                 <?php
 
-            }
+            } else {
             ?>
+                <div class="flex-grow-1 text-center">
+                    <div class="p-3" style="display: block;">
+                        <h2>Guía para el usuario común</h2>
+                        <br>
+                        <br>
+                        <h4>Rol "usuario"</h4>
+                        <p>El rol de usuario común lo tiene nada más entrar en nuestra página y no necesitas hacer nada
+                            especial para poder acceder al menú del mismo. Si te preguntas cómo funciona este apartado, entonces
+                            sigue los siguientes pasos.</p>
+                        <br>
+                        <p>Al acceder al apartado de "Usuario" situado en el menú superior de la página:</p>
+                        <p>Podremos ver otro menú, este lateral, en el que veremos los botones "principal", "mapa" y "tienda".
+                        </p>
+                        <br>
+                        <br>
+                        <h4>Principal</h4>
+                        <p>En el apartado "principal" podrás ver las noticias de actualizaciones o informaciones del día a día
+                            de las que se advierte al usuario.</p>
+                        <br>
+                        <br>
+                        <h4>Mapa</h4>
+                        <p>En el apartado "mapa" podrás ver un mapa de toda la península en el que podrás hacer clic con el
+                            objetivo de situar un punto. ¿Qué punto debe situar el usuario? Básicamente la ubicación en la que
+                            se encuentra su lugar publicitario.</p>
+                        <p>Por ejemplo, si yo vivo en Castro Urdiales, puedo buscar mi ubicación por calle e incluso piso en la
+                            barra de búsqueda, y los campos se rellenan. Como usuario solo deberá rellenar los campos:
+                            descripción y precio, porque son obligatorios. En la descripción se recomienda poner la calle, el
+                            portal y el piso. También se recomienda que la foto de Google enfoque a la propiedad en cuestión.
+                        </p>
 
+                        <img src="../img/guiaMapa.png">
+                        <br>
+                        <p>Y por último se guarda el punto y se podrá ver en el mapa. También tendrás un botón de borrar si lo
+                            seleccionas. Cabe destacar que si te has equivocado puedes ir a "cuenta" y editar la descripción o
+                            el precio de la ubicación.
+                        </p>
+                        <br>
+                        <br>
+                        <h4>Tienda</h4>
+                        <p>En la tienda podremos ver los productos disponibles. Estos son fundas y marcos para los carteles de
+                            publicidad, ayudando al usuario a poder situar la publicidad en su propiedad de forma más cómoda. En
+                            "Carrito" podrá ver cuántos productos ha añadido y confirmar su compra.
+                        </p>
+                    </div>
+                </div>
             <?php
+            }
     } else {
         echo ('Acceso denegado');
         print '<a href ="../index.php"><button>Volver</button></a>';

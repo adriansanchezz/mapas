@@ -17,7 +17,7 @@ require_once '../lib/mapa.php';
 
 <body>
     <?php
-    if (isset($_SESSION['usuario']) && validarVigilante($_SESSION['usuario']['id_usuario'])) {
+    if (isset($_SESSION['usuario']) && validarVigilante($_SESSION['usuario']['id_usuario']) && validarBloqueo($_SESSION['usuario']['id_usuario'])) {
         // Menu general
         menu_general();
         $puntos = 0;
@@ -35,80 +35,28 @@ require_once '../lib/mapa.php';
         ?>
         <!-- Crear submenu con sus opciones -->
         <div class="d-flex vh-100">
-            <div class="d-flex flex-column flex-shrink-0 p-3 text-white"
-                style="width: 200px; background: linear-gradient(10deg, rgb(226, 249, 255), rgb(0, 102, 131));">
-                <br><br>
-                <ul class="nav nav-pills flex-column mb-auto">
-                    <!-- <li>
-                        <form action="vigilante.php" method="post">
-                            <button type="submit" name="vigilantePrincipal"
-                                class="btn btn-link nav-link text-white">Principal
-                            </button>
-                        </form>
-                    </li> -->
-                    <li>
-                        <form action="vigilante.php" method="post">
-                            <button type="submit" name="misiones" class="btn btn-link nav-link text-white">Misiones
-                            </button>
-                        </form>
-                    </li>
-                    <li>
-                        <form action="vigilante.php" method="post">
-                            <button type="submit" name="recompensas" class="btn btn-link nav-link text-white">Recompensas
-                            </button>
-                        </form>
-                    </li>
-                    <li>
-                        <div class="puntos-container">
-                            <?php echo "<b>Tus puntos:</b> " . $puntos; ?>
-
-                        </div>
-                    </li>
-                </ul>
-            </div>
-
-
-
-
-
-
-
-
             <div id="sidebar" style="background: linear-gradient(10deg, rgb(226, 249, 255), rgb(0, 102, 131));">
                 <div class="p-2">
-                    <a href="#" class="navbar-brand text-center text-light w-100 p-4 border-bottom">
-                        Sidebar
+                    <a href="vigilante.php?misiones" class="navbar-brand text-center text-light w-100 p-4 border-bottom">
+                        Vigilante
                     </a>
                 </div>
                 <div id="sidebar-accordion" class="accordion">
                     <div class="list-group">
-                        <a href="#" class="list-group-item list-group-item-action text-light" style="background: rgb(0, 102, 131);">
-                            <i class="fa fa-tachometer mr-3" aria-hidden="true"></i>Dashboard
+                        <a href="vigilante.php?misiones" class="list-group-item list-group-item-action text-light" style="background: rgb(0, 102, 131);">
+                            <i class="fa fa-bullseye mr-3" aria-hidden="true"></i>Misiones
                         </a>
 
-                        <a href="#" class="list-group-item list-group-item-action text-light" style="background: rgb(0, 102, 131);">
-                            <i class="fa fa-user mr-3" aria-hidden="true"></i>Profile
+                        <a href="vigilante.php?recompensas" class="list-group-item list-group-item-action text-light" style="background: rgb(0, 102, 131);">
+                            <i class="fa fa-shopping-bag mr-3" aria-hidden="true"></i> Recompensas
                         </a>
 
-                        <a href="#" class="list-group-item list-group-item-action text-light" style="background: rgb(0, 102, 131);">
-                            <i class="fa fa-shopping-cart mr-3" aria-hidden="true"></i>Buy Now!
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action text-light" style="background: rgb(0, 102, 131);">
-                            <i class="fa fa-cog mr-3" aria-hidden="true"></i>Settings
+                        <a href="vigilante.php?recompensas" class="list-group-item list-group-item-action text-light" style="background: rgb(0, 120, 150);">
+                            <?php echo "<b>Tus puntos:</b> " . $puntos; ?>
                         </a>
                     </div>
                 </div>
             </div>
-
-
-
-
-
-
-
-
-
-
 
             <!-- <?php
             if (isset($_REQUEST['vigilantePrincipal'])) {

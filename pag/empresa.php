@@ -10,95 +10,39 @@ require_once '../lib/mapa.php';
     <!-- Meter informacion general de head -->
     <?php head_info(); ?>
     <title>DisplayAds</title>
-    <style>
-        .popup-content {
-            max-width: 300px;
-            /* Ajusta el ancho máximo según tus necesidades */
-        }
-
-        .popup-content img {
-            max-width: 100%;
-            max-height: 300px;
-            /* Ajusta la altura máxima según tus necesidades */
-        }
-    </style>
     <script src="../js/funciones.js"></script>
     <script src="../js/mapa.js"></script>
+    <link href="../css/empresa.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
     <?php
-    if (isset($_SESSION['usuario']) && validarEmpresa($_SESSION['usuario']['id_usuario'])) {
+    if (isset($_SESSION['usuario']) && validarEmpresa($_SESSION['usuario']['id_usuario']) && validarBloqueo($_SESSION['usuario']['id_usuario'])) {
         // Menu general
         menu_general(); ?>
 
         <!-- Menu horizontal -->
         <div class="d-flex vh-100">
-            <div class="d-flex flex-column flex-shrink-0 p-3 text-white"
-                style="width: 200px; background: linear-gradient(10deg, rgb(226, 249, 255), rgb(0, 102, 131));">
-                <br><br>
-                <!-- Crear submenu con sus opciones -->
-                <ul class="nav nav-pills flex-column mb-auto">
-                    <!-- <li class="nav-item">
-                        <form action="empresa.php" method="post">
-                            <button type="submit" name="empresaPrincipal"
-                                class="btn btn-link nav-link text-white">Principal</button>
-                        </form>
-                    </li> -->
-                    <li class="nav-item">
-                        <form action="empresa.php" method="post">
-                            <button type="submit" name="empresaMapa"
-                                class="btn btn-link nav-link text-white">Publicitarse</button>
-                        </form>
-                    </li>
-                    <li>
-                        <form action="empresa.php" method="post">
-                            <button type="submit" name="empresaInfo"
-                                class="btn btn-link nav-link text-white">Informacion</button>
-                        </form>
-                    </li>
-
-                </ul>
-            </div>
-
-
-
-
-
-
             <div id="sidebar" style="background: linear-gradient(10deg, rgb(226, 249, 255), rgb(0, 102, 131));">
                 <div class="p-2">
-                    <a href="#" class="navbar-brand text-center text-light w-100 p-4 border-bottom">
-                        Sidebar
+                    <a href="empresa.php?empresaMapa" class="navbar-brand text-center text-light w-100 p-4 border-bottom">
+                        Empresa
                     </a>
                 </div>
                 <div id="sidebar-accordion" class="accordion">
                     <div class="list-group">
-                        <a href="#" class="list-group-item list-group-item-action text-light" style="background: rgb(0, 102, 131);">
-                            <i class="fa fa-tachometer mr-3" aria-hidden="true"></i>Dashboard
+                        <a href="empresa.php?empresaMapa" class="list-group-item list-group-item-action text-light"
+                            style="background: rgb(0, 102, 131);">
+                            <i class="fa fa-map mr-3" aria-hidden="true"></i>Publicitarse
                         </a>
 
-                        <a href="#" class="list-group-item list-group-item-action text-light" style="background: rgb(0, 102, 131);">
-                            <i class="fa fa-user mr-3" aria-hidden="true"></i>Profile
-                        </a>
-
-                        <a href="#" class="list-group-item list-group-item-action text-light" style="background: rgb(0, 102, 131);">
-                            <i class="fa fa-shopping-cart mr-3" aria-hidden="true"></i>Buy Now!
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action text-light" style="background: rgb(0, 102, 131);">
-                            <i class="fa fa-cog mr-3" aria-hidden="true"></i>Settings
+                        <a href="empresa.php?empresaInfo" class="list-group-item list-group-item-action text-light"
+                            style="background: rgb(0, 102, 131);">
+                            <i class="fa fa-user mr-3" aria-hidden="true"></i> Informacion
                         </a>
                     </div>
                 </div>
             </div>
-
-
-
-
-
-
-
-
 
 
             <!-- <?php

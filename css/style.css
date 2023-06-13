@@ -13,4 +13,5 @@
     height: 100vh;
     background: #343a40;
     background: linear-gradient(10deg, rgb(226, 249, 255), rgb(0, 123, 157));
+    min-width: 150px;
 }

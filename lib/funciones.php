@@ -361,6 +361,20 @@ function validarVigilante($id_user)
     }
 }
 
+// Velificar bloqueo
+function validarBloqueo($id_user)
+{
+    // Consulta
+    $sql = "SELECT * FROM usuarios WHERE id_usuario='$id_user' AND fecha_bloqueo IS NULL";
+
+    // Devuelve si true o false
+    if (sqlSELECT($sql)->num_rows > 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 // Listar usuario y sus datos con rol, para todo los usuraio que existe
 function listarUsuarios($id_user)
 {

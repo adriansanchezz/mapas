@@ -9,37 +9,9 @@ require_once '../lib/modulos.php';
     <!-- Meter informacion general de head -->
     <?php head_info(); ?>
     <title>DisplayAds</title>
+    <link href="../css/cuenta.css" rel="stylesheet" type="text/css">
 </head>
-
 <body>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th,
-        td {
-            border: 1px solid black;
-            padding: 8px;
-            text-align: center;
-        }
-
-        th {
-            background-color: #333;
-            color: white;
-        }
-
-        td:nth-child(even) {
-            background-color: #f2f2f2;
-            color: #333;
-        }
-
-        td:nth-child(odd) {
-            background-color: #ddd;
-            color: #333;
-        }
-    </style>
     <?php
     if (isset($_SESSION['usuario'])) {
         // Menu general

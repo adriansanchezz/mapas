@@ -11,40 +11,10 @@ require_once '../lib/mapa.php';
     <?php head_info(); ?>
     <title>DisplayAds</title>
     <script src="../js/funciones.js"></script>
+    <link href="../css/administrador.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
-
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th,
-        td {
-            border: 1px solid black;
-            padding: 8px;
-            text-align: center;
-        }
-
-        th {
-            background-color: #333;
-            color: white;
-        }
-
-
-        td:nth-child(even) {
-            background-color: #f2f2f2;
-            color: #333;
-        }
-
-        td:nth-child(odd) {
-            background-color: #ddd;
-            color: #333;
-        }
-
-    </style>
     <?php
     if (isset($_SESSION['usuario']) && validarAdmin($_SESSION['usuario']['id_usuario'])) {
         // Menu general
@@ -52,90 +22,34 @@ require_once '../lib/mapa.php';
 
         <!-- Menu lateral -->
         <div class="d-flex vh-100">
-            <div class="d-flex flex-column flex-shrink-0 p-3 text-white"
-                style="width: 200px; background: linear-gradient(10deg, rgb(226, 249, 255), rgb(0, 102, 131));">
-                <hr>
-                <!-- Crear submenu con sus opciones -->
-                <ul class="nav nav-pills flex-column mb-auto flex-grow-1">
-                    <li class="nav-item">
-                        <form action="administrador.php" method="get">
-                            <button type="submit" name="administradorPanel" class="btn btn-link nav-link text-white">
-                                Panel de control
-                            </button>
-                        </form>
-                    </li>
-                    <li class="nav-item">
-                        <form action="administrador.php" method="get">
-                            <button type="submit" name="administradorUsuarios" class="btn btn-link nav-link text-white">
-                                Usuarios
-                            </button>
-                        </form>
-                    </li>
-                    <li class="nav-item">
-                        <form action="administrador.php" method="get">
-                            <button type="submit" name="administradorProductos" class="btn btn-link nav-link text-white">
-                                Productos
-                            </button>
-                        </form>
-                    </li>
-                    <!-- <li class="nav-item">
-                        <form action="administrador.php" method="get">
-                            <button type="submit" name="administradorNoticias" class="btn btn-link nav-link text-white">
-                                Noticias
-                            </button>
-                        </form>
-                    </li> -->
-                    <li class="nav-item">
-                        <form action="administrador.php" method="get">
-                            <button type="submit" name="administradorMisiones" class="btn btn-link nav-link text-white">
-                                Misiones
-                            </button>
-                        </form>
-                    </li>
-                    <li class="nav-item">
-                        <form action="administrador.php" method="get">
-                            <button type="submit" name="administradorSoportes" class="btn btn-link nav-link text-white">
-                                Soportes
-                            </button>
-                        </form>
-                    </li>
-                </ul>
-            </div>
-
-
-                
             <div id="sidebar" style="background: linear-gradient(10deg, rgb(226, 249, 255), rgb(0, 102, 131));">
                 <div class="p-2">
-                    <a href="#" class="navbar-brand text-center text-light w-100 p-4 border-bottom">
-                        Sidebar
+                    <a href="administrador.php?administradorPanel" class="navbar-brand text-center text-light w-100 p-4 border-bottom">
+                        Administrador
                     </a>
                 </div>
                 <div id="sidebar-accordion" class="accordion">
                     <div class="list-group">
-                        <a href="#" class="list-group-item list-group-item-action text-light" style="background: rgb(0, 102, 131);">
-                            <i class="fa fa-tachometer mr-3" aria-hidden="true"></i>Dashboard
+                        <a href="administrador.php?administradorPanel" class="list-group-item list-group-item-action text-light" style="background: rgb(0, 102, 131);">
+                            <i class="fa fa-tachometer mr-3" aria-hidden="true"></i>Panel de control
                         </a>
 
-                        <a href="#" class="list-group-item list-group-item-action text-light" style="background: rgb(0, 102, 131);">
-                            <i class="fa fa-user mr-3" aria-hidden="true"></i>Profile
+                        <a href="administrador.php?administradorUsuarios" class="list-group-item list-group-item-action text-light" style="background: rgb(0, 102, 131);">
+                            <i class="fa fa-user mr-3" aria-hidden="true"></i>Usuarios
                         </a>
 
-                        <a href="#" class="list-group-item list-group-item-action text-light" style="background: rgb(0, 102, 131);">
-                            <i class="fa fa-shopping-cart mr-3" aria-hidden="true"></i>Buy Now!
+                        <a href="administrador.php?administradorProductos" class="list-group-item list-group-item-action text-light" style="background: rgb(0, 102, 131);">
+                            <i class="fa fa-shopping-cart mr-3" aria-hidden="true"></i>Productos
                         </a>
-                        <a href="#" class="list-group-item list-group-item-action text-light" style="background: rgb(0, 102, 131);">
-                            <i class="fa fa-cog mr-3" aria-hidden="true"></i>Settings
+                        <a href="administrador.php?administradorMisiones" class="list-group-item list-group-item-action text-light" style="background: rgb(0, 102, 131);">
+                            <i class="fa fa-bullseye mr-3" aria-hidden="true"></i>Misiones
+                        </a>
+                        <a href="administrador.php?administradorSoportes" class="list-group-item list-group-item-action text-light" style="background: rgb(0, 102, 131);">
+                            <i class="fa fa-cog mr-3" aria-hidden="true"></i>Soportes
                         </a>
                     </div>
                 </div>
             </div>
-
-
-
-
-
-
-
 
 
             <div class="flex-grow-1">

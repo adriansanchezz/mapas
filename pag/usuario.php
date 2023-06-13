@@ -19,38 +19,13 @@ require_once '../lib/mapa.php';
 
 <body>
     <?php
-    if (isset($_SESSION['usuario']) && validarUsuario($_SESSION['usuario']['id_usuario'])) {
+    if (isset($_SESSION['usuario']) && validarUsuario($_SESSION['usuario']['id_usuario']) && validarBloqueo($_SESSION['usuario']['id_usuario'])) {
         // Menu general
         menu_general();
         ?>
 
         <!-- Crear submenu con sus opciones -->
         <div class="d-flex vh-100">
-            <div class="d-flex flex-column flex-shrink-0 p-3 text-white"
-                style="width: 200px; background: linear-gradient(10deg, rgb(226, 249, 255), rgb(0, 102, 131));">
-                <br><br>
-
-                <ul class="nav nav-pills flex-column mb-auto">
-                    <!-- <li class="nav-item">
-                        <form action="usuario.php" method="post">
-                            <button type="submit" name="usuarioPrincipal"
-                                class="btn btn-link nav-link text-white">Principal</button>
-                        </form>
-                    </li> -->
-                    <li>
-                        <form action="usuario.php" method="post">
-                            <button type="submit" name="usuarioMapa" class="btn btn-link nav-link text-white">Mapa</button>
-                        </form>
-                    </li>
-                    <li>
-                        <form action="usuario.php" method="post">
-                            <button type="submit" name="usuarioTienda"
-                                class="btn btn-link nav-link text-white">Tienda</button>
-                        </form>
-                    </li>
-                </ul>
-            </div>
-
             <div id="sidebar" style="background: linear-gradient(10deg, rgb(226, 249, 255), rgb(0, 102, 131));">
                 <div class="p-2">
                     <a href="usuario.php?usuarioMapa" class="navbar-brand text-center text-light w-100 p-4 border-bottom">
@@ -65,7 +40,6 @@ require_once '../lib/mapa.php';
 
                         <a href="usuario.php?usuarioTienda" class="list-group-item list-group-item-action text-light" style="background: rgb(0, 102, 131);">
                             <i class="fa fa-shopping-bag mr-3" aria-hidden="true"></i> Tienda
-                            
                         </a>
 
                         <a href="usuario.php?usuarioCarrito" class="list-group-item list-group-item-action text-light" style="background: rgb(0, 102, 131);">
@@ -92,10 +66,6 @@ require_once '../lib/mapa.php';
                 ?>
                 <div class="flex-grow-1">
                     <div class="p-3" style="display: block;">
-                        <form class="form-inline my-2 my-lg-0" action="usuario.php" method="post">
-                            <button class="btn btn-outline-success my-2 my-sm-0" name="usuarioCarrito"
-                                type="submit">Carrito</button>
-                        </form>
 
                         <section class="bg-white py-4 my-3">
                             <div class="container">
