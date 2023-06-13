@@ -10,56 +10,40 @@ require_once '../lib/mapa.php';
     <!-- Meter informacion general de head -->
     <?php head_info(); ?>
     <title>DisplayAds</title>
-    <style>
-        .popup-content {
-            max-width: 300px;
-            /* Ajusta el ancho máximo según tus necesidades */
-        }
-
-        .popup-content img {
-            max-width: 100%;
-            max-height: 300px;
-            /* Ajusta la altura máxima según tus necesidades */
-        }
-    </style>
     <script src="../js/funciones.js"></script>
     <script src="../js/mapa.js"></script>
+    <link href="../css/empresa.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
     <?php
-    if (isset($_SESSION['usuario']) && validarEmpresa($_SESSION['usuario']['id_usuario'])) {
+    if (isset($_SESSION['usuario']) && validarEmpresa($_SESSION['usuario']['id_usuario']) && validarBloqueo($_SESSION['usuario']['id_usuario'])) {
         // Menu general
         menu_general(); ?>
 
         <!-- Menu horizontal -->
         <div class="d-flex vh-100">
-            <div class="d-flex flex-column flex-shrink-0 p-3 text-white"
-                style="width: 200px; background: linear-gradient(10deg, rgb(226, 249, 255), rgb(0, 102, 131));">
-                <br><br>
-                <!-- Crear submenu con sus opciones -->
-                <ul class="nav nav-pills flex-column mb-auto">
-                    <!-- <li class="nav-item">
-                        <form action="empresa.php" method="post">
-                            <button type="submit" name="empresaPrincipal"
-                                class="btn btn-link nav-link text-white">Principal</button>
-                        </form>
-                    </li> -->
-                    <li class="nav-item">
-                        <form action="empresa.php" method="post">
-                            <button type="submit" name="empresaMapa"
-                                class="btn btn-link nav-link text-white">Publicitarse</button>
-                        </form>
-                    </li>
-                    <li>
-                        <form action="empresa.php" method="post">
-                            <button type="submit" name="empresaInfo"
-                                class="btn btn-link nav-link text-white">Informacion</button>
-                        </form>
-                    </li>
+            <div id="sidebar">
+                <div class="p-2">
+                    <a href="empresa.php?empresaMapa" class="navbar-brand text-center text-light w-100 p-4 border-bottom">
+                        Empresa
+                    </a>
+                </div>
+                <div id="sidebar-accordion" class="accordion">
+                    <div class="list-group">
+                        <a href="empresa.php?empresaMapa" class="list-group-item list-group-item-action text-light"
+                            id="sidebar2">
+                            <i class="fa fa-map mr-3" aria-hidden="true"></i>Publicitarse
+                        </a>
 
-                </ul>
+                        <a href="empresa.php?empresaInfo" class="list-group-item list-group-item-action text-light"
+                            id="sidebar2">
+                            <i class="fa fa-user mr-3" aria-hidden="true"></i> Informacion
+                        </a>
+                    </div>
+                </div>
             </div>
+
 
             <!-- <?php
             if (isset($_REQUEST['empresaPrincipal'])) {
@@ -143,9 +127,13 @@ require_once '../lib/mapa.php';
 
                     }
                 }
+<<<<<<< HEAD
 
                 // Redirigir nuevamente al mapa.
                 echo "<script>window.location.href = 'empresa.php?empresaMapa';</script>";
+=======
+                echo "<script>window.location.href = 'empresa.php?empresaMapa=1';</script>";
+>>>>>>> c010a56c9848553d73a0640fd13d94a31b20e4e9
                 exit();
             }
 

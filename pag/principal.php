@@ -55,16 +55,13 @@ require_once '../lib/modulos.php';
                                     <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
                                         <div class="carousel-inner">
                                             <div class="carousel-item active">
-                                                <img src="../img/imagen/mapaempresa.png"
-                                                    class="d-block w-100" alt="...">
+                                                <img src="../img/imagen/mapaempresa.png" class="d-block w-100" alt="...">
                                             </div>
                                             <div class="carousel-item">
-                                                <img src="../img/imagen/mapausuario.png"
-                                                    class="d-block w-100" alt="...">
+                                                <img src="../img/imagen/mapausuario.png" class="d-block w-100" alt="...">
                                             </div>
                                             <div class="carousel-item">
-                                                <img src="../img/imagen/mapavigilante.png"
-                                                    class="d-block w-100" alt="...">
+                                                <img src="../img/imagen/mapavigilante.png" class="d-block w-100" alt="...">
                                             </div>
                                         </div>
                                         <button class="carousel-control-prev" type="button"
@@ -129,7 +126,11 @@ require_once '../lib/modulos.php';
                 </div>
             </section>
         </div>
-
+        <footer class="bg-light container-fluid text-center mt-5">
+            <div class="pt-2 pb-2">
+                &copy;Display Ads
+            </div>
+        </footer>
         <?php
 
     } else {

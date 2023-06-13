@@ -7,3 +7,14 @@
     height: 100px;
     width: 150px;
 }
+
+#sidebar {
+    width: 13%;
+    height: 100vh;
+    background: linear-gradient(10deg, rgb(226, 249, 255), rgb(0, 123, 157));
+    min-width: 150px;
+}
+
+#sidebar2 {
+    background: rgb(0, 129, 165)
+}

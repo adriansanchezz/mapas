@@ -39,9 +39,6 @@ require_once 'lib/modulos.php';
     ?>
         </form>
     </div>
-
-
-
 </body>
 
 </html>

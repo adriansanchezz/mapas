@@ -175,7 +175,7 @@ function mapa($valor)
         <input type="submit" class="btn btn-primary" id="solicitarMision" value="Solicitar misión">
         <div class="container mt-4">
             <div class="table-responsive mb-4">
-                Misiones en proceso:
+                Misiones en proceso(<small><i>*Cada mision cuenta 10 puntos</i></small>):
                 <table id="tabla-puntos" class="table">
                     <thead>
                         <tr>

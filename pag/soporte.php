@@ -12,70 +12,9 @@ require_once '../lib/modulos.php';
 
     <!-- Agregar enlace a Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link href="../css/soporte.css" rel="stylesheet" type="text/css">
 </head>
-
 <body>
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
-        }
-
-        .container {
-            text-align: center;
-            max-width: 400px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #ffffff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-top: 100px;
-        }
-
-        .container h2 {
-            text-align: center;
-            color: #333333;
-            margin-bottom: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 14px;
-            font-weight: bold;
-            margin-bottom: 5px;
-            color: #333333;
-        }
-
-        .form-group input[type="text"],
-        .form-group input[type="email"],
-        .form-group textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #dddddd;
-            border-radius: 4px;
-        }
-
-        .form-group textarea {
-            height: 100px;
-        }
-
-        .form-group input[type="submit"] {
-            background-color: #007bff;
-            color: #ffffff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .form-group input[type="submit"]:hover {
-            background-color: #0056b3;
-        }
-    </style>
     <?php
 
     if (isset($_SESSION['usuario'])) {

@@ -11,6 +11,10 @@ function conectar()
     $usuariodb = "root";
     $clavedb = "";
 
+    // $basededatos = "id20705558_mapa_promocion";
+    // $usuariodb = "id20705558_root";
+    // $clavedb = "({wQ>S|E[~75z*eA";
+
     // crear connection
     $conn = mysqli_connect($host, $usuariodb, $clavedb, $basededatos);
 
@@ -350,6 +354,20 @@ function validarVigilante($id_user)
     $sql = "SELECT * FROM usuarios_roles WHERE id_usuario='$id_user' AND id_rol=(SELECT id_rol FROM roles WHERE nombre='Vigilante')";
 
     // Devuelve si true o false, según si tiene o no tiene este rol
+    if (sqlSELECT($sql)->num_rows > 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+// Velificar bloqueo
+function validarBloqueo($id_user)
+{
+    // Consulta
+    $sql = "SELECT * FROM usuarios WHERE id_usuario='$id_user' AND fecha_bloqueo IS NULL";
+
+    // Devuelve si true o false
     if (sqlSELECT($sql)->num_rows > 0) {
         return true;
     } else {

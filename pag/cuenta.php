@@ -9,37 +9,10 @@ require_once '../lib/modulos.php';
     <!-- Meter informacion general de head -->
     <?php head_info(); ?>
     <title>DisplayAds</title>
+    <link href="../css/cuenta.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th,
-        td {
-            border: 1px solid black;
-            padding: 8px;
-            text-align: center;
-        }
-
-        th {
-            background-color: #333;
-            color: white;
-        }
-
-        td:nth-child(even) {
-            background-color: #f2f2f2;
-            color: #333;
-        }
-
-        td:nth-child(odd) {
-            background-color: #ddd;
-            color: #333;
-        }
-    </style>
     <?php
     if (isset($_SESSION['usuario'])) {
         // Menu general
@@ -47,37 +20,36 @@ require_once '../lib/modulos.php';
 
         <!-- Menu horizontal -->
         <div class="d-flex vh-100">
-            <div class="d-flex flex-column flex-shrink-0 p-3 text-white"
-                style="width: 200px; background: linear-gradient(10deg, rgb(226, 249, 255), rgb(0, 102, 131));">
-                <br><br>
-                <!-- Crear submenu con sus opciones -->
-                <ul class="nav nav-pills flex-column mb-auto">
-                    <li>
-                        <form action="cuenta.php" method="post">
-                            <button type="submit" name="cuentaInformacion"
-                                class="btn btn-link nav-link text-white">Informacion
-                            </button>
-                        </form>
-                    </li>
-                    <li>
-                        <form action="cuenta.php" method="post">
-                            <button type="submit" name="publicidades"
-                                class="btn btn-link nav-link text-white">Publicidades</button>
-                        </form>
-                    </li>
-                    <li>
-                        <form action="cuenta.php" method="post">
-                            <button type="submit" name="usuarioSoportes"
-                                class="btn btn-link nav-link text-white">Soportes</button>
-                        </form>
-                    </li>
-                    <li>
-                        <form action="cuenta.php" method="post">
-                            <button type="submit" name="suscripcion"
-                                class="btn btn-link nav-link text-white">Suscripción</button>
-                        </form>
-                    </li>
-                </ul>
+            <div id="sidebar">
+                <div class="p-2">
+                    <a href="cuenta.php?cuentaInformacion"
+                        class="navbar-brand text-center text-light w-100 p-4 border-bottom">
+                        Cuenta
+                    </a>
+                </div>
+                <div id="sidebar-accordion" class="accordion">
+                    <div class="list-group">
+                        <a href="cuenta.php?cuentaInformacion" class="list-group-item list-group-item-action text-light"
+                            id="sidebar2">
+                            <i class="fa fa-address-card mr-3" aria-hidden="true"></i>Informacion
+                        </a>
+
+                        <a href="cuenta.php?publicidades" class="list-group-item list-group-item-action text-light"
+                            id="sidebar2">
+                            <i class="fa fa-window-maximize mr-3" aria-hidden="true"></i>Publicidades
+                        </a>
+
+                        <a href="cuenta.php?usuarioSoportes" class="list-group-item list-group-item-action text-light"
+                            id="sidebar2">
+                            <i class="fa fa-ticket mr-3" aria-hidden="true"></i>Soportes
+                        </a>
+
+                        <a href="cuenta.php?suscripcion" class="list-group-item list-group-item-action text-light"
+                            id="sidebar2">
+                            <i class="fa fa-plus mr-3" aria-hidden="true"></i>Suscripción
+                        </a>
+                    </div>
+                </div>
             </div>
 
             <?php
@@ -197,18 +169,37 @@ require_once '../lib/modulos.php';
             if (isset($_REQUEST['suscripcion'])) {
                 ?>
                 <div class="flex-grow-1">
-                    <div class="p-3" style="display: block;">
-                        <form>
-                            <button type="button" id="btnMensual" class="btn btn-primary btn-lg"
-                                data-suscripcion="mensual">Suscripción Mensual</button>
-                        </form>
-                        <form>
-                            <button type="button" id="btnAnual" class="btn btn-primary btn-lg"
-                                data-suscripcion="anual">Suscripción Anual</button>
-                        </form>
-                        <div id="paypal-button-container"></div>
+                    <div class='col-md-6 col-lg-4'>
+                        <div class='card my-3'>
+                            <div class='card-body'>
+                                <h3 class='card-title'>Suscripción Mensual</h3>
+                                <p class='card-text'>Suscripción mesual, cuenta vip en 30 dias, con ventaja de 5% descuento en
+                                    las compras</p>
+
+                                <form>
+                                    <button type="button" id="btnMensual" class="btn btn-primary btn-lg"
+                                        data-suscripcion="mensual">Suscripción Mensual</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class='col-md-6 col-lg-4'>
+                        <div class='card my-3'>
+                            <div class='card-body'>
+                                <h3 class='card-title'>Suscripción Anual</h3>
+                                <p class='card-text'>Suscripción anual, cuenta vip en 1 año, con ventaja de 5% descuento en
+                                    las compras</p>
+                                <form>
+                                    <button type="button" id="btnAnual" class="btn btn-primary btn-lg"
+                                        data-suscripcion="anual">Suscripción Anual</button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                <div id="paypal-button-container"></div>
                 <script
                     src="https://www.paypal.com/sdk/js?client-id=Ae-QOggCqT3W10C1Q7U1lTDaYwmgEsmPuPxDuQEOD4uHZK0DMvJb2brCahcG-HMPPBti9IsX8pCsB-Db&currency=EUR"></script>
                 <script>
@@ -243,7 +234,7 @@ require_once '../lib/modulos.php';
                             label: 'pay'
                         },
                         createOrder: function (data, actions) {
-                            var value = (selectedSuscripcion === "mensual") ? 5 : 20;
+                            var value = (selectedSuscripcion === "mensual") ? 4.99 : 49.99;
                             return actions.order.create({
                                 purchase_units: [{
                                     amount: {
