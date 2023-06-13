@@ -127,13 +127,9 @@ require_once '../lib/mapa.php';
 
                     }
                 }
-<<<<<<< HEAD
 
                 // Redirigir nuevamente al mapa.
                 echo "<script>window.location.href = 'empresa.php?empresaMapa';</script>";
-=======
-                echo "<script>window.location.href = 'empresa.php?empresaMapa=1';</script>";
->>>>>>> c010a56c9848553d73a0640fd13d94a31b20e4e9
                 exit();
             }
 
