@@ -306,7 +306,7 @@ function menu_general()
                                 }
                             }
 
-                            // Consulta para 
+                            // Consulta para que la empresa sepa cuando es el último día de su publicidad y cuando su alquiler ha caducado completamente.
                             $sql = "SELECT * FROM publicidades as p, empresas as e WHERE p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND p.ocupado = 1 AND p.estado = 1 AND p.comprador = e.id_empresa";
                             $result = sqlSELECT($sql);
                             $fechaBD = null;
@@ -337,7 +337,7 @@ function menu_general()
                             }
 
 
-
+                            // Consulta para que los usuarios reciban notificaciones enviadas por los administradores.
                             $sql = "SELECT * FROM alertas WHERE usuario = " . $_SESSION['usuario']['id_usuario'] . " AND estado = 0";
                             $result = sqlSELECT($sql);
                             if ($result->num_rows > 0) {
@@ -349,7 +349,7 @@ function menu_general()
 
 
 
-                            // COMPROBAR VIP.
+                            // Que los usuarios VIP sepan cuando es su último día y cuando ya se ha caducado.
                             $sql = "SELECT * FROM usuarios WHERE id_usuario = " . $_SESSION['usuario']['id_usuario'];
                             $result = sqlSELECT($sql);
                             $fechaBD = null;
@@ -384,9 +384,10 @@ function menu_general()
 
 
 
-
+                            // Si se ha pulsado vistoPedido se setea la revisión a 0.
                             if(isset($_REQUEST['vistoPedido']))
                             {
+                                // 
                                 $id_pedido = $_POST['id_pedido'];
                                 $sql = "UPDATE pedidos SET revision = 0 WHERE id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND id_pedido = " . $id_pedido;
                                 sqlUPDATE($sql);
@@ -396,7 +397,7 @@ function menu_general()
 
 
 
-
+                            // Si el administrador ha marcado como visto el pedido del usuario.
                             if(isset($_REQUEST['vistoPedidoUsuario']))
                             {
                                 $id_pedido = $_POST['id_pedido'];
@@ -410,6 +411,8 @@ function menu_general()
                                 echo "<script>window.location.href = 'principal.php';</script>";
                                 exit();
                             }
+
+                            // Si el administrador indica como visto el pedido de la empresa se setea la revisión a 2.
                             if(isset($_REQUEST['vistoPedidoEmpresa']))
                             {
                                 $id_pedido = $_POST['id_pedido'];
@@ -418,6 +421,8 @@ function menu_general()
                                 echo "<script>window.location.href = 'principal.php';</script>";
                                 exit();
                             }
+
+                            // Si el usuario ha visto el piso rechazado.
                             if (isset($_REQUEST['vistoPiso'])) {
                                 $id_publicidad = $_POST['id_publicidad'];
                                 $sql = "DELETE FROM publicidades WHERE id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND id_publicidad = " . $id_publicidad;
@@ -426,6 +431,8 @@ function menu_general()
                                 echo "<script>window.location.href = 'principal.php';</script>";
                                 exit();
                             }
+
+                            // Si el usuario ha visto el piso aceptado.
                             if (isset($_REQUEST['vistoPisoAceptado'])) {
                                 $id_publicidad = $_POST['id_publicidad'];
                                 $sql = "UPDATE publicidades SET revision = 3 WHERE id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND id_publicidad = " . $id_publicidad;
@@ -434,6 +441,8 @@ function menu_general()
                                 echo "<script>window.location.href = 'principal.php';</script>";
                                 exit();
                             }
+
+                            // Si el usuario le da al botón de vistoVIP entonces se sete su fecha de VIP en null.
                             if (isset($_REQUEST['vistoVIP'])) {
                                 $sql = "UPDATE usuarios SET VIP = NULL WHERE id_usuario = " . $_SESSION['usuario']['id_usuario'];
                                 sqlUPDATE($sql);
@@ -441,6 +450,7 @@ function menu_general()
                                 exit();
                             }
 
+                            // Si el usuario acepta a la empresa que se quiere publicitar en su publicidad.
                             if (isset($_POST['aceptarEmpresa'])) {
                                 $id_publicidad = $_POST['id_publicidad'];
                                 $sql = "UPDATE publicidades SET ocupado = 1 WHERE id_publicidad = " . $id_publicidad;
@@ -449,6 +459,8 @@ function menu_general()
                                     exit();
                                 }
                             }
+
+                            // Si el usuario rechaza a la empresa que se quiere publicitar en su publicidad.
                             if (isset($_POST['rechazarEmpresa'])) {
                                 $id_publicidad = $_POST['id_publicidad'];
                                 $sql = "UPDATE publicidades SET ocupado = 0, comprador = NULL WHERE id_publicidad = " . $id_publicidad;
@@ -458,10 +470,7 @@ function menu_general()
                                 }
                             }
 
-
-                            
-
-                            // Imprimir las notificaciones en orden inverso
+                            // Imprimir las notificaciones en orden inverso.
                             for ($i = count($notificaciones) - 1; $i >= 0; $i--) {
                                 echo $notificaciones[$i];
                             }

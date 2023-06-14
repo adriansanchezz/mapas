@@ -2,6 +2,7 @@
 require_once '../lib/funciones.php';
 require_once '../lib/modulos.php';
 require_once '../lib/mapa.php';
+
 // Establecer la conexión con la base de datos.
 $conn = conectar();
 
@@ -10,19 +11,19 @@ $sql = "SELECT * FROM publicidades WHERE id_usuario = ?";
 $stmt = $conn->prepare($sql);
 
 if ($stmt) {
-    // Asignar el valor del parámetro
+    // Asignar el valor del parámetro.
     $id_usuario = $_SESSION['usuario']['id_usuario'];
 
-    // Vincular el parámetro a la sentencia preparada
+    // Vincular el parámetro id_usuario a la sentencia preparada.
     $stmt->bind_param("i", $id_usuario);
 
-    // Ejecutar la consulta
+    // Ejecutar la consulta.
     $stmt->execute();
 
-    // Obtener los resultados
+    // Obtener los resultados.
     $result = $stmt->get_result();
 
-    // Crear un array para almacenar los datos de los marcadores
+    // Crear un array para almacenar los datos de los marcadores.
     $marcadores = array();
 
     // Si da resultados entonces entra en el if.
