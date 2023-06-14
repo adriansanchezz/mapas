@@ -489,7 +489,7 @@ function vigilante() {
 
             var data = "descripcion=" + encodeURIComponent("Ve al lugar y saca una foto");
             data += "&id_publicidad=" + encodeURIComponent(marcadorJSON.id_publicidad);
-            var url = '../lib/ejecutarMision.php?subirMision';
+            var url = '../lib/solicitarMision.php?subirMision';
             var xhr = new XMLHttpRequest();
             xhr.open('POST', url, true);
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
