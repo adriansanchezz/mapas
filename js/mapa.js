@@ -288,7 +288,7 @@ function mapaUsuario() {
         var textoRegex = /^[A-Za-zÁáÉéÍíÓóÚúÑñ\s]+$/;
 
         if (!textoRegex.test(provincia)) {
-            alert('Los campos de descripción, provincia, ciudad y ubicación deben contener solo letras.');
+            alert('El campo de provincia debe contener solo letras.');
             return false;
         }
 

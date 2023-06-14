@@ -11,14 +11,14 @@ function mapa($valor)
         <div class="flex-grow-1">
             <div class="p-3" style="display: block;">
                 <div class="p-3" style="display: block;">
-                    <form class="form-inline my-2 my-lg-0" action="empresa.php" method="post">
-                        <button class="btn btn-outline-success my-2 my-sm-0" name="empresaCarrito"
-                            type="submit">Carrito</button>
-                    </form>
-                    <h1>Bienvenido a nuestro mapa</h1>
-                    <h4>Selecciona alguna ubicación para ver información:</h4>
-                    <p>¿Quieres buscar una ubicación?</p>
-                    <div class="input-group mb-3">
+                        <form class="form-inline my-2 my-lg-0" action="empresa.php" method="post">
+                            <button class="btn btn-outline-success my-2 my-sm-0" name="empresaCarrito"
+                                type="submit">Carrito</button>
+                        </form>
+                        <h1>Bienvenido a nuestro mapa</h1>
+                        <h4>Selecciona alguna ubicación para ver información:</h4>
+                        <p>¿Quieres buscar una ubicación?</p>
+                        <div class="input-group mb-3">
                         <input type="text" class="form-control" id="direccion" placeholder="Buscar dirección">
                         <div class="input-group-append">
                             <button class="btn btn-primary" id="buscarDireccion">Buscar</button>
