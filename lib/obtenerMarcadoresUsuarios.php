@@ -34,7 +34,14 @@ if ($stmt) {
             $descripcion = $row['descripcion'];
             $ubicacion = $row['ubicacion'];
             $precio = $row['precio'];
-
+            if($row['caducidad_compra'] !== null)
+            {
+                $compra = 1;
+            }
+            else
+            {
+                $compra = 0;
+            }
             // Se obtiene la id del tipo de propiedad.
             $tipo = $row['id_tipo_publicidad'];
 
@@ -78,7 +85,8 @@ if ($stmt) {
                 'descripcion' => $descripcion,
                 'imageUrl' => $imageUrl,
                 'mostrarImagen' => $mostrarImagen,
-                'id_publicidad' => $row['id_publicidad']
+                'id_publicidad' => $row['id_publicidad'],
+                'compra' => $compra
             );
 
             $marcadores[] = $marcador;

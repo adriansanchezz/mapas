@@ -134,17 +134,25 @@ function mapaUsuario() {
 
             // Asignar los datos del marcador al pop-up
             var popupContent = `<div class='popup-content vista_mapa'>
-                                    <h3 class='popup-title'>${marcador.nombre_tipo}</h3>
-                                    <h4 class='popup-location'>${marcador.ubicacion}</h4>
-                                    <h4 class='popup-price'>${marcador.precio}</h4>
-                                    <p class='popup-description'>${marcador.descripcion}</p>
-                                    Imagen Google:<br> <img class='popup-image imagen_mapa' src='${marcador.imageUrl}' alt='Imagen de la ubicación'><br>
-                                    Imagen usuario:<br>${marcador.mostrarImagen}<br>
-                                    <form action='usuario.php' method='POST'>
-                                        <input type='hidden' name='id_publicidad' value='${marcador.id_publicidad}'>
-                                        <button class='popup-delete-button' type='submit' name='borrarMarcador'>Borrar</button>
-                                    </form>
-                                </div>`;
+                                <h3 class='popup-title'>${marcador.nombre_tipo}</h3>
+                                <h4 class='popup-location'>${marcador.ubicacion}</h4>
+                                <h4 class='popup-price'>${marcador.precio}</h4>
+                                <p class='popup-description'>${marcador.descripcion}</p>
+                                Imagen Google:<br> <img class='popup-image imagen_mapa' src='${marcador.imageUrl}' alt='Imagen de la ubicación'><br>
+                                Imagen usuario:<br>${marcador.mostrarImagen}<br>`;
+
+                            if (marcador.compra == 0) {
+                                popupContent += `<form action='usuario.php' method='POST'>
+                                    <input type='hidden' name='id_publicidad' value='${marcador.id_publicidad}'>
+                                    <button class='popup-delete-button' type='submit' name='borrarMarcador'>Borrar</button>
+                                </form>`;
+                            }
+                            else
+                            {
+                                popupContent += `<p>No puedes borrar una publicidad vendida a una empresa.</p>`;
+                            }
+
+                            popupContent += `</div>`;
 
             marker.bindPopup(popupContent);
         }
