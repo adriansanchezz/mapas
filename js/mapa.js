@@ -598,7 +598,7 @@ function validarFormulario() {
 
     var textoRegex = /^[A-Za-zÁáÉéÍíÓóÚúÑñ\s]+$/;
 
-    if (!textoRegex.test(provincia) || !textoRegex.test(ciudad) || !textoRegex.test(ubicacion)) {
+    if (!textoRegex.test(provincia)) {
         alert('Los campos de descripción, provincia, ciudad y ubicación deben contener solo letras.');
         return false;
     }
