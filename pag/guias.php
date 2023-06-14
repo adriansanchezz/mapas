@@ -79,7 +79,7 @@ require_once '../lib/modulos.php';
                             portal y el piso. También se recomienda que la foto de Google enfoque a la propiedad en cuestión.
                         </p>
 
-                        <img src="../img/guiaMapa.png">
+                        
                         <br>
                         <p>Y por último se guarda el punto y se podrá ver en el mapa. También tendrás un botón de borrar si lo
                             seleccionas. Cabe destacar que si te has equivocado puedes ir a "cuenta" y editar la descripción o
@@ -220,7 +220,7 @@ require_once '../lib/modulos.php';
                                     portal y el piso. También se recomienda que la foto de Google enfoque a la propiedad en cuestión.
                                 </p>
 
-                                <img src="../img/guiaMapa.png">
+                                
                                 <br>
                                 <p>Y por último se guarda el punto y se podrá ver en el mapa. También tendrás un botón de borrar si lo
                                     seleccionas. Cabe destacar que si te has equivocado puedes ir a "cuenta" y editar la descripción o

@@ -12,6 +12,7 @@ require_once '../lib/mapa.php';
     <title>DisplayAds</title>
     <script src="../js/funciones.js"></script>
     <script src="../js/mapa.js"></script>
+    <script src="../js/paypal.js"></script>
     <link href="../css/empresa.css" rel="stylesheet" type="text/css">
 </head>
 
@@ -67,141 +68,37 @@ require_once '../lib/mapa.php';
             ?>
 
             <?php
+            // Añadir al carrito al seleccionar una publicidad.
             if (isset($_POST['add_to_cart'])) {
 
-                $product_id = $_POST['publicidad_id'];
+                $id_producto = $_POST['publicidad_id'];
                 $precio = $_POST['precio'];
                 $id_empresa = $_SESSION['usuario']['id_usuario'];
-                $conn = conectar();
-                $sql = "UPDATE publicidades SET comprador = ? WHERE id_publicidad = ?";
-                $stmt = $conn->prepare($sql);
-                $stmt->bind_param("ii", $id_empresa, $product_id);
-                $stmt->execute();
-                $stmt->close();
-                $sql = "SELECT * FROM pedidos as p, lineas_pedidos as lp WHERE p.id_pedido = lp.id_pedido AND p.fecha_fin IS NULL AND p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND lp.id_publicidad = " . $product_id . " AND lp.cantidad > 0;";
-
-                if (sqlSELECT($sql)->num_rows > 0) {
-                    echo "<script>
-                            alert('¡Atención! Este producto ya se encuentra en el carrito.');
-                            window.location.href = 'empresa.php?empresaMapa=1';
-                        </script>";
-                    exit();
-
-                } else {
-
-                    $sql = "SELECT * FROM pedidos as p, lineas_pedidos as lp WHERE p.id_pedido = lp.id_pedido AND p.fecha_fin IS NULL AND p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND lp.id_publicidad IS NOT NULL;";
-
-                    if (sqlSELECT($sql)->num_rows > 0) {
-                        $id_pedido = obtenerUltimoIdPedidoPublicidad(); // Obtener el último ID de pedido insertado
-                        $sqlLinea = "INSERT INTO `lineas_pedidos`(`precio`, `cantidad`, `id_producto`, `id_publicidad`, `id_pedido`) VALUES ($precio, 1, NULL, $product_id, $id_pedido)";
-                        sqlINSERT($sqlLinea);
-                    } else {
-
-                        $importe = 0;
-                        $fecha_fin = "NULL"; // Asignar NULL a la columna fecha_fin
-                        $id_usuario = $_SESSION['usuario']['id_usuario'];
-
-                        $conn = conectar();
-                        mysqli_begin_transaction($conn); // Reemplaza $conn con tu conexión a la base de datos
-        
-                        try {
-                            // Insertar el pedido
-                            $sqlPedido = "INSERT INTO `pedidos`(`importe`, `fecha_inicio`, `fecha_fin`, `id_usuario`) VALUES ($importe, NOW(), NULL, $id_usuario)";
-                            $resultPedido = $conn->query($sqlPedido);
-
-                            // Obtener el último ID de pedido insertado
-                            $id_pedido = mysqli_insert_id($conn);
-
-                            // Insertar la línea de pedido
-                            $sqlLinea = "INSERT INTO `lineas_pedidos`(`precio`, `cantidad`, `id_publicidad`, `id_pedido`) VALUES ($precio, 1, $product_id, $id_pedido)";
-                            $resultLinea = $conn->query($sqlLinea);
-
-                            // Confirmar la transacción
-                            mysqli_commit($conn);
-                        } catch (Exception $e) {
-                            // Ocurrió un error, revertir la transacción
-                            mysqli_rollback($conn);
-                            // Manejar el error adecuadamente
-                            echo "Error: " . $e->getMessage();
-                        }
-
-                    }
-                }
-
-                // Redirigir nuevamente al mapa.
-                echo "<script>window.location.href = 'empresa.php?empresaMapa';</script>";
-                exit();
+                addCartEmpresa($id_producto, $precio, $id_empresa);
+                
             }
 
             // Calcular el total de dinero en el carrito
             $totalMoney = 0;
             ?>
             <?php
-
+            // Eliminar del carrito.
             if (isset($_POST['remove_from_cart'])) {
-                $product_id = trim($_POST['id_publicidad']);
-
-                $conn = conectar();
-                $sql = "UPDATE publicidades SET comprador = NULL WHERE id_publicidad = ?";
-                $stmt = $conn->prepare($sql);
-                $stmt->bind_param("i", $product_id);
-                $stmt->execute();
-                $stmt->close();
-
-                $sql = "SELECT * FROM pedidos AS p JOIN lineas_pedidos AS lp ON p.id_pedido = lp.id_pedido WHERE p.fecha_fin IS NULL AND lp.cantidad > 0 AND p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . ";";
-
-                if (sqlSELECT($sql)->num_rows > 0) {
-
-                    $id_pedido = obtenerUltimoIdPedidoPublicidad(); // Obtener el último ID de pedido insertado
-                    $sqlPedido = "DELETE FROM `lineas_pedidos` WHERE id_pedido = " . $id_pedido . " AND id_publicidad = " . $product_id;
-                    sqlDELETE($sqlPedido);
-
-                }
-
-                // Redirigir nuevamente al carrito
-                echo "<script>window.location.href = 'empresa.php?empresaCarrito=1';</script>";
-                exit();
+                $id_producto = trim($_POST['id_publicidad']);
+                removeCartEmpresa($id_producto);
+                
             }
 
+            // Actualizar el pedido cuando se compre, ya que el pedido empieza con algunos datos sin identificar.
             if (isset($_REQUEST['actualizarPedido'])) {
                 $importe = $_REQUEST['importe']; // Obtener el valor de importe desde los parámetros de la solicitud
-        
-                // Actualizar el pedido en la base de datos utilizando el valor de importe
-                $id_pedido = obtenerUltimoIdPedidoPublicidad();
-                $sqlPedido = "UPDATE pedidos SET fecha_fin = NOW(), importe = " . $importe . " WHERE id_pedido = " . $id_pedido;
-                sqlUPDATE($sqlPedido);
-                foreach ($_REQUEST as $key => $value) {
-                    if (strpos($key, 'months_') === 0) {
-                        // Obtener la ID del producto
-                        $product_id = substr($key, 7);
-
-                        // Obtener el valor de los meses seleccionados
-                        $selected_months = intval($value);
-
-
-                        $query = "UPDATE lineas_pedidos 
-                        SET precio = (SELECT precio FROM publicidades WHERE id_publicidad = $product_id) * $selected_months 
-                        WHERE id_publicidad = $product_id";
-
-                        // Ejecutar la consulta en tu base de datos
-                        // ...
-                        sqlUPDATE($query);
-
-
-                        // Realizar la consulta de actualización
-                        $fecha_según_mes = date('Y-m-d', strtotime("+$selected_months months"));
-                        $query = "UPDATE publicidades SET caducidad_compra = '$fecha_según_mes' WHERE id_publicidad = $product_id";
-
-                        // Ejecutar la consulta en tu base de datos
-                        // ...
-                        sqlUPDATE($query);
-                    }
-                }
+                actualizarPedidoEmpresa($importe);
             }
             ?>
 
 
             <?php
+            // Carrito de la empresa.
             if (isset($_REQUEST['empresaCarrito'])) {
                 ?>
                 <div class="products">
@@ -227,16 +124,16 @@ require_once '../lib/mapa.php';
 
                         // Iterar sobre los productos en el carrito
                         while ($row = $result->fetch_assoc()) {
-                            $product_id = $row['id_publicidad'];
+                            $id_producto = $row['id_publicidad'];
                             $product_name = $row['ubicacion'];
                             $product_description = $row['provincia'];
                             $product_price = $row['precio'];
 
                             // Almacenar el precio del producto en el array asociativo
-                            $product_prices[$product_id] = $product_price;
+                            $product_prices[$id_producto] = $product_price;
 
                             // Obtener el valor seleccionado de meses
-                            $selected_months = isset($_POST["months_$product_id"]) ? intval($_POST["months_$product_id"]) : 1;
+                            $selected_months = isset($_POST["months_$id_producto"]) ? intval($_POST["months_$id_producto"]) : 1;
 
                             // Calcular el subtotal por producto considerando el aumento de precios por mes
                             $subtotal = $product_price * $selected_months;
@@ -250,14 +147,15 @@ require_once '../lib/mapa.php';
                             echo "<div class='card-body text-primary'>";
                             echo "<h5 class='card-title'>$product_description</h5>";
                             echo "<p class='card-text'>Precio por mes: $product_price €</p>";
-                            echo "<p class='card-text'>Meses seleccionados: <span id='months_selected_$product_id'>$selected_months</span></p>";
+                            echo "<p class='card-text'>Meses seleccionados: <span id='months_selected_$id_producto'>$selected_months</span></p>";
                             echo "<form action='empresa.php' method='post'>";
-                            echo "<input type='hidden' name='id_publicidad' value='$product_id'>";
-                            echo "<label for='months_$product_id'>Meses:</label>";
-                            echo "<input type='number' name='months_$product_id' id='months_$product_id' min='1' max='12' value='$selected_months' onchange='updateTotalPrice($product_id)'>";
-                            echo "<button class='btn btn-danger' name='remove_from_cart' value='$product_id' type='submit'>Eliminar</button>";
+                            echo "<input type='hidden' name='id_publicidad' value='$id_producto'>";
+                            echo "<label for='months_$id_producto'>Meses:</label>";
+                            // se le aplica un name al input llamado months_idproducto que contendrá la id de producto.
+                            echo "<input type='number' name='months_$id_producto' id='months_$id_producto' min='1' max='12' value='$selected_months' onchange='precioTotalMeses($id_producto)'>";
+                            echo "<button class='btn btn-danger' name='remove_from_cart' value='$id_producto' type='submit'>Eliminar</button>";
                             echo "</form>";
-                            echo "<p id='total_price_$product_id'>Subtotal: " . ($product_price * $selected_months) . " €</p>";
+                            echo "<p id='total_price_$id_producto'>Subtotal: " . ($product_price * $selected_months) . " €</p>";
                             echo "</div>";
                             echo "</div>";
                         }
@@ -274,23 +172,34 @@ require_once '../lib/mapa.php';
 
                     ?>
                     <script>
-                        function updateTotalPrice(productId) {
+                        // Función para cambiar el precio según los meses seleccionados.
+                        function precioTotalMeses(productId) {
+                            // en el array de precios de productos se añade el precio del producto.
                             var productPrices = <?php echo json_encode($product_prices); ?>;
+                            // Se obtiene el div de producto por su nombre de clase. Y segun más productos haya más coge.
                             var products = document.getElementsByClassName('product');
                             var totalImporte = 0;
-
+                            // Se recorre products.
                             for (var i = 0; i < products.length; i++) {
+                                // product es igual a la posicion i de products.
                                 var product = products[i];
+                                // Se obtiene la id del elemento.
                                 var productIdElement = product.querySelector('input[name="id_publicidad"]');
+                                // Se obtiene el selector de meses.
                                 var monthsSelector = product.querySelector('input[name^="months_"]');
+                                // Se obtiene el precio total.
                                 var totalPriceElement = product.querySelector('[id^="total_price_"]');
 
+                                // Se obtiene la id.
                                 var currentProductId = parseInt(productIdElement.value);
+                                // Se obtiene el precio de producto.
                                 var currentProductPrice = parseFloat(productPrices[currentProductId]);
+                                // Se obtiene los meses seleccionados.
                                 var currentSelectedMonths = parseInt(monthsSelector.value);
+                                // Se multiplica el precio por los meses.
                                 var currentTotalPrice = currentProductPrice * currentSelectedMonths;
 
-                                // Actualizar el precio total del producto
+                                // Actualizar el precio total del producto.
                                 totalPriceElement.textContent = 'Subtotal: ' + currentTotalPrice + ' €';
 
                                 // Agregar el precio del producto al importe total
@@ -308,6 +217,7 @@ require_once '../lib/mapa.php';
                 <!-- Set up a container element for the button -->
                 <div id="paypal-button-container"></div>
                 <script>
+                    // Funciones de paypal.
                     paypal.Buttons({
                         style: {
                             color: 'blue',
@@ -315,67 +225,93 @@ require_once '../lib/mapa.php';
                             label: 'pay'
                         },
                         createOrder: function (data, actions) {
+                            // Se obtiene los precios de los productos.
                             var productPrices = <?php echo json_encode($product_prices); ?>;
+                            // Se obtiene los productos.
                             var products = document.getElementsByClassName('product');
                             var totalImporte = 0;
 
+                            // Se recorre products.
                             for (var i = 0; i < products.length; i++) {
+                                // Se obtiene el producto de posición i.
                                 var product = products[i];
+                                // Se selecciona el id.
                                 var productIdElement = product.querySelector('input[name="id_publicidad"]');
+                                // Se selecciona el selector de meses.
                                 var monthsSelector = product.querySelector('input[name^="months_"]');
 
+                                // Se obtiene la id.
                                 var currentProductId = parseInt(productIdElement.value);
+                                // Se obtiene el precio.
                                 var currentProductPrice = parseFloat(productPrices[currentProductId]);
+                                // Se obtiene los meses.
                                 var currentSelectedMonths = parseInt(monthsSelector.value);
+                                // Se multiplica los meses por el precio y se hace con cada producto.
                                 var currentTotalPrice = currentProductPrice * currentSelectedMonths;
 
-                                // Agregar el precio del producto al importe total
+                                // Se va sumando el importe total.
                                 totalImporte += currentTotalPrice;
                             }
 
                             return actions.order.create({
                                 purchase_units: [{
                                     amount: {
+                                        // Se crea una orden con el importe total.
                                         value: totalImporte.toFixed(2) // Redondear el importe a 2 decimales
                                     }
                                 }]
                             })
                         },
 
+                        // Si se aprueba la petición.
                         onApprove: function (data, actions) {
                             actions.order.capture().then(function (detalles) {
+                                // Se realiza una petición http.
                                 var xhr = new XMLHttpRequest();
+                                // Se obtienen los precios.
                                 var productPrices = <?php echo json_encode($product_prices); ?>;
+                                // Se obtienen los productos.
                                 var products = document.getElementsByClassName('product');
                                 var totalImporte = 0;
 
+                                // Se recorren los productos.
                                 for (var i = 0; i < products.length; i++) {
+                                    // Se obtiene el producto.
                                     var product = products[i];
+                                    // Se selecciona el id.
                                     var productIdElement = product.querySelector('input[name="id_publicidad"]');
+                                    // Se selecciona el selector de meses.
                                     var monthsSelector = product.querySelector('input[name^="months_"]');
 
+                                    // Se obtiene el id.
                                     var currentProductId = parseInt(productIdElement.value);
+                                    // Se obtiene el precio.
                                     var currentProductPrice = parseFloat(productPrices[currentProductId]);
+                                    // Se obtienen los meses seleccionados.
                                     var currentSelectedMonths = parseInt(monthsSelector.value);
+                                    // Se obtiene el precio total.
                                     var currentTotalPrice = currentProductPrice * currentSelectedMonths;
 
-                                    // Agregar el precio del producto al importe total
+                                    // Se va sumando el precio total.
                                     totalImporte += currentTotalPrice;
                                 }
-                                var importe = totalImporte; // Obtener el valor de $importe en JavaScript
+                                var importe = totalImporte; 
 
-                                // Obtener los meses y las IDs de productos seleccionados
+                                // Obtener los meses seleccionados.
                                 var mesesSeleccionados = document.querySelectorAll('input[type="number"]');
+                                // Se crean los parámetros para la consulta http.
                                 var parametros = 'actualizarPedido&importe=' + importe;
 
-                                // Agregar los meses y las IDs de productos a los parámetros de la solicitud
+                                // Se recorre mesesSeleccionados.
                                 for (var i = 0; i < mesesSeleccionados.length; i++) {
-                                    var product_id = mesesSeleccionados[i].getAttribute('id').substring(7);
+                                    // Se obtiene el atributo id que es una cadena de texto.
+                                    var id_producto = mesesSeleccionados[i].getAttribute('id').substring(7);
+                                    // Se obtienen los meses seleccionados.
                                     var selected_months = mesesSeleccionados[i].value;
-
-                                    parametros += '&months_' + product_id + '=' + selected_months;
+                                    // Se posicionan los parámetros meses junto a productoid.
+                                    parametros += '&months_' + id_producto + '=' + selected_months;
                                 }
-
+                                // Y se envía a actualizarPedido los datos obtenidos aquí.
                                 xhr.open('GET', 'empresa.php?' + parametros, true);
                                 xhr.onreadystatechange = function () {
                                     if (xhr.readyState === 4 && xhr.status === 200) {
@@ -396,64 +332,7 @@ require_once '../lib/mapa.php';
                 <?php
             }
             if (isset($_REQUEST['empresaInfo'])) {
-                echo "<div class='container'>";
-                echo "<div class='row'>";
-                echo "<div class='col-md-6'>";
-                echo "<h2>Información general</h2>";
-                $sql = "SELECT * FROM empresas WHERE id_empresa = " . $_SESSION['usuario']['id_usuario'];
-                $result = sqlSELECT($sql);
-                if ($result->num_rows > 0) {
-                    $row = $result->fetch_assoc();
-                    echo "<p><strong>CIF:</strong> " . $row['cif'] . "</p>";
-                    echo "<p><strong>Nombre:</strong> " . $row['nombre'] . "</p>";
-                    echo "<p><strong>Telefono:</strong> " . $row['telefono'] . "</p>";
-                    echo "<p><strong>Email:</strong> " . $row['email'] . "</p>";
-                    echo "<p><strong>Direccion:</strong> " . $row['direccion'] . "</p>";
-                }
-                echo "</div>";
-
-                $sql = "SELECT p.ubicacion, p.codigo_postal, f.foto, u.email, p.caducidad_compra
-                        FROM publicidades as p, usuarios as u, fotos as f
-                        WHERE p.id_usuario = u.id_usuario
-                            AND f.id_publicidad = p.id_publicidad
-                            AND p.comprador = " . $_SESSION['usuario']['id_usuario'] . "
-                            AND p.ocupado = 1
-                            AND p.caducidad_compra IS NOT NULL";
-                $result = sqlSELECT($sql);
-
-                echo "<div class='col-md-6'>";
-                echo "<h2>Ubicaciones alquiladas</h2>";
-                if ($result->num_rows > 0) {
-                    echo "<table class='table table-striped table-bordered'>";
-                    echo "<thead class='thead-dark'>";
-                    echo "<tr>";
-                    echo "<th>Ubicación</th>";
-                    echo "<th>Código Postal</th>";
-                    echo "<th>Foto</th>";
-                    echo "<th>Dueño</th>";
-                    echo "<th>Fecha de Finalización</th>";
-                    echo "</tr>";
-                    echo "</thead>";
-                    echo "<tbody>";
-
-                    while ($row = $result->fetch_assoc()) {
-                        echo "<tr>";
-                        echo "<td>" . $row['ubicacion'] . "</td>";
-                        echo "<td>" . $row['codigo_postal'] . "</td>";
-                        echo "<td><img src='data:image/jpeg;base64," . base64_encode($row['foto']) . "' alt='Imagen del producto' class='img-thumbnail'></td>";
-                        echo "<td>" . $row['email'] . "</td>";
-                        echo "<td>" . $row['caducidad_compra'] . "</td>";
-                        echo "</tr>";
-                    }
-
-                    echo "</tbody>";
-                    echo "</table>";
-                } else {
-                    echo "<p>No se encontraron ubicaciones alquiladas.</p>";
-                }
-                echo "</div>";
-                echo "</div>";
-                echo "</div>";
+                empresaInfo();
             }
             ?>
         </div>

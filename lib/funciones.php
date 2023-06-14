@@ -7,7 +7,7 @@ function conectar()
 {
     // Datos para la base de datos.
     $host = "localhost";
-    $basededatos = "mapa_promocion";
+    $basededatos = "mapa_promocion2";
     $usuariodb = "root";
     $clavedb = "";
 
@@ -1863,4 +1863,637 @@ function procesarPagos()
     }
 }
 
+// Se obtiene la información del usuario empresarial.
+function empresaInfo()
+{
+    echo "<div class='container'>";
+    echo "<div class='row'>";
+    echo "<div class='col-md-6'>";
+    echo "<h2>Información general</h2>";
+    $sql = "SELECT * FROM empresas WHERE id_empresa = " . $_SESSION['usuario']['id_usuario'];
+    $result = sqlSELECT($sql);
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        echo "<p><strong>CIF:</strong> " . $row['cif'] . "</p>";
+        echo "<p><strong>Nombre:</strong> " . $row['nombre'] . "</p>";
+        echo "<p><strong>Telefono:</strong> " . $row['telefono'] . "</p>";
+        echo "<p><strong>Email:</strong> " . $row['email'] . "</p>";
+        echo "<p><strong>Direccion:</strong> " . $row['direccion'] . "</p>";
+    }
+    echo "</div>";
+
+    $sql = "SELECT p.ubicacion, p.codigo_postal, f.foto, u.email, p.caducidad_compra
+                        FROM publicidades as p, usuarios as u, fotos as f
+                        WHERE p.id_usuario = u.id_usuario
+                            AND f.id_publicidad = p.id_publicidad
+                            AND p.comprador = " . $_SESSION['usuario']['id_usuario'] . "
+                            AND p.ocupado = 1
+                            AND p.caducidad_compra IS NOT NULL";
+    $result = sqlSELECT($sql);
+
+    echo "<div class='col-md-6'>";
+    echo "<h2>Ubicaciones alquiladas</h2>";
+    if ($result->num_rows > 0) {
+        echo "<table class='table table-striped table-bordered'>";
+        echo "<thead class='thead-dark'>";
+        echo "<tr>";
+        echo "<th>Ubicación</th>";
+        echo "<th>Código Postal</th>";
+        echo "<th>Foto</th>";
+        echo "<th>Dueño</th>";
+        echo "<th>Fecha de Finalización</th>";
+        echo "</tr>";
+        echo "</thead>";
+        echo "<tbody>";
+
+        while ($row = $result->fetch_assoc()) {
+            echo "<tr>";
+            echo "<td>" . $row['ubicacion'] . "</td>";
+            echo "<td>" . $row['codigo_postal'] . "</td>";
+            echo "<td><img src='data:image/jpeg;base64," . base64_encode($row['foto']) . "' alt='Imagen del producto' class='img-thumbnail'></td>";
+            echo "<td>" . $row['email'] . "</td>";
+            echo "<td>" . $row['caducidad_compra'] . "</td>";
+            echo "</tr>";
+        }
+
+        echo "</tbody>";
+        echo "</table>";
+    } else {
+        echo "<p>No se encontraron ubicaciones alquiladas.</p>";
+    }
+    echo "</div>";
+    echo "</div>";
+    echo "</div>";
+}
+
+
+function usuarioTienda()
+{
+    // Consultar los productos desde la base de datos
+    $sql = "SELECT * FROM productos as p, fotos as f 
+            WHERE f.id_producto = p.id_producto
+            AND p.recompensa = 0
+            AND p.estado = 1";
+
+    $result = sqlSELECT($sql);
+
+    // Verificar si se encontraron productos
+    if ($result->num_rows > 0) {
+        // Iterar sobre los productos y mostrarlos en la página
+        while ($row = $result->fetch_assoc()) {
+            $imagen = $row["foto"];
+
+            echo "
+        <div class='col-md-6 col-lg-4'>
+            <div class='card my-3'>
+                <img src='data:image/jpeg;base64," . base64_encode($imagen) . "' alt='Imagen del producto'>
+                <div class='card-body'>
+                    <h3 class='card-title'>" . $row['nombre'] . "</h3>
+                    <p class='card-text'>" . $row['descripcion'] . "</p>
+                    <p class='card-text'>Precio: $" . $row['precio'] . "</p>
+                    <form action='usuario.php' method='post'>
+                        <input type='hidden' name='id_producto' value='" . $row['id_producto'] . "'>
+                        <input type='hidden' name='precio' value='" . $row['precio'] . "'>
+                        <input class='btn btn-primary' type='submit' name='add_to_cart' value='Agregar al carrito'>
+                    </form>
+                </div>
+        
+            </div>
+        </div>
+        ";
+
+        }
+    } else {
+        echo "<div class='alert alert-info'>No se encontraron productos</div>";
+    }
+}
+
+
+function lanzarAlerta($usuario, $titulo, $texto, $id_admin, $fechaHora)
+{
+    $sql = "INSERT INTO `alertas`(`titulo`, `descripcion`, `usuario`, `estado`, `fecha_hora`, `id_usuario`) VALUES ('$titulo', '$texto', '$usuario', 0, '$fechaHora', '$id_admin')";
+    sqlINSERT($sql);
+    echo "<script>window.location.href = 'administrador.php?administradorPanel';</script>";
+    exit();
+}
+
+function aceptarCertificado($id_publicidad)
+{
+    $sql = "UPDATE publicidades SET revision = 1 WHERE id_publicidad = " . $id_publicidad;
+
+    if (sqlUPDATE($sql)) {
+        echo "<script>window.location.href = 'administrador.php?administradorPanel';</script>";
+        exit();
+    }
+}
+
+function rechazarCertificado($id_publicidad)
+{
+    $sql = "UPDATE publicidades SET revision = 0 WHERE id_publicidad = " . $id_publicidad;
+
+    if (sqlUPDATE($sql)) {
+        echo "<script>window.location.href = 'administrador.php?administradorPanel';</script>";
+        exit();
+    }
+}
+
+function revisarCompraUbicacion($id_publicidad)
+{
+    $sql = "UPDATE publicidades SET revision = 3 WHERE id_publicidad = " . $id_publicidad;
+    $sql2 = "UPDATE pedidos AS p, lineas_pedidos AS lp SET p.revision = 1 WHERE lp.id_pedido = p.id_pedido AND lp.id_publicidad = " . $id_publicidad;
+
+    if (sqlUPDATE($sql)) {
+        if (sqlUPDATE($sql2)) {
+            echo "<script>window.location.href = 'administrador.php?administradorPanel';</script>";
+            exit();
+        }
+    }
+}
+
+function revisarCompraProducto($id_pedido)
+{
+    $sql = "UPDATE pedidos SET revision = 1 WHERE id_pedido = " . $id_pedido;
+
+    if (sqlUPDATE($sql)) {
+        echo "<script>window.location.href = 'administrador.php?administradorPanel';</script>";
+        exit();
+    }
+}
+
+function nuevoProducto($nombreProducto, $descripcionProducto, $precioProducto, $puntosProducto, $recompensaProducto, $estado)
+{
+    $conn = conectar();
+    $sql = "INSERT INTO `productos`(`nombre`, `descripcion`, `puntos`, `precio`, `recompensa`, `estado`) VALUES (?, ?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    // Y mediante un bind_param se establecen los valores.
+    $stmt->bind_param('ssdddi', $nombreProducto, $descripcionProducto, $puntosProducto, $precioProducto, $recompensaProducto, $estado);
+    // Se ejecuta la consulta.
+    $stmt->execute();
+
+    // Verificar si la inserción fue exitosa.
+    if ($stmt->affected_rows > 0) {
+
+        if (isset($_FILES['imagen'])) {
+            if ($_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
+                $imagen = $_FILES['imagen']['tmp_name'];
+                $contenidoImagen = file_get_contents($imagen);
+                $ultimoIdProducto = $stmt->insert_id;
+                $sql = "INSERT INTO `fotos`(`foto`, `id_producto`) VALUES (?, ?)";
+                $stmt2 = $conn->prepare($sql);
+                $stmt2->bind_param("si", $contenidoImagen, $ultimoIdProducto);
+                // Ejecutar la consulta
+                if ($stmt2->execute()) {
+                    echo "<script>window.location.href = 'administrador.php?administradorProductos=';</script>";
+                    exit();
+                } else {
+                    echo "Error al subir la imagen: " . $stmt->error;
+                }
+
+            }
+        } else {
+            echo "<h1>ERROR</h1>";
+        }
+
+    } else {
+        // Si no lo fue, se indica un error.
+        echo "Error al guardar el marcador.";
+    }
+}
+
+function editarProducto($productoId, $nuevoValor, $columna)
+{
+
+    $conexion = conectar();
+    $columna = $conexion->real_escape_string($columna); // Escapar el nombre de la columna para evitar inyección de SQL
+    $consulta = "UPDATE productos SET $columna = '$nuevoValor' WHERE id_producto = $productoId";
+    $resultado = $conexion->query($consulta);
+
+    if ($resultado) {
+        echo "Actualización exitosa";
+    } else {
+        echo "Error al actualizar el valor";
+    }
+
+    exit();
+}
+
+function editarUsuario($usuarioId, $nuevoValor, $columna)
+{
+    $conexion = conectar();
+    $columna = $conexion->real_escape_string($columna); // Escapar el nombre de la columna para evitar inyección de SQL
+    $consulta = "UPDATE usuarios SET $columna = '$nuevoValor' WHERE id_usuario = $usuarioId";
+    $resultado = $conexion->query($consulta);
+
+
+    if ($resultado) {
+        echo "Actualización exitosa";
+    } else {
+        echo "Error al actualizar el valor";
+    }
+
+    exit();
+}
+
+
+function aceptarMision($id_mision)
+{
+    $conn = conectar();
+    $sqlUpdate = "UPDATE `misiones` SET `aceptacion` = 1 WHERE `id_mision` = ?";
+    $stmt = $conn->prepare($sqlUpdate);
+    $stmt->bind_param("i", $id_mision);
+    $stmt->execute();
+    $sqlUpdate = "UPDATE usuarios AS u, misiones AS m SET u.puntos = u.puntos + 10 WHERE m.id_mision = ? AND u.id_usuario = m.id_usuario";
+    $stmt = $conn->prepare($sqlUpdate);
+    $stmt->bind_param("i", $id_mision);
+    $stmt->execute();
+    echo "<script>window.location.href = 'administrador.php?administradorMisiones=';</script>";
+    exit();
+}
+function rechazarMision($id_mision)
+{
+    $conn = conectar();
+    $sqlUpdate = "UPDATE `misiones` SET `aceptacion` = 2 WHERE `id_mision` = ?";
+    $stmt = $conn->prepare($sqlUpdate);
+    $stmt->bind_param("i", $id_mision);
+    $stmt->execute();
+
+    echo "<script>window.location.href = 'administrador.php?administradorMisiones=';</script>";
+    exit();
+}
+
+function addCart($id_producto, $precio)
+{
+    $sql = "SELECT * FROM pedidos as p, lineas_pedidos as lp WHERE p.id_pedido = lp.id_pedido AND p.fecha_fin IS NULL AND p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND lp.id_producto = " . $id_producto . ";";
+
+    if (sqlSELECT($sql)->num_rows > 0) {
+        $id_pedido = obtenerUltimoIdPedido(); // Obtener el último ID de pedido insertado
+
+        $sqlPedido = "UPDATE lineas_pedidos SET cantidad = cantidad + 1 WHERE id_pedido = " . $id_pedido . " AND id_producto = " . $id_producto;
+        sqlUPDATE($sqlPedido);
+
+    } else {
+        $sql = "SELECT * FROM pedidos as p, lineas_pedidos as lp WHERE p.id_pedido = lp.id_pedido AND p.fecha_fin IS NULL AND p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND lp.id_producto IS NOT NULL;";
+
+        if (sqlSELECT($sql)->num_rows > 0) {
+            $id_pedido = obtenerUltimoIdPedido(); // Obtener el último ID de pedido insertado
+            $sqlLinea = "INSERT INTO `lineas_pedidos`(`precio`, `cantidad`, `id_producto`, `id_publicidad`, `id_pedido`) VALUES ($precio, 1, $id_producto, NULL, $id_pedido)";
+            sqlINSERT($sqlLinea);
+        } else {
+
+            $importe = 0;
+            $fecha_fin = "NULL"; // Asignar NULL a la columna fecha_fin
+            $id_usuario = $_SESSION['usuario']['id_usuario'];
+
+            // Iniciar una transacción
+            $conn = conectar();
+            mysqli_begin_transaction($conn); // Reemplaza $conn con tu conexión a la base de datos
+
+            try {
+                // Insertar el pedido
+                $sqlPedido = "INSERT INTO `pedidos`(`importe`, `fecha_inicio`, `fecha_fin`, `id_usuario`) VALUES ($importe, NOW(), $fecha_fin, $id_usuario)";
+                $resultPedido = $conn->query($sqlPedido);
+
+                // Obtener el último ID de pedido insertado
+                $id_pedido = mysqli_insert_id($conn);
+
+                // Insertar la línea de pedido
+                $sqlLinea = "INSERT INTO `lineas_pedidos`(`precio`, `cantidad`, `id_producto`, `id_publicidad`, `id_pedido`) VALUES ($precio, 1, $id_producto, NULL, $id_pedido)";
+                $resultLinea = $conn->query($sqlLinea);
+
+                // Confirmar la transacción
+                mysqli_commit($conn);
+            } catch (Exception $e) {
+                // Ocurrió un error, revertir la transacción
+                mysqli_rollback($conn);
+                // Manejar el error adecuadamente
+                echo "Error: " . $e->getMessage();
+            }
+        }
+    }
+
+    echo "<script>window.location.href = 'usuario.php?usuarioTienda';</script>";
+    exit();
+}
+
+function removeCart($id_producto)
+{
+    $sql = "SELECT * FROM pedidos AS p JOIN lineas_pedidos AS lp ON p.id_pedido = lp.id_pedido WHERE p.fecha_fin IS NULL AND lp.cantidad > 0 AND p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . ";";
+
+    if (sqlSELECT($sql)->num_rows > 0) {
+
+        $id_pedido = obtenerUltimoIdPedido(); // Obtener el último ID de pedido insertado
+        $sqlPedido = "UPDATE lineas_pedidos SET cantidad = cantidad - 1 WHERE id_pedido = " . $id_pedido . " AND id_producto = " . $id_producto;
+        sqlUPDATE($sqlPedido);
+
+    }
+
+    // Redirigir nuevamente al carrito
+    echo "<script>window.location.href = 'usuario.php?usuarioCarrito=1';</script>";
+    exit();
+}
+
+function actualizarPedido($importe, $ubicacion)
+{
+    // Actualizar el pedido en la base de datos utilizando el valor de importe y ubicacion
+    $id_pedido = obtenerUltimoIdPedido();
+    $sqlPedido = "UPDATE pedidos SET fecha_fin = NOW(), importe = '" . $importe . "', ubicacion = '" . $ubicacion . "' WHERE id_pedido = " . $id_pedido;
+    sqlUPDATE($sqlPedido);
+}
+
+function borrarMarcador($id)
+{
+    $conn = conectar();
+    $sql = "DELETE FROM `misiones` WHERE id_publicidad =" . $id . ";";
+    $resultado = mysqli_query($conn, $sql);
+
+    $sql2 = "DELETE FROM `publicidades` WHERE id_publicidad =" . $id . ";";
+    $resultado2 = mysqli_query($conn, $sql2);
+
+    if ($resultado2) {
+        echo "<script>window.location.href = 'usuario.php?usuarioMapa=';</script>";
+        exit();
+    } else {
+        echo "Error al ejecutar la consulta de eliminación: " . mysqli_error($conn);
+    }
+}
+
+
+function addCartEmpresa($id_producto, $precio, $id_empresa)
+{
+    $conn = conectar();
+    $sql = "UPDATE publicidades SET comprador = ? WHERE id_publicidad = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ii", $id_empresa, $id_producto);
+    $stmt->execute();
+    $stmt->close();
+    $sql = "SELECT * FROM pedidos as p, lineas_pedidos as lp WHERE p.id_pedido = lp.id_pedido AND p.fecha_fin IS NULL AND p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND lp.id_publicidad = " . $id_producto . " AND lp.cantidad > 0;";
+
+    if (sqlSELECT($sql)->num_rows > 0) {
+        echo "<script>
+                            alert('¡Atención! Este producto ya se encuentra en el carrito.');
+                            window.location.href = 'empresa.php?empresaMapa=1';
+                        </script>";
+        exit();
+
+    } else {
+
+        $sql = "SELECT * FROM pedidos as p, lineas_pedidos as lp WHERE p.id_pedido = lp.id_pedido AND p.fecha_fin IS NULL AND p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND lp.id_publicidad IS NOT NULL;";
+
+        if (sqlSELECT($sql)->num_rows > 0) {
+            $id_pedido = obtenerUltimoIdPedidoPublicidad(); // Obtener el último ID de pedido insertado
+            $sqlLinea = "INSERT INTO `lineas_pedidos`(`precio`, `cantidad`, `id_producto`, `id_publicidad`, `id_pedido`) VALUES ($precio, 1, NULL, $id_producto, $id_pedido)";
+            sqlINSERT($sqlLinea);
+        } else {
+
+            $importe = 0;
+            $fecha_fin = "NULL"; // Asignar NULL a la columna fecha_fin
+            $id_usuario = $_SESSION['usuario']['id_usuario'];
+
+            $conn = conectar();
+            mysqli_begin_transaction($conn); // Reemplaza $conn con tu conexión a la base de datos
+
+            try {
+                // Insertar el pedido
+                $sqlPedido = "INSERT INTO `pedidos`(`importe`, `fecha_inicio`, `fecha_fin`, `id_usuario`) VALUES ($importe, NOW(), NULL, $id_usuario)";
+                $resultPedido = $conn->query($sqlPedido);
+
+                // Obtener el último ID de pedido insertado
+                $id_pedido = mysqli_insert_id($conn);
+
+                // Insertar la línea de pedido
+                $sqlLinea = "INSERT INTO `lineas_pedidos`(`precio`, `cantidad`, `id_publicidad`, `id_pedido`) VALUES ($precio, 1, $id_producto, $id_pedido)";
+                $resultLinea = $conn->query($sqlLinea);
+
+                // Confirmar la transacción
+                mysqli_commit($conn);
+            } catch (Exception $e) {
+                // Ocurrió un error, revertir la transacción
+                mysqli_rollback($conn);
+                // Manejar el error adecuadamente
+                echo "Error: " . $e->getMessage();
+            }
+
+        }
+    }
+
+    // Redirigir nuevamente al mapa.
+    echo "<script>window.location.href = 'empresa.php?empresaMapa';</script>";
+    exit();
+}
+
+
+function removeCartEmpresa($id_producto)
+{
+    $conn = conectar();
+    $sql = "UPDATE publicidades SET comprador = NULL WHERE id_publicidad = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $id_producto);
+    $stmt->execute();
+    $stmt->close();
+
+    $sql = "SELECT * FROM pedidos AS p JOIN lineas_pedidos AS lp ON p.id_pedido = lp.id_pedido WHERE p.fecha_fin IS NULL AND lp.cantidad > 0 AND p.id_usuario = " . $_SESSION['usuario']['id_usuario'] . ";";
+
+    if (sqlSELECT($sql)->num_rows > 0) {
+
+        $id_pedido = obtenerUltimoIdPedidoPublicidad(); // Obtener el último ID de pedido insertado
+        $sqlPedido = "DELETE FROM `lineas_pedidos` WHERE id_pedido = " . $id_pedido . " AND id_publicidad = " . $id_producto;
+        sqlDELETE($sqlPedido);
+
+    }
+
+    // Redirigir nuevamente al carrito
+    echo "<script>window.location.href = 'empresa.php?empresaCarrito=1';</script>";
+    exit();
+}
+
+function actualizarPedidoEmpresa($importe)
+{
+    // Actualizar el pedido en la base de datos utilizando el valor de importe
+    $id_pedido = obtenerUltimoIdPedidoPublicidad();
+    $sqlPedido = "UPDATE pedidos SET fecha_fin = NOW(), importe = " . $importe . " WHERE id_pedido = " . $id_pedido;
+    sqlUPDATE($sqlPedido);
+    foreach ($_REQUEST as $key => $value) {
+        if (strpos($key, 'months_') === 0) {
+            // Obtener la ID del producto
+            $id_producto = substr($key, 7);
+
+            // Obtener el valor de los meses seleccionados
+            $selected_months = intval($value);
+
+
+            $query = "UPDATE lineas_pedidos 
+            SET precio = (SELECT precio FROM publicidades WHERE id_publicidad = $id_producto) * $selected_months 
+            WHERE id_publicidad = $id_producto";
+
+            // Ejecutar la consulta en tu base de datos
+            // ...
+            sqlUPDATE($query);
+
+
+            // Realizar la consulta de actualización
+            $fecha_según_mes = date('Y-m-d', strtotime("+$selected_months months"));
+            $query = "UPDATE publicidades SET caducidad_compra = '$fecha_según_mes' WHERE id_publicidad = $id_producto";
+
+            // Ejecutar la consulta en tu base de datos
+            // ...
+            sqlUPDATE($query);
+        }
+    }
+}
+
+
+function recompensas()
+{
+
+    // Consultar los productos desde la base de datos
+    $sql = "SELECT * FROM productos as p, fotos as f 
+    WHERE f.id_producto = p.id_producto
+    AND p.estado = 1 
+    AND p.puntos > 0
+    AND p.recompensa = 1";
+
+    $result = sqlSELECT($sql);
+    // Verificar si se encontraron productos
+    if ($result->num_rows > 0) {
+        // Iterar sobre los productos y mostrarlos en la página
+        while ($row = $result->fetch_assoc()) {
+
+            echo "
+            <div class='col-md-6 col-lg-4'>
+                <div class='card my-3'>
+                    <img src='data:image/jpeg;base64," . base64_encode($row['foto']) . "' alt='Imagen del producto'>
+                    <div class='card-body'>
+                        <h3 class='card-title'>" . $row['nombre'] . "</h3>
+                        <p class='card-text'>" . $row['descripcion'] . "</p>
+                        <p class='card-text'>Puntos: " . $row['puntos'] . "</p>
+
+                        <form action='vigilante.php' method='post'>
+                            <input type='hidden' name='id_producto' value='" . $row['id_producto'] . "'>";
+
+            $sql2 = "SELECT ubicacion, fecha_inicio FROM pedidos WHERE id_usuario = " . $_SESSION['usuario']['id_usuario'] . " AND ubicacion IS NOT NULL ORDER BY fecha_inicio DESC LIMIT 1";
+            $result2 = sqlSELECT($sql2);
+
+            echo "
+        <div class='form-group'>
+        <label for='formGroupExampleInput'>Ubicacion: </label>
+        ";
+
+            if ($result2->num_rows > 0) {
+                $row2 = $result2->fetch_assoc();
+                $ubicacionReciente = $row2['ubicacion'];
+                $fechaInicio = $row2['fecha_inicio'];
+                echo "<input class='form-control' type='text' id='ubicacion-input' name='ubicacion' placeholder='Indica la ubicación a la que enviar el producto' value='" . htmlspecialchars($ubicacionReciente) . "' required>";
+            } else {
+                echo "<input class='form-control' type='text' id='ubicacion-input' name='ubicacion' placeholder='Indica la ubicación a la que enviar el producto' required>";
+            }
+
+
+            echo "
+        </div>
+        <input class='btn btn-primary' type='submit'  name='reclamarRecompensa' value='Reclamar'>
+        </form>
+                            
+                        </form>
+                    </div>
+                </div>
+            </div> 
+            ";
+
+        }
+    } else {
+        echo "<div class='alert alert-info'>No se encontraron productos</div>";
+    }
+    if (isset($_GET['mensaje'])) {
+        $mensaje = $_GET['mensaje'];
+        echo "<p>$mensaje</p>";
+    }
+
+}
+
+function reclamarRecompensa($id_usuario, $id_producto, $ubicacion)
+{
+    $sql = "SELECT * FROM productos WHERE id_producto = " . $id_producto;
+    $result = sqlSELECT($sql);
+    $conn = conectar();
+    // Si da resultados entonces entra en el if.
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $sql2 = "SELECT * FROM usuarios WHERE id_usuario = " . $id_usuario;
+            $result2 = sqlSELECT($sql2);
+            if ($result2->num_rows > 0) {
+                while ($row2 = $result2->fetch_assoc()) {
+                    $puntos_vale = $row['puntos'];
+                    $puntos_tiene = $row2['puntos'];
+                    if (($puntos_tiene - $puntos_vale) >= 0) {
+                        $precio = $row['puntos'];
+
+
+
+
+                        $sqlPedido = "INSERT INTO `pedidos` (`puntos`, `fecha_inicio`, `fecha_fin`, `id_usuario`, `ubicacion`) VALUES ($precio, NOW(), NOW(), $id_usuario, '$ubicacion')";
+                        $resultPedido = $conn->query($sqlPedido);
+
+                        // Obtener el último ID de pedido insertado
+                        $id_pedido = mysqli_insert_id($conn);
+                        $sqlLinea = "INSERT INTO `lineas_pedidos`(`precio`, `cantidad`, `id_producto`, `id_publicidad`, `id_pedido`) VALUES ($precio, 1, $id_producto, NULL, $id_pedido)";
+                        $resultLinea = $conn->query($sqlLinea);
+
+                        $sql2 = "UPDATE usuarios SET puntos = puntos - " . (int) $row['puntos'] . " WHERE id_usuario = " . $_SESSION['usuario']['id_usuario'];
+                        sqlUPDATE($sql2);
+                    } else {
+                        $mensaje = "No tienes suficientes puntos para reclamar esta recompensa.";
+                    }
+                }
+            }
+        }
+    }
+
+    $url = "vigilante.php?recompensas";
+    if (isset($mensaje)) {
+        $url .= "&mensaje=" . urlencode($mensaje);
+    }
+
+    echo "<script>window.location.href = '$url';</script>";
+    exit();
+}
+
+// Función para subir una misión en el menú vigilante.
+function imagenMision($id_mision)
+{
+    if (isset($_FILES['imagen'])) {
+        if ($_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
+            $imagen = $_FILES['imagen']['tmp_name'];
+            $contenidoImagen = file_get_contents($imagen);
+            $conn = conectar();
+
+            // Actualizar campo `fecha_fin`
+            $fechaFin = date('Y-m-d'); // Obtener fecha actual
+            $sqlFechaFin = "UPDATE `misiones` SET `fecha_fin` = ? WHERE `id_mision` = ?";
+            $stmtFechaFin = $conn->prepare($sqlFechaFin);
+            $stmtFechaFin->bind_param("si", $fechaFin, $id_mision);
+            $stmtFechaFin->execute();
+
+            // Insertar imagen en la tabla `fotos`
+            $sqlInsertarFoto = "INSERT INTO `fotos` (`foto`, `id_mision`) VALUES (?, ?)";
+            $stmtInsertarFoto = $conn->prepare($sqlInsertarFoto);
+            $stmtInsertarFoto->bind_param("si", $contenidoImagen, $id_mision);
+
+            // Ejecutar la consulta de inserción
+            if ($stmtInsertarFoto->execute()) {
+                // Actualizar el estado de la misión
+                $sqlUpdate = "UPDATE `misiones` SET `estado` = 1 WHERE `id_mision` = ?";
+                $stmtUpdate = $conn->prepare($sqlUpdate);
+                $stmtUpdate->bind_param("i", $id_mision);
+                $stmtUpdate->execute();
+
+                echo "<script>window.location.href = 'vigilante.php?misiones=';</script>";
+                exit();
+            } else {
+                echo "Error al subir la imagen: " . $stmtInsertarFoto->error;
+            }
+        }
+    } else {
+        echo "<h1>ERROR</h1>";
+    }
+}
 ?>
