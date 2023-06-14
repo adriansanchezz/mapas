@@ -58,7 +58,7 @@ function mapa($valor)
                 </div>
                 <div class="col-md-3">
                     <form action="usuario.php" method="POST" enctype="multipart/form-data"
-                        onsubmit="return validarFormulario(); guardarMarcador();">
+                        onsubmit="return validarFormulario();">
                         <input type="hidden" name="lat" id="lat">
                         <input type="hidden" name="lng" id="lng">
                         <div class="card">
