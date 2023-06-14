@@ -42,16 +42,16 @@ require_once '../lib/mapa.php';
                         </a>
 
                         <a href="administrador.php?administradorProductos"
-                        class="list-group-item list-group-item-action text-light" id="sidebar2">
+                            class="list-group-item list-group-item-action text-light" id="sidebar2">
                             <i class="fa fa-shopping-cart mr-3" aria-hidden="true"></i>Productos
                         </a>
                         <a href="administrador.php?administradorMisiones"
-                        class="list-group-item list-group-item-action text-light" id="sidebar2">
+                            class="list-group-item list-group-item-action text-light" id="sidebar2">
                             <i class="fa fa-bullseye mr-3" aria-hidden="true"></i>Misiones
                         </a>
                         <a href="administrador.php?administradorSoportes"
-                        class="list-group-item list-group-item-action text-light" id="sidebar2">
-                            <i class="fa fa-cog mr-3" aria-hidden="true"></i>Soportes
+                            class="list-group-item list-group-item-action text-light" id="sidebar2">
+                            <i class="fa fa-ticket mr-3" aria-hidden="true"></i>Soportes
                         </a>
                     </div>
                 </div>
