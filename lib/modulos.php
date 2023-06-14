@@ -342,7 +342,7 @@ function menu_general()
                             $result = sqlSELECT($sql);
                             if ($result->num_rows > 0) {
                                 while ($row = $result->fetch_assoc()) {
-                                    $notificacion = "<h5 style='color: red;'>Notificación del administrador: " . $row['titulo'] . "</h5><p>" . $row['descripcion'] . "</p>";
+                                    $notificacion = "<div class='notification'><h5 style='color: red;'>Notificación del administrador: " . $row['titulo'] . "</h5><p>" . $row['descripcion'] . "</p><form action='usuario.php' method='post'><input type='hidden' name='id_alerta' value='" . $row['id_alerta'] . "'><input type='submit' value='Visto' name='vistoAdmin'></form></div>";
                                     array_push($notificaciones, $notificacion);
                                 }
                             }
@@ -395,7 +395,15 @@ function menu_general()
                                 exit();
                             }
 
-
+                            if(isset($_REQUEST['vistoAdmin']))
+                            {
+                                 
+                                $id_alerta = $_POST['id_alerta'];
+                                $sql = "UPDATE alertas SET estado = 1 WHERE usuario = " . $_SESSION['usuario']['id_usuario'] . " AND id_alerta = " . $id_alerta;
+                                sqlUPDATE($sql);
+                                echo "<script>window.location.href = 'principal.php';</script>";
+                                exit();
+                            }
 
                             // Si el administrador ha marcado como visto el pedido del usuario.
                             if(isset($_REQUEST['vistoPedidoUsuario']))

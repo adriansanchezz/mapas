@@ -288,7 +288,7 @@ function mapaUsuario() {
         var textoRegex = /^[A-Za-zÁáÉéÍíÓóÚúÑñ\s]+$/;
 
         if (!textoRegex.test(provincia)) {
-            alert('Los campos de descripción, provincia, ciudad y ubicación deben contener solo letras.');
+            alert('El campo de provincia debe contener solo letras.');
             return false;
         }
 
@@ -489,7 +489,7 @@ function vigilante() {
 
             var data = "descripcion=" + encodeURIComponent("Ve al lugar y saca una foto");
             data += "&id_publicidad=" + encodeURIComponent(marcadorJSON.id_publicidad);
-            var url = '../lib/ejecutarMision.php?subirMision';
+            var url = '../lib/solicitarMision.php?subirMision';
             var xhr = new XMLHttpRequest();
             xhr.open('POST', url, true);
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -598,7 +598,7 @@ function validarFormulario() {
 
     var textoRegex = /^[A-Za-zÁáÉéÍíÓóÚúÑñ\s]+$/;
 
-    if (!textoRegex.test(provincia) || !textoRegex.test(ciudad) || !textoRegex.test(ubicacion)) {
+    if (!textoRegex.test(provincia)) {
         alert('Los campos de descripción, provincia, ciudad y ubicación deben contener solo letras.');
         return false;
     }

@@ -260,11 +260,7 @@ require_once '../lib/mapa.php';
                         $texto = $_POST['texto'];
                         $id_admin = $_SESSION['usuario']['id_usuario'];
                         $fechaHora = date('Y-m-d H:i:s'); // Obtiene la fecha y hora actual en el formato deseado
-                
-                        $sql = "INSERT INTO `alertas`(`titulo`, `descripcion`, `usuario`, `estado`, `fecha_hora`, `id_usuario`) VALUES ('$titulo', '$texto', '$usuario', 0, '$fechaHora', '$id_admin')";
-                        sqlINSERT($sql);
-                        echo "<script>window.location.href = 'administrador.php?administradorPanel';</script>";
-                        exit();
+                        lanzarAlerta($usuario, $titulo, $texto, $id_admin, $fechaHora);
 
                     }
 
@@ -272,54 +268,29 @@ require_once '../lib/mapa.php';
                     if (isset($_POST['aceptarCertificado'])) {
 
                         $id_publicidad = $_POST['id_publicidad'];
-                        $sql = "UPDATE publicidades SET revision = 1 WHERE id_publicidad = " . $id_publicidad;
-
-                        if (sqlUPDATE($sql)) {
-                            echo "<script>window.location.href = 'administrador.php?administradorPanel';</script>";
-                            exit();
-                        }
-
-
+                        aceptarCertificado($id_publicidad);
                     }
 
                     // Para rechazar el certificado de un piso.
                     if (isset($_POST['rechazarCertificado'])) {
 
                         $id_publicidad = $_POST['id_publicidad'];
-                        $sql = "UPDATE publicidades SET revision = 0 WHERE id_publicidad = " . $id_publicidad;
-
-                        if (sqlUPDATE($sql)) {
-                            echo "<script>window.location.href = 'administrador.php?administradorPanel';</script>";
-                            exit();
-                        }
-
-
+                        rechazarCertificado($id_publicidad);
                     }
 
                     // Para marcar como revisada la compra de una ubicación.
                     if (isset($_POST['revisarCompraUbicacion'])) {
                         $id_publicidad = $_POST['id_publicidad'];
-                        $sql = "UPDATE publicidades SET revision = 3 WHERE id_publicidad = " . $id_publicidad;
-                        $sql2 = "UPDATE pedidos AS p, lineas_pedidos AS lp SET p.revision = 1 WHERE lp.id_pedido = p.id_pedido AND lp.id_publicidad = " . $id_publicidad;
 
-                        if (sqlUPDATE($sql)) {
-                            if (sqlUPDATE($sql2)) {
-                                echo "<script>window.location.href = 'administrador.php?administradorPanel';</script>";
-                                exit();
-                            }
-                        }
+                        revisarCompraUbicacion($id_publicidad);
 
                     }
 
                     // Para marcar como revisada la compra de un producto.
                     if (isset($_POST['revisarCompraProducto'])) {
                         $id_pedido = $_POST['id_pedido'];
-                        $sql = "UPDATE pedidos SET revision = 1 WHERE id_pedido = " . $id_pedido;
 
-                        if (sqlUPDATE($sql)) {
-                            echo "<script>window.location.href = 'administrador.php?administradorPanel';</script>";
-                            exit();
-                        }
+                        revisarCompraProducto($id_pedido);
                     }
                     ?>
 
@@ -388,6 +359,7 @@ require_once '../lib/mapa.php';
                         </div>
                         <?php
                     }
+                    // Para la creación de un nuevo producto.
                     if (isset($_POST['nuevoProducto'])) {
                         $nombreProducto = $_POST['nombre'];
                         $descripcionProducto = $_POST['descripcion'];
@@ -395,43 +367,7 @@ require_once '../lib/mapa.php';
                         $puntosProducto = $_POST['puntos'];
                         $recompensaProducto = $_POST['recompensa'];
                         $estado = 1;
-
-                        $conn = conectar();
-                        $sql = "INSERT INTO `productos`(`nombre`, `descripcion`, `puntos`, `precio`, `recompensa`, `estado`) VALUES (?, ?, ?, ?, ?, ?)";
-                        $stmt = $conn->prepare($sql);
-                        // Y mediante un bind_param se establecen los valores.
-                        $stmt->bind_param('ssdddi', $nombreProducto, $descripcionProducto, $puntosProducto, $precioProducto, $recompensaProducto, $estado);
-                        // Se ejecuta la consulta.
-                        $stmt->execute();
-
-                        // Verificar si la inserción fue exitosa.
-                        if ($stmt->affected_rows > 0) {
-
-                            if (isset($_FILES['imagen'])) {
-                                if ($_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
-                                    $imagen = $_FILES['imagen']['tmp_name'];
-                                    $contenidoImagen = file_get_contents($imagen);
-                                    $ultimoIdProducto = $stmt->insert_id;
-                                    $sql = "INSERT INTO `fotos`(`foto`, `id_producto`) VALUES (?, ?)";
-                                    $stmt2 = $conn->prepare($sql);
-                                    $stmt2->bind_param("si", $contenidoImagen, $ultimoIdProducto);
-                                    // Ejecutar la consulta
-                                    if ($stmt2->execute()) {
-                                        echo "<script>window.location.href = 'administrador.php?administradorProductos=';</script>";
-                                        exit();
-                                    } else {
-                                        echo "Error al subir la imagen: " . $stmt->error;
-                                    }
-
-                                }
-                            } else {
-                                echo "<h1>ERROR</h1>";
-                            }
-
-                        } else {
-                            // Si no lo fue, se indica un error.
-                            echo "Error al guardar el marcador.";
-                        }
+                        nuevoProducto($nombreProducto, $descripcionProducto, $precioProducto, $puntosProducto, $recompensaProducto, $estado);
                     }
                     ?>
 
@@ -440,32 +376,12 @@ require_once '../lib/mapa.php';
                     if (isset($_GET['editarProducto'])) {
                         // Obtener el ID del producto a editar
                         $productoId = $_GET['editarProducto'];
-
                         // Obtener el nuevo valor del producto
                         $nuevoValor = $_POST['nuevoValor'];
-
                         // Obtener el nombre de la columna a actualizar (puede venir como parámetro en la solicitud)
                         $columna = $_POST['columna']; // Asegúrate de validar y sanitizar este valor
-                
-                        // Realizar la lógica para actualizar el valor en la base de datos
-                        // Aquí debes escribir el código específico para tu base de datos y tabla
-                
-                        // Por ejemplo, supongamos que tienes una tabla llamada "productos"
-                        // Puedes utilizar una consulta SQL para actualizar el valor del producto en la columna específica
-                        // Ejemplo con MySQLi:
-                        $conexion = conectar();
-                        $columna = $conexion->real_escape_string($columna); // Escapar el nombre de la columna para evitar inyección de SQL
-                        $consulta = "UPDATE productos SET $columna = '$nuevoValor' WHERE id_producto = $productoId";
-                        $resultado = $conexion->query($consulta);
-
-                        // Manejar la respuesta de la actualización (puedes enviar un mensaje de éxito o realizar alguna otra acción)
-                        if ($resultado) {
-                            echo "Actualización exitosa";
-                        } else {
-                            echo "Error al actualizar el valor";
-                        }
-                        // Terminar la ejecución del script PHP
-                        exit();
+                        editarProducto($productoId, $nuevoValor, $columna);
+                        
                     }
                     ?>
 
@@ -474,29 +390,11 @@ require_once '../lib/mapa.php';
                     if (isset($_GET['editarUsuario'])) {
                         // Obtener el ID del producto a editar
                         $usuarioId = $_GET['editarUsuario'];
-
                         // Obtener el nuevo valor del producto
                         $nuevoValor = $_POST['nuevoValor'];
-
                         // Obtener el nombre de la columna a actualizar (puede venir como parámetro en la solicitud)
                         $columna = $_POST['columna']; // Asegúrate de validar y sanitizar este valor
-                
-                        // Por ejemplo, supongamos que tienes una tabla llamada "productos"
-                        // Puedes utilizar una consulta SQL para actualizar el valor del producto en la columna específica
-                        // Ejemplo con MySQLi:
-                        $conexion = conectar();
-                        $columna = $conexion->real_escape_string($columna); // Escapar el nombre de la columna para evitar inyección de SQL
-                        $consulta = "UPDATE usuarios SET $columna = '$nuevoValor' WHERE id_usuario = $usuarioId";
-                        $resultado = $conexion->query($consulta);
-
-                        // Manejar la respuesta de la actualización (puedes enviar un mensaje de éxito o realizar alguna otra acción)
-                        if ($resultado) {
-                            echo "Actualización exitosa";
-                        } else {
-                            echo "Error al actualizar el valor";
-                        }
-                        // Terminar la ejecución del script PHP
-                        exit();
+                        editarUsuario($usuarioId, $nuevoValor, $columna);
                     }
 
 
@@ -524,30 +422,17 @@ require_once '../lib/mapa.php';
                                                 misionesSinAceptar();
 
                     }
+                    // Aceptar la misión.
                     if (isset($_POST['aceptarMision'])) {
                         $id_mision = $_POST['id_mision'];
-                        $conn = conectar();
-                        $sqlUpdate = "UPDATE `misiones` SET `aceptacion` = 1 WHERE `id_mision` = ?";
-                        $stmt = $conn->prepare($sqlUpdate);
-                        $stmt->bind_param("i", $id_mision);
-                        $stmt->execute();
-                        $sqlUpdate = "UPDATE usuarios AS u, misiones AS m SET u.puntos = u.puntos + 10 WHERE m.id_mision = ? AND u.id_usuario = m.id_usuario";
-                        $stmt = $conn->prepare($sqlUpdate);
-                        $stmt->bind_param("i", $id_mision);
-                        $stmt->execute();
-                        echo "<script>window.location.href = 'administrador.php?administradorMisiones=';</script>";
-                        exit();
+                        aceptarMision($id_mision);
+                        
                     }
+                    // Rechazar la misión.
                     if (isset($_POST['rechazarMision'])) {
                         $id_mision = $_POST['id_mision'];
-                        $conn = conectar();
-                        $sqlUpdate = "UPDATE `misiones` SET `aceptacion` = 2 WHERE `id_mision` = ?";
-                        $stmt = $conn->prepare($sqlUpdate);
-                        $stmt->bind_param("i", $id_mision);
-                        $stmt->execute();
-
-                        echo "<script>window.location.href = 'administrador.php?administradorMisiones=';</script>";
-                        exit();
+                        rechazarMision($id_mision);
+                        
                     }
                     ?>
                                 </div>
