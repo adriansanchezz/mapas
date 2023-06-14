@@ -221,7 +221,7 @@ function mapaUsuario() {
 
             // Se crea un nuevo marcador y se añade al mapa.
             marker2 = L.marker(e.latlng).addTo(map);
-            var apiKey = 'AIzaSyADr5gpzLPePzkWwz8C94wBQ21DzQ4GGVU'; // Reemplaza con tu propia API Key de Google Maps Static
+            var apiKey = 'AIzaSyADr5gpzLPePzkWwz8C94wBQ21DzQ4GGVU'; 
 
             var img = new Image();
             img.src = 'https://maps.googleapis.com/maps/api/streetview?size=400x300&location=' + e.latlng.lat + ',' + e.latlng.lng + '&key=' + apiKey;

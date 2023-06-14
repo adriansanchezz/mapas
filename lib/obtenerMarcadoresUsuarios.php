@@ -94,7 +94,7 @@ if ($stmt) {
         }
     }
 
-    // Convertir el array a formato JSON
+    // Convertir el array a formato JSON.
     echo json_encode($marcadores);
 }
 ?>
