@@ -3,11 +3,19 @@ function mapaEmpresa() {
         // Creación del mapa.
         var map = L.map('map').setView([43.3828500, -3.2204300], 7);
 
+        // Se definen las coordenadas límites de España (más o menos).
+        var spainBounds = L.latLngBounds(
+            L.latLng(36.0000, -9.3922), // Coordenada superior izquierda (Latitud, Longitud)
+            L.latLng(43.7486, 4.3273)  // Coordenada inferior derecha (Latitud, Longitud)
+        );
+
+
         // Selección de cuanto zoom tendrá y más atributos necesarios.
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
             maxZoom: 18,
         }).addTo(map);
+        
     } catch (error) {
         var errorElement = document.getElementById('errorUsuario');
         errorElement.textContent = error;
@@ -58,6 +66,21 @@ function mapaEmpresa() {
             `);
         });
     }
+
+    // Se indica que los límites máximos son los establecidos en spainBounds.
+    map.setMaxBounds(spainBounds); // Establecer límites máximos
+
+    // Permitir arrastrar el mapa fuera de los límites para navegar
+    map.on('drag', function () {
+        map.panInsideBounds(spainBounds, { animate: false });
+    });
+
+    // Permitir hacer zoom fuera de los límites para navegar
+    map.on('zoomend', function () {
+        if (!spainBounds.contains(map.getCenter())) {
+            map.setView([43.3828500, -3.2204300], 13);
+        }
+    });
 
     // Función para buscar una dirección mediante una barra de búsqueda.
     function buscarDireccion() {
