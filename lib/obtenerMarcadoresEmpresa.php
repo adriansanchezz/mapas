@@ -3,6 +3,8 @@ require_once '../lib/funciones.php';
 require_once '../lib/modulos.php';
 require_once '../lib/mapa.php';
 
+// Se realiza un select de los marcadores, las imágenes y sus parámetros deben ser estado en 1, ocupado en 0, comprador en null y que el usuario sea distinto el que ha 
+// posteado la publicación del que se quiere publicitar.
 $sql = "SELECT p.*, t.nombre AS nombre_tipo, f.foto AS imagen
         FROM publicidades AS p
         INNER JOIN tipospublicidades AS t ON p.id_tipo_publicidad = t.id_tipo_publicidad
@@ -11,6 +13,7 @@ $sql = "SELECT p.*, t.nombre AS nombre_tipo, f.foto AS imagen
 
 $result = sqlSELECT($sql);
 
+// Creación de array de publicidades.
 $publicidades = array();
 
 // Si da resultados entonces se construye el array de publicidades.
@@ -30,6 +33,7 @@ if ($result->num_rows > 0) {
             'mostrarImagen' => ''
         );
 
+        // Si imagen en distinto de null entonces se crea mostrarImagen que será la imagen que el usuario ha subido.
         if ($row['imagen'] !== null) {
             $imagen = $row['imagen'];
             $publicidad['mostrarImagen'] = "<img src='data:image/jpeg;base64," . base64_encode($imagen) . "' alt='Imagen de la mapa'>";
@@ -48,5 +52,6 @@ if ($result->num_rows > 0) {
     }
 }
 
+// Se devuelve en json al js.
 echo json_encode($publicidades);
 ?>

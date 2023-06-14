@@ -3,11 +3,19 @@ function mapaEmpresa() {
         // Creación del mapa.
         var map = L.map('map').setView([43.3828500, -3.2204300], 7);
 
+        // Se definen las coordenadas límites de España (más o menos).
+        var spainBounds = L.latLngBounds(
+            L.latLng(36.0000, -9.3922), // Coordenada superior izquierda (Latitud, Longitud)
+            L.latLng(43.7486, 4.3273)  // Coordenada inferior derecha (Latitud, Longitud)
+        );
+
+
         // Selección de cuanto zoom tendrá y más atributos necesarios.
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
             maxZoom: 18,
         }).addTo(map);
+        
     } catch (error) {
         var errorElement = document.getElementById('errorUsuario');
         errorElement.textContent = error;
@@ -58,6 +66,21 @@ function mapaEmpresa() {
             `);
         });
     }
+
+    // Se indica que los límites máximos son los establecidos en spainBounds.
+    map.setMaxBounds(spainBounds); // Establecer límites máximos
+
+    // Permitir arrastrar el mapa fuera de los límites para navegar
+    map.on('drag', function () {
+        map.panInsideBounds(spainBounds, { animate: false });
+    });
+
+    // Permitir hacer zoom fuera de los límites para navegar
+    map.on('zoomend', function () {
+        if (!spainBounds.contains(map.getCenter())) {
+            map.setView([43.3828500, -3.2204300], 13);
+        }
+    });
 
     // Función para buscar una dirección mediante una barra de búsqueda.
     function buscarDireccion() {
@@ -134,17 +157,25 @@ function mapaUsuario() {
 
             // Asignar los datos del marcador al pop-up
             var popupContent = `<div class='popup-content vista_mapa'>
-                                    <h3 class='popup-title'>${marcador.nombre_tipo}</h3>
-                                    <h4 class='popup-location'>${marcador.ubicacion}</h4>
-                                    <h4 class='popup-price'>${marcador.precio}</h4>
-                                    <p class='popup-description'>${marcador.descripcion}</p>
-                                    Imagen Google:<br> <img class='popup-image imagen_mapa' src='${marcador.imageUrl}' alt='Imagen de la ubicación'><br>
-                                    Imagen usuario:<br>${marcador.mostrarImagen}<br>
-                                    <form action='usuario.php' method='POST'>
-                                        <input type='hidden' name='id_publicidad' value='${marcador.id_publicidad}'>
-                                        <button class='popup-delete-button' type='submit' name='borrarMarcador'>Borrar</button>
-                                    </form>
-                                </div>`;
+                                <h3 class='popup-title'>${marcador.nombre_tipo}</h3>
+                                <h4 class='popup-location'>${marcador.ubicacion}</h4>
+                                <h4 class='popup-price'>${marcador.precio}</h4>
+                                <p class='popup-description'>${marcador.descripcion}</p>
+                                Imagen Google:<br> <img class='popup-image imagen_mapa' src='${marcador.imageUrl}' alt='Imagen de la ubicación'><br>
+                                Imagen usuario:<br>${marcador.mostrarImagen}<br>`;
+
+                            if (marcador.compra == 0) {
+                                popupContent += `<form action='usuario.php' method='POST'>
+                                    <input type='hidden' name='id_publicidad' value='${marcador.id_publicidad}'>
+                                    <button class='popup-delete-button' type='submit' name='borrarMarcador'>Borrar</button>
+                                </form>`;
+                            }
+                            else
+                            {
+                                popupContent += `<p>No puedes borrar una publicidad vendida a una empresa.</p>`;
+                            }
+
+                            popupContent += `</div>`;
 
             marker.bindPopup(popupContent);
         }
@@ -190,7 +221,7 @@ function mapaUsuario() {
 
             // Se crea un nuevo marcador y se añade al mapa.
             marker2 = L.marker(e.latlng).addTo(map);
-            var apiKey = 'AIzaSyADr5gpzLPePzkWwz8C94wBQ21DzQ4GGVU'; // Reemplaza con tu propia API Key de Google Maps Static
+            var apiKey = 'AIzaSyADr5gpzLPePzkWwz8C94wBQ21DzQ4GGVU'; 
 
             var img = new Image();
             img.src = 'https://maps.googleapis.com/maps/api/streetview?size=400x300&location=' + e.latlng.lat + ',' + e.latlng.lng + '&key=' + apiKey;

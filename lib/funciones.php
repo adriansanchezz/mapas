@@ -1,32 +1,35 @@
 <?php
-// Abrir session
+// Abrir session.
 session_start();
 
-// conexion BD 
+// Función para conectarse a la base de datos.
 function conectar()
 {
-    //Dato 
+    // Datos para la base de datos.
     $host = "localhost";
     $basededatos = "mapa_promocion";
     $usuariodb = "root";
     $clavedb = "";
 
+    // Base de datos para el despliegue.
     // $basededatos = "id20705558_mapa_promocion";
     // $usuariodb = "id20705558_root";
     // $clavedb = "({wQ>S|E[~75z*eA";
 
-    // crear connection
+    // Creando la conexión.
     $conn = mysqli_connect($host, $usuariodb, $clavedb, $basededatos);
 
+    // Si no se crea la conexión se envía un error.
     if (!$conn) {
         throw new Exception('Error de conexión: ' . mysqli_connect_error());
     } else {
+        // Si se establece entonces devuelve la conexión.
         return $conn;
     }
 }
 
 
-// Para hacer Registro del usuario
+// Función para registrar un usuario.
 function registrarUser($username, $email, $telefono, $password, $password2)
 {
 
@@ -152,9 +155,10 @@ function validarCorreo($email)
     }
 }
 
+// Función para comprobar la contraseña de un usuario que se loguea.
 function comprobarPassword($password, $id_user)
 {
-    //Consulta
+    //Consulta para identificar al usuario.
     $sql = "SELECT * FROM usuarios WHERE id_usuario='$id_user'";
 
     //Verificar si el usuario existe o no
@@ -361,7 +365,7 @@ function validarVigilante($id_user)
     }
 }
 
-// Velificar bloqueo
+// Velificar bloqueo de un usuario.
 function validarBloqueo($id_user)
 {
     // Consulta
@@ -375,10 +379,10 @@ function validarBloqueo($id_user)
     }
 }
 
-// Listar usuario y sus datos con rol, para todo los usuraio que existe
+// Listar usuario y sus datos con rol, para todo los usuraio que existe.
 function listarUsuarios($id_user)
 {
-    // Consulta
+    // Consulta.
     $sql = "SELECT u.id_usuario , u.nombre, u.email, u.saldo, u.fecha_bloqueo, r.nombre as nombre_rol
         FROM usuarios u
         LEFT JOIN usuarios_roles ur ON u.id_usuario = ur.id_usuario
@@ -388,7 +392,7 @@ function listarUsuarios($id_user)
     // Guardar el resulatdo devulto
     $result = sqlSELECT($sql);
 
-    // Comprobar si existe el compo de la consulta, y listar los datos
+    // Comprobar si existe el compo de la consulta, y listar los datos.
     echo "
         <table border='1' style='border-collapse: collapse;'>
             <thead>
@@ -455,17 +459,17 @@ function listarUsuarios($id_user)
         ";
 }
 
-// Listar usuario y sus datos con rol, para todo los usuraio que existe
+// Función para listar usuario y sus datos con rol, para todo los usuraio que existe.
 function listarSoporte()
 {
-    // Consulta
+    // Consulta.
     $sql = "SELECT * FROM soportes
             WHERE fecha_fin IS NULL";
 
-    // Guardar el resulatdo devulto
+    // Guardar el resulatdo devulto.
     $result = sqlSELECT($sql);
 
-    // Comprobar si existe el compo de la consulta, y listar los datos
+    // Comprobar si existe el compo de la consulta, y listar los datos.
     echo "
         <table border='1' style='border-collapse: collapse;'>
             <thead>
@@ -551,7 +555,7 @@ function listarSoporte()
         ";
 }
 
-
+// Función para listar el soporte de una empresa.
 function listarSoporteEmpresa()
 {
     // Consulta
@@ -656,6 +660,7 @@ function listarSoporteEmpresa()
         ";
 }
 
+// Función para que el administrador pueda ver las empresas que han solicitado obtener dicho rol.
 function verSolicitudEmpresa($id)
 {
     // Consulta
@@ -891,7 +896,7 @@ function listarPublicidades($id_user)
     ";
 }
 
-// Listar Propiedad y sus datos, para todo los usuraio que existe
+// Listar Propiedad y sus datos, para todo los usuraio que existe.
 function listarTiposSoportes()
 {
     // Consulta
@@ -917,6 +922,7 @@ function listarTiposSoportes()
     ';
 }
 
+// Función para listar los tipos de empresa a la hora de seleccionarlas cuando realizas el formulario de empresa.
 function listarTiposEmpresas()
 {
     // Consulta
@@ -943,7 +949,7 @@ function listarTiposEmpresas()
     ';
 }
 
-// Agregar rol de Usuario
+// Agregar rol de Usuario.
 function agregarRoles($id_user, $nombre_rol)
 {
     switch ($nombre_rol) {
@@ -1017,7 +1023,7 @@ function eliminarRoles($id_user, $nombre_rol)
     }
 }
 
-// Actualizar dato de nombre, un parametro de nuevo nombre y id usuario
+// Actualizar dato de nombre, un parametro de nuevo nombre y id usuario.
 function guardarNombre($nombre, $id_user)
 {
     //consulta
@@ -1043,7 +1049,7 @@ function guardarNombre($nombre, $id_user)
     }
 }
 
-// Actualizar dato de correo, y pasa parametro de nuevo correo y correo repetido, mas su id usuario
+// Actualizar dato de correo, y pasa parametro de nuevo correo y correo repetido, mas su id usuario.
 function guardarCorreo($correo, $id_user)
 {
     // Consulta
@@ -1097,10 +1103,10 @@ function guardarPassword($antiguoPass, $pass, $pass2, $id_user)
 }
 
 // Pasar los valores para comprovar si repeti o no
-function repetirValor($valo, $valo2)
+function repetirValor($valor, $valor2)
 {
     // Verificar si los correo es igual o no
-    if ($valo == $valo2) {
+    if ($valor == $valor2) {
         return true;
     } else {
         return false;
@@ -1132,6 +1138,7 @@ function sumarVisitaTotal()
     }
 }
 
+// Función que sirve para que el administrador pueda ver las visitas totales a la página.
 function verVisitaTotal()
 {
     // Consulta
@@ -1142,6 +1149,7 @@ function verVisitaTotal()
     echo $datos["numero"];
 }
 
+// Función que sirve para que el administrador pueda ver los pedidos totales realizados en la página.
 function verPedidoTotal()
 {
     // Consulta
@@ -1162,6 +1170,7 @@ function verImporteTotal()
     echo $datos["total_importe"];
 }
 
+// Función que sirve para que los usuarios puedan activar sus publicidades.
 function activarPublicidad($id_publicidad)
 {
     // Consulta
@@ -1171,6 +1180,7 @@ function activarPublicidad($id_publicidad)
     sqlUPDATE($sql);
 }
 
+// Función que sirve para que los usuarios puedan desactivar sus publicidades.
 function desactivarPublicidad($id_publicidad)
 {
     // Consulta
@@ -1180,6 +1190,7 @@ function desactivarPublicidad($id_publicidad)
     sqlUPDATE($sql);
 }
 
+// Función que sirve para que los usuarios puedan borrar sus publicidades.
 function borrarPublicidad($id_publicidad)
 {
     // Consulta
@@ -1189,6 +1200,7 @@ function borrarPublicidad($id_publicidad)
     sqlDELETE($sql);
 }
 
+// Función que sirve para que los administradores puedan activar los productos.
 function activarProducto($id_producto)
 {
     // Consulta
@@ -1198,6 +1210,7 @@ function activarProducto($id_producto)
     sqlUPDATE($sql);
 }
 
+// Función que sirve para que los administradores puedan desactivar los productos.
 function desactivarProducto($id_producto)
 {
     // Consulta
@@ -1207,6 +1220,7 @@ function desactivarProducto($id_producto)
     sqlUPDATE($sql);
 }
 
+// Función que sirve para que los administradores puedan borrar los productos.
 function borrarProducto($id_producto)
 {
     // Consulta
@@ -1216,6 +1230,7 @@ function borrarProducto($id_producto)
     sqlDELETE($sql);
 }
 
+// Función que sirve para que los administradores puedan bloquear usuarios.
 function bloquearUsuario($id_usuario)
 {
     // 'Y': Representa el año con cuatro dígitos (ejemplo: 2023).
@@ -1261,8 +1276,6 @@ function rechazarSolicitudEmpresa($id, $cometario)
 // Función utilizada para guardar un marcador en el mapa del menú de usuario. 
 function guardarMarcador()
 {
-
-
     // Se verifica que la solicitud sea un método post.
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 

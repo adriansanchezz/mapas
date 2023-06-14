@@ -25,22 +25,12 @@ function mapa($valor)
                         </div>
                     </div>
                     <div id="map"></div>
-                    <!-- Se le da estilos al mapa para que quede más estético. -->
-                    <style>
-                        #map {
-                            height: 70vh;
-                            border: 8px solid #2c3e50;
-                            /* Color del borde */
-                            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-                            /* Sombra */
-                        }
-                    </style>
                 </div>
             </div>
         </div>
         <script>
+            // Se hace llamamiento de la función mapaEmpresa, que creará el mapa en cuestión y todo lo que tenga que ver con funciones del mismo.
             mapaEmpresa();
-             
         </script>
         <?php
     }
@@ -66,23 +56,9 @@ function mapa($valor)
                         <div id="map"></div>
                     </div>
                 </div>
-                <style>
-                    #map {
-                        height: 70vh;
-
-                        border: 8px solid #2c3e50;
-                        /* Color del borde */
-                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-                        /* Sombra */
-                    }
-
-                    #imagenPopUp {
-                        width: 30vh;
-                    }
-                </style>
                 <div class="col-md-3">
                     <form action="usuario.php" method="POST" enctype="multipart/form-data"
-                        onsubmit="return validarFormulario(); guardarMarcador();">
+                        onsubmit="return validarFormulario();">
                         <input type="hidden" name="lat" id="lat">
                         <input type="hidden" name="lng" id="lng">
                         <div class="card">
@@ -116,6 +92,7 @@ function mapa($valor)
                                     <label for="tipoPublicidad">Tipo de Publicidad:</label>
                                     <select class="form-control" name="tipoPublicidad" id="tipoPublicidad" required>
                                         <?php
+                                        // Seleccionar las publicidades de tipopublicidades para saber qué tipos hay.
                                         $sql = "SELECT id_tipo_publicidad, nombre FROM tipospublicidades";
                                         $resultado = sqlSELECT($sql);
                                         if (mysqli_num_rows($resultado) > 0) {
@@ -155,23 +132,18 @@ function mapa($valor)
 
         </div>
         <script>
+            // Se invoca a las funciones mapaUsuario y tipoPublicidad.
             mapaUsuario();
+            // Esta función crea un aviso en el que si el tipopublicidad es "piso" se cambia el mensaje.
             tipoPublicidad(); 
         </script>
         <?php
     }
     if ($valor == "vigilar") {
         ?>
-
         <h1>MISIONES</h1>
         <span id='errorUsuario' style='color: red;'></span>
         <div id="map"></div><br>
-        <style>
-            #solicitarMision {
-                margin-left: 10vh;
-                width: 150vh;
-            }
-        </style>
         <input type="submit" class="btn btn-primary" id="solicitarMision" value="Solicitar misión">
         <div class="container mt-4">
             <div class="table-responsive mb-4">
@@ -189,14 +161,19 @@ function mapa($valor)
                     <tbody>
                         <!-- Filas de puntos se agregarán aquí dinámicamente -->
                         <?php
+                        // Se obtiene la id del usuario logueado.
                         $id_usuario = $_SESSION['usuario']['id_usuario'];
+
+                        // Se crea una consulta sql.
                         $sql = "SELECT m.descripcion AS mision_descripcion, p.descripcion AS publicidad_descripcion, p.codigo_postal, p.ubicacion, m.id_mision
                                         FROM misiones AS m, publicidades AS p
                                         WHERE m.id_usuario='$id_usuario' AND m.estado=0 AND m.aceptacion=0 AND m.id_publicidad = p.id_publicidad";
                         $result = sqlSELECT($sql);
 
+                        // Se obtienen las filas obtenidas.
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
+                                // Se crea el cuerpo de una tabla que tendrá la información deseada.
                                 echo '<tr>';
                                 echo '<td>' . $row['ubicacion'] . '</td>'; // Columna de descripción de misiones
                                 echo '<td>' . $row['codigo_postal'] . '</td>'; // Columna de código postal de misiones
@@ -227,14 +204,18 @@ function mapa($valor)
                     <tbody>
                         <!-- Filas de puntos se agregarán aquí dinámicamente -->
                         <?php
+                        // Se obtiene el id de usuario logueado.
                         $id_usuario = $_SESSION['usuario']['id_usuario'];
+                        // Se crea una consulta para obtener las misiones enviadas, en espera, rechazadas y aceptadas.
                         $sql = "SELECT m.descripcion AS mision_descripcion, p.descripcion AS publicidad_descripcion, p.ubicacion, m.aceptacion, p.codigo_postal
                                         FROM misiones AS m, publicidades AS p
                                         WHERE m.id_usuario='$id_usuario' AND m.estado=1 AND m.id_publicidad = p.id_publicidad";
                         $result = sqlSELECT($sql);
 
+                        // Se obtienen las filas obtenidas.
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
+                                // Y finalmente se crea el cuerpo de la tabla con la información deseada.
                                 echo '<tr>';
                                 echo '<td>' . $row['ubicacion'] . '</td>'; // Columna de descripción de misiones
                                 echo '<td>' . $row['codigo_postal'] . '</td>'; // Columna de código postal de misiones
@@ -258,6 +239,7 @@ function mapa($valor)
             </div>
         </div>
         <script>
+            // Se llama a la función vigilante del js.
             vigilante();
         </script>
         <?php
