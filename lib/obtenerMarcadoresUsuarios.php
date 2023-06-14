@@ -63,10 +63,10 @@ if ($stmt) {
             $result3 = $conn->query($sql3);
             $mostrarImagen = '';
             if ($result3->num_rows > 0) {
-                // Recuperar la información de la imagen
+                // Recuperar la información de la imagen.
                 $row3 = $result3->fetch_assoc();
                 $imagen = $row3["foto"];
-                // Mostrar la imagen en la página
+                // Mostrar la imagen en la página.
                 $mostrarImagen = "<img src='data:image/jpeg;base64," . base64_encode($imagen) . "' alt='Imagen de la mapa usuario' class='imagen_mapa'>";
             }
 
@@ -76,7 +76,7 @@ if ($stmt) {
             // Se obtiene una imagen de la localización mediante coordenadas.
             $imageUrl = 'https://maps.googleapis.com/maps/api/streetview?size=400x300&location=' . $latitud . ',' . $longitud . '&key=' . $apiKey;
 
-            // Agregar los datos del marcador al array
+            // Agregar los datos del marcador al array.
             $marcador = array(
                 'latitud' => $latitud,
                 'longitud' => $longitud,
