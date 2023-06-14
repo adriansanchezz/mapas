@@ -1260,7 +1260,7 @@ function listarPublicidades($id_user)
             <td><span class='editablePublicidad' id='precio' data-publicidad-id='$id_publicidad'>$precio</span></td>
             <td>$estado</td>
             <td>
-                <form action='cuenta.php?administradorSoportes' method='POST'>
+                <form action='cuenta.php?publicidades' method='POST'>
                     <input type='hidden' name='id_publicidad' value='$id_publicidad'>
                     <button type='submit' name='activarPublicidad' class='btn btn-success'>Activar</button>
                     <button type='submit' name='desactivarPublicidad' class='btn btn-secondary'>Desacticar</button>
@@ -1856,7 +1856,7 @@ function procesarPagos()
             $saldoFinal = $datos["saldo"] + $precio;
 
             // Actualiza la base de datos con el nuevo saldo del usuario
-            $sql = "UPDATE usuarios SET saldo='$saldoFinal' 
+            $sql = "UPDATE usuarios SET saldo='$saldoFinal'
         WHERE id_usuario=" . $id_usuario;
             sqlUPDATE($sql);
         }
