@@ -1,13 +1,13 @@
 <?php
-// Abrir session
+// Abrir session.
 session_start();
 
-// conexion BD 
+// Función para conectarse a la base de datos. 
 function conectar()
 {
     //Dato 
     $host = "localhost";
-    $basededatos = "mapa_promocion2";
+    $basededatos = "mapa_promocion";
     $usuariodb = "root";
     $clavedb = "";
 
