@@ -25,22 +25,12 @@ function mapa($valor)
                         </div>
                     </div>
                     <div id="map"></div>
-                    <!-- Se le da estilos al mapa para que quede más estético. -->
-                    <style>
-                        #map {
-                            height: 70vh;
-                            border: 8px solid #2c3e50;
-                            /* Color del borde */
-                            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-                            /* Sombra */
-                        }
-                    </style>
                 </div>
             </div>
         </div>
         <script>
+            // Se hace llamamiento de la función mapaEmpresa, que creará el mapa en cuestión y todo lo que tenga que ver con funciones del mismo.
             mapaEmpresa();
-             
         </script>
         <?php
     }
@@ -66,20 +56,6 @@ function mapa($valor)
                         <div id="map"></div>
                     </div>
                 </div>
-                <style>
-                    #map {
-                        height: 70vh;
-
-                        border: 8px solid #2c3e50;
-                        /* Color del borde */
-                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-                        /* Sombra */
-                    }
-
-                    #imagenPopUp {
-                        width: 30vh;
-                    }
-                </style>
                 <div class="col-md-3">
                     <form action="usuario.php" method="POST" enctype="multipart/form-data"
                         onsubmit="return validarFormulario(); guardarMarcador();">
@@ -166,12 +142,6 @@ function mapa($valor)
         <h1>MISIONES</h1>
         <span id='errorUsuario' style='color: red;'></span>
         <div id="map"></div><br>
-        <style>
-            #solicitarMision {
-                margin-left: 10vh;
-                width: 150vh;
-            }
-        </style>
         <input type="submit" class="btn btn-primary" id="solicitarMision" value="Solicitar misión">
         <div class="container mt-4">
             <div class="table-responsive mb-4">

@@ -2,6 +2,19 @@
     z-index: 0;
 }
 
+#map {
+    height: 70vh;
+
+    border: 8px solid #2c3e50;
+    /* Color del borde */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    /* Sombra */
+}
+
+#imagenPopUp {
+    width: 30vh;
+}
+
 .puntos-container {
     background-color: #e9f2fe;
     border: 1px solid #bdbdbd;

@@ -6,9 +6,11 @@ body {
 }
 
 #map {
-    height: 400px;
+    height: 70vh;
     width: 100%;
     margin-bottom: 20px;
+    border: 8px solid #2c3e50;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .container {
