@@ -52,7 +52,7 @@ require_once '../lib/mapa.php';
                         </a>
                         <a href="administrador.php?administradorSoportes"
                             class="list-group-item list-group-item-action text-light" id="sidebar2">
-                            <i class="fa fa-cog mr-3" aria-hidden="true"></i>Soportes
+                            <i class="fa fa-ticket mr-3" aria-hidden="true"></i>Soportes
                         </a>
                     </div>
                 </div>
