@@ -7,9 +7,9 @@ function conectar()
 {
     // Datos para la base de datos.
     $host = "localhost";
-    $basededatos = "id20705558_mapa_promocion";
-    $usuariodb = "id20705558_root";
-    $clavedb = "({wQ>S|E[~75z*eA";
+    $basededatos = "mapa_promocion";
+    $usuariodb = "root";
+    $clavedb = "";
 
     // Base de datos para el despliegue.
     // $basededatos = "id20705558_mapa_promocion";
@@ -1580,12 +1580,13 @@ function desactivarPublicidad($id_publicidad)
 function borrarPublicidad($id_publicidad)
 {
     // Consulta
-    $sql = "DELETE FROM publicidades WHERE id_publicidad = $id_publicidad";
-
+    $sql = "DELETE FROM misiones WHERE id_publicidad = $id_publicidad";
+    $sql2 = "DELETE FROM publicidades WHERE id_publicidad = $id_publicidad AND caducidad_compra IS NULL";
+    
     // Actualizar los datos
-    if(sqlDELETE($sql))
+    if(sqlDELETE($sql2))
     {
-        
+        sqlDELETE($sql);
     }
     else
     {
@@ -1595,6 +1596,7 @@ function borrarPublicidad($id_publicidad)
                 </div>
               </div>";
     }
+
 }
 
 // Función que sirve para que los administradores puedan activar los productos.
