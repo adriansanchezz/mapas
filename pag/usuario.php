@@ -238,7 +238,7 @@ require_once '../lib/mapa.php';
                         return actions.order.create({
                             purchase_units: [{
                                 amount: {
-                                    value: '<?php echo $importe; ?>'
+                                    value: '<?php echo number_format($importe, 2); ?>'
                                 }
                             }]
                         });

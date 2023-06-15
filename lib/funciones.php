@@ -7,9 +7,9 @@ function conectar()
 {
     // Datos para la base de datos.
     $host = "localhost";
-    $basededatos = "mapa_promocion";
-    $usuariodb = "root";
-    $clavedb = "";
+    $basededatos = "id20705558_mapa_promocion";
+    $usuariodb = "id20705558_root";
+    $clavedb = "({wQ>S|E[~75z*eA";
 
     // Base de datos para el despliegue.
     // $basededatos = "id20705558_mapa_promocion";
@@ -440,13 +440,19 @@ function ubicacionesCompradas()
 
 
                         // Si la revisión está en null entonces significa que el administrador no lo ha revisado.
-                        if ($row['revision'] == null) {
+                        if ($row['revision'] == null || $row['revision'] == 3) {
                             echo "<form action='administrador.php' method='POST'>
                                     <input type='hidden' name='id_publicidad' value='" . $row['id_publicidad'] . "'>
                                     <input type='submit' name='revisarCompraUbicacion' value='Revisado'>
                                     </form>";
-                        } else {
+                        } else if($row['revision'] > 3){
                             echo "<p>Enviado.</p>";
+                        } else if($row['revision'] == 2){
+                            echo "<p>Piso en espera.</p>";
+                        } else if($row['revision'] == 1){
+                            echo "<p>Piso en aceptado.</p>";
+                        } else if($row['revision'] == 0){
+                            echo "<p>Piso rechazado.</p>";
                         }
 
 
@@ -1856,7 +1862,7 @@ function procesarPagos()
             $saldoFinal = $datos["saldo"] + $precio;
 
             // Actualiza la base de datos con el nuevo saldo del usuario
-            $sql = "UPDATE usuarios SET saldo='$saldoFinal'
+            $sql = "UPDATE usuarios SET saldo='$saldoFinal' 
         WHERE id_usuario=" . $id_usuario;
             sqlUPDATE($sql);
         }
@@ -1999,25 +2005,22 @@ function rechazarCertificado($id_publicidad)
 
 function revisarCompraUbicacion($id_publicidad)
 {
-    $sql = "UPDATE publicidades SET revision = 3 WHERE id_publicidad = " . $id_publicidad;
+    $sql = "UPDATE publicidades SET revision = 4 WHERE id_publicidad = " . $id_publicidad;
     $sql2 = "UPDATE pedidos AS p, lineas_pedidos AS lp SET p.revision = 1 WHERE lp.id_pedido = p.id_pedido AND lp.id_publicidad = " . $id_publicidad;
-
-    if (sqlUPDATE($sql)) {
-        if (sqlUPDATE($sql2)) {
-            echo "<script>window.location.href = 'administrador.php?administradorPanel';</script>";
-            exit();
-        }
-    }
+    sqlUPDATE($sql);
+    sqlUPDATE($sql2);
+    
+    echo "<script>window.location.href = 'administrador.php?administradorPanel';</script>";
+    exit();
 }
 
 function revisarCompraProducto($id_pedido)
 {
     $sql = "UPDATE pedidos SET revision = 1 WHERE id_pedido = " . $id_pedido;
 
-    if (sqlUPDATE($sql)) {
-        echo "<script>window.location.href = 'administrador.php?administradorPanel';</script>";
-        exit();
-    }
+    sqlUpdate($sql);
+    echo "<script>window.location.href = 'administrador.php?administradorPanel';</script>";
+    exit();
 }
 
 function nuevoProducto($nombreProducto, $descripcionProducto, $precioProducto, $puntosProducto, $recompensaProducto, $estado)

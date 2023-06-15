@@ -33,10 +33,10 @@ require_once 'lib/modulos.php';
             </div>
             <div class="redirigir"><a href="recuperar.php">¿Has olvido su contraseña?</a></div>
             <?php
-            if (isset($_POST['iniciar'])) {
-                autenticarUser($_POST['correo'], $_POST['password']);
-            }
-            ?>
+    if (isset($_POST['iniciar'])) {
+        autenticarUser($_POST['correo'], $_POST['password']);
+    }
+    ?>
         </form>
     </div>
 </body>

@@ -9,7 +9,7 @@ $sql = "SELECT p.*, t.nombre AS nombre_tipo, f.foto AS imagen
         FROM publicidades AS p
         INNER JOIN tipospublicidades AS t ON p.id_tipo_publicidad = t.id_tipo_publicidad
         LEFT JOIN fotos AS f ON p.id_publicidad = f.id_publicidad
-        WHERE (p.revision IS NULL OR p.revision = 1) AND p.estado = 1 AND p.ocupado = 0 AND p.comprador IS NULL AND p.id_usuario <> " . $_SESSION['usuario']['id_usuario'];
+        WHERE (p.revision IS NULL OR p.revision = 1 OR p.revision = 3) AND p.estado = 1 AND p.ocupado = 0 AND p.comprador IS NULL AND p.id_usuario <> " . $_SESSION['usuario']['id_usuario'];
 
 $result = sqlSELECT($sql);
 
