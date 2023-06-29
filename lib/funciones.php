@@ -7,9 +7,9 @@ function conectar()
 {
     // Datos para la base de datos.
     $host = "localhost";
-    $basededatos = "id20705558_mapa_promocion";
-    $usuariodb = "id20705558_root";
-    $clavedb = "({wQ>S|E[~75z*eA";
+    $basededatos = "mapa_promocion";
+    $usuariodb = "root";
+    $clavedb = "";
 
     // Base de datos para el despliegue.
     // $basededatos = "id20705558_mapa_promocion";
