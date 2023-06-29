@@ -1580,10 +1580,23 @@ function desactivarPublicidad($id_publicidad)
 function borrarPublicidad($id_publicidad)
 {
     // Consulta
-    $sql = "DELETE FROM publicidades WHERE id_publicidad = $id_publicidad";
-
+    $sql = "DELETE FROM misiones WHERE id_publicidad = $id_publicidad";
+    $sql2 = "DELETE FROM publicidades WHERE id_publicidad = $id_publicidad AND caducidad_compra IS NULL";
+    
     // Actualizar los datos
-    sqlDELETE($sql);
+    if(sqlDELETE($sql2))
+    {
+        sqlDELETE($sql);
+    }
+    else
+    {
+        echo "<div class='fixed-bottom bg-light'>
+                <div class='container'>
+                  <h3>No puedes borrar una publicidad que está alquilada por una empresa.</h3>
+                </div>
+              </div>";
+    }
+
 }
 
 // Función que sirve para que los administradores puedan activar los productos.
